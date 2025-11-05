@@ -1,17 +1,13 @@
 package io.volunteerapp.volunteer_app.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
+
+import java.sql.Date;
+import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.util.HashSet;
 import java.util.Set;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -29,42 +25,44 @@ public class Event {
     @Column(nullable = false, columnDefinition = "longtext")
     private String title;
 
-    @Column(
-            nullable = false,
-            columnDefinition = "longtext",
-            name = "\"description\""
-    )
+
     private String description;
 
-    @Column(nullable = false, columnDefinition = "longtext")
-    private String address;
-
-    @Column(nullable = false, columnDefinition = "longtext")
+    //vị trí đưa ra
     private String location;
 
+    //     thời gian mở đăng ky khác với thời gian diễn ra sự kiện
+//    đây là thời gian diễn ra sự kiện
     @Column(nullable = false)
-    private OffsetDateTime startTime;
+    private Date eventStartTime;
 
     @Column(nullable = false)
-    private OffsetDateTime endTime;
+    private Date eventEndTime;
 
-    @Column
-    private Integer capacity;
+    //    đây là thời gian cho phép đăng ky sự kiện
+    private Date registrationOpenTime;
+    private Date registrationCloseTime;
 
+
+//    số lượng người đăng kí tối đa
     @Column(nullable = false)
+    private Integer numOfVolunteers;
+
+
+//    số sao thưởng có thể null vì có thể sự kiện không có thưởng
     private Integer rewardPoints;
 
-    @Column(nullable = false, columnDefinition = "longtext")
+
+
     private String status;
 
-    @Column(nullable = false)
-    private Integer hasCertificate;
+    @Column(nullable = true )
+    private Boolean hasCertificate= false;
 
-    @Column(nullable = false)
-    private OffsetDateTime createdAt;
 
-    @Column(nullable = false)
-    private OffsetDateTime updatedAt;
+    private Instant createdAt;
+
+    private Instant updatedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "creator_id", nullable = false)
@@ -76,5 +74,17 @@ public class Event {
 
     @OneToMany(mappedBy = "event")
     private Set<EventRegistration> eventEventRegistrations = new HashSet<>();
+
+
+    @PrePersist
+    public void hanleBeforeCreate() {
+        this.createdAt = Instant.now();
+    }
+
+    @PreUpdate
+    public void handleBeforeUpdate() {
+        this.updatedAt = Instant.now();
+    }
+
 
 }
