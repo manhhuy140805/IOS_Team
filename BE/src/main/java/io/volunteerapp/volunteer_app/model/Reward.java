@@ -1,11 +1,8 @@
 package io.volunteerapp.volunteer_app.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
+
+import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -33,15 +30,24 @@ public class Reward {
     private Integer pointsRequired;
 
     @Column(nullable = false)
-    private Integer stock;
+    private Integer quantity;
 
-    @Column(nullable = false)
-    private OffsetDateTime createdAt;
 
-    @Column(nullable = false)
-    private OffsetDateTime updatedAt;
+    private Instant createdAt;
+
+    private Instant updatedAt;
 
     @OneToMany(mappedBy = "reward")
     private Set<UserReward> rewardUserRewards = new HashSet<>();
 
+
+    @PrePersist
+    public void handleBeforeCreate (){
+        this.createdAt = Instant.now();
+    }
+
+    @PreUpdate
+    public void handleBeforeUpdate (){
+        this.updatedAt = Instant.now();
+    }
 }

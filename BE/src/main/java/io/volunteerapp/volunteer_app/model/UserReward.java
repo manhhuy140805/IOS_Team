@@ -23,10 +23,6 @@ public class UserReward {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(nullable = false)
-    private OffsetDateTime redeemedAt;
-
-    @Column(nullable = false, columnDefinition = "longtext")
     private String status;
 
     @ManyToOne(fetch = FetchType.LAZY)

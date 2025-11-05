@@ -1,16 +1,14 @@
 package io.volunteerapp.volunteer_app.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
+
+import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.util.HashSet;
 import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
+
 
 
 @Entity
@@ -23,14 +21,13 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(nullable = false, columnDefinition = "longtext")
-    private String fullName;
+      private String fullName;
 
     @Column(nullable = false, columnDefinition = "longtext")
     private String email;
 
     @Column(nullable = false, columnDefinition = "longtext")
-    private String passwordHash;
+    private String password;
 
     @Column(columnDefinition = "longtext")
     private String phone;
@@ -38,17 +35,16 @@ public class User {
     @Column(columnDefinition = "longtext")
     private String avatarUrl;
 
-    @Column(nullable = false, columnDefinition = "longtext", name = "\"role\"")
+    @Column(nullable = false)
     private String role;
 
     @Column(nullable = false, columnDefinition = "longtext")
     private String status;
 
-    @Column(nullable = false)
-    private OffsetDateTime createdAt;
+    private Instant createdAt;
 
     @Column(nullable = false)
-    private OffsetDateTime updatedAt;
+    private Instant updatedAt;
 
     @OneToMany(mappedBy = "creator")
     private Set<Event> creatorEvents = new HashSet<>();
@@ -59,4 +55,15 @@ public class User {
     @OneToMany(mappedBy = "user")
     private Set<UserReward> userUserRewards = new HashSet<>();
 
+
+
+    @PrePersist
+    public void handleBeforeCreate(){
+        this.createdAt = Instant.now();
+    }
+
+    @PreUpdate
+    public void handleBeforeUpdate(){
+        this.updatedAt = Instant.now();
+    }
 }

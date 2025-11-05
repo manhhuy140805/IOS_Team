@@ -8,6 +8,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+
+import java.sql.Date;
 import java.time.OffsetDateTime;
 import lombok.Getter;
 import lombok.Setter;
@@ -24,16 +26,13 @@ public class EventRegistration {
     private Integer id;
 
     @Column(nullable = false, columnDefinition = "longtext")
-    private String status;
+    private String status="pending"; // nào ổn rồi làm kiểu enum sau nhé
 
     @Column(nullable = false)
-    private Integer checkIn;
+    private Boolean checkIn;
 
     @Column(nullable = false)
-    private OffsetDateTime joinDate;
-
-    @Column(nullable = false)
-    private Integer completedHours;
+    private Date joinDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
