@@ -23,7 +23,6 @@ public class AuthController {
     public ResponseEntity<RestResponse<UserResponse>> register(
             @Valid @RequestBody RegisterRequest request) {
 
-        // Gọi service xử lý logic
         return authService.register(request);
     }
 
@@ -31,7 +30,6 @@ public class AuthController {
     public ResponseEntity<RestResponse<LoginResponse>> login(
             @Valid @RequestBody LoginRequest request) {
 
-        // Gọi service xử lý logic
         return authService.login(request);
     }
 }
