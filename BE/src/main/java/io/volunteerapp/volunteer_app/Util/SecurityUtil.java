@@ -31,29 +31,14 @@ public class SecurityUtil {
     @Value("${jwt.refresh-token-validity-in-seconds}")
     private long refreshTokenExpiration;
 
-    /**
-     * Tạo JWT Access Token
-     * 
-     * LUỒNG HOẠT ĐỘNG:
-     * 1. Lấy thông tin user (email, id, role)
-     * 2. Tạo JWT với claim "scope" chứa ROLE_ADMIN hoặc ROLE_USER
-     * 3. Spring Security sẽ tự động parse "scope" thành GrantedAuthority
-     * 4. Khi dùng @PreAuthorize("hasRole('ROLE_ADMIN')"), Spring sẽ check
-     * authorities này
-     * 
-     * @param user - User entity chứa thông tin user
-     * @return JWT token string
-     */
     public String generateAccessToken(User user) {
         try {
-            // Header: thuật toán HS512
             JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
 
-            // Payload: thông tin user và quyền
             JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
-                    .subject(user.getEmail()) // Subject: email của user
-                    .issuer("VolunteerApp") // Issuer: tên app
-                    .issueTime(new java.util.Date()) // Thời gian tạo token
+                    .subject(user.getEmail())
+                    .issuer("VolunteerApp")
+                    .issueTime(new java.util.Date())
                     .expirationTime(new java.util.Date(
                             Instant.now().plus(this.accessTokenExpiration, ChronoUnit.SECONDS).toEpochMilli())) // Thời
                                                                                                                 // gian

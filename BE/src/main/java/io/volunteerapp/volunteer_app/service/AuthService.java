@@ -20,14 +20,17 @@ import java.util.Optional;
 @Service
 public class AuthService {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private SecurityUtil securityUtil;
+    private final SecurityUtil securityUtil;
+
+    public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder, SecurityUtil securityUtil) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.securityUtil = securityUtil;
+    }
 
     public ResponseEntity<RestResponse<UserResponse>> register(RegisterRequest request) {
 
