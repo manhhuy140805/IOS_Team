@@ -14,7 +14,6 @@ import java.time.OffsetDateTime;
 import lombok.Getter;
 import lombok.Setter;
 
-
 @Entity
 @Getter
 @Setter
@@ -25,8 +24,8 @@ public class EventRegistration {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(nullable = false, columnDefinition = "longtext")
-    private String status="pending"; // nào ổn rồi làm kiểu enum sau nhé
+    @Column(nullable = false)
+    private String status = "pending"; // nào ổn rồi làm kiểu enum sau nhé
 
     @Column(nullable = false)
     private Boolean checkIn;

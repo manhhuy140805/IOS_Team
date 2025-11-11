@@ -9,9 +9,8 @@ import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
 
-
-
 @Entity
+@Table(name = "users") // Đổi tên table vì "user" là reserved keyword trong PostgreSQL
 @Getter
 @Setter
 public class User {
@@ -21,24 +20,24 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-      private String fullName;
+    private String fullName;
 
-    @Column(nullable = false, columnDefinition = "longtext")
+    @Column(nullable = false)
     private String email;
 
-    @Column(nullable = false, columnDefinition = "longtext")
+    @Column(nullable = false)
     private String password;
 
-    @Column(columnDefinition = "longtext")
+    @Column
     private String phone;
 
-    @Column(columnDefinition = "longtext")
+    @Column
     private String avatarUrl;
 
     @Column(nullable = false)
     private String role;
 
-    @Column(nullable = false, columnDefinition = "longtext")
+    @Column(nullable = false)
     private String status;
 
     private Instant createdAt;
@@ -55,15 +54,13 @@ public class User {
     @OneToMany(mappedBy = "user")
     private Set<UserReward> userUserRewards = new HashSet<>();
 
-
-
     @PrePersist
-    public void handleBeforeCreate(){
+    public void handleBeforeCreate() {
         this.createdAt = Instant.now();
     }
 
     @PreUpdate
-    public void handleBeforeUpdate(){
+    public void handleBeforeUpdate() {
         this.updatedAt = Instant.now();
     }
 }

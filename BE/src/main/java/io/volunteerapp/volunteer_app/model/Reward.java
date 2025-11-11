@@ -9,7 +9,6 @@ import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
 
-
 @Entity
 @Getter
 @Setter
@@ -20,10 +19,10 @@ public class Reward {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(nullable = false, columnDefinition = "longtext")
+    @Column(nullable = false)
     private String name;
 
-    @Column(columnDefinition = "longtext", name = "\"description\"")
+    @Column(name = "\"description\"")
     private String description;
 
     @Column(nullable = false)
@@ -32,7 +31,6 @@ public class Reward {
     @Column(nullable = false)
     private Integer quantity;
 
-
     private Instant createdAt;
 
     private Instant updatedAt;
@@ -40,14 +38,13 @@ public class Reward {
     @OneToMany(mappedBy = "reward")
     private Set<UserReward> rewardUserRewards = new HashSet<>();
 
-
     @PrePersist
-    public void handleBeforeCreate (){
+    public void handleBeforeCreate() {
         this.createdAt = Instant.now();
     }
 
     @PreUpdate
-    public void handleBeforeUpdate (){
+    public void handleBeforeUpdate() {
         this.updatedAt = Instant.now();
     }
 }

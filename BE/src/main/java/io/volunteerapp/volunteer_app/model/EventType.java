@@ -11,7 +11,6 @@ import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
 
-
 @Entity
 @Getter
 @Setter
@@ -22,10 +21,10 @@ public class EventType {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(nullable = false, columnDefinition = "longtext")
+    @Column(nullable = false)
     private String name;
 
-    @Column(columnDefinition = "longtext", name = "\"description\"")
+    @Column(name = "\"description\"")
     private String description;
 
     @OneToMany(mappedBy = "eventType")

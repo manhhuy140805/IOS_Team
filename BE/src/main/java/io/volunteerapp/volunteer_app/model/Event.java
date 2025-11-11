@@ -11,7 +11,6 @@ import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
 
-
 @Entity
 @Getter
 @Setter
@@ -22,43 +21,37 @@ public class Event {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(nullable = false, columnDefinition = "longtext")
+    @Column(nullable = false)
     private String title;
-
 
     private String description;
 
-    //vị trí đưa ra
+    // vị trí đưa ra
     private String location;
 
-    //     thời gian mở đăng ky khác với thời gian diễn ra sự kiện
-//    đây là thời gian diễn ra sự kiện
+    // thời gian mở đăng ky khác với thời gian diễn ra sự kiện
+    // đây là thời gian diễn ra sự kiện
     @Column(nullable = false)
     private Date eventStartTime;
 
     @Column(nullable = false)
     private Date eventEndTime;
 
-    //    đây là thời gian cho phép đăng ky sự kiện
+    // đây là thời gian cho phép đăng ky sự kiện
     private Date registrationOpenTime;
     private Date registrationCloseTime;
 
-
-//    số lượng người đăng kí tối đa
+    // số lượng người đăng kí tối đa
     @Column(nullable = false)
     private Integer numOfVolunteers;
 
-
-//    số sao thưởng có thể null vì có thể sự kiện không có thưởng
+    // số sao thưởng có thể null vì có thể sự kiện không có thưởng
     private Integer rewardPoints;
-
-
 
     private String status;
 
-    @Column(nullable = true )
-    private Boolean hasCertificate= false;
-
+    @Column(nullable = true)
+    private Boolean hasCertificate = false;
 
     private Instant createdAt;
 
@@ -75,7 +68,6 @@ public class Event {
     @OneToMany(mappedBy = "event")
     private Set<EventRegistration> eventEventRegistrations = new HashSet<>();
 
-
     @PrePersist
     public void hanleBeforeCreate() {
         this.createdAt = Instant.now();
@@ -85,6 +77,5 @@ public class Event {
     public void handleBeforeUpdate() {
         this.updatedAt = Instant.now();
     }
-
 
 }
