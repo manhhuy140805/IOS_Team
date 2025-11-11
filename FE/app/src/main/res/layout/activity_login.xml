@@ -76,7 +76,7 @@
 
                         android:drawableStart="@drawable/ic_group"
                         android:drawablePadding="8dp"
-                        android:background="@drawable/bg_rounded_border"
+                        android:background="@drawable/bg_rounded_lite"
                         android:paddingStart="16dp"
                         android:paddingEnd="16dp"
                         android:paddingTop="8dp"
@@ -90,6 +90,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Email / SĐT"
+                        android:textStyle="bold"
                         android:textColor="@color/text_primary"
                         android:textSize="14sp"
                         android:layout_marginBottom="4dp"/>
@@ -113,6 +114,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Mật khẩu"
+                        android:textStyle="bold"
                         android:textColor="@color/text_primary"
                         android:textSize="14sp"
                         android:layout_marginTop="16dp"
@@ -159,16 +161,30 @@
                         android:paddingTop="12dp"
                         android:paddingBottom="12dp"/>
 
-                    <TextView
-                        android:id="@+id/tv_create_account"
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Bạn chưa có tài khoản? Tạo tài khoản"
-                        android:textColor="@color/text_secondary"
-                        android:layout_marginTop="24dp"
-                        android:paddingBottom="12dp"
-                        android:layout_gravity="center_horizontal"/>
+                        android:gravity="center"
+                        android:orientation="horizontal">
 
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Bạn chưa có tài khoản? "
+                            android:textColor="@color/text_secondary"
+                            android:textSize="14sp"/>
+
+                        <TextView
+                            android:id="@+id/tv_register_link"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Đăng kí ngay"
+                            android:textColor="@color/green_primary"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            android:clickable="true"
+                            android:focusable="true"/>
+                    </LinearLayout>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
         </androidx.constraintlayout.widget.ConstraintLayout>
