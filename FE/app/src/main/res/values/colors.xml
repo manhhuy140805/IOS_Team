@@ -9,4 +9,10 @@
     <color name="text_primary">#212529</color>
     <color name="text_secondary">#6C757D</color>
     <color name="gray_300">#E0E0E0</color>
+    
+    <!-- Redeem Colors -->
+    <color name="cyan">#00BCD4</color>
+    <color name="pink">#E91E63</color>
+    <color name="orange">#FF9800</color>
+    <color name="purple">#B39DDB</color>
 </resources>
