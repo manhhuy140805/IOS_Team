@@ -1,0 +1,148 @@
+<resources>
+    <!-- Categories -->
+    <string-array name="reward_categories">
+        <item>Tất cả</item>
+        <item>Voucher</item>
+        <item>Quà tặng</item>
+        <item>Cơ hội</item>
+    </string-array>
+
+    <!-- Reward Items - Names -->
+    <string-array name="reward_names">
+        <item>Voucher Highlands Coffee 50k</item>
+        <item>Bộ quà tặng văn phòng phẩm</item>
+        <item>Voucher Pizza Hut 100k</item>
+        <item>Chương nhận Tình nguyện viên săc</item>
+        <item>Áo thun tình nguyện viên</item>
+        <item>Vé xem phim CGV 2D</item>
+        <item>Sách "Nghệ thuật tình nguyện"</item>
+        <item>Voucher The Coffee House 30k</item>
+        <item>Balo canvas Volunteer Impact</item>
+        <item>Cây xanh mini để bàn</item>
+    </string-array>
+
+    <!-- Reward Items - Organizations -->
+    <string-array name="reward_organizations">
+        <item>Highlands Coffee</item>
+        <item>GreenOffice</item>
+        <item>Pizza Hut</item>
+        <item>Volunteer Impact</item>
+        <item>GreenThread</item>
+        <item>CGV Cinemas</item>
+        <item>BookHub</item>
+        <item>The Coffee House</item>
+        <item>CanvasWorks</item>
+        <item>GreenLife</item>
+    </string-array>
+
+    <!-- Reward Items - Descriptions -->
+    <string-array name="reward_descriptions">
+        <item>Giảm 50k cho hóa đơn từ 100.000đ trở lên\n\nHSD: Sau khi đổi 30 ngày</item>
+        <item>Sổ tay, bút, túi sổ tách thiết kế môi trường</item>
+        <item>Giảm giá 100k cho hóa đơn từ 800k trở lên</item>
+        <item>Chứng nhận chính thức cho tình nguyện viên</item>
+        <item>Áo cotton 100%, thiết kế độc quyền\n\nSize: S, M, L, XL</item>
+        <item>1 vé xem phim 2D tại toàn bộ rạp CGV</item>
+        <item>Cuốn sách về kỹ năng và ý nghĩa tình nguyện</item>
+        <item>Giảm 30.000đ cho hóa đơn từ 50.000đ</item>
+        <item>Balo vải canvas bền đẹp, thiết kế ngắn gọn, thời trang</item>
+        <item>Cây xanh mini để bàn hoặc trang trí\n\nKích thước: Nhỏ gọn</item>
+    </string-array>
+
+    <!-- Reward Items - Points -->
+    <string-array name="reward_points">
+        <item>500</item>
+        <item>800</item>
+        <item>900</item>
+        <item>2,000</item>
+        <item>1,500</item>
+        <item>700</item>
+        <item>600</item>
+        <item>300</item>
+        <item>1,800</item>
+        <item>400</item>
+    </string-array>
+
+    <!-- Reward Items - Stock -->
+    <string-array name="reward_stock">
+        <item>48</item>
+        <item>26</item>
+        <item>62</item>
+        <item>Unlimited</item>
+        <item>15</item>
+        <item>38</item>
+        <item>22</item>
+        <item>89</item>
+        <item>12</item>
+        <item>34</item>
+    </string-array>
+
+    <!-- Reward Items - Expiry Dates -->
+    <string-array name="reward_expiry">
+        <item>HSD: 01/12/2025</item>
+        <item>Còn hàng mới phẩm</item>
+        <item>HSD: 18/01/2026</item>
+        <item></item>
+        <item>Hết: 5, M, L, XL</item>
+        <item>HSD: 30/11/2025</item>
+        <item>30 trang</item>
+        <item>HSD: 15/01/2026</item>
+        <item>Màu: Xanh, Đen</item>
+        <item>25 chậu còn</item>
+    </string-array>
+
+    <!-- Reward Items - Categories (0=all, 1=voucher, 2=gift, 3=opportunity) -->
+    <integer-array name="reward_category_types">
+        <item>1</item> <!-- Voucher Highlands -->
+        <item>2</item> <!-- Gift Box -->
+        <item>1</item> <!-- Pizza Hut Voucher -->
+        <item>3</item> <!-- Certificate -->
+        <item>2</item> <!-- T-shirt -->
+        <item>3</item> <!-- Movie Ticket -->
+        <item>2</item> <!-- Book -->
+        <item>1</item> <!-- Coffee House Voucher -->
+        <item>2</item> <!-- Backpack -->
+        <item>2</item> <!-- Mini Plant -->
+    </integer-array>
+
+    <!-- Reward Items - Tags -->
+    <string-array name="reward_tag1">
+        <item>Ẩm uống</item>
+        <item>Chính thức</item>
+        <item>Ẩm uống</item>
+        <item>Chứng nhận</item>
+        <item>Merchandise</item>
+        <item>Giải trí</item>
+        <item>Tri thức</item>
+        <item>Ẩm uống</item>
+        <item>Merchandise</item>
+        <item>Trang trí</item>
+    </string-array>
+
+    <string-array name="reward_tag2">
+        <item>Phổ biến</item>
+        <item>Eco-Friendly</item>
+        <item></item>
+        <item>Đặc biệt</item>
+        <item>Giới hạn</item>
+        <item></item>
+        <item></item>
+        <item></item>
+        <item>Đặc sản</item>
+        <item></item>
+    </string-array>
+
+    <!-- Reward Icon Colors (indices for backgrounds) -->
+    <integer-array name="reward_icon_colors">
+        <item>0</item> <!-- Purple - Highlands -->
+        <item>1</item> <!-- Pink - Gift Box -->
+        <item>0</item> <!-- Purple - Pizza -->
+        <item>2</item> <!-- Orange - Certificate -->
+        <item>3</item> <!-- Cyan - T-shirt -->
+        <item>0</item> <!-- Purple - Movie -->
+        <item>1</item> <!-- Pink - Book -->
+        <item>0</item> <!-- Purple - Coffee -->
+        <item>3</item> <!-- Cyan - Backpack -->
+        <item>1</item> <!-- Pink - Plant -->
+    </integer-array>
+</resources>
