@@ -10,7 +10,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 
 import java.sql.Date;
-import java.time.OffsetDateTime;
 import lombok.Getter;
 import lombok.Setter;
 
