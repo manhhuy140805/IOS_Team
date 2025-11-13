@@ -16,7 +16,7 @@ import androidx.core.content.ContextCompat;
 
 import com.manhhuy.myapplication.R;
 
-public class xSendNotificationActivity extends AppCompatActivity {
+public class SendNotificationActivity extends AppCompatActivity {
 
     // UI Components
     private ImageView btnBack;
