@@ -278,7 +278,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Mọi ưu đãi hoặc phần thưởng này bất kỳ điểm nào khác không được hoàn lại"
-            android:textAlign="center"
+            android:textAlignment="center"
             android:textColor="#9E9E9E"
             android:textSize="10sp" />
 

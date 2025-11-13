@@ -232,7 +232,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
                             android:text="Thay đổi lịch"
-                            android:textAlign="center"
+                            android:textAlignment="center"
                             android:textColor="#212121"
                             android:textSize="12sp"
                             android:textStyle="bold" />
@@ -270,7 +270,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
                             android:text="Hủy hoạt động"
-                            android:textAlign="center"
+                            android:textAlignment="center"
                             android:textColor="#212121"
                             android:textSize="12sp"
                             android:textStyle="bold" />
@@ -308,7 +308,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
                             android:text="Thông tin"
-                            android:textAlign="center"
+                            android:textAlignment="center"
                             android:textColor="#212121"
                             android:textSize="12sp"
                             android:textStyle="bold" />
