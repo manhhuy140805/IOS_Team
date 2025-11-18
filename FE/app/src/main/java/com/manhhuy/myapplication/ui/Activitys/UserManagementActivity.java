@@ -20,6 +20,7 @@ import com.manhhuy.myapplication.adapter.UserAdapter;
 import com.manhhuy.myapplication.adapter.OrganizationAdapter;
 import com.manhhuy.myapplication.model.User;
 import com.manhhuy.myapplication.model.Organization;
+import com.manhhuy.myapplication.databinding.ActivityUserManagementBinding;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +28,7 @@ import java.util.List;
 
 public class UserManagementActivity extends AppCompatActivity implements UserAdapter.OnUserActionListener, OrganizationAdapter.OnOrganizationActionListener {
 
+    private ActivityUserManagementBinding binding;
     private RecyclerView rvUserList, rvOrgList;
     private UserAdapter userAdapter;
     private OrganizationAdapter organizationAdapter;
@@ -35,15 +37,6 @@ public class UserManagementActivity extends AppCompatActivity implements UserAda
     private List<Organization> organizationList;
     private List<Organization> filteredOrgList;
 
-    private TextView tvTotalUsers, tvActiveUsers, tvLockedUsers;
-    private TextView tvTotalOrgs, tvActiveOrgs, tvLockedOrgs;
-    private EditText etSearch, etOrgSearch;
-    private ImageView btnBack;
-    private LinearLayout tabUsers, tabOrganizations, llOrgStats, llUserStats;
-    private TextView btnFilterAll, btnFilterActive, btnFilterLocked, btnFilterPending;
-    private TextView btnOrgFilterAll, btnOrgFilterActive, btnOrgFilterLocked, btnOrgFilterPending;
-    private View cvOrgSearch, hvOrgFilter, cvUserSearch, hvUserFilter;
-
     private String currentUserFilter = "Tất cả";
     private String currentOrgFilter = "Tất cả";
     private boolean isUsersTab = true;
@@ -51,7 +44,9 @@ public class UserManagementActivity extends AppCompatActivity implements UserAda
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_user_management);
+        
+        binding = ActivityUserManagementBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
         initViews();
         setupRecyclerView();
@@ -62,65 +57,22 @@ public class UserManagementActivity extends AppCompatActivity implements UserAda
 
     private void initViews() {
         // Statistics
-        tvTotalUsers = findViewById(R.id.tvTotalUsers);
-        tvActiveUsers = findViewById(R.id.tvActiveUsers);
-        tvLockedUsers = findViewById(R.id.tvLockedUsers);
-        tvTotalOrgs = findViewById(R.id.tvTotalOrgs);
-        tvActiveOrgs = findViewById(R.id.tvActiveOrgs);
-        tvLockedOrgs = findViewById(R.id.tvLockedOrgs);
-
-        // Search
-        etSearch = findViewById(R.id.etSearch);
-        etOrgSearch = findViewById(R.id.etOrgSearch);
-
-        // Back button
-        btnBack = findViewById(R.id.btnBack);
-
-        // Tabs
-        tabUsers = findViewById(R.id.tabUsers);
-        tabOrganizations = findViewById(R.id.tabOrganizations);
-
-        // Organization stats container
-        llOrgStats = findViewById(R.id.llOrgStats);
-
-        // User stats container
-        llUserStats = findViewById(R.id.llUserStats);
-
-        // Search and filter containers
-        cvOrgSearch = findViewById(R.id.cvOrgSearch);
-        hvOrgFilter = findViewById(R.id.hvOrgFilter);
-        cvUserSearch = findViewById(R.id.cvUserSearch);
-        hvUserFilter = findViewById(R.id.hvUserFilter);
-
-        // Filter buttons for Users
-        btnFilterAll = findViewById(R.id.btnFilterAll);
-        btnFilterActive = findViewById(R.id.btnFilterActive);
-        btnFilterLocked = findViewById(R.id.btnFilterLocked);
-        btnFilterPending = findViewById(R.id.btnFilterPending);
-
-        // Filter buttons for Organizations
-        btnOrgFilterAll = findViewById(R.id.btnOrgFilterAll);
-        btnOrgFilterActive = findViewById(R.id.btnOrgFilterActive);
-        btnOrgFilterLocked = findViewById(R.id.btnOrgFilterLocked);
-        btnOrgFilterPending = findViewById(R.id.btnOrgFilterPending);
-
-        // RecyclerViews
-        rvUserList = findViewById(R.id.rvUserList);
-        rvOrgList = findViewById(R.id.rvOrgList);
+        rvUserList = binding.rvUserList;
+        rvOrgList = binding.rvOrgList;
     }
 
     private void setupRecyclerView() {
         userList = new ArrayList<>();
         filteredUserList = new ArrayList<>();
         userAdapter = new UserAdapter(filteredUserList, this);
-        rvUserList.setLayoutManager(new LinearLayoutManager(this));
-        rvUserList.setAdapter(userAdapter);
+        binding.rvUserList.setLayoutManager(new LinearLayoutManager(this));
+        binding.rvUserList.setAdapter(userAdapter);
 
         organizationList = new ArrayList<>();
         filteredOrgList = new ArrayList<>();
         organizationAdapter = new OrganizationAdapter(filteredOrgList, this);
-        rvOrgList.setLayoutManager(new LinearLayoutManager(this));
-        rvOrgList.setAdapter(organizationAdapter);
+        binding.rvOrgList.setLayoutManager(new LinearLayoutManager(this));
+        binding.rvOrgList.setAdapter(organizationAdapter);
     }
 
     private void loadSampleData() {
@@ -194,14 +146,14 @@ public class UserManagementActivity extends AppCompatActivity implements UserAda
     }
 
     private void setupListeners() {
-        btnBack.setOnClickListener(v -> finish());
+        binding.btnBack.setOnClickListener(v -> finish());
 
         // Tab click listeners
-        tabUsers.setOnClickListener(v -> switchToUsersTab());
-        tabOrganizations.setOnClickListener(v -> switchToOrganizationsTab());
+        binding.tabUsers.setOnClickListener(v -> switchToUsersTab());
+        binding.tabOrganizations.setOnClickListener(v -> switchToOrganizationsTab());
 
         // User Search functionality
-        etSearch.addTextChangedListener(new TextWatcher() {
+        binding.etSearch.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
@@ -215,7 +167,7 @@ public class UserManagementActivity extends AppCompatActivity implements UserAda
         });
 
         // Organization Search functionality
-        etOrgSearch.addTextChangedListener(new TextWatcher() {
+        binding.etOrgSearch.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
@@ -229,31 +181,31 @@ public class UserManagementActivity extends AppCompatActivity implements UserAda
         });
 
         // User Filter buttons
-        btnFilterAll.setOnClickListener(v -> setUserFilter("Tất cả", btnFilterAll));
-        btnFilterActive.setOnClickListener(v -> setUserFilter("Hoạt động", btnFilterActive));
-        btnFilterLocked.setOnClickListener(v -> setUserFilter("Bị khóa", btnFilterLocked));
-        btnFilterPending.setOnClickListener(v -> setUserFilter("Chờ xác thực", btnFilterPending));
+        binding.btnFilterAll.setOnClickListener(v -> setUserFilter("Tất cả", binding.btnFilterAll));
+        binding.btnFilterActive.setOnClickListener(v -> setUserFilter("Hoạt động", binding.btnFilterActive));
+        binding.btnFilterLocked.setOnClickListener(v -> setUserFilter("Bị khóa", binding.btnFilterLocked));
+        binding.btnFilterPending.setOnClickListener(v -> setUserFilter("Chờ xác thực", binding.btnFilterPending));
 
         // Organization Filter buttons
-        btnOrgFilterAll.setOnClickListener(v -> setOrgFilter("Tất cả", btnOrgFilterAll));
-        btnOrgFilterActive.setOnClickListener(v -> setOrgFilter("Hoạt động", btnOrgFilterActive));
-        btnOrgFilterLocked.setOnClickListener(v -> setOrgFilter("Bị khóa", btnOrgFilterLocked));
-        btnOrgFilterPending.setOnClickListener(v -> setOrgFilter("Chờ xác thực", btnOrgFilterPending));
+        binding.btnOrgFilterAll.setOnClickListener(v -> setOrgFilter("Tất cả", binding.btnOrgFilterAll));
+        binding.btnOrgFilterActive.setOnClickListener(v -> setOrgFilter("Hoạt động", binding.btnOrgFilterActive));
+        binding.btnOrgFilterLocked.setOnClickListener(v -> setOrgFilter("Bị khóa", binding.btnOrgFilterLocked));
+        binding.btnOrgFilterPending.setOnClickListener(v -> setOrgFilter("Chờ xác thực", binding.btnOrgFilterPending));
     }
 
     private void switchToUsersTab() {
         isUsersTab = true;
         // Hide organization UI
-        llOrgStats.setVisibility(View.GONE);
-        cvOrgSearch.setVisibility(View.GONE);
-        hvOrgFilter.setVisibility(View.GONE);
-        rvOrgList.setVisibility(View.GONE);
+        binding.llOrgStats.setVisibility(View.GONE);
+        binding.cvOrgSearch.setVisibility(View.GONE);
+        binding.hvOrgFilter.setVisibility(View.GONE);
+        binding.rvOrgList.setVisibility(View.GONE);
 
         // Show user UI
-        llUserStats.setVisibility(View.VISIBLE);
-        cvUserSearch.setVisibility(View.VISIBLE);
-        hvUserFilter.setVisibility(View.VISIBLE);
-        rvUserList.setVisibility(View.VISIBLE);
+        binding.llUserStats.setVisibility(View.VISIBLE);
+        binding.cvUserSearch.setVisibility(View.VISIBLE);
+        binding.hvUserFilter.setVisibility(View.VISIBLE);
+        binding.rvUserList.setVisibility(View.VISIBLE);
 
         // Update tab colors
         updateTabColors();
@@ -262,16 +214,16 @@ public class UserManagementActivity extends AppCompatActivity implements UserAda
     private void switchToOrganizationsTab() {
         isUsersTab = false;
         // Hide user UI
-        llUserStats.setVisibility(View.GONE);
-        cvUserSearch.setVisibility(View.GONE);
-        hvUserFilter.setVisibility(View.GONE);
-        rvUserList.setVisibility(View.GONE);
+        binding.llUserStats.setVisibility(View.GONE);
+        binding.cvUserSearch.setVisibility(View.GONE);
+        binding.hvUserFilter.setVisibility(View.GONE);
+        binding.rvUserList.setVisibility(View.GONE);
 
         // Show organization UI
-        llOrgStats.setVisibility(View.VISIBLE);
-        cvOrgSearch.setVisibility(View.VISIBLE);
-        hvOrgFilter.setVisibility(View.VISIBLE);
-        rvOrgList.setVisibility(View.VISIBLE);
+        binding.llOrgStats.setVisibility(View.VISIBLE);
+        binding.cvOrgSearch.setVisibility(View.VISIBLE);
+        binding.hvOrgFilter.setVisibility(View.VISIBLE);
+        binding.rvOrgList.setVisibility(View.VISIBLE);
 
         // Update tab colors
         updateTabColors();
@@ -280,20 +232,20 @@ public class UserManagementActivity extends AppCompatActivity implements UserAda
     private void updateTabColors() {
         if (isUsersTab) {
             // Users tab active
-            ((ImageView) tabUsers.getChildAt(0)).setColorFilter(getColor(R.color.green_primary));
-            ((TextView) tabUsers.getChildAt(1)).setTextColor(getColor(R.color.green_primary));
+            ((ImageView) binding.tabUsers.getChildAt(0)).setColorFilter(getColor(R.color.green_primary));
+            ((TextView) binding.tabUsers.getChildAt(1)).setTextColor(getColor(R.color.green_primary));
 
             // Organizations tab inactive
-            ((ImageView) tabOrganizations.getChildAt(0)).setColorFilter(getColor(R.color.text_secondary));
-            ((TextView) tabOrganizations.getChildAt(1)).setTextColor(getColor(R.color.text_secondary));
+            ((ImageView) binding.tabOrganizations.getChildAt(0)).setColorFilter(getColor(R.color.text_secondary));
+            ((TextView) binding.tabOrganizations.getChildAt(1)).setTextColor(getColor(R.color.text_secondary));
         } else {
             // Organizations tab active
-            ((ImageView) tabOrganizations.getChildAt(0)).setColorFilter(getColor(R.color.green_primary));
-            ((TextView) tabOrganizations.getChildAt(1)).setTextColor(getColor(R.color.green_primary));
+            ((ImageView) binding.tabOrganizations.getChildAt(0)).setColorFilter(getColor(R.color.green_primary));
+            ((TextView) binding.tabOrganizations.getChildAt(1)).setTextColor(getColor(R.color.green_primary));
 
             // Users tab inactive
-            ((ImageView) tabUsers.getChildAt(0)).setColorFilter(getColor(R.color.text_secondary));
-            ((TextView) tabUsers.getChildAt(1)).setTextColor(getColor(R.color.text_secondary));
+            ((ImageView) binding.tabUsers.getChildAt(0)).setColorFilter(getColor(R.color.text_secondary));
+            ((TextView) binding.tabUsers.getChildAt(1)).setTextColor(getColor(R.color.text_secondary));
         }
     }
 
@@ -301,33 +253,33 @@ public class UserManagementActivity extends AppCompatActivity implements UserAda
         currentUserFilter = filter;
 
         // Reset all buttons
-        resetFilterButton(btnFilterAll);
-        resetFilterButton(btnFilterActive);
-        resetFilterButton(btnFilterLocked);
-        resetFilterButton(btnFilterPending);
+        resetFilterButton(binding.btnFilterAll);
+        resetFilterButton(binding.btnFilterActive);
+        resetFilterButton(binding.btnFilterLocked);
+        resetFilterButton(binding.btnFilterPending);
 
         // Highlight selected button
         selectedButton.setBackgroundResource(R.drawable.bg_filter_selected);
         selectedButton.setTextColor(getColor(R.color.white));
 
         // Apply filter
-        filterUsers(etSearch.getText().toString());
+        filterUsers(binding.etSearch.getText().toString());
     }
 
     private void setOrgFilter(String filter, TextView selectedButton) {
         currentOrgFilter = filter;
         // Reset all buttons
-        resetFilterButton(btnOrgFilterAll);
-        resetFilterButton(btnOrgFilterActive);
-        resetFilterButton(btnOrgFilterLocked);
-        resetFilterButton(btnOrgFilterPending);
+        resetFilterButton(binding.btnOrgFilterAll);
+        resetFilterButton(binding.btnOrgFilterActive);
+        resetFilterButton(binding.btnOrgFilterLocked);
+        resetFilterButton(binding.btnOrgFilterPending);
 
         // Highlight selected button
         selectedButton.setBackgroundResource(R.drawable.bg_filter_selected);
         selectedButton.setTextColor(getColor(R.color.white));
 
         // Apply filter
-        filterOrganizations(etOrgSearch.getText().toString());
+        filterOrganizations(binding.etOrgSearch.getText().toString());
     }
 
     private void resetFilterButton(TextView button) {
@@ -386,9 +338,9 @@ public class UserManagementActivity extends AppCompatActivity implements UserAda
             }
         }
 
-        tvTotalUsers.setText(String.valueOf(totalUsers));
-        tvActiveUsers.setText(String.valueOf(activeUsers));
-        tvLockedUsers.setText(String.valueOf(lockedUsers));
+        binding.tvTotalUsers.setText(String.valueOf(totalUsers));
+        binding.tvActiveUsers.setText(String.valueOf(activeUsers));
+        binding.tvLockedUsers.setText(String.valueOf(lockedUsers));
 
         int totalOrgs = organizationList.size();
         int activeOrgs = 0;
@@ -402,9 +354,9 @@ public class UserManagementActivity extends AppCompatActivity implements UserAda
             }
         }
 
-        tvTotalOrgs.setText(String.valueOf(totalOrgs));
-        tvActiveOrgs.setText(String.valueOf(activeOrgs));
-        tvLockedOrgs.setText(String.valueOf(lockedOrgs));
+        binding.tvTotalOrgs.setText(String.valueOf(totalOrgs));
+        binding.tvActiveOrgs.setText(String.valueOf(activeOrgs));
+        binding.tvLockedOrgs.setText(String.valueOf(lockedOrgs));
     }
 
     @Override
