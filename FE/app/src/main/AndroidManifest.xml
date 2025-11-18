@@ -44,10 +44,6 @@
 
         </activity>
         <activity
-            android:name=".ui.Activitys.SendNotificationActivity"
-            android:exported="false">
-        </activity>
-        <activity
             android:name=".ui.Activitys.RedeemActivity"
             android:exported="false">
         </activity>
