@@ -43,6 +43,7 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
+<<<<<<< HEAD
     implementation("androidx.viewpager2:viewpager2:1.0.0")
     implementation("com.google.android.material:material:1.12.0")
     implementation("androidx.cardview:cardview:1.0.0")
@@ -54,4 +55,10 @@ dependencies {
     implementation("androidx.constraintlayout:constraintlayout:2.2.0-alpha10")
 //
 
+=======
+    
+    // Glide for image loading
+    implementation(libs.glide)
+    annotationProcessor(libs.glide.compiler)
+>>>>>>> ce381da3e9fe6ab7fc1274e2917eb7d5a698c5a6
 }
