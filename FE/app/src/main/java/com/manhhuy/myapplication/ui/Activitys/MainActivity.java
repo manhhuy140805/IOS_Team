@@ -16,11 +16,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        
         // Initialize views
         MaterialToolbar toolbar = findViewById(R.id.toolbar);
         FloatingActionButton fab = findViewById(R.id.fab);
-
+        
         // Setup Toolbar
         setSupportActionBar(toolbar);
         toolbar.setOnMenuItemClickListener(item -> {
@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
             }
             return false;
         });
-
+        
         // Setup FAB
         fab.setOnClickListener(view -> Snackbar.make(view, "FAB Clicked - Material Design 3!", Snackbar.LENGTH_LONG)
                 .setAction("Action", v -> Toast.makeText(this, "Action clicked", Toast.LENGTH_SHORT).show())
