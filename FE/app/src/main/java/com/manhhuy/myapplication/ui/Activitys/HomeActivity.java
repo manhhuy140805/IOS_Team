@@ -16,7 +16,8 @@ import com.manhhuy.myapplication.databinding.ActivityHomeBinding;
 
 public class HomeActivity extends AppCompatActivity {
     private ActivityHomeBinding binding;
-    private final  String[] tabtitles= new String[]{"Home","Event","Rewards","Profile"};
+    private final String[] tabtitles = new String[] { "Home", "Event", "Rewards", "Profile" };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,14 +29,13 @@ public class HomeActivity extends AppCompatActivity {
             return insets;
         });
 
-        HomeAdapter homeAdapter= new HomeAdapter(this);
+        HomeAdapter homeAdapter = new HomeAdapter(this);
 
         binding.viewPager.setAdapter(homeAdapter);
-        new TabLayoutMediator(binding.tabLayout, binding.viewPager, (tab, position)->{
+        new TabLayoutMediator(binding.tabLayout, binding.viewPager, (tab, position) -> {
             tab.setText(tabtitles[position]);
         }).attach();
     }
-
 
     @Override
     public void onBackPressed() {

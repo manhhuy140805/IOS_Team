@@ -54,4 +54,7 @@ dependencies {
     implementation("androidx.constraintlayout:constraintlayout:2.2.0-alpha10")
 //
 
+    // Glide for image loading
+    implementation(libs.glide)
+    annotationProcessor(libs.glide.compiler)
 }
