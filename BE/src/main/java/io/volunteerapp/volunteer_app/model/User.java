@@ -3,7 +3,6 @@ package io.volunteerapp.volunteer_app.model;
 import jakarta.persistence.*;
 
 import java.time.Instant;
-import java.time.OffsetDateTime;
 import java.util.HashSet;
 import java.util.Set;
 import lombok.Getter;

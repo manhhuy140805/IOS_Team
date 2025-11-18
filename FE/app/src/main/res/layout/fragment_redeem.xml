@@ -6,8 +6,7 @@
     android:layout_height="match_parent"
     android:background="#F5F5F5"
     android:orientation="vertical"
-    tools:context=".ui.Activitys.RedeemActivity">
-
+    tools:context=".ui.Activitys.Fragment.RedeemFragment">
     <!-- Header with Points Card -->
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
@@ -54,7 +53,7 @@
                     android:layout_width="32dp"
                     android:layout_height="32dp"
                     android:src="@drawable/ic_coin"
-                    app:tint="#FFFFFF" />
+                    />
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -67,7 +66,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Điểm của bạn"
-                        android:textColor="#E0F7FA"
+                        android:textColor="#000000"
                         android:textSize="12sp" />
 
                     <TextView
@@ -75,7 +74,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="1,250"
-                        android:textColor="#FFFFFF"
+                        android:textColor="#000000"
                         android:textSize="28sp"
                         android:textStyle="bold" />
                 </LinearLayout>
@@ -91,7 +90,7 @@
                     android:paddingHorizontal="12dp"
                     android:paddingVertical="6dp"
                     android:text="Lịch sử"
-                    android:textColor="#FFFFFF"
+                    android:textColor="#000000"
                     android:textSize="12sp"
                     android:textStyle="bold" />
 
@@ -100,7 +99,7 @@
                     android:layout_height="16dp"
                     android:layout_marginStart="4dp"
                     android:src="@drawable/ic_arrow_right"
-                    app:tint="#FFFFFF" />
+                    />
             </LinearLayout>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
@@ -221,6 +220,9 @@
     </LinearLayout>
 
     <!-- RecyclerView for Rewards -->
+
+    <!-- Empty State -->
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvRewards"
         android:layout_width="match_parent"
@@ -231,7 +233,6 @@
         android:paddingBottom="8dp"
         tools:listitem="@layout/item_reward" />
 
-    <!-- Empty State -->
     <LinearLayout
         android:id="@+id/emptyState"
         android:layout_width="match_parent"

@@ -25,7 +25,9 @@ import com.manhhuy.myapplication.databinding.ActivityUserManagementBinding;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+ * Activity for managing users and organizations
+ */
 public class UserManagementActivity extends AppCompatActivity implements UserAdapter.OnUserActionListener, OrganizationAdapter.OnOrganizationActionListener {
 
     private ActivityUserManagementBinding binding;
