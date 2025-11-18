@@ -5,34 +5,45 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/md_theme_light_background"
     tools:context=".ui.Activitys.HomeActivity">
-    <!-- để  -->
+
+    <!-- ViewPager2 with smooth transitions -->
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:overScrollMode="never"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/tabLayout" />
 
-    <!-- Modern TabLayout at bottom -->
+    <!-- Modern TabLayout at bottom with gradient background -->
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
         android:layout_width="match_parent"
-        android:layout_height="64dp"
-        android:background="#1A1A2E"
-        android:elevation="12dp"
+        android:layout_height="72dp"
+        android:background="@drawable/tab_background"
+        android:elevation="16dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="12dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:tabMode="fixed"
+        app:tabGravity="fill"
+        app:tabIconTint="@color/tab_icon_color"
         app:tabTextColor="#7E7E8E"
         app:tabSelectedTextColor="#FFFFFF"
+        app:tabIndicator="@drawable/tab_indicator"
         app:tabIndicatorColor="#E94560"
-        app:tabIndicatorHeight="4dp"
+        app:tabIndicatorHeight="3dp"
         app:tabIndicatorFullWidth="false"
         app:tabIndicatorGravity="top"
-        app:tabRippleColor="#E94560"
-        app:tabTextAppearance="@style/CustomTabText" />
+        app:tabRippleColor="#40E94560"
+        app:tabTextAppearance="@style/CustomTabText"
+        app:tabPaddingStart="0dp"
+        app:tabPaddingEnd="0dp"
+        app:tabInlineLabel="false" />
 </androidx.constraintlayout.widget.ConstraintLayout>

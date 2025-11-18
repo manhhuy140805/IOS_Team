@@ -2,6 +2,7 @@ package com.manhhuy.myapplication.model;
 
 import java.util.Date;
 
+// User model for volunteer management system
 public class User {
     private Integer id;
     private String fullName;
@@ -18,6 +19,12 @@ public class User {
     private int eventsCount;
     private int pointsCount;
 
+    // Additional fields for User Management
+    private String joinDate;
+    private int activityCount;
+    private String lastActive;
+    private String violationType;
+
     public User() {
     }
 
@@ -32,6 +39,19 @@ public class User {
         this.status = status;
         this.createdAt = createdAt;
         this.updatedAt = new Date();
+    }
+
+    // Constructor for User Management
+    public User(String id, String fullName, String email, String joinDate,
+                int activityCount, String lastActive, String status, String violationType) {
+        this.id = id != null ? Integer.parseInt(id) : null;
+        this.fullName = fullName;
+        this.email = email;
+        this.joinDate = joinDate;
+        this.activityCount = activityCount;
+        this.lastActive = lastActive;
+        this.status = status;
+        this.violationType = violationType;
     }
 
     // Getters and Setters
@@ -129,5 +149,46 @@ public class User {
 
     public void setPointsCount(int pointsCount) {
         this.pointsCount = pointsCount;
+    }
+
+    // User Management getters and setters
+    public String getName() {
+        return fullName;
+    }
+
+    public void setName(String name) {
+        this.fullName = name;
+    }
+
+    public String getJoinDate() {
+        return joinDate;
+    }
+
+    public void setJoinDate(String joinDate) {
+        this.joinDate = joinDate;
+    }
+
+    public int getActivityCount() {
+        return activityCount;
+    }
+
+    public void setActivityCount(int activityCount) {
+        this.activityCount = activityCount;
+    }
+
+    public String getLastActive() {
+        return lastActive;
+    }
+
+    public void setLastActive(String lastActive) {
+        this.lastActive = lastActive;
+    }
+
+    public String getViolationType() {
+        return violationType;
+    }
+
+    public void setViolationType(String violationType) {
+        this.violationType = violationType;
     }
 }

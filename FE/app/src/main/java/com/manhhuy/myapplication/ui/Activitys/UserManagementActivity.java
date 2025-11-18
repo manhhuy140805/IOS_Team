@@ -24,7 +24,9 @@ import com.manhhuy.myapplication.model.Organization;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+ * Activity for managing users and organizations
+ */
 public class UserManagementActivity extends AppCompatActivity implements UserAdapter.OnUserActionListener, OrganizationAdapter.OnOrganizationActionListener {
 
     private RecyclerView rvUserList, rvOrgList;

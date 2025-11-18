@@ -149,6 +149,13 @@ public class RewardAdapter extends RecyclerView.Adapter<RewardAdapter.RewardView
         return rewardList.size();
     }
 
+    // Set categories/rewards list
+    public void setCategories(List<RewardItem> rewards) {
+        this.rewardList = rewards;
+        this.rewardListFull = new ArrayList<>(rewards);
+        notifyDataSetChanged();
+    }
+
     // Filter by category
     public void filterByCategory(int categoryType) {
         rewardList.clear();

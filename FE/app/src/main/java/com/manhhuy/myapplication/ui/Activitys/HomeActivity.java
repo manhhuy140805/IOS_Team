@@ -10,14 +10,22 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.tabs.TabLayoutMediator;
+import com.manhhuy.myapplication.R;
 import com.manhhuy.myapplication.adapter.HomeAdapter;
 import com.manhhuy.myapplication.databinding.ActivityHomeBinding;
+import com.manhhuy.myapplication.utils.ZoomOutPageTransformer;
 
 public class HomeActivity extends AppCompatActivity {
 
     private ActivityHomeBinding binding;
 
     private final String[] tabTitles = new String[] { "Home", "Event", "Rewards", "Profile" };
+    private final int[] tabIcons = new int[] {
+        R.drawable.ic_home,
+        R.drawable.ic_event,
+        R.drawable.ic_rewards,
+        R.drawable.ic_profile
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,14 +41,25 @@ public class HomeActivity extends AppCompatActivity {
             return insets;
         });
 
+        setupViewPager();
+        setupBackPress();
+    }
 
+    private void setupViewPager() {
         HomeAdapter homeAdapter = new HomeAdapter(this);
         binding.viewPager.setAdapter(homeAdapter);
+        binding.viewPager.setOffscreenPageLimit(4); // Pre-load all tabs for smooth transition
+        binding.viewPager.setPageTransformer(new ZoomOutPageTransformer()); // Add smooth page transition
 
         new TabLayoutMediator(binding.tabLayout, binding.viewPager,
-                (tab, position) -> tab.setText(tabTitles[position])
+                (tab, position) -> {
+                    tab.setText(tabTitles[position]);
+                    tab.setIcon(tabIcons[position]);
+                }
         ).attach();
+    }
 
+    private void setupBackPress() {
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
@@ -50,7 +69,7 @@ public class HomeActivity extends AppCompatActivity {
                     finish();
                 } else {
                     // Lùi về tab trước
-                    binding.viewPager.setCurrentItem(currentItem - 1);
+                    binding.viewPager.setCurrentItem(currentItem - 1, true);
                 }
             }
         });
