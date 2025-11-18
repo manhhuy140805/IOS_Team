@@ -1,23 +1,32 @@
 package com.manhhuy.myapplication.ui.Activitys.Fragment;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.manhhuy.myapplication.R;
+import com.manhhuy.myapplication.adapter.SearchResultAdapter;
+import com.manhhuy.myapplication.databinding.FragmentSearchBinding;
+import com.manhhuy.myapplication.model.SearchResult;
 
-/**
- * GIẢI THÍCH: SearchFragment - Trang tìm kiếm sự kiện tình nguyện
- * Fragment này cho phép người dùng search và filter các sự kiện
- * Hiện tại đang để placeholder, bạn có thể thêm SearchView và RecyclerView sau
- */
+import java.util.ArrayList;
+import java.util.List;
+
+
 public class SearchFragment extends Fragment {
+
+    private FragmentSearchBinding binding;
+    private SearchResultAdapter adapter;
+    private List<SearchResult> allResults;
 
     public SearchFragment() {
         // Required empty public constructor
@@ -30,36 +39,172 @@ public class SearchFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // GIẢI THÍCH: Inflate layout fragment_search.xml
-        return inflater.inflate(R.layout.fragment_search, container, false);
+        binding = FragmentSearchBinding.inflate(inflater, container, false);
+        return binding.getRoot();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        // GIẢI THÍCH: Setup search functionality, filters, và RecyclerView ở đây
 
-        // TODO: Setup SearchView
-        // TODO: Setup Filter buttons
-        // TODO: Setup RecyclerView cho search results
-        // TODO: Load initial data
+        setupRecyclerView();
+        setupSearchFunctionality();
+        setupFilterButtons();
+        loadInitialData();
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        // Clean up resources
+    private void setupRecyclerView() {
+        allResults = new ArrayList<>();
+        adapter = new SearchResultAdapter(allResults);
+
+        binding.searchResultsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        binding.searchResultsRecyclerView.setAdapter(adapter);
+
+        adapter.setListener(result -> {
+            Toast.makeText(getContext(), "Đã chọn: " + result.getTitle(), Toast.LENGTH_SHORT).show();
+            // TODO: Navigate to detail page
+        });
     }
-}
+
+    private void setupSearchFunctionality() {
+        // Setup search keyword input with text change listener
+        binding.searchKeyword.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                applyFilters(s.toString());
+            }
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
+    }
+
+    private void setupFilterButtons() {
+        // Apply filters button click listener
+        binding.applyFilterBtn.setOnClickListener(v -> {
+            String keyword = binding.searchKeyword.getText().toString();
+            applyFilters(keyword);
+            Toast.makeText(getContext(), "Đã áp dụng bộ lọc", Toast.LENGTH_SHORT).show();
+        });
+
+        // Category checkboxes listeners
+        binding.categoryEnvironment.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            String keyword = binding.searchKeyword.getText().toString();
+            applyFilters(keyword);
+        });
+
+        binding.categoryEducation.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            String keyword = binding.searchKeyword.getText().toString();
+            applyFilters(keyword);
+        });
+
+        binding.categoryHealth.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            String keyword = binding.searchKeyword.getText().toString();
+            applyFilters(keyword);
+        });
+    }
+
+    private void loadInitialData() {
+        allResults.clear();
+        allResults.add(new SearchResult(
+                "Dọn rác bãi biển Vũng Tàu",
+                "Nhóm Môi trường xanh",
+                "Vũng Tàu",
+                R.drawable.bg_rounded_orange,
+                "Môi trường",
+                "Dọn dẹp",
+                "Mô tả ngắn: Dọn rác, phân loại rác thải, trồng cây ven biển.",
+                "20/11/2025",
+                45,
+                50,
+                "1 ngày"
+        ));
+
+        allResults.add(new SearchResult(
+                "Dạy học cho trẻ em vùng cao",
+                "Hội từ thiện Ánh Sáng",
+                "Sapa, Lào Cai",
+                R.drawable.bg_rounded_orange,
+                "Giáo dục",
+                "Dạy học",
+                "Mô tả ngắn: Giảng dạy, tặng sách vở, tổ chức hoạt động ngoại khóa.",
+                "25/11/2025",
+                15,
+                20,
+                "3 ngày"
+        ));
+
+        allResults.add(new SearchResult(
+                "Chăm sóc bệnh nhân tại bệnh viện",
+                "Câu lạc bộ Tình nguyện Y tế",
+                "Bệnh viện Trung ương, Hà Nội",
+                R.drawable.bg_rounded_orange,
                 "Y tế",
                 "Tâm lý",
-                "Mô tả ngắn: Thăm hỏi, độc sách, hỗ trợ thử tục hành chính cho bệnh nhân.",
-                "15/11/2025",
+                "Mô tả ngắn: Thăm hỏi, đọc sách, hỗ trợ thủ tục hành chính cho bệnh nhân.",
+                "15/12/2025",
                 20,
                 30,
                 "Tuần"
         ));
 
+        allResults.add(new SearchResult(
+                "Trồng cây xanh tại công viên",
+                "Nhóm Xanh hóa đô thị",
+                "Công viên Cầu Giấy, Hà Nội",
+                R.drawable.bg_rounded_orange,
+                "Môi trường",
+                "Trồng cây",
+                "Mô tả ngắn: Trồng cây, chăm sóc cây xanh, làm sạch khu vực công viên.",
+                "22/11/2025",
+                30,
+                40,
+                "0.5 ngày"
+        ));
+
+        updateSearchResults(allResults);
+        updateResultCount(allResults.size());
+    }
+
+    private void applyFilters(String keyword) {
+        // Filter results based on keyword and category filters
+        List<SearchResult> filteredResults = new ArrayList<>();
+
+        // Get selected categories
+        List<String> selectedCategories = new ArrayList<>();
+        if (binding.categoryEnvironment.isChecked()) {
+            selectedCategories.add("Môi trường");
+        }
+        if (binding.categoryEducation.isChecked()) {
+            selectedCategories.add("Giáo dục");
+        }
+        if (binding.categoryHealth.isChecked()) {
+            selectedCategories.add("Y tế");
+        }
+
+        // Filter by keyword and category
+        for (SearchResult result : allResults) {
+            boolean matchKeyword = keyword.isEmpty() ||
+                    result.getTitle().toLowerCase().contains(keyword.toLowerCase()) ||
+                    result.getDescription().toLowerCase().contains(keyword.toLowerCase()) ||
+                    result.getOrganization().toLowerCase().contains(keyword.toLowerCase());
+
+            boolean matchCategory = selectedCategories.isEmpty() ||
+                    selectedCategories.contains(result.getCategory());
+
+            if (matchKeyword && matchCategory) {
+                filteredResults.add(result);
+            }
+        }
+
+        updateSearchResults(filteredResults);
+        updateResultCount(filteredResults.size());
+    }
+
+    private void updateSearchResults(List<SearchResult> results) {
         if (results.isEmpty()) {
             binding.noResultsMessage.setVisibility(View.VISIBLE);
             binding.searchResultsRecyclerView.setVisibility(View.GONE);
@@ -70,22 +215,14 @@ public class SearchFragment extends Fragment {
         }
     }
 
-    private void applyFilters(String keyword) {
-        // Filter results based on keyword and other filters
-        String category = "";
-        if (binding.categoryEnvironment.isChecked()) {
-            category = "Môi trường";
-        } else if (binding.categoryEducation.isChecked()) {
-            category = "Giáo dục";
-        } else if (binding.categoryHealth.isChecked()) {
-            category = "Y tế";
-        }
+    private void updateResultCount(int count) {
+        binding.viewMoreFilters.setText("→ " + count + " kết quả");
+    }
 
-        String startDate = binding.startDate.getText().toString();
-        String endDate = binding.endDate.getText().toString();
-
-        // Apply filters and reload results
-        loadSearchResults();
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
     }
 
 }
