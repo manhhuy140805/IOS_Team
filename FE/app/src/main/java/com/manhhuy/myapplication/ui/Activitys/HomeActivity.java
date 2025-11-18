@@ -19,12 +19,13 @@ public class HomeActivity extends AppCompatActivity {
 
     private ActivityHomeBinding binding;
 
-    private final String[] tabTitles = new String[] { "Home", "Event", "Rewards", "Profile" };
+    private final String[] tabTitles = new String[] { "Home", "Event", "Rewards", "Applicants", "Profile" };
     private final int[] tabIcons = new int[] {
-        R.drawable.ic_home,
-        R.drawable.ic_event,
-        R.drawable.ic_rewards,
-        R.drawable.ic_profile
+            R.drawable.ic_home,
+            R.drawable.ic_event,
+            R.drawable.ic_rewards,
+            R.drawable.ic_applicants,
+            R.drawable.ic_profile
     };
 
     @Override
@@ -48,15 +49,14 @@ public class HomeActivity extends AppCompatActivity {
     private void setupViewPager() {
         HomeAdapter homeAdapter = new HomeAdapter(this);
         binding.viewPager.setAdapter(homeAdapter);
-        binding.viewPager.setOffscreenPageLimit(4); // Pre-load all tabs for smooth transition
+        binding.viewPager.setOffscreenPageLimit(5); // Pre-load all tabs for smooth transition
         binding.viewPager.setPageTransformer(new ZoomOutPageTransformer()); // Add smooth page transition
 
         new TabLayoutMediator(binding.tabLayout, binding.viewPager,
                 (tab, position) -> {
                     tab.setText(tabTitles[position]);
                     tab.setIcon(tabIcons[position]);
-                }
-        ).attach();
+                }).attach();
     }
 
     private void setupBackPress() {
