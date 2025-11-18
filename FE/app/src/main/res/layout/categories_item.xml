@@ -1,42 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="120dp"
-    android:layout_height="140dp"
-    android:padding="12dp">
+    android:layout_width="wrap_content"
+    android:layout_height="40dp"
+    android:layout_marginEnd="8dp"
+    app:cardCornerRadius="20dp"
+    app:cardElevation="1dp"
+    app:cardBackgroundColor="@android:color/white">
 
-    <ImageView
-        android:id="@+id/categoryIcon"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:scaleType="centerInside"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/categoryName"
+    <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="14sp"
-        android:textStyle="bold"
-        android:textColor="@android:color/black"
-        android:gravity="center"
-        android:layout_marginTop="8dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/categoryIcon" />
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingStart="14dp"
+        android:paddingEnd="14dp">
 
-    <TextView
-        android:id="@+id/jobCount"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="12sp"
-        android:textColor="@android:color/darker_gray"
-        android:gravity="center"
-        android:layout_marginTop="4dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/categoryName" />
+        <!-- Category Icon -->
+        <ImageView
+            android:id="@+id/categoryIcon"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:scaleType="centerInside"
+            android:contentDescription="@string/app_name"
+            app:tint="@android:color/holo_blue_dark"
+            android:layout_marginEnd="8dp" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <!-- Category Name -->
+        <TextView
+            android:id="@+id/categoryName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Category"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/holo_blue_dark" />
+
+        <!-- Job Count Badge -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="wrap_content"
+            android:layout_height="24dp"
+            android:layout_marginStart="8dp"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="0dp"
+            app:cardBackgroundColor="@android:color/holo_blue_light">
+
+            <TextView
+                android:id="@+id/jobCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="23"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/white"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:gravity="center"
+                android:layout_gravity="center" />
+
+        </androidx.cardview.widget.CardView>
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

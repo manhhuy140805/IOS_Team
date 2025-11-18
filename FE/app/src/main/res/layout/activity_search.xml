@@ -6,62 +6,139 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="#F5F5F5"
     tools:context=".ui.Activitys.SearchActivity">
 
-    <!-- Header Section -->
+    <!-- Header Section with Gradient -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="@android:color/holo_blue_dark"
-        android:padding="16dp">
+        android:background="@drawable/bg_gradient_header"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Kết quả tìm kiếm"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:textColor="@android:color/white" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Hiển thị các hoạt động phù hợp — bạn có thể lọc lại"
-            android:textSize="12sp"
-            android:textColor="@android:color/white"
-            android:layout_marginTop="4dp" />
-
+        <!-- Back Button & Title -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="12dp"
-            android:gravity="center_vertical">
+            android:gravity="center_vertical"
+            android:layout_marginBottom="16dp">
 
-            <EditText
-                android:id="@+id/searchKeyword"
+            <ImageView
+                android:id="@+id/backButton"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_back"
+                android:scaleType="centerInside"
+                android:contentDescription="@string/app_name"
+                app:tint="@android:color/white" />
+
+            <LinearLayout
                 android:layout_width="0dp"
-                android:layout_height="40dp"
-                android:layout_weight="1"
-                android:hint="Từ khóa: &quot;đơn biến&quot;"
-                android:padding="8dp"
-                android:background="@android:color/white"
-                android:textSize="12sp" />
-
-            <TextView
-                android:id="@+id/viewMoreFilters"
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="→ 24 kết quả"
-                android:textColor="@android:color/white"
-                android:textSize="12sp"
-                android:layout_marginStart="12dp" />
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:layout_marginStart="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Search Results"
+                    android:textSize="22sp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/white" />
+
+                <TextView
+                    android:id="@+id/viewMoreFilters"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="24 opportunities found"
+                    android:textSize="12sp"
+                    android:textColor="@android:color/white"
+                    android:alpha="0.85"
+                    android:layout_marginTop="2dp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- Search Bar with Filters -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:spacing="8dp">
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                app:cardCornerRadius="10dp"
+                app:cardElevation="0dp"
+                app:cardBackgroundColor="@android:color/white">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="12dp">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_search"
+                        android:scaleType="centerInside"
+                        android:contentDescription="@string/app_name"
+                        app:tint="@android:color/darker_gray" />
+
+                    <EditText
+                        android:id="@+id/searchKeyword"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:hint="Search keyword..."
+                        android:paddingStart="10dp"
+                        android:paddingEnd="10dp"
+                        android:background="@android:color/transparent"
+                        android:textSize="13sp"
+                        android:inputType="text"
+                        android:textColorHint="@android:color/darker_gray"
+                        android:textColor="@android:color/black" />
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                app:cardCornerRadius="10dp"
+                app:cardElevation="0dp"
+                app:cardBackgroundColor="@android:color/white">
+
+                <ImageView
+                    android:id="@+id/filterButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/ic_filter"
+                    android:scaleType="centerInside"
+                    android:contentDescription="@string/app_name"
+                    app:tint="@android:color/holo_blue_dark" />
+
+            </androidx.cardview.widget.CardView>
 
         </LinearLayout>
 
     </LinearLayout>
 
+    <!-- Content -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -73,156 +150,324 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- Filter Section -->
+            <!-- Filter Panel -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/filterPanel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:visibility="gone"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp"
+                app:cardBackgroundColor="@android:color/white">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <!-- Filter Header -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="16dp">
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_filter"
+                            android:scaleType="centerInside"
+                            android:contentDescription="@string/app_name"
+                            app:tint="@android:color/holo_blue_dark"
+                            android:layout_marginEnd="8dp" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Filters"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            android:textColor="@android:color/black" />
+
+                        <TextView
+                            android:id="@+id/clearFiltersBtn"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Clear All"
+                            android:textSize="11sp"
+                            android:textColor="@android:color/holo_blue_dark"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+                    <!-- Category Filter - RecyclerView Horizontal -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginBottom="16dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Category"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            android:textColor="@android:color/black"
+                            android:layout_marginBottom="10dp" />
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/categoryFiltersRecyclerView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:scrollbars="none"
+                            android:clipToPadding="false"
+                            android:paddingEnd="8dp"
+                            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+                    </LinearLayout>
+
+                    <!-- Divider -->
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#E8E8E8"
+                        android:layout_marginBottom="16dp" />
+
+                    <!-- Date Range Filter -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginBottom="16dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Registration Deadline"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            android:textColor="@android:color/black"
+                            android:layout_marginBottom="10dp" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:spacing="8dp">
+
+                            <androidx.cardview.widget.CardView
+                                android:layout_width="0dp"
+                                android:layout_height="40dp"
+                                android:layout_weight="1"
+                                app:cardCornerRadius="8dp"
+                                app:cardElevation="0dp"
+                                app:cardBackgroundColor="#F5F5F5">
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:orientation="horizontal"
+                                    android:gravity="center_vertical"
+                                    android:paddingStart="10dp"
+                                    android:paddingEnd="10dp">
+
+                                    <ImageView
+                                        android:layout_width="16dp"
+                                        android:layout_height="16dp"
+                                        android:src="@drawable/ic_calendar"
+                                        android:scaleType="centerInside"
+                                        android:contentDescription="@string/app_name"
+                                        app:tint="@android:color/darker_gray"
+                                        android:layout_marginEnd="6dp" />
+
+                                    <EditText
+                                        android:id="@+id/startDate"
+                                        android:layout_width="0dp"
+                                        android:layout_height="match_parent"
+                                        android:layout_weight="1"
+                                        android:hint="From"
+                                        android:inputType="date"
+                                        android:background="@android:color/transparent"
+                                        android:textSize="12sp"
+                                        android:textColorHint="@android:color/darker_gray"
+                                        android:textColor="@android:color/black" />
+
+                                </LinearLayout>
+
+                            </androidx.cardview.widget.CardView>
+
+                            <androidx.cardview.widget.CardView
+                                android:layout_width="0dp"
+                                android:layout_height="40dp"
+                                android:layout_weight="1"
+                                app:cardCornerRadius="8dp"
+                                app:cardElevation="0dp"
+                                app:cardBackgroundColor="#F5F5F5">
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:orientation="horizontal"
+                                    android:gravity="center_vertical"
+                                    android:paddingStart="10dp"
+                                    android:paddingEnd="10dp">
+
+                                    <ImageView
+                                        android:layout_width="16dp"
+                                        android:layout_height="16dp"
+                                        android:src="@drawable/ic_calendar"
+                                        android:scaleType="centerInside"
+                                        android:contentDescription="@string/app_name"
+                                        app:tint="@android:color/darker_gray"
+                                        android:layout_marginEnd="6dp" />
+
+                                    <EditText
+                                        android:id="@+id/endDate"
+                                        android:layout_width="0dp"
+                                        android:layout_height="match_parent"
+                                        android:layout_weight="1"
+                                        android:hint="To"
+                                        android:inputType="date"
+                                        android:background="@android:color/transparent"
+                                        android:textSize="12sp"
+                                        android:textColorHint="@android:color/darker_gray"
+                                        android:textColor="@android:color/black" />
+
+                                </LinearLayout>
+
+                            </androidx.cardview.widget.CardView>
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <!-- Divider -->
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#E8E8E8"
+                        android:layout_marginBottom="16dp" />
+
+                    <!-- Action Buttons -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center"
+                        android:spacing="8dp">
+
+                        <Button
+                            android:id="@+id/resetFilterBtn"
+                            android:layout_width="0dp"
+                            android:layout_height="40dp"
+                            android:layout_weight="1"
+                            android:text="Reset"
+                            android:textColor="@android:color/holo_blue_dark"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            android:backgroundTint="@android:color/white"
+                            android:strokeColor="@android:color/holo_blue_dark"
+                            android:strokeWidth="1" />
+
+                        <Button
+                            android:id="@+id/applyFilterBtn"
+                            android:layout_width="0dp"
+                            android:layout_height="40dp"
+                            android:layout_weight="1"
+                            android:text="Apply Filters"
+                            android:textColor="@android:color/white"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            android:backgroundTint="@android:color/holo_blue_dark" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <!-- Results Label -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="12dp"
-                android:layout_marginBottom="16dp">
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="12dp">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
+                <TextView
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
+                    android:layout_weight="1"
+                    android:text="Results"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="🔍 Lọc và Sắp xếp thể loại / Thời gian / Số người"
-                        android:textSize="12sp"
-                        android:textStyle="bold"
-                        android:textColor="@android:color/black" />
-
-                </LinearLayout>
-
-                <!-- Category Filter -->
-                <LinearLayout
-                    android:layout_width="match_parent"
+                <Spinner
+                    android:id="@+id/sortSpinner"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_marginTop="12dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Thể loại"
-                        android:textSize="12sp"
-                        android:textStyle="bold"
-                        android:textColor="@android:color/black" />
-
-                    <CheckBox
-                        android:id="@+id/categoryEnvironment"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Môi trường"
-                        android:layout_marginTop="4dp" />
-
-                    <CheckBox
-                        android:id="@+id/categoryEducation"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Giáo dục" />
-
-                    <CheckBox
-                        android:id="@+id/categoryHealth"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Y tế" />
-
-                </LinearLayout>
-
-                <!-- Date Filter -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_marginTop="12dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Thời gian đăng ký"
-                        android:textSize="12sp"
-                        android:textStyle="bold"
-                        android:textColor="@android:color/black" />
-
-                    <EditText
-                        android:id="@+id/startDate"
-                        android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:hint="mm/dd/yyyy"
-                        android:inputType="date"
-                        android:padding="8dp"
-                        android:layout_marginTop="4dp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Đến"
-                        android:textSize="11sp"
-                        android:textColor="@android:color/darker_gray"
-                        android:layout_marginTop="8dp" />
-
-                    <EditText
-                        android:id="@+id/endDate"
-                        android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:hint="mm/dd/yyyy"
-                        android:inputType="date"
-                        android:padding="8dp"
-                        android:layout_marginTop="4dp" />
-
-                </LinearLayout>
-
-                <!-- Sort By -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="12dp">
-
-                    <EditText
-                        android:id="@+id/sortBy"
-                        android:layout_width="0dp"
-                        android:layout_height="40dp"
-                        android:layout_weight="1"
-                        android:hint="Liên quan nhất"
-                        android:padding="8dp" />
-
-                    <Button
-                        android:id="@+id/applyFilterBtn"
-                        android:layout_width="wrap_content"
-                        android:layout_height="40dp"
-                        android:text="Áp dụng"
-                        android:textColor="@android:color/white"
-                        android:backgroundTint="@android:color/holo_green_dark"
-                        android:layout_marginStart="8dp" />
-
-                </LinearLayout>
+                    android:entries="@array/sort_options" />
 
             </LinearLayout>
 
-            <!-- Search Results -->
+            <!-- Search Results RecyclerView -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/searchResultsRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
+                android:layout_marginBottom="16dp"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
             <!-- No Results Message -->
-            <TextView
-                android:id="@+id/noResultsMessage"
+            <LinearLayout
+                android:id="@+id/noResultsContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Hiện chưa có kết quả. Để tìm chính xác hơn, hãy cập nhật bộ lọc hoạc truy cập trang tổng chức."
-                android:textSize="12sp"
-                android:textColor="@android:color/darker_gray"
+                android:orientation="vertical"
                 android:gravity="center"
                 android:visibility="gone"
-                android:padding="16dp" />
+                android:padding="24dp">
+
+                <ImageView
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:src="@drawable/ic_search"
+                    android:scaleType="centerInside"
+                    android:contentDescription="@string/app_name"
+                    app:tint="@android:color/darker_gray"
+                    android:alpha="0.3"
+                    android:layout_marginBottom="16dp" />
+
+                <TextView
+                    android:id="@+id/noResultsMessage"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="No results found"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/darker_gray"
+                    android:gravity="center"
+                    android:layout_marginBottom="8dp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Try adjusting your filters or search keywords"
+                    android:textSize="12sp"
+                    android:textColor="@android:color/darker_gray"
+                    android:gravity="center"
+                    android:alpha="0.7" />
+
+            </LinearLayout>
 
         </LinearLayout>
 

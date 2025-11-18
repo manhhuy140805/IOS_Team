@@ -76,13 +76,18 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
                 binding.searchResultImage.setImageResource(result.getImageResId());
             }
             
-            binding.searchResultCategory.setText(result.getCategory());
-            binding.searchResultSubcategory.setText(result.getSubcategory());
-            binding.searchResultDescription.setText(result.getDescription());
-            binding.searchResultDeadline.setText("📅 Hạn: " + result.getDeadline());
-            binding.searchResultRegistered.setText("👥 " + result.getRegisteredCount());
-            binding.searchResultSlots.setText(result.getTotalSlots() + " chỗ");
-            binding.searchResultDuration.setText("⏱ " + result.getDuration());
+            // Set description
+            binding.searchResultDescription.setText(result.getDescription() != null ? 
+                    result.getDescription() : "");
+            
+            // Set deadline
+            binding.searchResultDeadline.setText(result.getDeadline() != null ? 
+                    result.getDeadline() : "N/A");
+            
+            // Set slots
+            String slotsText = result.getTotalSlots() > 0 ? 
+                    result.getTotalSlots() + " slots" : "No slots";
+            binding.searchResultSlots.setText(slotsText);
 
             binding.getRoot().setOnClickListener(v -> {
                 if (listener != null) {

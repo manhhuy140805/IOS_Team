@@ -63,30 +63,47 @@ public class HomeActivity extends AppCompatActivity {
     private void loadData() {
         // Load categories data
         List<Category> categories = new ArrayList<>();
-        categories.add(new Category("Environment", 128, R.drawable.ic_launcher_background));
-        categories.add(new Category("Education", 93, R.drawable.ic_launcher_background));
-        categories.add(new Category("Healthcare", 67, R.drawable.ic_launcher_background));
-        categories.add(new Category("Animal Care", 45, R.drawable.ic_launcher_background));
+        categories.add(new Category("Environment", 128, R.drawable.ic_plant));
+        categories.add(new Category("Education", 93, R.drawable.ic_book));
+        categories.add(new Category("Healthcare", 67, R.drawable.ic_coffee));
+        categories.add(new Category("Animal Care", 45, R.drawable.ic_heart));
+        categories.add(new Category("Technology", 56, R.drawable.ic_download));
         
         categoriesAdapter.setCategories(categories);
 
         // Load events data
         List<Event> events = new ArrayList<>();
         events.add(new Event(
-                "Beach Cleanup",
-                "Green Vietnam",
+                "Beach Cleanup Drive 2024",
+                "Green Vietnam Organization",
                 "Environment",
                 R.drawable.ic_launcher_background,
-                "200,000 VND/day",
-                "Vung Tau"
+                "200 points",
+                "Vung Tau Beach"
         ));
         events.add(new Event(
-                "Teach English to Kids",
-                "Education For All",
+                "Teach English to Street Kids",
+                "Education For All Foundation",
                 "Teaching",
                 R.drawable.ic_launcher_background,
-                "150,000 VND/shift",
+                "150 points",
                 "Ho Chi Minh City"
+        ));
+        events.add(new Event(
+                "Medical Camp in Rural Area",
+                "Health Volunteers International",
+                "Healthcare",
+                R.drawable.ic_launcher_background,
+                "300 points",
+                "Rural District, Binh Duong"
+        ));
+        events.add(new Event(
+                "Animal Shelter Care",
+                "Paws and Whiskers",
+                "Animal Care",
+                R.drawable.ic_launcher_background,
+                "180 points",
+                "District 2, HCMC"
         ));
         
         eventAdapter.setEvents(events);

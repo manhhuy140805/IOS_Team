@@ -53,7 +53,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Ca
 
         public void bind(Category category) {
             binding.categoryName.setText(category.getName());
-            binding.jobCount.setText(category.getJobCount() + " jobs");
+            binding.jobCount.setText(String.valueOf(category.getJobCount()));
             binding.categoryIcon.setImageResource(category.getIconResId());
         }
     }
