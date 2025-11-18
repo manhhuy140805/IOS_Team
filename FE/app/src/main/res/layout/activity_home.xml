@@ -7,8 +7,6 @@
     android:layout_height="match_parent"
     tools:context=".ui.Activitys.HomeActivity">
 
-
-
     <!-- để  -->
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/viewPager"

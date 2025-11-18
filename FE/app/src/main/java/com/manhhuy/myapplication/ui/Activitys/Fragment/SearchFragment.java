@@ -1,36 +1,37 @@
-package com.manhhuy.myapplication.ui.Activitys;
+package com.manhhuy.myapplication.ui.Activitys.Fragment;
 
 import android.os.Bundle;
-import android.view.View;
 
 import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
+
+import android.view.View;
+
 
 import com.manhhuy.myapplication.R;
 import com.manhhuy.myapplication.adapter.SearchResultAdapter;
-import com.manhhuy.myapplication.databinding.ActivitySearchBinding;
+import com.manhhuy.myapplication.databinding.FragmentSearchBinding;
 import com.manhhuy.myapplication.model.SearchResult;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SearchActivity extends AppCompatActivity {
-
-    private ActivitySearchBinding binding;
+public class SearchFragment extends Fragment {
+    private FragmentSearchBinding binding;
     private SearchResultAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        
-        binding = ActivitySearchBinding.inflate(getLayoutInflater());
+
+        binding = FragmentSearchBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        
+
         ViewCompat.setOnApplyWindowInsetsListener(binding.main, (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -45,7 +46,7 @@ public class SearchActivity extends AppCompatActivity {
     private void setupRecyclerView() {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         binding.searchResultsRecyclerView.setLayoutManager(layoutManager);
-        
+
         adapter = new SearchResultAdapter(new ArrayList<>());
         binding.searchResultsRecyclerView.setAdapter(adapter);
 
@@ -63,7 +64,7 @@ public class SearchActivity extends AppCompatActivity {
 
     private void loadSearchResults() {
         List<SearchResult> results = new ArrayList<>();
-        
+
         results.add(new SearchResult(
                 "Dọn sạch bờ biển",
                 "Vung Tàu, Green Vietnam",
@@ -134,4 +135,5 @@ public class SearchActivity extends AppCompatActivity {
         // Apply filters and reload results
         loadSearchResults();
     }
+
 }

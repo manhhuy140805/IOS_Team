@@ -15,10 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyApplication"
         tools:targetApi="31">
-        <activity
 
-            android:name=".ui.Activitys.HomeActivity"
-            android:exported="false" />
         <activity
             android:name=".ui.Activitys.SertificateActivity"
             android:exported="false" />
@@ -51,11 +48,7 @@
             android:exported="false">
 
         </activity>
-        <activity
-            android:name=".ui.Activitys.SearchActivity"
-            android:exported="false">
 
-        </activity>
         <activity
 
             android:name=".ui.Activitys.DetailEventActivity"/>
@@ -64,13 +57,7 @@
             android:exported="false">
 
         </activity>
-        <activity
-            android:name=".ui.Activitys.HomeActivity"
-            android:exported="true">
-        </activity>
-        <activity
-            android:name=".ui.Activitys.LoginActivity"
-            android:exported="false" />
+
 
         <activity
             android:name=".ui.Activitys.MainActivity"

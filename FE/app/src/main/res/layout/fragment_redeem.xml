@@ -6,8 +6,7 @@
     android:layout_height="match_parent"
     android:background="#F5F5F5"
     android:orientation="vertical"
-    tools:context=".ui.Activitys.RedeemActivity">
-
+    tools:context=".ui.Activitys.Fragment.RedeemFragment">
     <!-- Header with Points Card -->
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
@@ -221,6 +220,8 @@
     </LinearLayout>
 
     <!-- RecyclerView for Rewards -->
+
+    <!-- Empty State -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvRewards"
         android:layout_width="match_parent"
@@ -231,7 +232,6 @@
         android:paddingBottom="8dp"
         tools:listitem="@layout/item_reward" />
 
-    <!-- Empty State -->
     <LinearLayout
         android:id="@+id/emptyState"
         android:layout_width="match_parent"

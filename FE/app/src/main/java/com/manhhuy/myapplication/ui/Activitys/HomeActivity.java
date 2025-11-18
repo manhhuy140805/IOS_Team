@@ -12,7 +12,7 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.manhhuy.myapplication.R;
 import com.manhhuy.myapplication.adapter.HomeAdapter;
-import com.manhhuy.myapplication.databinding.ActivityHomeBinding;
+
 
 public class HomeActivity extends AppCompatActivity {
     private ActivityHomeBinding binding;
