@@ -103,4 +103,24 @@
     <color name="pink">#E91E63</color>
     <color name="orange">#FF9800</color>
     <color name="purple">#B39DDB</color>
+    
+    <!-- Admin Approve Posts Colors -->
+    <color name="primary_green">#00B894</color>
+    <color name="status_pending">#FF9500</color>
+    <color name="status_approved">#00B894</color>
+    <color name="status_rejected">#FF6B6B</color>
+    <color name="text_dark">#2C3E50</color>
+    <color name="text_gray">#7F8C8D</color>
+    <color name="text_light_gray">#95A5A6</color>
+    <color name="background_gray">#F5F5F5</color>
+    <color name="border_gray">#F0F0F0</color>
+    <color name="tag_environment_bg">#E8F8F5</color>
+    <color name="tag_education_bg">#FFF3E0</color>
+    <color name="tag_education_text">#FF9500</color>
+    <color name="org_badge_green">#C3F0CA</color>
+    <color name="rejection_bg">#FFF3E3</color>
+    <color name="rejection_border">#FF9500</color>
+    <color name="rejection_text">#D68910</color>
+    <color name="rejection_text_dark">#95721E</color>
+    <color name="button_blue">#0984E3</color>
 </resources>
