@@ -20,12 +20,22 @@
         <activity
             android:name=".ui.Activitys.RegisterActivity"
             android:exported="true">
+        </activity>
+        <activity
+            android:name=".ui.Activitys.AdminRewardManagementActivity"
+            android:exported="true" />
+        <activity
+            android:name=".ui.Activitys.AdminEventManagerActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".ui.Activitys.AdminApprovePostsActivity"
+            android:exported="true" />
         <activity
             android:name=".ui.Activitys.LoginActivity"
             android:exported="false" />
