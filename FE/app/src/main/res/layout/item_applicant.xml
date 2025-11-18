@@ -276,21 +276,6 @@
                 android:textStyle="bold" />
         </LinearLayout>
 
-        <!-- View Details Button (for accepted/rejected) -->
-        <Button
-            android:id="@+id/btnViewDetails"
-            android:layout_width="match_parent"
-            android:layout_height="42dp"
-            android:layout_marginTop="12dp"
-            android:background="@drawable/bg_tab_filter"
-            android:drawableStart="@drawable/ic_info_outline"
-            android:drawablePadding="6dp"
-            android:drawableTint="#FFFFFF"
-            android:text="Xem chi tiết"
-            android:textAllCaps="false"
-            android:textColor="#FFFFFF"
-            android:textSize="13sp"
-            android:textStyle="bold"
-            android:visibility="gone" />
+       
     </LinearLayout>
 </androidx.cardview.widget.CardView>

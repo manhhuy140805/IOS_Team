@@ -75,21 +75,18 @@ public class AplicationAdapter extends RecyclerView.Adapter<AplicationAdapter.Ap
                 holder.tvStatus.setBackgroundResource(R.drawable.bg_status_pending);
                 holder.tvStatus.setTextColor(ContextCompat.getColor(context, R.color.orange));
                 holder.actionButtons.setVisibility(View.VISIBLE);
-                holder.btnViewDetails.setVisibility(View.GONE);
                 break;
             case 1: // Accepted
                 holder.tvStatus.setText("Đã chấp nhận");
                 holder.tvStatus.setBackgroundResource(R.drawable.bg_status_accepted);
                 holder.tvStatus.setTextColor(ContextCompat.getColor(context, R.color.green_primary));
                 holder.actionButtons.setVisibility(View.GONE);
-                holder.btnViewDetails.setVisibility(View.VISIBLE);
                 break;
             case 2: // Rejected
                 holder.tvStatus.setText("Đã từ chối");
                 holder.tvStatus.setBackgroundResource(R.drawable.bg_status_rejected);
                 holder.tvStatus.setTextColor(ContextCompat.getColor(context, android.R.color.holo_red_dark));
                 holder.actionButtons.setVisibility(View.GONE);
-                holder.btnViewDetails.setVisibility(View.VISIBLE);
                 break;
         }
 
@@ -103,12 +100,6 @@ public class AplicationAdapter extends RecyclerView.Adapter<AplicationAdapter.Ap
         holder.btnReject.setOnClickListener(v -> {
             if (listener != null) {
                 listener.onReject(applicant, position);
-            }
-        });
-
-        holder.btnViewDetails.setOnClickListener(v -> {
-            if (listener != null) {
-                listener.onViewDetails(applicant);
             }
         });
 
@@ -183,7 +174,7 @@ public class AplicationAdapter extends RecyclerView.Adapter<AplicationAdapter.Ap
         TextView tvActivityName, tvRegDate, tvPhone;
         LinearLayout noteSection, actionButtons;
         TextView tvNote;
-        Button btnAccept, btnReject, btnViewDetails;
+        Button btnAccept, btnReject;
 
         public ApplicantViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -200,7 +191,6 @@ public class AplicationAdapter extends RecyclerView.Adapter<AplicationAdapter.Ap
             actionButtons = itemView.findViewById(R.id.actionButtons);
             btnAccept = itemView.findViewById(R.id.btnAccept);
             btnReject = itemView.findViewById(R.id.btnReject);
-            btnViewDetails = itemView.findViewById(R.id.btnViewDetails);
         }
     }
 }

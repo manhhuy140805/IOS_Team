@@ -76,7 +76,7 @@ public class AcceptApplicantFragment extends Fragment implements AplicationAdapt
 
         // Mock data - 10 applicants
         applicantList.add(new Applicant(
-                "Lê Ngọc Tân",
+                "Võ Nguyễn Đại Hiếu",
                 "abc.nguyen@email.com",
                 "Beach Cleanup",
                 "24/10/2025",
