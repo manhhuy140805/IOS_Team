@@ -28,14 +28,7 @@ import java.util.List;
 public class RedeemFragment extends Fragment {
 
     private FragmentRedeemBinding binding;
-    private RecyclerView rvRewards;
     private RewardAdapter rewardAdapter;
-    private TextView tvTotalPoints;
-    private TextView tvViewHistory;
-    private TextView tabAll, tabVoucher, tabGift, tabOpportunity;
-    private ImageView ivSectionIcon;
-    private TextView tvSectionTitle;
-    private LinearLayout emptyState;
 
     private int currentUserPoints = 1250;
     private int selectedCategory = 0; // 0=all, 1=voucher, 2=gift, 3=opportunity
@@ -51,70 +44,55 @@ public class RedeemFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
-        // GIẢI THÍCH: Inflate layout fragment_redeem.xml
-        return inflater.inflate(R.layout.fragment_redeem, container, false);
+        // Use view binding to inflate
+        binding = FragmentRedeemBinding.inflate(inflater, container, false);
+        return binding.getRoot();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // GIẢI THÍCH: Khởi tạo các view
-        initViews(view);
-
         // RecyclerView cho danh sách rewards
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-        rvRewards.setLayoutManager(layoutManager);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(requireContext());
+        binding.rvRewards.setLayoutManager(layoutManager);
 
-        // GIẢI THÍCH: Khởi tạo adapter với list rỗng
+        // Khởi tạo adapter với list rỗng
         List<RewardItem> rewardList = new ArrayList<>();
-        rewardAdapter = new RewardAdapter(getContext(), rewardList, currentUserPoints);
-        rvRewards.setAdapter(rewardAdapter);
-        // hết
-        tvTotalPoints.setText(String.format("%,d", currentUserPoints));
+        rewardAdapter = new RewardAdapter(requireContext(), rewardList, currentUserPoints);
+        binding.rvRewards.setAdapter(rewardAdapter);
 
-        // GIẢI THÍCH: Setup category tabs
+        binding.tvTotalPoints.setText(String.format("%,d", currentUserPoints));
+
+        // Setup category tabs
         setupCategoryTabs();
 
-        // GIẢI THÍCH: Load dữ liệu rewards mẫu
+        // Load dữ liệu rewards mẫu
         loadSampleRewards();
-    }
-
-    private void initViews(View view) {
-        rvRewards = view.findViewById(R.id.rvRewards);
-        tvTotalPoints = view.findViewById(R.id.tvTotalPoints);
-        tvViewHistory = view.findViewById(R.id.tvViewHistory);
-        tabAll = view.findViewById(R.id.tabAll);
-        tabVoucher = view.findViewById(R.id.tabVoucher);
-        tabGift = view.findViewById(R.id.tabGift);
-        tabOpportunity = view.findViewById(R.id.tabOpportunity);
-        ivSectionIcon = view.findViewById(R.id.ivSectionIcon);
-        tvSectionTitle = view.findViewById(R.id.tvSectionTitle);
-        emptyState = view.findViewById(R.id.emptyState);
     }
 
     private void setupCategoryTabs() {
 
-        tabAll.setOnClickListener(v -> {
-            selectCategory(0, tabAll);
+        binding.tabAll.setOnClickListener(v -> {
+            selectCategory(0, binding.tabAll);
             updateSectionTitle(0);
             rewardAdapter.filterByCategory(0);
         });
 
-        tabVoucher.setOnClickListener(v -> {
-            selectCategory(1, tabVoucher);
+        binding.tabVoucher.setOnClickListener(v -> {
+            selectCategory(1, binding.tabVoucher);
             updateSectionTitle(1);
             rewardAdapter.filterByCategory(1);
         });
 
-        tabGift.setOnClickListener(v -> {
-            selectCategory(2, tabGift);
+        binding.tabGift.setOnClickListener(v -> {
+            selectCategory(2, binding.tabGift);
             updateSectionTitle(2);
             rewardAdapter.filterByCategory(2);
         });
 
-        tabOpportunity.setOnClickListener(v -> {
-            selectCategory(3, tabOpportunity);
+        binding.tabOpportunity.setOnClickListener(v -> {
+            selectCategory(3, binding.tabOpportunity);
             updateSectionTitle(3);
             rewardAdapter.filterByCategory(3);
         });
@@ -124,10 +102,10 @@ public class RedeemFragment extends Fragment {
         selectedCategory = category;
 
         // Reset tất cả tabs về trạng thái chưa chọn
-        resetTab(tabAll);
-        resetTab(tabVoucher);
-        resetTab(tabGift);
-        resetTab(tabOpportunity);
+        resetTab(binding.tabAll);
+        resetTab(binding.tabVoucher);
+        resetTab(binding.tabGift);
+        resetTab(binding.tabOpportunity);
 
         // Highlight tab được chọn
         selectedTab.setBackgroundResource(R.drawable.bg_category_tab_selected);
@@ -144,21 +122,21 @@ public class RedeemFragment extends Fragment {
         tab.setBackgroundResource(R.drawable.bg_category_tab);
 
         // Set màu text và icon theo từng tab
-        if (tab == tabAll) {
+        if (tab == binding.tabAll) {
             tab.setTextColor(ContextCompat.getColor(requireContext(), R.color.green_primary));
-        } else if (tab == tabVoucher) {
+        } else if (tab == binding.tabVoucher) {
             tab.setTextColor(ContextCompat.getColor(requireContext(), R.color.cyan));
             if (tab.getCompoundDrawables()[0] != null) {
                 tab.getCompoundDrawables()[0].setTint(
                         ContextCompat.getColor(requireContext(), R.color.cyan));
             }
-        } else if (tab == tabGift) {
+        } else if (tab == binding.tabGift) {
             tab.setTextColor(ContextCompat.getColor(requireContext(), R.color.pink));
             if (tab.getCompoundDrawables()[0] != null) {
                 tab.getCompoundDrawables()[0].setTint(
                         ContextCompat.getColor(requireContext(), R.color.pink));
             }
-        } else if (tab == tabOpportunity) {
+        } else if (tab == binding.tabOpportunity) {
             tab.setTextColor(ContextCompat.getColor(requireContext(), R.color.orange));
             if (tab.getCompoundDrawables()[0] != null) {
                 tab.getCompoundDrawables()[0].setTint(
@@ -170,26 +148,26 @@ public class RedeemFragment extends Fragment {
     private void updateSectionTitle(int category) {
         switch (category) {
             case 0:
-                tvSectionTitle.setText("Phổ biến nhất");
-                ivSectionIcon.setImageResource(R.drawable.ic_gift);
+                binding.tvSectionTitle.setText("Phổ biến nhất");
+                binding.ivSectionIcon.setImageResource(R.drawable.ic_gift);
                 break;
             case 1:
-                tvSectionTitle.setText("Voucher");
-                ivSectionIcon.setImageResource(R.drawable.ic_voucher);
+                binding.tvSectionTitle.setText("Voucher");
+                binding.ivSectionIcon.setImageResource(R.drawable.ic_voucher);
                 break;
             case 2:
-                tvSectionTitle.setText("Quà tặng");
-                ivSectionIcon.setImageResource(R.drawable.ic_gift);
+                binding.tvSectionTitle.setText("Quà tặng");
+                binding.ivSectionIcon.setImageResource(R.drawable.ic_gift);
                 break;
             case 3:
-                tvSectionTitle.setText("Cơ hội");
-                ivSectionIcon.setImageResource(R.drawable.ic_discount);
+                binding.tvSectionTitle.setText("Cơ hội");
+                binding.ivSectionIcon.setImageResource(R.drawable.ic_discount);
                 break;
         }
     }
 
     private void loadSampleRewards() {
-        // GIẢI THÍCH: Tạo dữ liệu mẫu cho rewards
+        // Tạo dữ liệu mẫu cho rewards
         List<RewardItem> rewards = new ArrayList<>();
 
         // Voucher items
@@ -299,22 +277,22 @@ public class RedeemFragment extends Fragment {
                 2 // orange
         ));
 
-        // GIẢI THÍCH: Cập nhật adapter với dữ liệu mới
+        // Cập nhật adapter với dữ liệu mới
         rewardAdapter.setCategories(rewards);
 
-        // GIẢI THÍCH: Ẩn/hiện empty state
+        // Ẩn/hiện empty state
         if (rewards.isEmpty()) {
-            rvRewards.setVisibility(View.GONE);
-            emptyState.setVisibility(View.VISIBLE);
+            binding.rvRewards.setVisibility(View.GONE);
+            binding.emptyState.setVisibility(View.VISIBLE);
         } else {
-            rvRewards.setVisibility(View.VISIBLE);
-            emptyState.setVisibility(View.GONE);
+            binding.rvRewards.setVisibility(View.VISIBLE);
+            binding.emptyState.setVisibility(View.GONE);
         }
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-
+        binding = null;
     }
 }

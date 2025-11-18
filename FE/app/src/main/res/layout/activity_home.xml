@@ -46,5 +46,5 @@
         app:tabPaddingStart="0dp"
         app:tabPaddingEnd="0dp"
         app:tabInlineLabel="false" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>
 
