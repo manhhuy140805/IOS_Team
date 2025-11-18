@@ -1,19 +1,346 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     tools:context=".ui.Activitys.MainActivity">
 
-    <TextView
+    <!-- Top App Bar Material 3 -->
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:title="Material Design 3 Demo"
+            app:titleTextColor="?attr/colorOnPrimary"
+            android:background="?attr/colorPrimary"
+            app:menu="@menu/main_menu"
+            style="@style/Widget.Material3.Toolbar.OnSurface" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <!-- Scrollable Content -->
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- Typography Section -->
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Typography Examples"
+                android:textAppearance="?attr/textAppearanceHeadlineMedium"
+                android:textColor="?attr/colorPrimary"
+                android:layout_marginBottom="8dp" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Display Large - 57sp"
+                android:textAppearance="?attr/textAppearanceDisplayLarge"
+                android:layout_marginBottom="4dp" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Headline Large - 32sp"
+                android:textAppearance="?attr/textAppearanceHeadlineLarge"
+                android:layout_marginBottom="4dp" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Title Large - 22sp"
+                android:textAppearance="?attr/textAppearanceTitleLarge"
+                android:layout_marginBottom="4dp" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Body Large - 16sp - Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+                android:textAppearance="?attr/textAppearanceBodyLarge"
+                android:layout_marginBottom="16dp" />
+
+            <!-- Buttons Section -->
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Buttons"
+                android:textAppearance="?attr/textAppearanceHeadlineMedium"
+                android:textColor="?attr/colorPrimary"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="8dp" />
+
+            <!-- Filled Button (Primary) -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnFilled"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Filled Button"
+                android:layout_marginBottom="8dp"
+                style="@style/Widget.Material3.Button" />
+
+            <!-- Outlined Button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnOutlined"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Outlined Button"
+                android:layout_marginBottom="8dp"
+                style="@style/Widget.Material3.Button.OutlinedButton" />
+
+            <!-- Text Button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Text Button"
+                android:layout_marginBottom="8dp"
+                style="@style/Widget.Material3.Button.TextButton" />
+
+            <!-- Tonal Button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnTonal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Tonal Button"
+                android:layout_marginBottom="16dp"
+                style="@style/Widget.Material3.Button.TonalButton" />
+
+            <!-- Cards Section -->
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Cards"
+                android:textAppearance="?attr/textAppearanceHeadlineMedium"
+                android:textColor="?attr/colorPrimary"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="8dp" />
+
+            <!-- Filled Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                app:cardElevation="0dp"
+                app:cardBackgroundColor="?attr/colorSurfaceVariant"
+                style="@style/Widget.Material3.CardView.Filled">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Filled Card"
+                        android:textAppearance="?attr/textAppearanceTitleMedium"
+                        android:layout_marginBottom="4dp" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="This is a filled card with Surface Variant color"
+                        android:textAppearance="?attr/textAppearanceBodyMedium" />
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Elevated Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                app:cardElevation="4dp"
+                style="@style/Widget.Material3.CardView.Elevated">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Elevated Card"
+                        android:textAppearance="?attr/textAppearanceTitleMedium"
+                        android:layout_marginBottom="4dp" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="This is an elevated card with shadow"
+                        android:textAppearance="?attr/textAppearanceBodyMedium" />
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Outlined Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="?attr/colorOutline"
+                app:cardElevation="0dp"
+                style="@style/Widget.Material3.CardView.Outlined">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Outlined Card"
+                        android:textAppearance="?attr/textAppearanceTitleMedium"
+                        android:layout_marginBottom="4dp" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="This is an outlined card with border"
+                        android:textAppearance="?attr/textAppearanceBodyMedium" />
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Text Fields Section -->
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Text Fields"
+                android:textAppearance="?attr/textAppearanceHeadlineMedium"
+                android:textColor="?attr/colorPrimary"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="8dp" />
+
+            <!-- Filled Text Field -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Filled Text Field"
+                android:layout_marginBottom="12dp"
+                style="@style/Widget.Material3.TextInputLayout.FilledBox">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Outlined Text Field -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Outlined Text Field"
+                android:layout_marginBottom="12dp"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Chips Section -->
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Chips"
+                android:textAppearance="?attr/textAppearanceHeadlineMedium"
+                android:textColor="?attr/colorPrimary"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="8dp" />
+
+            <com.google.android.material.chip.ChipGroup
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:singleSelection="false">
+
+                <com.google.android.material.chip.Chip
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Assist Chip"
+                    style="@style/Widget.Material3.Chip.Assist" />
+
+                <com.google.android.material.chip.Chip
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Filter Chip"
+                    android:checkable="true"
+                    style="@style/Widget.Material3.Chip.Filter" />
+
+                <com.google.android.material.chip.Chip
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Suggestion Chip"
+                    style="@style/Widget.Material3.Chip.Suggestion" />
+
+            </com.google.android.material.chip.ChipGroup>
+
+            <!-- Switch and Checkbox -->
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Selection Controls"
+                android:textAppearance="?attr/textAppearanceHeadlineMedium"
+                android:textColor="?attr/colorPrimary"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="8dp" />
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Material Switch"
+                android:checked="true"
+                android:layout_marginBottom="8dp" />
+
+            <com.google.android.material.checkbox.MaterialCheckBox
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Material Checkbox"
+                android:checked="true"
+                android:layout_marginBottom="80dp" />
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+    <!-- Floating Action Button (FAB) -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="IOS Team"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_gravity="bottom|end"
+        android:layout_margin="16dp"
+        android:contentDescription="Add"
+        app:srcCompat="@android:drawable/ic_input_add"
+        style="@style/Widget.Material3.FloatingActionButton.Primary" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
