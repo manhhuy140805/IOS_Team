@@ -2,103 +2,55 @@ package com.manhhuy.myapplication.ui.Activitys.Fragment;
 
 import android.os.Bundle;
 
-import androidx.activity.EdgeToEdge;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
 
+import android.view.LayoutInflater;
 import android.view.View;
-
+import android.view.ViewGroup;
 
 import com.manhhuy.myapplication.R;
-import com.manhhuy.myapplication.adapter.SearchResultAdapter;
-import com.manhhuy.myapplication.databinding.FragmentSearchBinding;
-import com.manhhuy.myapplication.model.SearchResult;
 
-import java.util.ArrayList;
-import java.util.List;
-
+/**
+ * GIẢI THÍCH: SearchFragment - Trang tìm kiếm sự kiện tình nguyện
+ * Fragment này cho phép người dùng search và filter các sự kiện
+ * Hiện tại đang để placeholder, bạn có thể thêm SearchView và RecyclerView sau
+ */
 public class SearchFragment extends Fragment {
-    private FragmentSearchBinding binding;
-    private SearchResultAdapter adapter;
+
+    public SearchFragment() {
+        // Required empty public constructor
+    }
+
+    public static SearchFragment newInstance() {
+        return new SearchFragment();
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
-
-        binding = FragmentSearchBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
-
-        ViewCompat.setOnApplyWindowInsetsListener(binding.main, (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
-
-        setupRecyclerView();
-        setupFilters();
-        loadSearchResults();
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // GIẢI THÍCH: Inflate layout fragment_search.xml
+        return inflater.inflate(R.layout.fragment_search, container, false);
     }
 
-    private void setupRecyclerView() {
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-        binding.searchResultsRecyclerView.setLayoutManager(layoutManager);
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        // GIẢI THÍCH: Setup search functionality, filters, và RecyclerView ở đây
 
-        adapter = new SearchResultAdapter(new ArrayList<>());
-        binding.searchResultsRecyclerView.setAdapter(adapter);
-
-        adapter.setListener(result -> {
-            // Handle result click - navigate to detail activity
-        });
+        // TODO: Setup SearchView
+        // TODO: Setup Filter buttons
+        // TODO: Setup RecyclerView cho search results
+        // TODO: Load initial data
     }
 
-    private void setupFilters() {
-        binding.applyFilterBtn.setOnClickListener(v -> {
-            String keyword = binding.searchKeyword.getText().toString();
-            applyFilters(keyword);
-        });
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        // Clean up resources
     }
-
-    private void loadSearchResults() {
-        List<SearchResult> results = new ArrayList<>();
-
-        results.add(new SearchResult(
-                "Dọn sạch bờ biển",
-                "Vung Tàu, Green Vietnam",
-                "Vung Tau",
-                R.drawable.ic_launcher_background,
-                "Môi trường",
-                "Ngoài trời",
-                "Mô tả ngắn: Thu gom rác nhưa, phân loại và bàn giao cho đơn vị chế.",
-                "30/10/2025",
-                12,
-                0,
-                "1 ngày"
-        ));
-
-        // Item with image URL
-        results.add(new SearchResult(
-                "Dạy tiếng Anh cho trẻ em",
-                "Education For All, Quận 1, HCM",
-                "Ho Chi Minh City",
-                "https://images2.thanhnien.vn/528068263637045248/2023/4/13/base64-16813649927941566404443.png",
-                "Giáo dục",
-                "Trẻ em",
-                "Mô tả ngắn: Hỗ trợ hỏi tiếng Anh cấp độ cơ bản cho trẻ 6-10 tuổi.",
-                "07/11/2025",
-                6,
-                44,
-                "Linh hoạt"
-        ));
-
-        results.add(new SearchResult(
-                "Hỗ trợ bệnh nhân tại bệnh viện",
-                "Care & Share, Cần Thơ",
-                "Can Tho",
-                R.drawable.ic_launcher_background,
+}
                 "Y tế",
                 "Tâm lý",
                 "Mô tả ngắn: Thăm hỏi, độc sách, hỗ trợ thử tục hành chính cho bệnh nhân.",

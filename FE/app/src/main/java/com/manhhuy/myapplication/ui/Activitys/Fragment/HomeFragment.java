@@ -2,6 +2,8 @@ package com.manhhuy.myapplication.ui.Activitys.Fragment;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -10,74 +12,40 @@ import android.view.ViewGroup;
 
 import com.manhhuy.myapplication.R;
 
+/**
+ * GIẢI THÍCH: HomeFragment - Trang chủ hiển thị danh sách sự kiện tình nguyện
+ * Hiện tại đang để placeholder, bạn có thể thêm RecyclerView và Adapter sau
+ */
 public class HomeFragment extends Fragment {
-    private ActivityHomeBinding binding;
-    private CategoriesAdapter categoriesAdapter;
-    private EventAdapter eventAdapter;
+
+    public HomeFragment() {
+        // Required empty public constructor
+    }
+
+    public static HomeFragment newInstance() {
+        return new HomeFragment();
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        //  onCreateView - Method này tạo View cho Fragment
 
-        binding = ActivityHomeBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
-
-        ViewCompat.setOnApplyWindowInsetsListener(binding.main, (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
-
-        setupCategoriesRecyclerView();
-        setupEventsRecyclerView();
-        loadData();
+        return inflater.inflate(R.layout.fragment_home, container, false);
     }
 
-    private void setupCategoriesRecyclerView() {
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-        binding.categoriesRecyclerView.setLayoutManager(layoutManager);
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+//  chạy SAU KHI view đã được tạo
+        // Đây là nơi để setup RecyclerView, load data, set listeners, etc.
 
-        categoriesAdapter = new CategoriesAdapter(new ArrayList<>());
-        binding.categoriesRecyclerView.setAdapter(categoriesAdapter);
     }
 
-    private void setupEventsRecyclerView() {
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-        binding.eventsRecyclerView.setLayoutManager(layoutManager);
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
 
-        eventAdapter = new EventAdapter(new ArrayList<>());
-        binding.eventsRecyclerView.setAdapter(eventAdapter);
-    }
-
-    private void loadData() {
-        // Load categories data
-        List<Category> categories = new ArrayList<>();
-        categories.add(new Category("Environment", 128, R.drawable.ic_launcher_background));
-        categories.add(new Category("Education", 93, R.drawable.ic_launcher_background));
-        categories.add(new Category("Healthcare", 67, R.drawable.ic_launcher_background));
-        categories.add(new Category("Animal Care", 45, R.drawable.ic_launcher_background));
-
-        categoriesAdapter.setCategories(categories);
-
-        // Load events data
-        List<Event> events = new ArrayList<>();
-        events.add(new Event(
-                "Beach Cleanup",
-                "Green Vietnam",
-                "Environment",
-                R.drawable.ic_launcher_background,
-                "200,000 VND/day",
-                "Vung Tau"));
-        events.add(new Event(
-                "Teach English to Kids",
-                "Education For All",
-                "Teaching",
-                R.drawable.ic_launcher_background,
-                "150,000 VND/shift",
-                "Ho Chi Minh City"));
-
-        eventAdapter.setEvents(events);
     }
 
 }

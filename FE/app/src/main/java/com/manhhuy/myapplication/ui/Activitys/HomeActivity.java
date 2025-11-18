@@ -8,10 +8,9 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
-import com.manhhuy.myapplication.R;
 import com.manhhuy.myapplication.adapter.HomeAdapter;
+import com.manhhuy.myapplication.databinding.ActivityHomeBinding;
 
 
 public class HomeActivity extends AppCompatActivity {
@@ -22,8 +21,11 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_home);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+
+        binding = ActivityHomeBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+
+        ViewCompat.setOnApplyWindowInsetsListener(binding.main, (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
@@ -35,14 +37,20 @@ public class HomeActivity extends AppCompatActivity {
         new TabLayoutMediator(binding.tabLayout, binding.viewPager, (tab, position) -> {
             tab.setText(tabtitles[position]);
         }).attach();
-    }
 
-    @Override
-    public void onBackPressed() {
-        if (binding.viewPager.getCurrentItem() == 0) {
-            super.onBackPressed();
-        } else {
-            binding.viewPager.setCurrentItem(binding.viewPager.getCurrentItem() - 1);
-        }
+        // GIẢI THÍCH: Xử lý nút Back theo cách modern (không dùng onBackPressed cũ nữa)
+        // OnBackPressedCallback cho phép kiểm soát hành vi back button tốt hơn
+        getOnBackPressedDispatcher().addCallback(this, new androidx.activity.OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                // Nếu đang ở tab đầu tiên (Home), cho phép thoát app
+                if (binding.viewPager.getCurrentItem() == 0) {
+                    finish(); // Thoát activity
+                } else {
+                    // Nếu không, quay về tab trước đó
+                    binding.viewPager.setCurrentItem(binding.viewPager.getCurrentItem() - 1);
+                }
+            }
+        });
     }
 }

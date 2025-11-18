@@ -1,43 +1,54 @@
 package com.manhhuy.myapplication.model;
 
+import java.util.Date;
+
 public class User {
-    private String id;
-    private String name;
+    private Integer id;
+    private String fullName;
     private String email;
-    private String joinDate;
-    private int activityCount;
-    private String lastActive;
-    private String status; // "Hoạt động", "Bị khóa", "Chờ xác thực"
-    private String violationType; // "Spam", null if no violation
+    private String password;
+    private String phone;
+    private String avatarUrl;
+    private String role; // VOLUNTEER, ORGANIZER, ADMIN
+    private String status; // ACTIVE, LOCKED, PENDING
+    private Date createdAt;
+    private Date updatedAt;
+
+    // Additional fields for UI
+    private int eventsCount;
+    private int pointsCount;
 
     public User() {
     }
 
-    public User(String id, String name, String email, String joinDate, int activityCount, String lastActive, String status, String violationType) {
+    public User(Integer id, String fullName, String email, String phone, String avatarUrl,
+                String role, String status, Date createdAt) {
         this.id = id;
-        this.name = name;
+        this.fullName = fullName;
         this.email = email;
-        this.joinDate = joinDate;
-        this.activityCount = activityCount;
-        this.lastActive = lastActive;
+        this.phone = phone;
+        this.avatarUrl = avatarUrl;
+        this.role = role;
         this.status = status;
-        this.violationType = violationType;
+        this.createdAt = createdAt;
+        this.updatedAt = new Date();
     }
 
-    public String getId() {
+    // Getters and Setters
+    public Integer getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getFullName() {
+        return fullName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 
     public String getEmail() {
@@ -48,28 +59,36 @@ public class User {
         this.email = email;
     }
 
-    public String getJoinDate() {
-        return joinDate;
+    public String getPassword() {
+        return password;
     }
 
-    public void setJoinDate(String joinDate) {
-        this.joinDate = joinDate;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
-    public int getActivityCount() {
-        return activityCount;
+    public String getPhone() {
+        return phone;
     }
 
-    public void setActivityCount(int activityCount) {
-        this.activityCount = activityCount;
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
-    public String getLastActive() {
-        return lastActive;
+    public String getAvatarUrl() {
+        return avatarUrl;
     }
 
-    public void setLastActive(String lastActive) {
-        this.lastActive = lastActive;
+    public void setAvatarUrl(String avatarUrl) {
+        this.avatarUrl = avatarUrl;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 
     public String getStatus() {
@@ -80,11 +99,35 @@ public class User {
         this.status = status;
     }
 
-    public String getViolationType() {
-        return violationType;
+    public Date getCreatedAt() {
+        return createdAt;
     }
 
-    public void setViolationType(String violationType) {
-        this.violationType = violationType;
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Date getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Date updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public int getEventsCount() {
+        return eventsCount;
+    }
+
+    public void setEventsCount(int eventsCount) {
+        this.eventsCount = eventsCount;
+    }
+
+    public int getPointsCount() {
+        return pointsCount;
+    }
+
+    public void setPointsCount(int pointsCount) {
+        this.pointsCount = pointsCount;
     }
 }
