@@ -11,8 +11,10 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.manhhuy.myapplication.R;
+import com.manhhuy.myapplication.adapter.FilterCategoryAdapter;
 import com.manhhuy.myapplication.adapter.SearchResultAdapter;
 import com.manhhuy.myapplication.databinding.ActivitySearchBinding;
+import com.manhhuy.myapplication.model.FilterCategory;
 import com.manhhuy.myapplication.model.SearchResult;
 
 import java.util.ArrayList;
@@ -22,6 +24,7 @@ public class SearchActivity extends AppCompatActivity {
 
     private ActivitySearchBinding binding;
     private SearchResultAdapter adapter;
+    private FilterCategoryAdapter categoryAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,9 +40,28 @@ public class SearchActivity extends AppCompatActivity {
             return insets;
         });
 
+        setupCategoryFiltersRecyclerView();
         setupRecyclerView();
         setupFilters();
         loadSearchResults();
+    }
+
+    private void setupCategoryFiltersRecyclerView() {
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        binding.categoryFiltersRecyclerView.setLayoutManager(layoutManager);
+        
+        List<FilterCategory> filterCategories = new ArrayList<>();
+        filterCategories.add(new FilterCategory("Environment", false));
+        filterCategories.add(new FilterCategory("Education", false));
+        filterCategories.add(new FilterCategory("Healthcare", false));
+        filterCategories.add(new FilterCategory("Animal Care", false));
+        filterCategories.add(new FilterCategory("Technology", false));
+        
+        categoryAdapter = new FilterCategoryAdapter(filterCategories);
+        categoryAdapter.setListener((category, isSelected) -> {
+            // Handle category selection
+        });
+        binding.categoryFiltersRecyclerView.setAdapter(categoryAdapter);
     }
 
     private void setupRecyclerView() {
@@ -55,10 +77,51 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     private void setupFilters() {
+        // Filter button - toggle filter panel visibility
+        binding.filterButton.setOnClickListener(v -> {
+            if (binding.filterPanel.getVisibility() == View.GONE) {
+                binding.filterPanel.setVisibility(View.VISIBLE);
+            } else {
+                binding.filterPanel.setVisibility(View.GONE);
+            }
+        });
+        
+        // Apply filter button
         binding.applyFilterBtn.setOnClickListener(v -> {
             String keyword = binding.searchKeyword.getText().toString();
             applyFilters(keyword);
+            // Optionally hide filter panel after applying
+            binding.filterPanel.setVisibility(View.GONE);
         });
+        
+        // Clear filters button
+        binding.clearFiltersBtn.setOnClickListener(v -> {
+            clearAllFilters();
+        });
+        
+        // Reset filter button
+        binding.resetFilterBtn.setOnClickListener(v -> {
+            clearAllFilters();
+        });
+    }
+
+    private void clearAllFilters() {
+        binding.searchKeyword.setText("");
+        binding.startDate.setText("");
+        binding.endDate.setText("");
+        
+        // Clear category selections
+        if (categoryAdapter != null) {
+            List<FilterCategory> categories = new ArrayList<>();
+            categories.add(new FilterCategory("Environment", false));
+            categories.add(new FilterCategory("Education", false));
+            categories.add(new FilterCategory("Healthcare", false));
+            categories.add(new FilterCategory("Animal Care", false));
+            categories.add(new FilterCategory("Technology", false));
+            categoryAdapter.setCategories(categories);
+        }
+        
+        loadSearchResults();
     }
 
     private void loadSearchResults() {
@@ -119,15 +182,6 @@ public class SearchActivity extends AppCompatActivity {
 
     private void applyFilters(String keyword) {
         // Filter results based on keyword and other filters
-        String category = "";
-        if (binding.categoryEnvironment.isChecked()) {
-            category = "Môi trường";
-        } else if (binding.categoryEducation.isChecked()) {
-            category = "Giáo dục";
-        } else if (binding.categoryHealth.isChecked()) {
-            category = "Y tế";
-        }
-
         String startDate = binding.startDate.getText().toString();
         String endDate = binding.endDate.getText().toString();
 
