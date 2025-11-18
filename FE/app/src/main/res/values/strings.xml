@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">My Application</string>
+    
+    <string-array name="sort_options">
+        <item>Most Relevant</item>
+        <item>Recently Posted</item>
+        <item>Deadline Soon</item>
+        <item>Highest Points</item>
+        <item>Most Popular</item>
+    </string-array>
 </resources>
