@@ -26,7 +26,7 @@ private ActivityMainBinding binding;
         });
 
         binding.btnSignIn.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, SignInActivity.class);
+//            Intent intent = new Intent(MainActivity.this, SignInActivity.class);
         });
     }
 }
