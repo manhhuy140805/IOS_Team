@@ -46,7 +46,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Search Results"
+                    android:text="@string/search_results_title"
                     android:textSize="22sp"
                     android:textStyle="bold"
                     android:textColor="@android:color/white" />
@@ -55,7 +55,7 @@
                     android:id="@+id/viewMoreFilters"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="24 opportunities found"
+                    android:text="@string/opportunities_found"
                     android:textSize="12sp"
                     android:textColor="@android:color/white"
                     android:alpha="0.85"
@@ -102,7 +102,8 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:hint="Search keyword..."
+                        android:hint="@string/search_keyword_hint"
+                        android:autofillHints="none"
                         android:paddingStart="10dp"
                         android:paddingEnd="10dp"
                         android:background="@android:color/transparent"
@@ -187,7 +188,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Filters"
+                            android:text="@string/filters_label"
                             android:textSize="14sp"
                             android:textStyle="bold"
                             android:textColor="@android:color/black" />
@@ -196,7 +197,7 @@
                             android:id="@+id/clearFiltersBtn"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Clear All"
+                            android:text="@string/clear_all"
                             android:textSize="11sp"
                             android:textColor="@android:color/holo_blue_dark"
                             android:textStyle="bold" />
@@ -213,7 +214,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Category"
+                            android:text="@string/category_label"
                             android:textSize="12sp"
                             android:textStyle="bold"
                             android:textColor="@android:color/black"
@@ -226,8 +227,43 @@
                             android:orientation="horizontal"
                             android:scrollbars="none"
                             android:clipToPadding="false"
+                            android:paddingStart="8dp"
                             android:paddingEnd="8dp"
                             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+                        <!-- Added CheckBoxes for category filters to match binding IDs used in SearchFragment.java -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginBottom="8dp">
+
+                            <CheckBox
+                                android:id="@+id/categoryEnvironment"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Môi trường"
+                                android:textSize="12sp" />
+
+                            <CheckBox
+                                android:id="@+id/categoryEducation"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Giáo dục"
+                                android:textSize="12sp"
+                                android:layout_marginStart="12dp" />
+
+                            <CheckBox
+                                android:id="@+id/categoryHealth"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Y tế"
+                                android:textSize="12sp"
+                                android:layout_marginStart="12dp" />
+
+                        </LinearLayout>
 
                     </LinearLayout>
 
@@ -248,7 +284,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Registration Deadline"
+                            android:text="@string/registration_deadline"
                             android:textSize="12sp"
                             android:textStyle="bold"
                             android:textColor="@android:color/black"
@@ -291,7 +327,8 @@
                                         android:layout_width="0dp"
                                         android:layout_height="match_parent"
                                         android:layout_weight="1"
-                                        android:hint="From"
+                                        android:hint="@string/from_hint"
+                                        android:autofillHints="none"
                                         android:inputType="date"
                                         android:background="@android:color/transparent"
                                         android:textSize="12sp"
@@ -332,7 +369,8 @@
                                         android:layout_width="0dp"
                                         android:layout_height="match_parent"
                                         android:layout_weight="1"
-                                        android:hint="To"
+                                        android:hint="@string/to_hint"
+                                        android:autofillHints="none"
                                         android:inputType="date"
                                         android:background="@android:color/transparent"
                                         android:textSize="12sp"
@@ -367,7 +405,8 @@
                             android:layout_width="0dp"
                             android:layout_height="40dp"
                             android:layout_weight="1"
-                            android:text="Reset"
+                            style="?android:attr/buttonBarButtonStyle"
+                            android:text="@string/reset"
                             android:textColor="@android:color/holo_blue_dark"
                             android:textSize="12sp"
                             android:textStyle="bold"
@@ -380,7 +419,8 @@
                             android:layout_width="0dp"
                             android:layout_height="40dp"
                             android:layout_weight="1"
-                            android:text="Apply Filters"
+                            style="?android:attr/buttonBarButtonStyle"
+                            android:text="@string/apply_filters"
                             android:textColor="@android:color/white"
                             android:textSize="12sp"
                             android:textStyle="bold"
@@ -404,7 +444,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Results"
+                    android:text="@string/results_label"
                     android:textSize="14sp"
                     android:textStyle="bold"
                     android:textColor="@android:color/black" />
@@ -450,7 +490,7 @@
                     android:id="@+id/noResultsMessage"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="No results found"
+                    android:text="@string/no_results"
                     android:textSize="14sp"
                     android:textStyle="bold"
                     android:textColor="@android:color/darker_gray"
@@ -460,7 +500,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Try adjusting your filters or search keywords"
+                    android:text="@string/no_results_sub"
                     android:textSize="12sp"
                     android:textColor="@android:color/darker_gray"
                     android:gravity="center"

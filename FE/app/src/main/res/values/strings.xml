@@ -11,4 +11,20 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
+    <!-- Strings added for SearchFragment -->
+    <string name="search_results_title">Search Results</string>
+    <string name="opportunities_found">%1$d kết quả</string>
+    <string name="search_keyword_hint">Search keyword…</string>
+    <string name="filters_label">Filters</string>
+    <string name="clear_all">Clear All</string>
+    <string name="category_label">Category</string>
+    <string name="registration_deadline">Registration Deadline</string>
+    <string name="from_hint">From</string>
+    <string name="to_hint">To</string>
+    <string name="reset">Reset</string>
+    <string name="apply_filters">Apply Filters</string>
+    <string name="results_label">Results</string>
+    <string name="no_results">No results found</string>
+    <string name="no_results_sub">Try adjusting your filters or search keywords</string>
+
 </resources>

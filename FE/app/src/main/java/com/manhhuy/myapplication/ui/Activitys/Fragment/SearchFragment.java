@@ -216,7 +216,8 @@ public class SearchFragment extends Fragment {
     }
 
     private void updateResultCount(int count) {
-        binding.viewMoreFilters.setText("→ " + count + " kết quả");
+        // Use string resource with placeholder to support localization and avoid lint warnings
+        binding.viewMoreFilters.setText(getString(R.string.opportunities_found, count));
     }
 
     @Override

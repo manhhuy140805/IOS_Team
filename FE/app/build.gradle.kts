@@ -35,6 +35,14 @@ android {
 }
 
 dependencies {
+// Retrofit
+    implementation("com.squareup.retrofit2:retrofit:2.11.0")
+// Gson converter (chuyển JSON <-> Object)
+    implementation("com.squareup.retrofit2:converter-gson:2.11.0")
+// OkHttp (HTTP client chính của Retrofit)
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
+// Logging Interceptor (dùng để log request/response)
+    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
 
     implementation(libs.appcompat)
     implementation(libs.material)
