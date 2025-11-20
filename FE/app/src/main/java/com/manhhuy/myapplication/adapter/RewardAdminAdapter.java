@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.manhhuy.myapplication.R;
+import com.manhhuy.myapplication.databinding.ItemRewardAdminBinding;
 import com.manhhuy.myapplication.model.RewardItem;
 
 import java.util.List;
@@ -37,43 +38,43 @@ public class RewardAdminAdapter extends RecyclerView.Adapter<RewardAdminAdapter.
     @NonNull
     @Override
     public RewardViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_reward_admin, parent, false);
-        return new RewardViewHolder(view);
+        ItemRewardAdminBinding binding = ItemRewardAdminBinding.inflate(LayoutInflater.from(context), parent, false);
+        return new RewardViewHolder(binding);
     }
 
     @Override
     public void onBindViewHolder(@NonNull RewardViewHolder holder, int position) {
         RewardItem reward = rewardList.get(position);
 
-        holder.tvRewardName.setText(reward.getName());
-        holder.tvRewardCategory.setText(getCategoryText(reward.getCategoryType()));
-        holder.tvRewardPoints.setText("⭐ " + reward.getPoints() + " điểm");
-        holder.tvStock.setText("Còn: " + reward.getStock());
+        holder.binding.tvRewardName.setText(reward.getName());
+        holder.binding.tvRewardCategory.setText(getCategoryText(reward.getCategoryType()));
+        holder.binding.tvRewardPoints.setText("⭐ " + reward.getPoints() + " điểm");
+        holder.binding.tvStock.setText("Còn: " + reward.getStock());
         
         // Calculate redeemed count (mock data - should come from backend)
         int redeemed = calculateRedeemed(reward);
-        holder.tvRedeemed.setText("Đã đổi: " + redeemed);
+        holder.binding.tvRedeemed.setText("Đã đổi: " + redeemed);
 
         // Set status
         setStatusBadge(holder, reward);
 
         // Set icon based on category
-        setRewardIcon(holder.ivRewardImage, reward);
+        setRewardIcon(holder.binding.ivRewardImage, reward);
 
         // Button listeners
-        holder.btnEdit.setOnClickListener(v -> {
+        holder.binding.btnEdit.setOnClickListener(v -> {
             if (listener != null) {
                 listener.onEditClick(reward, position);
             }
         });
 
-        holder.btnPause.setOnClickListener(v -> {
+        holder.binding.btnPause.setOnClickListener(v -> {
             if (listener != null) {
                 listener.onPauseClick(reward, position);
             }
         });
 
-        holder.btnDelete.setOnClickListener(v -> {
+        holder.binding.btnDelete.setOnClickListener(v -> {
             if (listener != null) {
                 listener.onDeleteClick(reward, position);
             }
@@ -102,18 +103,18 @@ public class RewardAdminAdapter extends RecyclerView.Adapter<RewardAdminAdapter.
         int stock = Integer.parseInt(reward.getStock());
         
         if (stock == 0) {
-            holder.tvStatus.setText("Tạm ngưng");
-            holder.tvStatus.setBackgroundResource(R.drawable.bg_button_lock);
-            holder.tvStatus.setTextColor(context.getResources().getColor(R.color.status_rejected));
-            holder.btnPause.setText("Kích hoạt");
+            holder.binding.tvStatus.setText("Tạm ngưng");
+            holder.binding.tvStatus.setBackgroundResource(R.drawable.bg_button_lock);
+            holder.binding.tvStatus.setTextColor(context.getResources().getColor(R.color.status_rejected));
+            holder.binding.btnPause.setText("Kích hoạt");
         } else if (stock <= 5) {
-            holder.tvStatus.setText("Sắp hết hàng");
-            holder.tvStatus.setBackgroundResource(R.drawable.bg_button_delete);
-            holder.tvStatus.setTextColor(context.getResources().getColor(R.color.status_rejected));
+            holder.binding.tvStatus.setText("Sắp hết hàng");
+            holder.binding.tvStatus.setBackgroundResource(R.drawable.bg_button_delete);
+            holder.binding.tvStatus.setTextColor(context.getResources().getColor(R.color.status_rejected));
         } else {
-            holder.tvStatus.setText("Đang hoạt động");
-            holder.tvStatus.setBackgroundResource(R.drawable.bg_status_active_reward);
-            holder.tvStatus.setTextColor(context.getResources().getColor(R.color.app_green_primary));
+            holder.binding.tvStatus.setText("Đang hoạt động");
+            holder.binding.tvStatus.setBackgroundResource(R.drawable.bg_status_active_reward);
+            holder.binding.tvStatus.setTextColor(context.getResources().getColor(R.color.app_green_primary));
         }
     }
 
@@ -143,23 +144,11 @@ public class RewardAdminAdapter extends RecyclerView.Adapter<RewardAdminAdapter.
     }
 
     static class RewardViewHolder extends RecyclerView.ViewHolder {
-        ImageView ivRewardImage;
-        TextView tvRewardName, tvRewardCategory, tvRewardPoints;
-        TextView tvStock, tvRedeemed, tvStatus;
-        Button btnEdit, btnPause, btnDelete;
+        ItemRewardAdminBinding binding;
 
-        public RewardViewHolder(@NonNull View itemView) {
-            super(itemView);
-            ivRewardImage = itemView.findViewById(R.id.ivRewardImage);
-            tvRewardName = itemView.findViewById(R.id.tvRewardName);
-            tvRewardCategory = itemView.findViewById(R.id.tvRewardCategory);
-            tvRewardPoints = itemView.findViewById(R.id.tvRewardPoints);
-            tvStock = itemView.findViewById(R.id.tvStock);
-            tvRedeemed = itemView.findViewById(R.id.tvRedeemed);
-            tvStatus = itemView.findViewById(R.id.tvStatus);
-            btnEdit = itemView.findViewById(R.id.btnEdit);
-            btnPause = itemView.findViewById(R.id.btnPause);
-            btnDelete = itemView.findViewById(R.id.btnDelete);
+        public RewardViewHolder(@NonNull ItemRewardAdminBinding binding) {
+            super(binding.getRoot());
+            this.binding = binding;
         }
     }
 }

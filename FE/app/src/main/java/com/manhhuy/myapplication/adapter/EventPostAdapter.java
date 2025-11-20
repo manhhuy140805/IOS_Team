@@ -13,6 +13,7 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.manhhuy.myapplication.R;
+import com.manhhuy.myapplication.databinding.ItemEventPostBinding;
 import com.manhhuy.myapplication.model.EventPost;
 
 import java.text.SimpleDateFormat;
@@ -40,9 +41,8 @@ public class EventPostAdapter extends RecyclerView.Adapter<EventPostAdapter.View
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_event_post, parent, false);
-        return new ViewHolder(view);
+        ItemEventPostBinding binding = ItemEventPostBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+        return new ViewHolder(binding);
     }
 
     @Override
@@ -50,97 +50,97 @@ public class EventPostAdapter extends RecyclerView.Adapter<EventPostAdapter.View
         EventPost post = eventPosts.get(position);
         
         // Set title
-        holder.tvTitle.setText(post.getTitle());
+        holder.binding.tvTitle.setText(post.getTitle());
         
         // Set organization
-        holder.tvOrgInitials.setText(post.getOrganizationInitials());
-        holder.tvOrgName.setText(post.getOrganizationName());
+        holder.binding.tvOrgInitials.setText(post.getOrganizationInitials());
+        holder.binding.tvOrgName.setText(post.getOrganizationName());
         
         // Set organization color
         if (post.getOrganizationColor() != null) {
-            holder.tvOrgInitials.setBackgroundColor(Color.parseColor(post.getOrganizationColor()));
+            holder.binding.tvOrgInitials.setBackgroundColor(Color.parseColor(post.getOrganizationColor()));
         }
         
         // Set date
         if (post.getEventDate() != null) {
             SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-            holder.tvDate.setText(sdf.format(post.getEventDate()));
+            holder.binding.tvDate.setText(sdf.format(post.getEventDate()));
         }
         
         // Set location
-        holder.tvLocation.setText(post.getLocation());
+        holder.binding.tvLocation.setText(post.getLocation());
         
         // Set reward
-        holder.tvReward.setText(post.getRewardPoints() + "đ");
+        holder.binding.tvReward.setText(post.getRewardPoints() + "đ");
         
         // Set posted info
         String postedInfo = "Đăng bởi: " + post.getPostedBy() + " • " + post.getPostedTime();
-        holder.tvPostedInfo.setText(postedInfo);
+        holder.binding.tvPostedInfo.setText(postedInfo);
         
         // Set status and buttons based on post status
         String status = post.getStatus();
         if ("pending".equals(status)) {
-            holder.tvStatus.setText("⏳ Chờ duyệt");
-            holder.tvStatus.setBackgroundResource(R.drawable.status_pending);
-            holder.layoutActionButtons.setVisibility(View.VISIBLE);
-            holder.layoutApprovedButtons.setVisibility(View.GONE);
-            holder.layoutRejectionReason.setVisibility(View.GONE);
-            holder.btnReview.setVisibility(View.GONE);
+            holder.binding.tvStatus.setText("⏳ Chờ duyệt");
+            holder.binding.tvStatus.setBackgroundResource(R.drawable.status_pending);
+            holder.binding.layoutActionButtons.setVisibility(View.VISIBLE);
+            holder.binding.layoutApprovedButtons.setVisibility(View.GONE);
+            holder.binding.layoutRejectionReason.setVisibility(View.GONE);
+            holder.binding.btnReview.setVisibility(View.GONE);
             
         } else if ("approved".equals(status)) {
-            holder.tvStatus.setText("✓ Đã duyệt");
-            holder.tvStatus.setBackgroundResource(R.drawable.status_approved);
-            holder.layoutActionButtons.setVisibility(View.GONE);
-            holder.layoutApprovedButtons.setVisibility(View.VISIBLE);
-            holder.layoutRejectionReason.setVisibility(View.GONE);
-            holder.btnReview.setVisibility(View.GONE);
+            holder.binding.tvStatus.setText("✓ Đã duyệt");
+            holder.binding.tvStatus.setBackgroundResource(R.drawable.status_approved);
+            holder.binding.layoutActionButtons.setVisibility(View.GONE);
+            holder.binding.layoutApprovedButtons.setVisibility(View.VISIBLE);
+            holder.binding.layoutRejectionReason.setVisibility(View.GONE);
+            holder.binding.btnReview.setVisibility(View.GONE);
             
             // Update posted info for approved posts
             String reviewedInfo = "Duyệt bởi: " + post.getReviewedBy() + " • " + post.getReviewedTime();
-            holder.tvPostedInfo.setText(reviewedInfo);
+            holder.binding.tvPostedInfo.setText(reviewedInfo);
             
         } else if ("rejected".equals(status)) {
-            holder.tvStatus.setText("✕ Từ chối");
-            holder.tvStatus.setBackgroundResource(R.drawable.status_rejected);
-            holder.layoutActionButtons.setVisibility(View.GONE);
-            holder.layoutApprovedButtons.setVisibility(View.GONE);
-            holder.layoutRejectionReason.setVisibility(View.VISIBLE);
-            holder.btnReview.setVisibility(View.VISIBLE);
+            holder.binding.tvStatus.setText("✕ Từ chối");
+            holder.binding.tvStatus.setBackgroundResource(R.drawable.status_rejected);
+            holder.binding.layoutActionButtons.setVisibility(View.GONE);
+            holder.binding.layoutApprovedButtons.setVisibility(View.GONE);
+            holder.binding.layoutRejectionReason.setVisibility(View.VISIBLE);
+            holder.binding.btnReview.setVisibility(View.VISIBLE);
             
             // Set rejection reason
-            holder.tvRejectionReason.setText(post.getRejectionReason());
+            holder.binding.tvRejectionReason.setText(post.getRejectionReason());
             
             // Update posted info for rejected posts
             String rejectedInfo = "Từ chối bởi: " + post.getReviewedBy() + " • " + post.getReviewedTime();
-            holder.tvPostedInfo.setText(rejectedInfo);
+            holder.binding.tvPostedInfo.setText(rejectedInfo);
         }
         
         // Set click listeners
-        holder.btnApprove.setOnClickListener(v -> {
+        holder.binding.btnApprove.setOnClickListener(v -> {
             if (listener != null) {
                 listener.onApproveClick(post, position);
             }
         });
         
-        holder.btnReject.setOnClickListener(v -> {
+        holder.binding.btnReject.setOnClickListener(v -> {
             if (listener != null) {
                 listener.onRejectClick(post, position);
             }
         });
         
-        holder.btnStatistics.setOnClickListener(v -> {
+        holder.binding.btnStatistics.setOnClickListener(v -> {
             if (listener != null) {
                 listener.onStatisticsClick(post, position);
             }
         });
         
-        holder.btnEdit.setOnClickListener(v -> {
+        holder.binding.btnEdit.setOnClickListener(v -> {
             if (listener != null) {
                 listener.onEditClick(post, position);
             }
         });
         
-        holder.btnReview.setOnClickListener(v -> {
+        holder.binding.btnReview.setOnClickListener(v -> {
             if (listener != null) {
                 listener.onReviewClick(post, position);
             }
@@ -158,33 +158,11 @@ public class EventPostAdapter extends RecyclerView.Adapter<EventPostAdapter.View
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
-        ImageView imgEvent;
-        TextView tvStatus, tvTitle, tvOrgInitials, tvOrgName;
-        TextView tvDate, tvLocation, tvReward, tvPostedInfo;
-        TextView tvRejectionReason;
-        LinearLayout layoutActionButtons, layoutApprovedButtons, layoutRejectionReason;
-        CardView btnApprove, btnReject, btnStatistics, btnEdit, btnReview;
+        ItemEventPostBinding binding;
 
-        ViewHolder(View itemView) {
-            super(itemView);
-            imgEvent = itemView.findViewById(R.id.imgEvent);
-            tvStatus = itemView.findViewById(R.id.tvStatus);
-            tvTitle = itemView.findViewById(R.id.tvTitle);
-            tvOrgInitials = itemView.findViewById(R.id.tvOrgInitials);
-            tvOrgName = itemView.findViewById(R.id.tvOrgName);
-            tvDate = itemView.findViewById(R.id.tvDate);
-            tvLocation = itemView.findViewById(R.id.tvLocation);
-            tvReward = itemView.findViewById(R.id.tvReward);
-            tvPostedInfo = itemView.findViewById(R.id.tvPostedInfo);
-            tvRejectionReason = itemView.findViewById(R.id.tvRejectionReason);
-            layoutActionButtons = itemView.findViewById(R.id.layoutActionButtons);
-            layoutApprovedButtons = itemView.findViewById(R.id.layoutApprovedButtons);
-            layoutRejectionReason = itemView.findViewById(R.id.layoutRejectionReason);
-            btnApprove = itemView.findViewById(R.id.btnApprove);
-            btnReject = itemView.findViewById(R.id.btnReject);
-            btnStatistics = itemView.findViewById(R.id.btnStatistics);
-            btnEdit = itemView.findViewById(R.id.btnEdit);
-            btnReview = itemView.findViewById(R.id.btnReview);
+        ViewHolder(ItemEventPostBinding binding) {
+            super(binding.getRoot());
+            this.binding = binding;
         }
     }
 }

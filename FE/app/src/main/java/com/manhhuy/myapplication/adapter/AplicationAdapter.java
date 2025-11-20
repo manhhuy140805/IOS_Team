@@ -15,6 +15,7 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.manhhuy.myapplication.R;
+import com.manhhuy.myapplication.databinding.ItemApplicantBinding;
 import com.manhhuy.myapplication.model.Applicant;
 
 import java.util.ArrayList;
@@ -45,8 +46,8 @@ public class AplicationAdapter extends RecyclerView.Adapter<AplicationAdapter.Ap
     @NonNull
     @Override
     public ApplicantViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_applicant, parent, false);
-        return new ApplicantViewHolder(view);
+        ItemApplicantBinding binding = ItemApplicantBinding.inflate(LayoutInflater.from(context), parent, false);
+        return new ApplicantViewHolder(binding);
     }
 
     @Override
@@ -54,50 +55,50 @@ public class AplicationAdapter extends RecyclerView.Adapter<AplicationAdapter.Ap
         Applicant applicant = applicantList.get(position);
 
         // Set data
-        holder.tvName.setText(applicant.getName());
-        holder.tvEmail.setText(applicant.getEmail());
-        holder.tvActivityName.setText(applicant.getActivityName());
-        holder.tvRegDate.setText(applicant.getRegistrationDate());
-        holder.tvPhone.setText(applicant.getPhone());
+        holder.binding.tvName.setText(applicant.getName());
+        holder.binding.tvEmail.setText(applicant.getEmail());
+        holder.binding.tvActivityName.setText(applicant.getActivityName());
+        holder.binding.tvRegDate.setText(applicant.getRegistrationDate());
+        holder.binding.tvPhone.setText(applicant.getPhone());
 
         // Set note
         if (applicant.getNote() != null && !applicant.getNote().isEmpty()) {
-            holder.noteSection.setVisibility(View.VISIBLE);
-            holder.tvNote.setText(applicant.getNote());
+            holder.binding.noteSection.setVisibility(View.VISIBLE);
+            holder.binding.tvNote.setText(applicant.getNote());
         } else {
-            holder.noteSection.setVisibility(View.GONE);
+            holder.binding.noteSection.setVisibility(View.GONE);
         }
 
         // Set status and buttons
         switch (applicant.getStatus()) {
             case 0: // Pending
-                holder.tvStatus.setText("Chờ duyệt");
-                holder.tvStatus.setBackgroundResource(R.drawable.bg_status_pending);
-                holder.tvStatus.setTextColor(ContextCompat.getColor(context, R.color.orange));
-                holder.actionButtons.setVisibility(View.VISIBLE);
+                holder.binding.tvStatus.setText("Chờ duyệt");
+                holder.binding.tvStatus.setBackgroundResource(R.drawable.bg_status_pending);
+                holder.binding.tvStatus.setTextColor(ContextCompat.getColor(context, R.color.orange));
+                holder.binding.actionButtons.setVisibility(View.VISIBLE);
                 break;
             case 1: // Accepted
-                holder.tvStatus.setText("Đã chấp nhận");
-                holder.tvStatus.setBackgroundResource(R.drawable.bg_status_accepted);
-                holder.tvStatus.setTextColor(ContextCompat.getColor(context, R.color.app_green_primary));
-                holder.actionButtons.setVisibility(View.GONE);
+                holder.binding.tvStatus.setText("Đã chấp nhận");
+                holder.binding.tvStatus.setBackgroundResource(R.drawable.bg_status_accepted);
+                holder.binding.tvStatus.setTextColor(ContextCompat.getColor(context, R.color.app_green_primary));
+                holder.binding.actionButtons.setVisibility(View.GONE);
                 break;
             case 2: // Rejected
-                holder.tvStatus.setText("Đã từ chối");
-                holder.tvStatus.setBackgroundResource(R.drawable.bg_reject_button);
-                holder.tvStatus.setTextColor(ContextCompat.getColor(context, android.R.color.holo_red_dark));
-                holder.actionButtons.setVisibility(View.GONE);
+                holder.binding.tvStatus.setText("Đã từ chối");
+                holder.binding.tvStatus.setBackgroundResource(R.drawable.bg_reject_button);
+                holder.binding.tvStatus.setTextColor(ContextCompat.getColor(context, android.R.color.holo_red_dark));
+                holder.binding.actionButtons.setVisibility(View.GONE);
                 break;
         }
 
         // Button listeners
-        holder.btnAccept.setOnClickListener(v -> {
+        holder.binding.btnAccept.setOnClickListener(v -> {
             if (listener != null) {
                 listener.onAccept(applicant, position);
             }
         });
 
-        holder.btnReject.setOnClickListener(v -> {
+        holder.binding.btnReject.setOnClickListener(v -> {
             if (listener != null) {
                 listener.onReject(applicant, position);
             }
@@ -169,28 +170,11 @@ public class AplicationAdapter extends RecyclerView.Adapter<AplicationAdapter.Ap
     }
 
     static class ApplicantViewHolder extends RecyclerView.ViewHolder {
-        ImageView ivAvatar;
-        TextView tvName, tvEmail, tvStatus;
-        TextView tvActivityName, tvRegDate, tvPhone;
-        LinearLayout noteSection, actionButtons;
-        TextView tvNote;
-        Button btnAccept, btnReject;
+        ItemApplicantBinding binding;
 
-        public ApplicantViewHolder(@NonNull View itemView) {
-            super(itemView);
-
-            ivAvatar = itemView.findViewById(R.id.ivAvatar);
-            tvName = itemView.findViewById(R.id.tvName);
-            tvEmail = itemView.findViewById(R.id.tvEmail);
-            tvStatus = itemView.findViewById(R.id.tvStatus);
-            tvActivityName = itemView.findViewById(R.id.tvActivityName);
-            tvRegDate = itemView.findViewById(R.id.tvRegDate);
-            tvPhone = itemView.findViewById(R.id.tvPhone);
-            noteSection = itemView.findViewById(R.id.noteSection);
-            tvNote = itemView.findViewById(R.id.tvNote);
-            actionButtons = itemView.findViewById(R.id.actionButtons);
-            btnAccept = itemView.findViewById(R.id.btnAccept);
-            btnReject = itemView.findViewById(R.id.btnReject);
+        public ApplicantViewHolder(@NonNull ItemApplicantBinding binding) {
+            super(binding.getRoot());
+            this.binding = binding;
         }
     }
 }

@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.imageview.ShapeableImageView;
 import com.manhhuy.myapplication.R;
+import com.manhhuy.myapplication.databinding.ItemOrganizationBinding;
 import com.manhhuy.myapplication.model.Organization;
 
 import java.util.List;
@@ -34,9 +35,8 @@ public class OrganizationAdapter extends RecyclerView.Adapter<OrganizationAdapte
     @NonNull
     @Override
     public OrgViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_organization, parent, false);
-        return new OrgViewHolder(view);
+        ItemOrganizationBinding binding = ItemOrganizationBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+        return new OrgViewHolder(binding);
     }
 
     @Override
@@ -56,82 +56,62 @@ public class OrganizationAdapter extends RecyclerView.Adapter<OrganizationAdapte
     }
 
     static class OrgViewHolder extends RecyclerView.ViewHolder {
-        private ShapeableImageView ivOrgLogo;
-        private TextView tvOrgName;
-        private TextView tvOrgEmail;
-        private TextView tvOrgStatus;
-        private TextView tvFoundedDate;
-        private TextView tvMemberCount;
-        private LinearLayout llViolationWarning;
-        private TextView tvViolationType;
-        private TextView btnView;
-        private TextView btnLockUnlock;
-        private TextView btnDelete;
+        private ItemOrganizationBinding binding;
 
-        public OrgViewHolder(@NonNull View itemView) {
-            super(itemView);
-            ivOrgLogo = itemView.findViewById(R.id.ivOrgLogo);
-            tvOrgName = itemView.findViewById(R.id.tvOrgName);
-            tvOrgEmail = itemView.findViewById(R.id.tvOrgEmail);
-            tvOrgStatus = itemView.findViewById(R.id.tvOrgStatus);
-            tvFoundedDate = itemView.findViewById(R.id.tvFoundedDate);
-            tvMemberCount = itemView.findViewById(R.id.tvMemberCount);
-            llViolationWarning = itemView.findViewById(R.id.llViolationWarning);
-            tvViolationType = itemView.findViewById(R.id.tvViolationType);
-            btnView = itemView.findViewById(R.id.btnView);
-            btnLockUnlock = itemView.findViewById(R.id.btnLockUnlock);
-            btnDelete = itemView.findViewById(R.id.btnDelete);
+        public OrgViewHolder(@NonNull ItemOrganizationBinding binding) {
+            super(binding.getRoot());
+            this.binding = binding;
         }
 
         public void bind(Organization organization, OnOrganizationActionListener listener) {
             // Set basic info
-            tvOrgName.setText(organization.getName());
-            tvOrgEmail.setText(organization.getEmail());
-            tvFoundedDate.setText("Thành lập: " + organization.getFoundedDate());
-            tvMemberCount.setText("Thành viên: " + organization.getMemberCount());
+            binding.tvOrgName.setText(organization.getName());
+            binding.tvOrgEmail.setText(organization.getEmail());
+            binding.tvFoundedDate.setText("Thành lập: " + organization.getFoundedDate());
+            binding.tvMemberCount.setText("Thành viên: " + organization.getMemberCount());
 
             // Set status badge
-            tvOrgStatus.setText(organization.getStatus());
+            binding.tvOrgStatus.setText(organization.getStatus());
             switch (organization.getStatus()) {
                 case "Hoạt động":
-                    tvOrgStatus.setBackgroundResource(R.drawable.bg_status_active);
-                    tvOrgStatus.setTextColor(itemView.getContext().getColor(R.color.app_green_primary));
-                    btnLockUnlock.setText("Khóa");
+                    binding.tvOrgStatus.setBackgroundResource(R.drawable.bg_status_active);
+                    binding.tvOrgStatus.setTextColor(itemView.getContext().getColor(R.color.app_green_primary));
+                    binding.btnLockUnlock.setText("Khóa");
                     break;
                 case "Bị khóa":
-                    tvOrgStatus.setBackgroundResource(R.drawable.bg_button_lock);
-                    tvOrgStatus.setTextColor(itemView.getContext().getColor(R.color.pink));
-                    btnLockUnlock.setText("Mở khóa");
+                    binding.tvOrgStatus.setBackgroundResource(R.drawable.bg_button_lock);
+                    binding.tvOrgStatus.setTextColor(itemView.getContext().getColor(R.color.pink));
+                    binding.btnLockUnlock.setText("Mở khóa");
                     break;
                 case "Chờ xác thực":
-                    tvOrgStatus.setBackgroundResource(R.drawable.bg_status_pending);
-                    tvOrgStatus.setTextColor(itemView.getContext().getColor(R.color.orange));
-                    btnLockUnlock.setText("Khóa");
+                    binding.tvOrgStatus.setBackgroundResource(R.drawable.bg_status_pending);
+                    binding.tvOrgStatus.setTextColor(itemView.getContext().getColor(R.color.orange));
+                    binding.btnLockUnlock.setText("Khóa");
                     break;
             }
 
             // Show/hide violation warning
             if (organization.getViolationType() != null && !organization.getViolationType().isEmpty()) {
-                llViolationWarning.setVisibility(View.VISIBLE);
-                tvViolationType.setText("Vi phạm: " + organization.getViolationType());
+                binding.llViolationWarning.setVisibility(View.VISIBLE);
+                binding.tvViolationType.setText("Vi phạm: " + organization.getViolationType());
             } else {
-                llViolationWarning.setVisibility(View.GONE);
+                binding.llViolationWarning.setVisibility(View.GONE);
             }
 
             // Set click listeners
-            btnView.setOnClickListener(v -> {
+            binding.btnView.setOnClickListener(v -> {
                 if (listener != null) {
                     listener.onViewClick(organization);
                 }
             });
 
-            btnLockUnlock.setOnClickListener(v -> {
+            binding.btnLockUnlock.setOnClickListener(v -> {
                 if (listener != null) {
                     listener.onLockUnlockClick(organization);
                 }
             });
 
-            btnDelete.setOnClickListener(v -> {
+            binding.btnDelete.setOnClickListener(v -> {
                 if (listener != null) {
                     listener.onDeleteClick(organization);
                 }

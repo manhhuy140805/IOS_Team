@@ -15,6 +15,7 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.manhhuy.myapplication.R;
+import com.manhhuy.myapplication.databinding.ItemRewardBinding;
 import com.manhhuy.myapplication.model.RewardItem;
 
 import java.util.ArrayList;
@@ -37,8 +38,8 @@ public class RewardAdapter extends RecyclerView.Adapter<RewardAdapter.RewardView
     @NonNull
     @Override
     public RewardViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_reward, parent, false);
-        return new RewardViewHolder(view);
+        ItemRewardBinding binding = ItemRewardBinding.inflate(LayoutInflater.from(context), parent, false);
+        return new RewardViewHolder(binding);
     }
 
     @Override
@@ -46,20 +47,20 @@ public class RewardAdapter extends RecyclerView.Adapter<RewardAdapter.RewardView
         RewardItem item = rewardList.get(position);
 
         // Set data
-        holder.tvRewardName.setText(item.getName());
-        holder.tvOrganization.setText(item.getOrganization());
-        holder.tvDescription.setText(item.getDescription());
-        holder.tvRewardPoints.setText(item.getPoints());
-        holder.tvStock.setText(item.getStock());
-        holder.tvExpiry.setText(item.getExpiry());
+        holder.binding.tvRewardName.setText(item.getName());
+        holder.binding.tvOrganization.setText(item.getOrganization());
+        holder.binding.tvDescription.setText(item.getDescription());
+        holder.binding.tvRewardPoints.setText(item.getPoints());
+        holder.binding.tvStock.setText(item.getStock());
+        holder.binding.tvExpiry.setText(item.getExpiry());
 
         // Set tags
-        holder.tvTag1.setText(item.getTag1());
+        holder.binding.tvTag1.setText(item.getTag1());
         if (item.getTag2() != null && !item.getTag2().isEmpty()) {
-            holder.tvTag2.setVisibility(View.VISIBLE);
-            holder.tvTag2.setText(item.getTag2());
+            holder.binding.tvTag2.setVisibility(View.VISIBLE);
+            holder.binding.tvTag2.setText(item.getTag2());
         } else {
-            holder.tvTag2.setVisibility(View.GONE);
+            holder.binding.tvTag2.setVisibility(View.GONE);
         }
 
         // Set icon background color
@@ -81,7 +82,7 @@ public class RewardAdapter extends RecyclerView.Adapter<RewardAdapter.RewardView
             default:
                 backgroundRes = R.drawable.bg_icon_purple;
         }
-        holder.iconContainer.setBackgroundResource(backgroundRes);
+        holder.binding.iconContainer.setBackgroundResource(backgroundRes);
 
         // Set icon based on category type
         switch (item.getCategoryType()) {
@@ -97,7 +98,7 @@ public class RewardAdapter extends RecyclerView.Adapter<RewardAdapter.RewardView
             default:
                 iconRes = R.drawable.ic_gift;
         }
-        holder.ivRewardIcon.setImageResource(iconRes);
+        holder.binding.ivRewardIcon.setImageResource(iconRes);
 
         // Check if user has enough points
         int itemPoints = parsePoints(item.getPoints());
@@ -105,28 +106,28 @@ public class RewardAdapter extends RecyclerView.Adapter<RewardAdapter.RewardView
 
         // Update button state
         if (canRedeem) {
-            holder.btnRedeem.setEnabled(true);
-            holder.btnRedeem.setBackgroundResource(R.drawable.bg_redeem_button);
-            holder.btnRedeem.setTextColor(ContextCompat.getColor(context, android.R.color.white));
-            holder.btnRedeem.setText("Đổi ngay");
+            holder.binding.btnRedeem.setEnabled(true);
+            holder.binding.btnRedeem.setBackgroundResource(R.drawable.bg_redeem_button);
+            holder.binding.btnRedeem.setTextColor(ContextCompat.getColor(context, android.R.color.white));
+            holder.binding.btnRedeem.setText("Đổi ngay");
         } else {
-            holder.btnRedeem.setEnabled(false);
-            holder.btnRedeem.setBackgroundResource(R.drawable.bg_button_lock);
-            holder.btnRedeem.setTextColor(ContextCompat.getColor(context, android.R.color.darker_gray));
-            holder.btnRedeem.setText("Chưa đủ điểm");
+            holder.binding.btnRedeem.setEnabled(false);
+            holder.binding.btnRedeem.setBackgroundResource(R.drawable.bg_button_lock);
+            holder.binding.btnRedeem.setTextColor(ContextCompat.getColor(context, android.R.color.darker_gray));
+            holder.binding.btnRedeem.setText("Chưa đủ điểm");
         }
 
         // Handle expiry visibility
         if (item.getExpiry() != null && !item.getExpiry().isEmpty()) {
-            holder.ivExpiry.setVisibility(View.VISIBLE);
-            holder.tvExpiry.setVisibility(View.VISIBLE);
+            holder.binding.ivExpiry.setVisibility(View.VISIBLE);
+            holder.binding.tvExpiry.setVisibility(View.VISIBLE);
         } else {
-            holder.ivExpiry.setVisibility(View.GONE);
-            holder.tvExpiry.setVisibility(View.GONE);
+            holder.binding.ivExpiry.setVisibility(View.GONE);
+            holder.binding.tvExpiry.setVisibility(View.GONE);
         }
 
         // Click listener
-        holder.btnRedeem.setOnClickListener(v -> {
+        holder.binding.btnRedeem.setOnClickListener(v -> {
             if (canRedeem) {
                 Toast.makeText(context,
                         "Đổi thưởng: " + item.getName() + " (-" + item.getPoints() + " điểm)",
@@ -188,27 +189,11 @@ public class RewardAdapter extends RecyclerView.Adapter<RewardAdapter.RewardView
     }
 
     static class RewardViewHolder extends RecyclerView.ViewHolder {
-        FrameLayout iconContainer;
-        ImageView ivRewardIcon, ivExpiry;
-        TextView tvRewardName, tvOrganization, tvDescription, tvRewardPoints;
-        TextView tvStock, tvExpiry, tvTag1, tvTag2;
-        Button btnRedeem;
+        ItemRewardBinding binding;
 
-        public RewardViewHolder(@NonNull View itemView) {
-            super(itemView);
-
-            iconContainer = itemView.findViewById(R.id.iconContainer);
-            ivRewardIcon = itemView.findViewById(R.id.ivRewardIcon);
-            ivExpiry = itemView.findViewById(R.id.ivExpiry);
-            tvRewardName = itemView.findViewById(R.id.tvRewardName);
-            tvOrganization = itemView.findViewById(R.id.tvOrganization);
-            tvDescription = itemView.findViewById(R.id.tvDescription);
-            tvRewardPoints = itemView.findViewById(R.id.tvRewardPoints);
-            tvStock = itemView.findViewById(R.id.tvStock);
-            tvExpiry = itemView.findViewById(R.id.tvExpiry);
-            tvTag1 = itemView.findViewById(R.id.tvTag1);
-            tvTag2 = itemView.findViewById(R.id.tvTag2);
-            btnRedeem = itemView.findViewById(R.id.btnRedeem);
+        public RewardViewHolder(@NonNull ItemRewardBinding binding) {
+            super(binding.getRoot());
+            this.binding = binding;
         }
     }
 }

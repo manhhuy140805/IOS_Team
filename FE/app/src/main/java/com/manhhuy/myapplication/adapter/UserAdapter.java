@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.imageview.ShapeableImageView;
 import com.manhhuy.myapplication.R;
+import com.manhhuy.myapplication.databinding.ItemUserBinding;
 import com.manhhuy.myapplication.model.User;
 
 import java.util.List;
@@ -34,9 +35,8 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
     @NonNull
     @Override
     public UserViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_user, parent, false);
-        return new UserViewHolder(view);
+        ItemUserBinding binding = ItemUserBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+        return new UserViewHolder(binding);
     }
 
     @Override
@@ -56,85 +56,63 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
     }
 
     static class UserViewHolder extends RecyclerView.ViewHolder {
-        private ShapeableImageView ivUserAvatar;
-        private TextView tvUserName;
-        private TextView tvUserEmail;
-        private TextView tvUserStatus;
-        private TextView tvJoinDate;
-        private TextView tvActivityCount;
-        private TextView tvLastActive;
-        private LinearLayout llViolationWarning;
-        private TextView tvViolationType;
-        private TextView btnView;
-        private TextView btnLockUnlock;
-        private TextView btnDelete;
+        private ItemUserBinding binding;
 
-        public UserViewHolder(@NonNull View itemView) {
-            super(itemView);
-            ivUserAvatar = itemView.findViewById(R.id.ivUserAvatar);
-            tvUserName = itemView.findViewById(R.id.tvUserName);
-            tvUserEmail = itemView.findViewById(R.id.tvUserEmail);
-            tvUserStatus = itemView.findViewById(R.id.tvUserStatus);
-            tvJoinDate = itemView.findViewById(R.id.tvJoinDate);
-            tvActivityCount = itemView.findViewById(R.id.tvActivityCount);
-            tvLastActive = itemView.findViewById(R.id.tvLastActive);
-            llViolationWarning = itemView.findViewById(R.id.llViolationWarning);
-            tvViolationType = itemView.findViewById(R.id.tvViolationType);
-            btnView = itemView.findViewById(R.id.btnView);
-            btnLockUnlock = itemView.findViewById(R.id.btnLockUnlock);
-            btnDelete = itemView.findViewById(R.id.btnDelete);
+        public UserViewHolder(@NonNull ItemUserBinding binding) {
+            super(binding.getRoot());
+            this.binding = binding;
         }
 
         public void bind(User user, OnUserActionListener listener) {
             // Set basic info
-            tvUserName.setText(user.getName());
-            tvUserEmail.setText(user.getEmail());
-            tvJoinDate.setText("Tham gia: " + user.getJoinDate());
-            tvActivityCount.setText("Hoạt động: " + user.getActivityCount());
-            tvLastActive.setText("Giờ: " + user.getLastActive());
+            binding.tvUserName.setText(user.getName());
+            binding.tvUserEmail.setText(user.getEmail());
+            binding.tvJoinDate.setText("Tham gia: " + user.getJoinDate());
+            binding.tvActivityCount.setText("Hoạt động: " + user.getActivityCount());
+            binding.tvLastActive.setText("Giờ: " + user.getLastActive());
 
             // Set status badge
-            tvUserStatus.setText(user.getStatus());
+            binding.tvUserStatus.setText(user.getStatus());
             switch (user.getStatus()) {
                 case "Hoạt động":
-                    tvUserStatus.setBackgroundResource(R.drawable.bg_status_active);
-                    tvUserStatus.setTextColor(itemView.getContext().getColor(R.color.app_green_primary));
-                    btnLockUnlock.setText("Khóa");
+                    binding.tvUserStatus.setBackgroundResource(R.drawable.bg_status_active);
+                    binding.tvUserStatus.setTextColor(itemView.getContext().getColor(R.color.app_green_primary));
+                    binding.btnLockUnlock.setText("Khóa");
                     break;
                 case "Bị khóa":
-                    tvUserStatus.setBackgroundResource(R.drawable.bg_button_lock);
-                    tvUserStatus.setTextColor(itemView.getContext().getColor(R.color.pink));
-                    btnLockUnlock.setText("Mở khóa");
+                    binding.tvUserStatus.setBackgroundResource(R.drawable.bg_button_lock);
+                    binding.tvUserStatus.setTextColor(itemView.getContext().getColor(R.color.pink));
+                    binding.btnLockUnlock.setText("Mở khóa");
                     break;
                 case "Chờ xác thực":
-                    tvUserStatus.setBackgroundResource(R.drawable.bg_status_pending);
-                    tvUserStatus.setTextColor(itemView.getContext().getColor(R.color.orange));
-                    btnLockUnlock.setText("Khóa");
+                    binding.tvUserStatus.setBackgroundResource(R.drawable.bg_status_pending);
+                    binding.tvUserStatus.setTextColor(itemView.getContext().getColor(R.color.orange));
+                    binding.btnLockUnlock.setText("Khóa");
                     break;
             }
 
             // Show/hide violation warning
             if (user.getViolationType() != null && !user.getViolationType().isEmpty()) {
-                llViolationWarning.setVisibility(View.VISIBLE);
-                tvViolationType.setText("Vi phạm: " + user.getViolationType());
+                binding.llViolationWarning.setVisibility(View.VISIBLE);
+                binding.tvViolationType.setText("Vi phạm: " + user.getViolationType());
             } else {
-                llViolationWarning.setVisibility(View.GONE);
+                binding.llViolationWarning.setVisibility(View.GONE);
             }
 
             // Set click listeners
-            btnView.setOnClickListener(v -> {
+            binding.btnView.setOnClickListener(v -> {
                 if (listener != null) {
                     listener.onViewClick(user);
                 }
             });
 
-            btnLockUnlock.setOnClickListener(v -> {
+            binding.btnLockUnlock.setOnClickListener(v -> {
                 if (listener != null) {
                     listener.onLockUnlockClick(user);
                 }
             });
 
-            btnDelete.setOnClickListener(v -> {
+            binding.btnDelete.setOnClickListener(v -> {
                 if (listener != null) {
                     listener.onDeleteClick(user);
                 }
