@@ -41,7 +41,7 @@ public class RewardAdminAdapter extends RecyclerView.Adapter<RewardAdminAdapter.
         holder.binding.tvRewardCategory.setText(getCategoryText(reward.getCategoryType()));
         holder.binding.tvRewardPoints.setText("⭐ " + reward.getPoints() + " điểm");
         holder.binding.tvStock.setText("Còn: " + reward.getStock());
-        
+
         // Calculate redeemed count (mock data - should come from backend)
         int redeemed = calculateRedeemed(reward);
         holder.binding.tvRedeemed.setText("Đã đổi: " + redeemed);
@@ -78,7 +78,7 @@ public class RewardAdminAdapter extends RecyclerView.Adapter<RewardAdminAdapter.
 
     private void setStatusBadge(RewardViewHolder holder, RewardItem reward) {
         int stock = Integer.parseInt(reward.getStock());
-        
+
         if (stock == 0) {
             holder.binding.tvStatus.setText("Tạm ngưng");
             holder.binding.tvStatus.setBackgroundResource(R.drawable.bg_button_lock);
@@ -98,14 +98,14 @@ public class RewardAdminAdapter extends RecyclerView.Adapter<RewardAdminAdapter.
     private void setRewardIcon(ImageView imageView, RewardItem reward) {
         // Set icon based on category type and icon color index
         int[] iconResources = {
-            R.drawable.ic_coffee,
-            R.drawable.ic_group,
-            R.drawable.ic_certificate,
-            R.drawable.ic_book,
-            R.drawable.ic_voucher,
-            R.drawable.ic_backpack
+                R.drawable.ic_coffee,
+                R.drawable.ic_group,
+                R.drawable.ic_certificate,
+                R.drawable.ic_book,
+                R.drawable.ic_voucher,
+                R.drawable.ic_backpack
         };
-        
+
         int iconIndex = reward.getIconColorIndex() % iconResources.length;
         imageView.setImageResource(iconResources[iconIndex]);
     }
@@ -116,7 +116,7 @@ public class RewardAdminAdapter extends RecyclerView.Adapter<RewardAdminAdapter.
     }
 
     public void updateList(List<RewardItem> newList) {
-        this.rewardList = newList;
+//        this.rewardList = newList;
         notifyDataSetChanged();
     }
 
