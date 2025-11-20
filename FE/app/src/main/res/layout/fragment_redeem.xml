@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="#F5F5F5"
     android:orientation="vertical"
-    tools:context=".ui.Activitys.Fragment.RedeemFragment">
+    tools:context=".ui.Activities.Fragment.RedeemFragment">
     <!-- Header with Points Card -->
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
@@ -18,7 +18,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/bg_points_card"
+            android:background="@color/white"
             android:orientation="vertical"
             android:padding="20dp">
 
@@ -27,7 +27,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Đổi Thưởng"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/app_green_primary"
                 android:textSize="24sp"
                 android:textStyle="bold" />
 
@@ -36,7 +36,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:text="Sử dụng điểm tích lũy để nhận quà tặng"
-                android:textColor="#E0F7FA"
+                android:textColor="@color/app_green_primary"
                 android:textSize="12sp" />
 
             <!-- Points Display -->
@@ -122,7 +122,7 @@
                 android:id="@+id/tabAll"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bg_category_tab_selected"
+                android:background="@drawable/bg_tab_selected_event_manager"
                 android:clickable="true"
                 android:drawableStart="@drawable/ic_gift"
                 android:drawablePadding="6dp"
@@ -141,7 +141,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:background="@drawable/bg_category_tab"
+                android:background="@drawable/bg_tab_unselected_event_manager"
                 android:clickable="true"
                 android:drawableStart="@drawable/ic_voucher"
                 android:drawablePadding="6dp"
@@ -159,7 +159,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:background="@drawable/bg_category_tab"
+                android:background="@drawable/bg_tab_unselected_event_manager"
                 android:clickable="true"
                 android:drawableStart="@drawable/ic_gift"
                 android:drawablePadding="6dp"
@@ -177,7 +177,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:background="@drawable/bg_category_tab"
+                android:background="@drawable/bg_tab_unselected_event_manager"
                 android:clickable="true"
                 android:drawableStart="@drawable/ic_discount"
                 android:drawablePadding="6dp"
@@ -206,7 +206,7 @@
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:src="@drawable/ic_gift"
-            app:tint="#00BCD4" />
+            app:tint="@color/app_green_primary" />
 
         <TextView
             android:id="@+id/tvSectionTitle"
@@ -291,7 +291,7 @@
             android:focusable="true"
             android:foreground="?android:attr/selectableItemBackground"
             android:text="Xem chính sách điểm • Điều khoản đổi thưởng"
-            android:textColor="#00BCD4"
+            android:textColor="@color/app_green_primary"
             android:textSize="10sp"
             android:textStyle="bold" />
     </LinearLayout>

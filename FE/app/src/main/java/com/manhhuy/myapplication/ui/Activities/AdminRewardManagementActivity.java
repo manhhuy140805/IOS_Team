@@ -1,7 +1,6 @@
-package com.manhhuy.myapplication.ui.Activitys;
+package com.manhhuy.myapplication.ui.Activities;
 
 import android.os.Bundle;
-import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -200,12 +199,12 @@ public class AdminRewardManagementActivity extends AppCompatActivity {
 
     private void resetTabStyle(TextView tab) {
         tab.setBackgroundResource(R.drawable.bg_category_tab_unselected_reward);
-        tab.setTextColor(getResources().getColor(R.color.text_gray));
+        tab.setTextColor(getResources().getColor(R.color.text_secondary));
     }
 
     private void setSelectedTabStyle(TextView tab) {
         tab.setBackgroundResource(R.drawable.bg_category_tab_selected_reward);
-        tab.setTextColor(getResources().getColor(R.color.primary_green));
+        tab.setTextColor(getResources().getColor(R.color.app_green_primary));
     }
 
     private void filterRewards(int category) {

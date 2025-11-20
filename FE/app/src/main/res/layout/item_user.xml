@@ -75,7 +75,7 @@
                 android:paddingHorizontal="12dp"
                 android:paddingVertical="6dp"
                 android:background="@drawable/bg_status_active"
-                android:textColor="@color/green_primary"/>
+                android:textColor="@color/app_green_primary"/>
 
         </RelativeLayout>
 

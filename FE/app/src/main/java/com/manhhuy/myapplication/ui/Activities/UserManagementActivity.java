@@ -1,12 +1,10 @@
-package com.manhhuy.myapplication.ui.Activitys;
+package com.manhhuy.myapplication.ui.Activities;
 
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -234,16 +232,16 @@ public class UserManagementActivity extends AppCompatActivity implements UserAda
     private void updateTabColors() {
         if (isUsersTab) {
             // Users tab active
-            ((ImageView) binding.tabUsers.getChildAt(0)).setColorFilter(getColor(R.color.green_primary));
-            ((TextView) binding.tabUsers.getChildAt(1)).setTextColor(getColor(R.color.green_primary));
+            ((ImageView) binding.tabUsers.getChildAt(0)).setColorFilter(getColor(R.color.app_green_primary));
+            ((TextView) binding.tabUsers.getChildAt(1)).setTextColor(getColor(R.color.app_green_primary));
 
             // Organizations tab inactive
             ((ImageView) binding.tabOrganizations.getChildAt(0)).setColorFilter(getColor(R.color.text_secondary));
             ((TextView) binding.tabOrganizations.getChildAt(1)).setTextColor(getColor(R.color.text_secondary));
         } else {
             // Organizations tab active
-            ((ImageView) binding.tabOrganizations.getChildAt(0)).setColorFilter(getColor(R.color.green_primary));
-            ((TextView) binding.tabOrganizations.getChildAt(1)).setTextColor(getColor(R.color.green_primary));
+            ((ImageView) binding.tabOrganizations.getChildAt(0)).setColorFilter(getColor(R.color.app_green_primary));
+            ((TextView) binding.tabOrganizations.getChildAt(1)).setTextColor(getColor(R.color.app_green_primary));
 
             // Users tab inactive
             ((ImageView) binding.tabUsers.getChildAt(0)).setColorFilter(getColor(R.color.text_secondary));

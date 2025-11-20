@@ -13,34 +13,68 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingVertical="40dp"
             android:orientation="vertical">
 
             <!-- Header with gradient background -->
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bg_gradient_header_event"
+                android:background="@color/white"
                 android:paddingBottom="24dp"
                 android:elevation="8dp">
 
                 <!-- Title -->
-                <TextView
-                    android:id="@+id/tvTitle"
+                <LinearLayout
+                    android:id="@+id/headerTop"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingHorizontal="24dp"
-                    android:paddingTop="24dp"
-                    android:text="Quản Lý Sự Kiện"
-                    android:textColor="@android:color/white"
-                    android:textSize="28sp"
-                    android:textStyle="bold"
-                    android:letterSpacing="0.02" />
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="20dp"
+                    android:paddingTop="20dp">
+
+                    <ImageButton
+                        android:id="@+id/btnBack"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:contentDescription="Back"
+                        android:padding="5dp"
+                        android:src="@drawable/ic_back"
+                        app:tint="@color/app_green_primary" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_weight="1"
+                        android:lineSpacingExtra="2dp"
+                        android:text="Quản Lý Hạng Mục Quà"
+                        android:textColor="@color/app_green_primary"
+                        android:textSize="23sp"
+                        android:textStyle="bold" />
+
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/btnAddReward"
+                        android:layout_width="wrap_content"
+                        android:layout_height="32dp"
+                        android:background="@drawable/bg_add_button"
+                        android:minWidth="0dp"
+                        android:paddingHorizontal="16dp"
+                        android:paddingVertical="0dp"
+                        android:text="+ Thêm"
+                        android:textAllCaps="false"
+                        android:textColor="@color/app_green_primary"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
 
                 <!-- Statistics Cards -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/tvTitle"
+                    android:layout_below="@id/headerTop"
                     android:layout_marginTop="20dp"
                     android:orientation="horizontal"
                     android:paddingHorizontal="24dp"
@@ -59,6 +93,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center"
+                            android:background="@drawable/bg_category_tab_unselected_reward"
                             android:orientation="vertical"
                             android:padding="16dp">
 
@@ -67,7 +102,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="24"
-                                android:textColor="@android:color/white"
+                                android:textColor="@color/app_green_primary"
                                 android:textSize="26sp"
                                 android:textStyle="bold"
                                 android:fontFamily="sans-serif-medium" />
@@ -78,7 +113,7 @@
                                 android:layout_marginTop="4dp"
                                 android:alpha="0.95"
                                 android:text="Tổng số"
-                                android:textColor="@android:color/white"
+                                android:textColor="@color/app_green_primary"
                                 android:textSize="12sp" />
                         </LinearLayout>
                     </androidx.cardview.widget.CardView>
@@ -96,6 +131,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center"
+                            android:background="@drawable/bg_category_tab_unselected_reward"
                             android:orientation="vertical"
                             android:padding="16dp">
 
@@ -104,7 +140,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="12"
-                                android:textColor="@android:color/white"
+                                android:textColor="@color/app_green_primary"
                                 android:textSize="26sp"
                                 android:textStyle="bold"
                                 android:fontFamily="sans-serif-medium" />
@@ -115,7 +151,7 @@
                                 android:layout_marginTop="4dp"
                                 android:alpha="0.95"
                                 android:text="Hoạt động"
-                                android:textColor="@android:color/white"
+                                android:textColor="@color/app_green_primary"
                                 android:textSize="12sp" />
                         </LinearLayout>
                     </androidx.cardview.widget.CardView>
@@ -134,6 +170,7 @@
                             android:layout_height="wrap_content"
                             android:gravity="center"
                             android:orientation="vertical"
+                            android:background="@drawable/bg_category_tab_unselected_reward"
                             android:padding="16dp">
 
                             <TextView
@@ -141,7 +178,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="8"
-                                android:textColor="@android:color/white"
+                                android:textColor="@color/app_green_primary"
                                 android:textSize="26sp"
                                 android:textStyle="bold"
                                 android:fontFamily="sans-serif-medium" />
@@ -152,7 +189,7 @@
                                 android:layout_marginTop="4dp"
                                 android:alpha="0.95"
                                 android:text="Hoàn thành"
-                                android:textColor="@android:color/white"
+                                android:textColor="@color/app_green_primary"
                                 android:textSize="12sp" />
                         </LinearLayout>
                     </androidx.cardview.widget.CardView>
@@ -163,59 +200,39 @@
             <HorizontalScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingVertical="24dp"
                 android:scrollbars="none">
 
                 <LinearLayout
+                    android:id="@+id/layoutCategoryTabs"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:paddingHorizontal="24dp">
+                    android:paddingHorizontal="20dp"
+                    android:paddingVertical="15dp">
 
                     <TextView
                         android:id="@+id/tabAll"
-                        android:layout_width="120dp"
-                        android:layout_height="48dp"
-                        android:layout_marginEnd="12dp"
-                        android:background="@drawable/bg_tab_selected_event_manager"
-                        android:gravity="center"
-                        android:text="Tất cả"
-                        android:textColor="@android:color/white"
-                        android:textSize="15sp"
-                        android:textStyle="bold"
-                        android:elevation="4dp"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:foreground="?attr/selectableItemBackground" />
+                        style="@style/CategoryTabSelected"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="10dp"
+                        android:text="Tất cả" />
 
                     <TextView
-                        android:id="@+id/tabActive"
-                        android:layout_width="140dp"
-                        android:layout_height="48dp"
-                        android:layout_marginEnd="12dp"
-                        android:background="@drawable/bg_tab_unselected_event_manager"
-                        android:gravity="center"
-                        android:text="Hoạt động"
-                        android:textColor="@color/text_gray"
-                        android:textSize="15sp"
-                        android:textStyle="bold"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:foreground="?attr/selectableItemBackground" />
+                        android:id="@+id/tabActivity"
+                        style="@style/CategoryTabUnselected"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="10dp"
+                        android:text="Hoạt động" />
 
                     <TextView
-                        android:id="@+id/tabCompleted"
-                        android:layout_width="140dp"
-                        android:layout_height="48dp"
-                        android:background="@drawable/bg_tab_unselected_event_manager"
-                        android:gravity="center"
-                        android:text="Hoàn thành"
-                        android:textColor="@color/text_gray"
-                        android:textSize="15sp"
-                        android:textStyle="bold"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:foreground="?attr/selectableItemBackground" />
+                        android:id="@+id/tabComplete"
+                        style="@style/CategoryTabUnselected"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="10dp"
+                        android:text="Hoàn thành" />
                 </LinearLayout>
             </HorizontalScrollView>
 
@@ -241,7 +258,7 @@
                         android:paddingHorizontal="20dp"
                         android:paddingVertical="12dp"
                         android:text="🌿 Môi trường"
-                        android:textColor="@color/primary_green"
+                        android:textColor="@color/app_green_primary"
                         android:textSize="14sp"
                         android:textStyle="bold"
                         android:clickable="true"
@@ -257,7 +274,7 @@
                         android:paddingHorizontal="20dp"
                         android:paddingVertical="12dp"
                         android:text="📚 Giáo dục"
-                        android:textColor="@color/text_dark"
+                        android:textColor="@color/text_secondary"
                         android:textSize="14sp"
                         android:textStyle="bold"
                         android:clickable="true"
@@ -272,7 +289,7 @@
                         android:paddingHorizontal="20dp"
                         android:paddingVertical="12dp"
                         android:text="🏥 Y tế"
-                        android:textColor="@color/text_dark"
+                        android:textColor="@color/text_primary"
                         android:textSize="14sp"
                         android:textStyle="bold"
                         android:clickable="true"

@@ -69,10 +69,10 @@ public class EventManagerAdapter extends RecyclerView.Adapter<EventManagerAdapte
         if ("active".equals(status)) {
             holder.tvStatus.setText("Đang hoạt động");
             holder.tvStatus.setBackgroundResource(R.drawable.bg_status_active_event);
-            holder.tvStatus.setTextColor(context.getResources().getColor(R.color.primary_green));
+            holder.tvStatus.setTextColor(context.getResources().getColor(R.color.app_green_primary));
         } else if ("completed".equals(status)) {
             holder.tvStatus.setText("Hoàn thành");
-            holder.tvStatus.setBackgroundResource(R.drawable.bg_status_completed_event);
+            holder.tvStatus.setBackgroundResource(R.drawable.bg_rounded_lite);
             holder.tvStatus.setTextColor(context.getResources().getColor(R.color.button_blue));
         }
 

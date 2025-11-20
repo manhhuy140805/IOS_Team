@@ -103,17 +103,17 @@ public class RewardAdminAdapter extends RecyclerView.Adapter<RewardAdminAdapter.
         
         if (stock == 0) {
             holder.tvStatus.setText("Tạm ngưng");
-            holder.tvStatus.setBackgroundResource(R.drawable.bg_status_paused_reward);
-            holder.tvStatus.setTextColor(context.getResources().getColor(R.color.rejection_text_dark));
+            holder.tvStatus.setBackgroundResource(R.drawable.bg_button_lock);
+            holder.tvStatus.setTextColor(context.getResources().getColor(R.color.status_rejected));
             holder.btnPause.setText("Kích hoạt");
         } else if (stock <= 5) {
             holder.tvStatus.setText("Sắp hết hàng");
-            holder.tvStatus.setBackgroundResource(R.drawable.bg_status_low_stock);
-            holder.tvStatus.setTextColor(context.getResources().getColor(R.color.rejection_text_dark));
+            holder.tvStatus.setBackgroundResource(R.drawable.bg_button_delete);
+            holder.tvStatus.setTextColor(context.getResources().getColor(R.color.status_rejected));
         } else {
             holder.tvStatus.setText("Đang hoạt động");
             holder.tvStatus.setBackgroundResource(R.drawable.bg_status_active_reward);
-            holder.tvStatus.setTextColor(context.getResources().getColor(R.color.primary_green));
+            holder.tvStatus.setTextColor(context.getResources().getColor(R.color.app_green_primary));
         }
     }
 
@@ -121,7 +121,7 @@ public class RewardAdminAdapter extends RecyclerView.Adapter<RewardAdminAdapter.
         // Set icon based on category type and icon color index
         int[] iconResources = {
             R.drawable.ic_coffee,
-            R.drawable.ic_tshirt,
+            R.drawable.ic_group,
             R.drawable.ic_certificate,
             R.drawable.ic_book,
             R.drawable.ic_voucher,

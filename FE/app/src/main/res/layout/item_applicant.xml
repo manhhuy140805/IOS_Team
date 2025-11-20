@@ -31,6 +31,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scaleType="centerCrop"
+                    android:padding="15dp"
                     android:src="@drawable/ic_user" />
             </FrameLayout>
 
@@ -181,7 +182,7 @@
                 <ImageView
                     android:layout_width="16dp"
                     android:layout_height="16dp"
-                    android:src="@drawable/ic_call"
+                    android:src="@drawable/ic_phone"
                     app:tint="#616161" />
 
                 <TextView

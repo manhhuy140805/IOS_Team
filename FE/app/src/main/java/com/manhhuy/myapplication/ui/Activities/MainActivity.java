@@ -1,4 +1,4 @@
-package com.manhhuy.myapplication.ui.Activitys;
+package com.manhhuy.myapplication.ui.Activities;
 
 import android.os.Bundle;
 
@@ -8,24 +8,34 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.manhhuy.myapplication.databinding.ActivityRegisterBinding;
+import com.manhhuy.myapplication.databinding.ActivityMainBinding;
 
-public class RegisterActivity extends AppCompatActivity {
-
-    private ActivityRegisterBinding binding;
+public class MainActivity extends AppCompatActivity {
+    private ActivityMainBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        
-        binding = ActivityRegisterBinding.inflate(getLayoutInflater());
+
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        
-        ViewCompat.setOnApplyWindowInsetsListener(binding.main, (v, insets) -> {
+
+        ViewCompat.setOnApplyWindowInsetsListener(binding.getRoot(), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        binding.btnSignIn.setOnClickListener(v -> {
+            // Intent intent = new Intent(MainActivity.this, SignInActivity.class);
+        });
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        binding = null;
     }
 }

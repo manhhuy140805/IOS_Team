@@ -1,4 +1,4 @@
-package com.manhhuy.myapplication.ui.Activitys.Fragment;
+package com.manhhuy.myapplication.ui.Activities.Fragment;
 
 import android.os.Bundle;
 
@@ -207,7 +207,7 @@ public class AcceptApplicantFragment extends Fragment implements AplicationAdapt
         resetTab(tabRejected);
 
         // Highlight selected
-        selectedTab.setBackgroundResource(R.drawable.bg_tab_filter_selected);
+        selectedTab.setBackgroundResource(R.drawable.bg_category_tab_selected_reward);
         selectedTab.setTextColor(ContextCompat.getColor(requireContext(), android.R.color.white));
 
         // Filter

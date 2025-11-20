@@ -1,7 +1,6 @@
-package com.manhhuy.myapplication.ui.Activitys;
+package com.manhhuy.myapplication.ui.Activities;
 
 import android.os.Bundle;
-import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -52,8 +51,8 @@ public class AdminEventManagerActivity extends AppCompatActivity implements Even
         tvCompletedEvents = findViewById(R.id.tvCompletedEvents);
         
         tabAll = findViewById(R.id.tabAll);
-        tabActive = findViewById(R.id.tabActive);
-        tabCompleted = findViewById(R.id.tabCompleted);
+        tabActive = findViewById(R.id.tabActivity);
+        tabCompleted = findViewById(R.id.tabComplete);
         
         chipEnvironment = findViewById(R.id.chipEnvironment);
         chipEducation = findViewById(R.id.chipEducation);
@@ -158,19 +157,26 @@ public class AdminEventManagerActivity extends AppCompatActivity implements Even
     }
 
     private void selectTab(TextView selectedTab) {
-        // Reset all tabs
-        tabAll.setBackgroundResource(R.drawable.bg_tab_unselected_event_manager);
-        tabAll.setTextColor(getResources().getColor(R.color.text_gray));
-        
-        tabActive.setBackgroundResource(R.drawable.bg_tab_unselected_event_manager);
-        tabActive.setTextColor(getResources().getColor(R.color.text_gray));
-        
-        tabCompleted.setBackgroundResource(R.drawable.bg_tab_unselected_event_manager);
-        tabCompleted.setTextColor(getResources().getColor(R.color.text_gray));
+        // Reset all tabs to unselected style
+        setTabStyle(tabAll, R.style.CategoryTabUnselected);
+        setTabStyle(tabActive, R.style.CategoryTabUnselected);
+        setTabStyle(tabCompleted, R.style.CategoryTabUnselected);
 
-        // Highlight selected tab
-        selectedTab.setBackgroundResource(R.drawable.bg_tab_selected_event_manager);
-        selectedTab.setTextColor(getResources().getColor(android.R.color.white));
+        // Highlight selected tab with selected style
+        setTabStyle(selectedTab, R.style.CategoryTabSelected);
+    }
+
+    private void setTabStyle(TextView tab, int styleRes) {
+        // Get style attributes
+        int[] attrs = {android.R.attr.background, android.R.attr.textColor};
+        
+        if (styleRes == R.style.CategoryTabSelected) {
+            tab.setBackgroundResource(R.drawable.bg_category_tab_selected_reward);
+            tab.setTextColor(getResources().getColor(R.color.app_green_primary));
+        } else {
+            tab.setBackgroundResource(R.drawable.bg_category_tab_unselected_reward);
+            tab.setTextColor(getResources().getColor(R.color.text_secondary));
+        }
     }
 
     private void setupChipListeners() {
@@ -196,17 +202,17 @@ public class AdminEventManagerActivity extends AppCompatActivity implements Even
     private void selectChip(TextView selectedChip) {
         // Reset all chips
         chipEnvironment.setBackgroundResource(R.drawable.bg_chip_unselected_event);
-        chipEnvironment.setTextColor(getResources().getColor(R.color.text_dark));
+        chipEnvironment.setTextColor(getResources().getColor(R.color.text_primary));
         
         chipEducation.setBackgroundResource(R.drawable.bg_chip_unselected_event);
-        chipEducation.setTextColor(getResources().getColor(R.color.text_dark));
+        chipEducation.setTextColor(getResources().getColor(R.color.text_primary));
         
         chipHealth.setBackgroundResource(R.drawable.bg_chip_unselected_event);
-        chipHealth.setTextColor(getResources().getColor(R.color.text_dark));
+        chipHealth.setTextColor(getResources().getColor(R.color.text_primary));
 
         // Highlight selected chip
         selectedChip.setBackgroundResource(R.drawable.bg_chip_selected_event);
-        selectedChip.setTextColor(getResources().getColor(R.color.primary_green));
+        selectedChip.setTextColor(getResources().getColor(R.color.app_green_primary));
     }
 
     private void applyFilters() {

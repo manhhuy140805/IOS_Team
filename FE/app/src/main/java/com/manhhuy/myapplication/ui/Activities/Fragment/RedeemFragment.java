@@ -1,4 +1,4 @@
-package com.manhhuy.myapplication.ui.Activitys.Fragment;
+package com.manhhuy.myapplication.ui.Activities.Fragment;
 
 import android.os.Bundle;
 
@@ -7,13 +7,10 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.manhhuy.myapplication.R;
@@ -108,7 +105,7 @@ public class RedeemFragment extends Fragment {
         resetTab(binding.tabOpportunity);
 
         // Highlight tab được chọn
-        selectedTab.setBackgroundResource(R.drawable.bg_category_tab_selected);
+        selectedTab.setBackgroundResource(R.drawable.bg_category_tab_selected_reward);
         selectedTab.setTextColor(ContextCompat.getColor(requireContext(), android.R.color.white));
 
         // Update drawable tint cho selected tab
@@ -123,7 +120,7 @@ public class RedeemFragment extends Fragment {
 
         // Set màu text và icon theo từng tab
         if (tab == binding.tabAll) {
-            tab.setTextColor(ContextCompat.getColor(requireContext(), R.color.green_primary));
+            tab.setTextColor(ContextCompat.getColor(requireContext(), R.color.app_green_primary));
         } else if (tab == binding.tabVoucher) {
             tab.setTextColor(ContextCompat.getColor(requireContext(), R.color.cyan));
             if (tab.getCompoundDrawables()[0] != null) {

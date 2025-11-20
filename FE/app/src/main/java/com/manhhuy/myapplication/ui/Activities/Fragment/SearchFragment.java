@@ -1,4 +1,4 @@
-package com.manhhuy.myapplication.ui.Activitys.Fragment;
+package com.manhhuy.myapplication.ui.Activities.Fragment;
 
 import android.os.Bundle;
 import android.text.Editable;

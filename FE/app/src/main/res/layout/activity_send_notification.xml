@@ -5,18 +5,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F5F5F5"
-    tools:context=".ui.Activitys.SendNotificationActivity">
+    tools:context=".ui.Activities.SendNotificationActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingVertical="40dp"
         android:orientation="vertical">
 
         <!-- Header with Gradient -->
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/bg_gradient_header"
+            android:background="@color/white"
             android:padding="16dp">
 
             <ImageView
@@ -26,15 +27,14 @@
                 android:layout_centerVertical="true"
                 android:contentDescription="@string/app_name"
                 android:padding="4dp"
-                android:src="@drawable/ic_back"
-                app:tint="#FFFFFF" />
+                android:src="@drawable/ic_back" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:text="Gửi Thông Báo"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/app_green_primary"
                 android:textSize="20sp"
                 android:textStyle="bold" />
         </RelativeLayout>
@@ -50,7 +50,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bg_event_card"
+                android:background="@drawable/bg_custom_edit_text"
                 android:orientation="vertical"
                 android:padding="16dp">
 
@@ -120,7 +120,7 @@
                     <ImageView
                         android:layout_width="20dp"
                         android:layout_height="20dp"
-                        android:src="@drawable/ic_pin" />
+                        android:src="@drawable/ic_location_pin" />
 
                     <TextView
                         android:id="@+id/tvEventLocation"
@@ -149,7 +149,7 @@
                     <ImageView
                         android:layout_width="20dp"
                         android:layout_height="20dp"
-                        android:src="@drawable/ic_people" />
+                        android:src="@drawable/ic_group" />
 
                     <TextView
                         android:id="@+id/tvRegisteredCount"
@@ -217,7 +217,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/bg_action_button"
+                        android:background="@drawable/bg_custom_edit_text"
                         android:gravity="center"
                         android:orientation="vertical"
                         android:padding="16dp">
@@ -255,7 +255,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/bg_action_button"
+                        android:background="@drawable/bg_custom_edit_text"
                         android:gravity="center"
                         android:orientation="vertical"
                         android:padding="16dp">
@@ -293,7 +293,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/bg_action_button"
+                        android:background="@drawable/bg_custom_edit_text"
                         android:gravity="center"
                         android:orientation="vertical"
                         android:padding="16dp">
@@ -481,7 +481,7 @@
                 <ImageView
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    android:src="@drawable/ic_people" />
+                    android:src="@drawable/ic_group" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -818,7 +818,7 @@
                 android:layout_height="56dp"
                 android:layout_marginStart="8dp"
                 android:layout_weight="1"
-                android:backgroundTint="#00ACC1"
+                android:backgroundTint="@color/app_green_primary"
                 android:text="Gửi Thông Báo"
                 android:textColor="#FFFFFF"
                 android:textSize="16sp"

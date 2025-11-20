@@ -30,7 +30,7 @@
                 android:src="@drawable/ic_organization"
                 android:scaleType="centerCrop"
                 app:shapeAppearanceOverlay="@style/ShapeAppearance.Circle"
-                android:background="@color/green_lite"
+                android:background="@color/app_green_light"
                 app:strokeColor="@color/gray_300"
                 app:strokeWidth="2dp"/>
 
@@ -76,7 +76,7 @@
                 android:paddingHorizontal="12dp"
                 android:paddingVertical="6dp"
                 android:background="@drawable/bg_status_active"
-                android:textColor="@color/green_primary"/>
+                android:textColor="@color/app_green_primary"/>
 
         </RelativeLayout>
 

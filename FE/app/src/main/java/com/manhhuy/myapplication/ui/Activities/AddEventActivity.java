@@ -1,8 +1,6 @@
-package com.manhhuy.myapplication.ui.Activitys;
+package com.manhhuy.myapplication.ui.Activities;
 
 import android.os.Bundle;
-import android.view.View;
-import android.widget.EditText;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -100,34 +98,34 @@ public class AddEventActivity extends AppCompatActivity {
         // Set selected category style
         switch (category) {
             case "community":
-                binding.btnCategoryCommunity.setBackgroundResource(R.drawable.btn_selected);
+                binding.btnCategoryCommunity.setBackgroundResource(R.drawable.bg_category_tab_selected_reward);
                 binding.btnCategoryCommunity.setCompoundDrawableTintList(
-                    getColorStateList(R.color.green_primary));
+                    getColorStateList(R.color.app_green_primary));
                 break;
             case "environment":
-                binding.btnCategoryEnvironment.setBackgroundResource(R.drawable.btn_selected);
+                binding.btnCategoryEnvironment.setBackgroundResource(R.drawable.bg_category_tab_selected_reward);
                 binding.btnCategoryEnvironment.setCompoundDrawableTintList(
-                    getColorStateList(R.color.green_primary));
+                    getColorStateList(R.color.app_green_primary));
                 break;
             case "education":
-                binding.btnCategoryEducation.setBackgroundResource(R.drawable.btn_selected);
+                binding.btnCategoryEducation.setBackgroundResource(R.drawable.bg_category_tab_selected_reward);
                 binding.btnCategoryEducation.setCompoundDrawableTintList(
-                    getColorStateList(R.color.green_primary));
+                    getColorStateList(R.color.app_green_primary));
                 break;
             case "health":
-                binding.btnCategoryHealth.setBackgroundResource(R.drawable.btn_selected);
+                binding.btnCategoryHealth.setBackgroundResource(R.drawable.bg_category_tab_selected_reward);
                 binding.btnCategoryHealth.setCompoundDrawableTintList(
-                    getColorStateList(R.color.green_primary));
+                    getColorStateList(R.color.app_green_primary));
                 break;
             case "animal":
-                binding.btnCategoryAnimal.setBackgroundResource(R.drawable.btn_selected);
+                binding.btnCategoryAnimal.setBackgroundResource(R.drawable.bg_category_tab_selected_reward);
                 binding.btnCategoryAnimal.setCompoundDrawableTintList(
-                    getColorStateList(R.color.green_primary));
+                    getColorStateList(R.color.app_green_primary));
                 break;
             case "other":
-                binding.btnCategoryOther.setBackgroundResource(R.drawable.btn_selected);
+                binding.btnCategoryOther.setBackgroundResource(R.drawable.bg_category_tab_selected_reward);
                 binding.btnCategoryOther.setCompoundDrawableTintList(
-                    getColorStateList(R.color.green_primary));
+                    getColorStateList(R.color.app_green_primary));
                 break;
         }
     }

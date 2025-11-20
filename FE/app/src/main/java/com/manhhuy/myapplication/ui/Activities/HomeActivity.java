@@ -1,4 +1,4 @@
-package com.manhhuy.myapplication.ui.Activitys;
+package com.manhhuy.myapplication.ui.Activities;
 
 import android.os.Bundle;
 
@@ -24,7 +24,7 @@ public class HomeActivity extends AppCompatActivity {
             R.drawable.ic_home,
             R.drawable.ic_event,
             R.drawable.ic_rewards,
-            R.drawable.ic_applicants,
+            R.drawable.ic_group,
             R.drawable.ic_profile
     };
 

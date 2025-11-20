@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F5F5F5"
-    tools:context=".ui.Activitys.Fragment.MeFragment">
+    tools:context=".ui.Activities.Fragment.MeFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -16,7 +16,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/bg_gradient_blue"
+            android:background="@color/app_green_light"
             android:paddingBottom="60dp">
 
             <!-- Settings Icon -->
@@ -62,10 +62,10 @@
                             android:id="@+id/ivAvatar"
                             android:layout_width="100dp"
                             android:layout_height="100dp"
-                            android:background="@drawable/bg_circle_blue_light"
-                            android:padding="3dp"
+                            android:background="@drawable/bg_avatar_circle"
+                            android:padding="20dp"
                             android:scaleType="centerCrop"
-                            android:src="@drawable/ic_person" />
+                            android:src="@drawable/ic_user" />
 
                         <!-- Status Badge -->
                         <View
@@ -94,7 +94,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
-                        android:drawableStart="@drawable/ic_email"
+                        android:drawableStart="@drawable/ic_mail"
                         android:drawablePadding="6dp"
                         android:drawableTint="#00BCD4"
                         android:text="nguyenvana@gmail.com"
@@ -120,7 +120,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
-                        android:background="@drawable/bg_tag_blue"
+                        android:background="@drawable/bg_tab_selected_event_manager"
                         android:paddingHorizontal="16dp"
                         android:paddingVertical="6dp"
                         android:text="Tình nguyện viên"
@@ -161,7 +161,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/bg_icon_cyan"
+                    android:background="@drawable/bg_tab_selected_event_manager"
                     android:gravity="center"
                     android:orientation="vertical"
                     android:padding="16dp">

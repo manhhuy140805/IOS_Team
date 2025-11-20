@@ -79,12 +79,12 @@ public class AplicationAdapter extends RecyclerView.Adapter<AplicationAdapter.Ap
             case 1: // Accepted
                 holder.tvStatus.setText("Đã chấp nhận");
                 holder.tvStatus.setBackgroundResource(R.drawable.bg_status_accepted);
-                holder.tvStatus.setTextColor(ContextCompat.getColor(context, R.color.green_primary));
+                holder.tvStatus.setTextColor(ContextCompat.getColor(context, R.color.app_green_primary));
                 holder.actionButtons.setVisibility(View.GONE);
                 break;
             case 2: // Rejected
                 holder.tvStatus.setText("Đã từ chối");
-                holder.tvStatus.setBackgroundResource(R.drawable.bg_status_rejected);
+                holder.tvStatus.setBackgroundResource(R.drawable.bg_reject_button);
                 holder.tvStatus.setTextColor(ContextCompat.getColor(context, android.R.color.holo_red_dark));
                 holder.actionButtons.setVisibility(View.GONE);
                 break;

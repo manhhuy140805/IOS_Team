@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/md_theme_light_background"
-    tools:context=".AddEventActivity">
+    tools:context="ui.Activities.AddEventActivity">
 
     <!-- Header with back button -->
     <LinearLayout
@@ -194,7 +194,7 @@
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/btn_selected"
+                        android:background="@drawable/bg_category_tab_selected_reward"
                         app:backgroundTint="@null"
                         android:layout_marginEnd="4dp"
                         android:paddingTop="16dp"
@@ -204,7 +204,7 @@
                         android:textSize="12sp"
                         android:textAllCaps="false"
                         android:drawableTop="@drawable/ic_backpack"
-                        android:drawableTint="@color/green_primary" />
+                        android:drawableTint="@color/app_green_primary" />
 
                     <Button
                         android:id="@+id/btn_category_environment"
@@ -508,7 +508,7 @@
                     <ImageView
                         android:layout_width="20dp"
                         android:layout_height="20dp"
-                        android:src="@drawable/ic_people"
+                        android:src="@drawable/ic_group"
                         android:tint="@color/md_theme_light_primary" />
 
                     <TextView
@@ -581,7 +581,7 @@
                     android:id="@+id/etRequirements"
                     android:layout_width="match_parent"
                     android:layout_height="80dp"
-                    android:hint="List any requirements, skills, or things volunteers should bring (e.g. can swim, physical health, bike, hiking gloves, etc.)"
+                    android:hint="Liệt kê bất kỳ yêu cầu, kỹ năng hoặc vật dụng mà tình nguyện viên cần mang theo (ví dụ: biết bơi, sức khỏe tốt, xe đạp, găng tay leo núi, v.v.)"
                     android:background="@drawable/bg_input_box"
                     android:paddingHorizontal="12dp"
                     android:paddingVertical="12dp"

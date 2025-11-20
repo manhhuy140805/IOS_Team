@@ -64,7 +64,7 @@
                         android:ellipsize="end"
                         android:maxLines="2"
                         android:text="Beach Cleanup"
-                        android:textColor="@color/text_dark"
+                        android:textColor="@color/app_green_primary"
                         android:textSize="18sp"
                         android:textStyle="bold"
                         android:fontFamily="sans-serif-medium"
@@ -76,7 +76,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
                         android:text="Green Vietnam"
-                        android:textColor="@color/text_gray"
+                        android:textColor="@color/app_green_primary"
                         android:textSize="13sp" />
                 </LinearLayout>
 
@@ -89,7 +89,7 @@
                     android:paddingHorizontal="14dp"
                     android:paddingVertical="6dp"
                     android:text="Đang hoạt động"
-                    android:textColor="@color/primary_green"
+                    android:textColor="@color/app_green_primary"
                     android:textSize="11sp"
                     android:textStyle="bold"
                     android:elevation="2dp" />
@@ -223,7 +223,7 @@
                     android:background="@drawable/bg_button_edit"
                     android:text="Xem"
                     android:textAllCaps="false"
-                    android:textColor="@color/primary_green"
+                    android:textColor="@color/app_green_primary"
                     android:textSize="13sp"
                     android:textStyle="bold"
                     android:elevation="2dp" />

@@ -20,7 +20,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="24"
-            android:textColor="@color/primary_green"
+            android:textColor="@color/app_green_primary"
             android:textSize="24sp"
             android:textStyle="bold" />
 
@@ -30,7 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:text="Tổng quà"
-            android:textColor="@color/text_gray"
+            android:textColor="@color/text_primary"
             android:textSize="11sp" />
     </LinearLayout>
 </androidx.cardview.widget.CardView>

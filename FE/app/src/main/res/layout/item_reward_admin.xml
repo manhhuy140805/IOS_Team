@@ -57,7 +57,7 @@
                         android:ellipsize="end"
                         android:maxLines="2"
                         android:text="Voucher The Coffee House 50K"
-                        android:textColor="@color/text_dark"
+                        android:textColor="@color/text_primary"
                         android:textSize="15sp"
                         android:textStyle="bold" />
 
@@ -67,7 +67,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
                         android:text="Voucher • Đồ uống"
-                        android:textColor="@color/text_gray"
+                        android:textColor="@color/app_green_primary"
                         android:textSize="11sp" />
 
                     <TextView
@@ -76,7 +76,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
                         android:text="⭐ 500 điểm"
-                        android:textColor="@color/primary_green"
+                        android:textColor="@color/app_green_primary"
                         android:textSize="16sp"
                         android:textStyle="bold" />
                 </LinearLayout>
@@ -140,8 +140,7 @@
         <!-- Divider -->
         <View
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/border_gray" />
+            android:layout_height="1dp" />
 
             <!-- Action Buttons -->
             <LinearLayout
@@ -160,7 +159,7 @@
                     android:background="@drawable/bg_button_edit"
                     android:text="Sửa"
                     android:textAllCaps="false"
-                    android:textColor="@color/primary_green"
+                    android:textColor="@color/app_green_primary"
                     android:textSize="13sp"
                     android:textStyle="bold" />
 
@@ -205,7 +204,7 @@
             android:paddingHorizontal="10dp"
             android:paddingVertical="4dp"
             android:text="Đang hoạt động"
-            android:textColor="@color/primary_green"
+            android:textColor="@color/app_green_primary"
             android:textSize="11sp"
             android:textStyle="bold" />
     </RelativeLayout>

@@ -6,14 +6,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".ui.Activitys.Fragment.SearchFragment">
+    tools:context=".ui.Activities.Fragment.SearchFragment">
 
     <!-- Header Section with Gradient -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="@drawable/bg_gradient_header"
+        android:background="@color/app_green_light"
         android:paddingStart="20dp"
         android:paddingEnd="20dp"
         android:paddingTop="20dp"
@@ -33,8 +33,7 @@
                 android:layout_height="24dp"
                 android:src="@drawable/ic_back"
                 android:scaleType="centerInside"
-                android:contentDescription="@string/app_name"
-                app:tint="@android:color/white" />
+                android:contentDescription="@string/app_name" />
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -49,7 +48,7 @@
                     android:text="@string/search_results_title"
                     android:textSize="22sp"
                     android:textStyle="bold"
-                    android:textColor="@android:color/white" />
+                    android:textColor="@color/app_green_primary" />
 
                 <TextView
                     android:id="@+id/viewMoreFilters"
@@ -57,7 +56,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/opportunities_found"
                     android:textSize="12sp"
-                    android:textColor="@android:color/white"
+                    android:textColor="@color/app_green_primary"
                     android:alpha="0.85"
                     android:layout_marginTop="2dp" />
 
@@ -130,7 +129,7 @@
                     android:src="@drawable/ic_filter"
                     android:scaleType="centerInside"
                     android:contentDescription="@string/app_name"
-                    app:tint="@android:color/holo_blue_dark" />
+                    app:tint="@color/app_green_primary" />
 
             </androidx.cardview.widget.CardView>
 

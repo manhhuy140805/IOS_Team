@@ -95,11 +95,11 @@ public class OrganizationAdapter extends RecyclerView.Adapter<OrganizationAdapte
             switch (organization.getStatus()) {
                 case "Hoạt động":
                     tvOrgStatus.setBackgroundResource(R.drawable.bg_status_active);
-                    tvOrgStatus.setTextColor(itemView.getContext().getColor(R.color.green_primary));
+                    tvOrgStatus.setTextColor(itemView.getContext().getColor(R.color.app_green_primary));
                     btnLockUnlock.setText("Khóa");
                     break;
                 case "Bị khóa":
-                    tvOrgStatus.setBackgroundResource(R.drawable.bg_status_locked);
+                    tvOrgStatus.setBackgroundResource(R.drawable.bg_button_lock);
                     tvOrgStatus.setTextColor(itemView.getContext().getColor(R.color.pink));
                     btnLockUnlock.setText("Mở khóa");
                     break;

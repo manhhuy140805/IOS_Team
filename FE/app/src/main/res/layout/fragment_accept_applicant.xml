@@ -6,13 +6,13 @@
     android:layout_height="match_parent"
     android:background="#F5F5F5"
     android:orientation="vertical"
-    tools:context=".ui.Activitys.Fragment.AcceptApplicantFragment">
+    tools:context=".ui.Activities.Fragment.AcceptApplicantFragment">
 
     <!-- Header with Gradient Background -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/bg_header_gradient"
+        android:background="@color/white"
         android:orientation="vertical"
         android:paddingHorizontal="20dp"
         android:paddingTop="24dp"
@@ -33,8 +33,7 @@
                 android:clickable="true"
                 android:focusable="true"
                 android:padding="6dp"
-                android:src="@drawable/ic_back"
-                app:tint="#000000" />
+                android:src="@drawable/ic_back" />
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -47,7 +46,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Duyệt Đăng Ký"
-                    android:textColor="#000000"
+                    android:textColor="@color/app_green_primary"
                     android:textSize="24sp"
                     android:textStyle="bold" />
 
@@ -56,7 +55,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:text="Quản lý tình nguyện viên đăng ký"
-                    android:textColor="#E0F7FA"
+                    android:textColor="@color/app_green_primary"
                     android:textSize="13sp" />
             </LinearLayout>
         </LinearLayout>
@@ -94,7 +93,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:text="Chờ duyệt"
-                    android:textColor="#E0F7FA"
+                    android:textColor="@color/app_green_primary"
                     android:textSize="12sp" />
             </LinearLayout>
 
@@ -123,7 +122,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:text="Đã chấp nhận"
-                    android:textColor="#E0F7FA"
+                    android:textColor="@color/app_green_primary"
                     android:textSize="12sp" />
             </LinearLayout>
 
@@ -152,7 +151,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:text="Đã từ chối"
-                    android:textColor="#E0F7FA"
+                    android:textColor="@color/app_green_primary"
                     android:textSize="12sp" />
             </LinearLayout>
         </LinearLayout>
@@ -175,7 +174,7 @@
                 android:id="@+id/tabAll"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bg_tab_filter_selected"
+                android:background="@drawable/bg_tab_selected_event_manager"
                 android:clickable="true"
                 android:focusable="true"
                 android:foreground="?android:attr/selectableItemBackground"
@@ -191,14 +190,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:background="@drawable/bg_tab_filter"
+                android:background="@drawable/bg_tab_unselected_event_manager"
                 android:clickable="true"
                 android:focusable="true"
                 android:foreground="?android:attr/selectableItemBackground"
                 android:paddingHorizontal="20dp"
                 android:paddingVertical="10dp"
                 android:text="Chờ duyệt"
-                android:textColor="#00BCD4"
+                android:textColor="@color/app_green_primary"
                 android:textSize="14sp" />
 
             <TextView
@@ -206,14 +205,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:background="@drawable/bg_tab_filter"
+                android:background="@drawable/bg_tab_unselected_event_manager"
                 android:clickable="true"
                 android:focusable="true"
                 android:foreground="?android:attr/selectableItemBackground"
                 android:paddingHorizontal="20dp"
                 android:paddingVertical="10dp"
                 android:text="Đã chấp nhận"
-                android:textColor="#00BCD4"
+                android:textColor="@color/app_green_primary"
                 android:textSize="14sp" />
 
             <TextView
@@ -221,14 +220,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:background="@drawable/bg_tab_filter"
+                android:background="@drawable/bg_tab_unselected_event_manager"
                 android:clickable="true"
                 android:focusable="true"
                 android:foreground="?android:attr/selectableItemBackground"
                 android:paddingHorizontal="20dp"
                 android:paddingVertical="10dp"
                 android:text="Đã từ chối"
-                android:textColor="#00BCD4"
+                android:textColor="@color/app_green_primary"
                 android:textSize="14sp" />
         </LinearLayout>
     </HorizontalScrollView>

@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
-    tools:context=".ui.Activitys.DetailEventActivity">
+    tools:context=".ui.Activities.DetailEventActivity">
 
     <!-- Header với gradient background -->
     <View
@@ -322,7 +322,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
-                        app:cardBackgroundColor="#00BFA5"
+                        app:cardBackgroundColor="@color/white"
                         app:cardCornerRadius="12dp">
 
                         <LinearLayout
@@ -336,7 +336,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="⭐ Phần thưởng"
-                                android:textColor="@android:color/white"
+                                android:textColor="@color/app_green_primary"
                                 android:textSize="14sp" />
 
                             <TextView
@@ -344,7 +344,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="4dp"
                                 android:text="200 điểm"
-                                android:textColor="@android:color/white"
+                                android:textColor="@color/app_green_primary"
                                 android:textSize="32sp"
                                 android:textStyle="bold" />
                         </LinearLayout>
@@ -367,7 +367,7 @@
                             android:paddingTop="6dp"
                             android:paddingEnd="16dp"
                             android:paddingBottom="6dp"
-                            android:text="Outdoor"
+                            android:text="Ngoài trời"
                             android:textColor="@android:color/black"
                             android:textSize="13sp" />
 
@@ -380,7 +380,7 @@
                             android:paddingTop="6dp"
                             android:paddingEnd="16dp"
                             android:paddingBottom="6dp"
-                            android:text="Weekend"
+                            android:text="Cuối tuần"
                             android:textColor="@android:color/black"
                             android:textSize="13sp" />
 
@@ -393,7 +393,7 @@
                             android:paddingTop="6dp"
                             android:paddingEnd="16dp"
                             android:paddingBottom="6dp"
-                            android:text="Environment"
+                            android:text="Môi trường"
                             android:textColor="@android:color/black"
                             android:textSize="13sp" />
                     </LinearLayout>
@@ -415,7 +415,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:lineSpacingExtra="4dp"
-                android:text="Join us for a meaningful morning cleaning up Vung Tau beach! Together we'll make our coastline beautiful again while raising awareness about ocean pollution. All equipment will be provided - just bring your enthusiasm and a positive attitude!"
+                android:text="Hãy cùng chúng tôi tham gia một buổi sáng ý nghĩa để dọn sạch bãi biển Vũng Tàu! Chúng ta sẽ cùng nhau làm cho bờ biển trở nên đẹp hơn và nâng cao nhận thức về ô nhiễm đại dương. Tất cả dụng cụ sẽ được cung cấp – bạn chỉ cần mang theo tinh thần nhiệt huyết và thái độ tích cực!"
                 android:textColor="@android:color/black"
                 android:textSize="14sp" />
 

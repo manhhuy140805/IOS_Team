@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F5F5F5"
-    tools:context=".ui.Activitys.SertificateActivity">
+    tools:context=".ui.Activities.CertificateActivity">
 
     <!-- Top App Bar -->
     <androidx.appcompat.widget.Toolbar
@@ -71,7 +71,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/bg_rounded_primary"
+                    android:background="@drawable/bg_custom_edit_text"
                     android:gravity="center"
                     android:orientation="vertical"
                     android:padding="32dp">
@@ -89,7 +89,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
                         android:text="Chúc mừng!"
-                        android:textColor="@android:color/white"
+                        android:textColor="@color/app_green_primary"
                         android:textSize="24sp"
                         android:textStyle="bold" />
 
@@ -99,7 +99,7 @@
                         android:layout_marginTop="8dp"
                         android:text="Bạn đã hoàn thành xuất sắc sự kiện tình nguyện"
                         android:textAlignment="center"
-                        android:textColor="@android:color/white"
+                        android:textColor="@color/app_green_primary"
                         android:textSize="14sp" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -115,7 +115,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/bg_gradient_blue"
+                    android:background="@drawable/bg_category_tab_selected_reward"
                     android:gravity="center"
                     android:orientation="vertical"
                     android:padding="32dp">
@@ -123,7 +123,7 @@
                     <ImageView
                         android:layout_width="80dp"
                         android:layout_height="80dp"
-                        android:background="@drawable/bg_circle_blue_light"
+                        android:background="@drawable/bg_avatar_circle"
                         android:padding="20dp"
                         android:src="@drawable/ic_medal"
                         android:contentDescription="Certificate" />
@@ -133,7 +133,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
                         android:text="CHỨNG NHẬN"
-                        android:textColor="@android:color/white"
+                        android:textColor="@color/app_green_primary"
                         android:textSize="28sp"
                         android:textStyle="bold" />
 
@@ -142,7 +142,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
                         android:text="TÌNH NGUYỆN VIÊN"
-                        android:textColor="@android:color/white"
+                        android:textColor="@color/app_green_primary"
                         android:textSize="14sp" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>

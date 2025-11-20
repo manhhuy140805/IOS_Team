@@ -98,11 +98,11 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
             switch (user.getStatus()) {
                 case "Hoạt động":
                     tvUserStatus.setBackgroundResource(R.drawable.bg_status_active);
-                    tvUserStatus.setTextColor(itemView.getContext().getColor(R.color.green_primary));
+                    tvUserStatus.setTextColor(itemView.getContext().getColor(R.color.app_green_primary));
                     btnLockUnlock.setText("Khóa");
                     break;
                 case "Bị khóa":
-                    tvUserStatus.setBackgroundResource(R.drawable.bg_status_locked);
+                    tvUserStatus.setBackgroundResource(R.drawable.bg_button_lock);
                     tvUserStatus.setTextColor(itemView.getContext().getColor(R.color.pink));
                     btnLockUnlock.setText("Mở khóa");
                     break;

@@ -5,11 +5,11 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-import com.manhhuy.myapplication.ui.Activitys.Fragment.AcceptApplicantFragment;
-import com.manhhuy.myapplication.ui.Activitys.Fragment.HomeFragment;
-import com.manhhuy.myapplication.ui.Activitys.Fragment.SearchFragment;
-import com.manhhuy.myapplication.ui.Activitys.Fragment.RedeemFragment;
-import com.manhhuy.myapplication.ui.Activitys.Fragment.MeFragment;
+import com.manhhuy.myapplication.ui.Activities.Fragment.AcceptApplicantFragment;
+import com.manhhuy.myapplication.ui.Activities.Fragment.HomeFragment;
+import com.manhhuy.myapplication.ui.Activities.Fragment.SearchFragment;
+import com.manhhuy.myapplication.ui.Activities.Fragment.RedeemFragment;
+import com.manhhuy.myapplication.ui.Activities.Fragment.MeFragment;
 
 public class HomeAdapter extends FragmentStateAdapter {
     public static final int NUM_PAGES = 5;
