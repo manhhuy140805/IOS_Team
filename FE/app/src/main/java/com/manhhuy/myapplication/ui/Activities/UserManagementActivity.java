@@ -11,31 +11,30 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.manhhuy.myapplication.R;
-import com.manhhuy.myapplication.adapter.UserAdapter;
-import com.manhhuy.myapplication.adapter.OrganizationAdapter;
-import com.manhhuy.myapplication.model.User;
-import com.manhhuy.myapplication.model.Organization;
+import com.manhhuy.myapplication.adapter.admin.userOrganations.OnOrganizationActionListener;
+import com.manhhuy.myapplication.adapter.admin.userOrganations.OnUserActionListener;
+import com.manhhuy.myapplication.adapter.admin.userOrganations.OrganizationAdapter;
+import com.manhhuy.myapplication.adapter.admin.userOrganations.UserAdapter;
 import com.manhhuy.myapplication.databinding.ActivityUserManagementBinding;
+import com.manhhuy.myapplication.model.Organization;
+import com.manhhuy.myapplication.model.User;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Activity for managing users and organizations
- */
-public class UserManagementActivity extends AppCompatActivity implements UserAdapter.OnUserActionListener, OrganizationAdapter.OnOrganizationActionListener {
+public class UserManagementActivity extends AppCompatActivity
+        implements OnUserActionListener, OnOrganizationActionListener {
 
     private ActivityUserManagementBinding binding;
-    private RecyclerView rvUserList, rvOrgList;
     private UserAdapter userAdapter;
     private OrganizationAdapter organizationAdapter;
-    private List<User> userList;
-    private List<User> filteredUserList;
-    private List<Organization> organizationList;
-    private List<Organization> filteredOrgList;
+
+    private final List<User> userList = new ArrayList<>();
+    private final List<User> filteredUserList = new ArrayList<>();
+    private final List<Organization> organizationList = new ArrayList<>();
+    private final List<Organization> filteredOrgList = new ArrayList<>();
 
     private String currentUserFilter = "Tất cả";
     private String currentOrgFilter = "Tất cả";
@@ -44,32 +43,22 @@ public class UserManagementActivity extends AppCompatActivity implements UserAda
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
         binding = ActivityUserManagementBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        initViews();
         setupRecyclerView();
         loadSampleData();
         setupListeners();
         updateStatistics();
     }
 
-    private void initViews() {
-        // Statistics
-        rvUserList = binding.rvUserList;
-        rvOrgList = binding.rvOrgList;
-    }
-
     private void setupRecyclerView() {
-        userList = new ArrayList<>();
-        filteredUserList = new ArrayList<>();
+        // Setup User RecyclerView
         userAdapter = new UserAdapter(filteredUserList, this);
         binding.rvUserList.setLayoutManager(new LinearLayoutManager(this));
         binding.rvUserList.setAdapter(userAdapter);
 
-        organizationList = new ArrayList<>();
-        filteredOrgList = new ArrayList<>();
+        // Setup Organization RecyclerView
         organizationAdapter = new OrganizationAdapter(filteredOrgList, this);
         binding.rvOrgList.setLayoutManager(new LinearLayoutManager(this));
         binding.rvOrgList.setAdapter(organizationAdapter);
@@ -82,21 +71,21 @@ public class UserManagementActivity extends AppCompatActivity implements UserAda
 
     private void loadUserData() {
         userList.clear();
-        
+
         // Sample data matching the design
-        userList.add(new User("1", "Nguyễn Văn An", "an.nguyen@email.com", 
+        userList.add(new User("1", "Nguyễn Văn An", "an.nguyen@email.com",
                 "15/10/2024", 12, "48h", "Hoạt động", null));
-        
-        userList.add(new User("2", "Lê Thị Hương", "huong.le@email.com", 
+
+        userList.add(new User("2", "Lê Thị Hương", "huong.le@email.com",
                 "20/09/2024", 25, "102h", "Hoạt động", null));
-        
-        userList.add(new User("3", "Trần Minh Khang", "khang.tran@email.com", 
+
+        userList.add(new User("3", "Trần Minh Khang", "khang.tran@email.com",
                 "05/08/2024", 8, null, "Bị khóa", "Spam"));
-        
-        userList.add(new User("4", "Phạm Thị Lan", "lan.pham@email.com", 
+
+        userList.add(new User("4", "Phạm Thị Lan", "lan.pham@email.com",
                 "24/10/2025", 0, null, "Chờ xác thực", null));
-        
-        userList.add(new User("5", "Đỗ Văn Tùng", "tung.do@email.com", 
+
+        userList.add(new User("5", "Đỗ Văn Tùng", "tung.do@email.com",
                 "12/07/2024", 18, "76h", "Hoạt động", null));
 
         // Add more sample users
@@ -155,7 +144,8 @@ public class UserManagementActivity extends AppCompatActivity implements UserAda
         // User Search functionality
         binding.etSearch.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -163,13 +153,15 @@ public class UserManagementActivity extends AppCompatActivity implements UserAda
             }
 
             @Override
-            public void afterTextChanged(Editable s) {}
+            public void afterTextChanged(Editable s) {
+            }
         });
 
         // Organization Search functionality
         binding.etOrgSearch.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -177,7 +169,8 @@ public class UserManagementActivity extends AppCompatActivity implements UserAda
             }
 
             @Override
-            public void afterTextChanged(Editable s) {}
+            public void afterTextChanged(Editable s) {
+            }
         });
 
         // User Filter buttons
@@ -230,6 +223,7 @@ public class UserManagementActivity extends AppCompatActivity implements UserAda
     }
 
     private void updateTabColors() {
+        // Cập nhật màu sắc và indicator cho tabs
         if (isUsersTab) {
             // Users tab active
             ((ImageView) binding.tabUsers.getChildAt(0)).setColorFilter(getColor(R.color.app_green_primary));
@@ -252,13 +246,13 @@ public class UserManagementActivity extends AppCompatActivity implements UserAda
     private void setUserFilter(String filter, TextView selectedButton) {
         currentUserFilter = filter;
 
-        // Reset all buttons
+        // Reset tất cả filter buttons
         resetFilterButton(binding.btnFilterAll);
         resetFilterButton(binding.btnFilterActive);
         resetFilterButton(binding.btnFilterLocked);
         resetFilterButton(binding.btnFilterPending);
 
-        // Highlight selected button
+        // Highlight button được chọn
         selectedButton.setBackgroundResource(R.drawable.bg_filter_selected);
         selectedButton.setTextColor(getColor(R.color.white));
 
@@ -368,7 +362,7 @@ public class UserManagementActivity extends AppCompatActivity implements UserAda
     @Override
     public void onLockUnlockClick(User user) {
         String action = user.getStatus().equals("Bị khóa") ? "mở khóa" : "khóa";
-        
+
         new AlertDialog.Builder(this)
                 .setTitle("Xác nhận")
                 .setMessage("Bạn có chắc muốn " + action + " tài khoản " + user.getName() + "?")

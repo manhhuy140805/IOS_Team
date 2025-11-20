@@ -1,14 +1,11 @@
-package com.manhhuy.myapplication.adapter;
+package com.manhhuy.myapplication.adapter.admin.event;
 
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.widget.AppCompatButton;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.manhhuy.myapplication.R;
@@ -22,16 +19,10 @@ import java.util.Locale;
 
 public class EventManagerAdapter extends RecyclerView.Adapter<EventManagerAdapter.EventViewHolder> {
 
-    private Context context;
-    private List<EventPost> eventList;
-    private List<EventPost> eventListFull;
-    private OnEventActionListener listener;
-
-    public interface OnEventActionListener {
-        void onViewClick(EventPost event);
-        void onEditClick(EventPost event);
-        void onDeleteClick(EventPost event);
-    }
+    private final Context context;
+    private final List<EventPost> eventList;
+    private final List<EventPost> eventListFull;
+    private final com.manhhuy.myapplication.adapter.admin.event.OnEventActionListener listener;
 
     public EventManagerAdapter(Context context, List<EventPost> eventList, OnEventActionListener listener) {
         this.context = context;
@@ -43,7 +34,8 @@ public class EventManagerAdapter extends RecyclerView.Adapter<EventManagerAdapte
     @NonNull
     @Override
     public EventViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        ItemEventManagerBinding binding = ItemEventManagerBinding.inflate(LayoutInflater.from(context), parent, false);
+        ItemEventManagerBinding binding = ItemEventManagerBinding.inflate(
+                LayoutInflater.from(parent.getContext()), parent, false);
         return new EventViewHolder(binding);
     }
 
@@ -63,7 +55,8 @@ public class EventManagerAdapter extends RecyclerView.Adapter<EventManagerAdapte
         }
 
         // Set participants
-        holder.binding.tvParticipants.setText("👥 " + event.getCurrentParticipants() + "/" + event.getMaxParticipants() + " người");
+        holder.binding.tvParticipants
+                .setText("👥 " + event.getCurrentParticipants() + "/" + event.getMaxParticipants() + " người");
 
         // Set status
         String status = event.getStatus();
@@ -82,14 +75,14 @@ public class EventManagerAdapter extends RecyclerView.Adapter<EventManagerAdapte
         if (tags != null && !tags.isEmpty()) {
             holder.binding.tvTag1.setVisibility(View.VISIBLE);
             holder.binding.tvTag1.setText(tags.get(0));
-            
+
             if (tags.size() > 1) {
                 holder.binding.tvTag2.setVisibility(View.VISIBLE);
                 holder.binding.tvTag2.setText(tags.get(1));
             } else {
                 holder.binding.tvTag2.setVisibility(View.GONE);
             }
-            
+
             if (tags.size() > 2) {
                 holder.binding.tvTag3.setVisibility(View.VISIBLE);
                 holder.binding.tvTag3.setText(tags.get(2));
@@ -103,17 +96,9 @@ public class EventManagerAdapter extends RecyclerView.Adapter<EventManagerAdapte
         }
 
         // Button listeners
-        holder.binding.btnView.setOnClickListener(v -> {
-            if (listener != null) listener.onViewClick(event);
-        });
-
-        holder.binding.btnEdit.setOnClickListener(v -> {
-            if (listener != null) listener.onEditClick(event);
-        });
-
-        holder.binding.btnDelete.setOnClickListener(v -> {
-            if (listener != null) listener.onDeleteClick(event);
-        });
+        holder.binding.btnView.setOnClickListener(v -> listener.onViewClick(event));
+        holder.binding.btnEdit.setOnClickListener(v -> listener.onEditClick(event));
+        holder.binding.btnDelete.setOnClickListener(v -> listener.onDeleteClick(event));
     }
 
     @Override

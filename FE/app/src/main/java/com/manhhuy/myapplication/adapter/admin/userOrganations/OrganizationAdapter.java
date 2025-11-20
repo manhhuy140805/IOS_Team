@@ -1,15 +1,12 @@
-package com.manhhuy.myapplication.adapter;
+package com.manhhuy.myapplication.adapter.admin.userOrganations;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.imageview.ShapeableImageView;
 import com.manhhuy.myapplication.R;
 import com.manhhuy.myapplication.databinding.ItemOrganizationBinding;
 import com.manhhuy.myapplication.model.Organization;
@@ -18,14 +15,8 @@ import java.util.List;
 
 public class OrganizationAdapter extends RecyclerView.Adapter<OrganizationAdapter.OrgViewHolder> {
 
-    private List<Organization> organizationList;
-    private OnOrganizationActionListener listener;
-
-    public interface OnOrganizationActionListener {
-        void onViewClick(Organization organization);
-        void onLockUnlockClick(Organization organization);
-        void onDeleteClick(Organization organization);
-    }
+    private final List<Organization> organizationList;
+    private final OnOrganizationActionListener listener;
 
     public OrganizationAdapter(List<Organization> organizationList, OnOrganizationActionListener listener) {
         this.organizationList = organizationList;
@@ -35,7 +26,8 @@ public class OrganizationAdapter extends RecyclerView.Adapter<OrganizationAdapte
     @NonNull
     @Override
     public OrgViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        ItemOrganizationBinding binding = ItemOrganizationBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+        ItemOrganizationBinding binding = ItemOrganizationBinding.inflate(LayoutInflater.from(parent.getContext()),
+                parent, false);
         return new OrgViewHolder(binding);
     }
 
@@ -51,7 +43,7 @@ public class OrganizationAdapter extends RecyclerView.Adapter<OrganizationAdapte
     }
 
     public void updateList(List<Organization> newList) {
-        this.organizationList = newList;
+//        this.organizationList = newList;
         notifyDataSetChanged();
     }
 
@@ -99,23 +91,9 @@ public class OrganizationAdapter extends RecyclerView.Adapter<OrganizationAdapte
             }
 
             // Set click listeners
-            binding.btnView.setOnClickListener(v -> {
-                if (listener != null) {
-                    listener.onViewClick(organization);
-                }
-            });
-
-            binding.btnLockUnlock.setOnClickListener(v -> {
-                if (listener != null) {
-                    listener.onLockUnlockClick(organization);
-                }
-            });
-
-            binding.btnDelete.setOnClickListener(v -> {
-                if (listener != null) {
-                    listener.onDeleteClick(organization);
-                }
-            });
+            binding.btnView.setOnClickListener(v -> listener.onViewClick(organization));
+            binding.btnLockUnlock.setOnClickListener(v -> listener.onLockUnlockClick(organization));
+            binding.btnDelete.setOnClickListener(v -> listener.onDeleteClick(organization));
         }
     }
 }

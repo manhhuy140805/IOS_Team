@@ -1,15 +1,11 @@
-package com.manhhuy.myapplication.adapter;
+package com.manhhuy.myapplication.adapter.admin.post;
 
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.manhhuy.myapplication.R;
@@ -23,17 +19,9 @@ import java.util.Locale;
 public class EventPostAdapter extends RecyclerView.Adapter<EventPostAdapter.ViewHolder> {
 
     private List<EventPost> eventPosts;
-    private OnItemClickListener listener;
+    private OnItemClickListenerInterface listener;
 
-    public interface OnItemClickListener {
-        void onApproveClick(EventPost post, int position);
-        void onRejectClick(EventPost post, int position);
-        void onStatisticsClick(EventPost post, int position);
-        void onEditClick(EventPost post, int position);
-        void onReviewClick(EventPost post, int position);
-    }
-
-    public EventPostAdapter(List<EventPost> eventPosts, OnItemClickListener listener) {
+    public EventPostAdapter(List<EventPost> eventPosts, OnItemClickListenerInterface listener) {
         this.eventPosts = eventPosts;
         this.listener = listener;
     }

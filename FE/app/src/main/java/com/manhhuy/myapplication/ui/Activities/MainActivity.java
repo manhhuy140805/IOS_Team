@@ -1,5 +1,6 @@
 package com.manhhuy.myapplication.ui.Activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
@@ -28,7 +29,8 @@ public class MainActivity extends AppCompatActivity {
         });
 
         binding.btnSignIn.setOnClickListener(v -> {
-            // Intent intent = new Intent(MainActivity.this, SignInActivity.class);
+             Intent intent = new Intent(MainActivity.this, HomeActivity.class);
+                startActivity(intent);
         });
 
     }

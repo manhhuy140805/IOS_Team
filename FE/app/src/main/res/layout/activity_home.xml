@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/md_theme_light_background"
+    android:orientation="horizontal"
     tools:context=".ui.Activities.HomeActivity">
 
     <!-- ViewPager2 with smooth transitions -->

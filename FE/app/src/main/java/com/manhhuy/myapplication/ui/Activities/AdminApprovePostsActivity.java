@@ -1,16 +1,15 @@
 package com.manhhuy.myapplication.ui.Activities;
 
 import android.os.Bundle;
-import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.manhhuy.myapplication.R;
-import com.manhhuy.myapplication.adapter.EventPostAdapter;
+import com.manhhuy.myapplication.adapter.admin.post.EventPostAdapter;
+import com.manhhuy.myapplication.adapter.admin.post.OnItemClickListenerInterface;
+import com.manhhuy.myapplication.databinding.ActivityAdminApprovePostsBinding;
 import com.manhhuy.myapplication.model.EventPost;
 
 import java.util.ArrayList;
@@ -18,92 +17,46 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-public class AdminApprovePostsActivity extends AppCompatActivity {
+public class AdminApprovePostsActivity extends AppCompatActivity implements OnItemClickListenerInterface {
 
-    private RecyclerView recyclerViewPosts;
+    private ActivityAdminApprovePostsBinding binding;
     private EventPostAdapter adapter;
     private List<EventPost> allPosts;
     private List<EventPost> filteredPosts;
-    
-    private TextView btnBack, btnMenu, btnLoadMore;
-    private TextView tabAll, tabPending, tabApproved, tabRejected;
-    private EditText searchInput;
     
     private String currentFilter = "all";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_admin_approve_posts);
-        
-        initViews();
+        binding = ActivityAdminApprovePostsBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+
         setupRecyclerView();
         loadSampleData();
         setupListeners();
     }
 
-    private void initViews() {
-        recyclerViewPosts = findViewById(R.id.recyclerViewPosts);
-        btnBack = findViewById(R.id.btnBack);
-        btnMenu = findViewById(R.id.btnMenu);
-        btnLoadMore = findViewById(R.id.btnLoadMore);
-        tabAll = findViewById(R.id.tabAll);
-        tabPending = findViewById(R.id.tabPending);
-        tabApproved = findViewById(R.id.tabApproved);
-        tabRejected = findViewById(R.id.tabRejected);
-        searchInput = findViewById(R.id.searchInput);
-    }
-
     private void setupRecyclerView() {
-        recyclerViewPosts.setLayoutManager(new LinearLayoutManager(this));
-        
-        adapter = new EventPostAdapter(new ArrayList<>(), new EventPostAdapter.OnItemClickListener() {
-            @Override
-            public void onApproveClick(EventPost post, int position) {
-                handleApprove(post, position);
-            }
-
-            @Override
-            public void onRejectClick(EventPost post, int position) {
-                handleReject(post, position);
-            }
-
-            @Override
-            public void onStatisticsClick(EventPost post, int position) {
-                Toast.makeText(AdminApprovePostsActivity.this, 
-                    "Xem thống kê: " + post.getTitle(), Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onEditClick(EventPost post, int position) {
-                Toast.makeText(AdminApprovePostsActivity.this, 
-                    "Chỉnh sửa: " + post.getTitle(), Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onReviewClick(EventPost post, int position) {
-                Toast.makeText(AdminApprovePostsActivity.this, 
-                    "Xem lại: " + post.getTitle(), Toast.LENGTH_SHORT).show();
-            }
-        });
-        
-        recyclerViewPosts.setAdapter(adapter);
+        binding.recyclerViewPosts.setLayoutManager(new LinearLayoutManager(this));
+        adapter = new EventPostAdapter(new ArrayList<>(), this);
+        binding.recyclerViewPosts.setAdapter(adapter);
     }
 
     private void setupListeners() {
-        btnBack.setOnClickListener(v -> finish());
-        
-        btnMenu.setOnClickListener(v -> 
+        binding.btnBack.setOnClickListener(v -> finish());
+
+        binding.btnMenu.setOnClickListener(v ->
             Toast.makeText(this, "Menu", Toast.LENGTH_SHORT).show());
         
-        btnLoadMore.setOnClickListener(v -> 
+        binding.btnLoadMore.setOnClickListener(v ->
             Toast.makeText(this, "Đang tải thêm...", Toast.LENGTH_SHORT).show());
         
         // Tab listeners
-        tabAll.setOnClickListener(v -> filterPosts("all"));
-        tabPending.setOnClickListener(v -> filterPosts("pending"));
-        tabApproved.setOnClickListener(v -> filterPosts("approved"));
-        tabRejected.setOnClickListener(v -> filterPosts("rejected"));
+        binding.tabAll.setOnClickListener(v -> filterPosts("all"));
+        binding.tabPending.setOnClickListener(v -> filterPosts("pending"));
+        binding.tabApproved.setOnClickListener(v -> filterPosts("approved"));
+        binding.tabRejected.setOnClickListener(v -> filterPosts("rejected"));
     }
 
     private void loadSampleData() {
@@ -187,7 +140,7 @@ public class AdminApprovePostsActivity extends AppCompatActivity {
         // Update tab UI
         updateTabUI();
         
-        // Filter posts
+        // Filter posts based on status
         filteredPosts = new ArrayList<>();
         for (EventPost post : allPosts) {
             if (filter.equals("all") || post.getStatus().equals(filter)) {
@@ -195,42 +148,46 @@ public class AdminApprovePostsActivity extends AppCompatActivity {
             }
         }
         
+        // Update adapter with filtered data
         adapter.updateData(filteredPosts);
     }
 
     private void updateTabUI() {
-        // Reset all tabs
-        tabAll.setBackgroundResource(R.drawable.tab_unselected);
-        tabAll.setTextColor(getResources().getColor(android.R.color.darker_gray));
-        tabPending.setBackgroundResource(R.drawable.tab_unselected);
-        tabPending.setTextColor(getResources().getColor(android.R.color.darker_gray));
-        tabApproved.setBackgroundResource(R.drawable.tab_unselected);
-        tabApproved.setTextColor(getResources().getColor(android.R.color.darker_gray));
-        tabRejected.setBackgroundResource(R.drawable.tab_unselected);
-        tabRejected.setTextColor(getResources().getColor(android.R.color.darker_gray));
-        
-        // Highlight selected tab
+        // Reset all tabs to default state
+        binding.tabAll.setBackgroundResource(R.drawable.tab_unselected);
+        binding.tabAll.setTextColor(getResources().getColor(android.R.color.darker_gray));
+        binding.tabPending.setBackgroundResource(R.drawable.tab_unselected);
+        binding.tabPending.setTextColor(getResources().getColor(android.R.color.darker_gray));
+        binding.tabApproved.setBackgroundResource(R.drawable.tab_unselected);
+        binding.tabApproved.setTextColor(getResources().getColor(android.R.color.darker_gray));
+        binding.tabRejected.setBackgroundResource(R.drawable.tab_unselected);
+        binding.tabRejected.setTextColor(getResources().getColor(android.R.color.darker_gray));
+
+        // Highlight the selected tab
         switch (currentFilter) {
             case "all":
-                tabAll.setBackgroundResource(R.drawable.tab_selected);
-                tabAll.setTextColor(getResources().getColor(android.R.color.white));
+                binding.tabAll.setBackgroundResource(R.drawable.tab_selected);
+                binding.tabAll.setTextColor(getResources().getColor(android.R.color.white));
                 break;
             case "pending":
-                tabPending.setBackgroundResource(R.drawable.tab_selected);
-                tabPending.setTextColor(getResources().getColor(android.R.color.white));
+                binding.tabPending.setBackgroundResource(R.drawable.tab_selected);
+                binding.tabPending.setTextColor(getResources().getColor(android.R.color.white));
                 break;
             case "approved":
-                tabApproved.setBackgroundResource(R.drawable.tab_selected);
-                tabApproved.setTextColor(getResources().getColor(android.R.color.white));
+                binding.tabApproved.setBackgroundResource(R.drawable.tab_selected);
+                binding.tabApproved.setTextColor(getResources().getColor(android.R.color.white));
                 break;
             case "rejected":
-                tabRejected.setBackgroundResource(R.drawable.tab_selected);
-                tabRejected.setTextColor(getResources().getColor(android.R.color.white));
+                binding.tabRejected.setBackgroundResource(R.drawable.tab_selected);
+                binding.tabRejected.setTextColor(getResources().getColor(android.R.color.white));
                 break;
         }
     }
 
-    private void handleApprove(EventPost post, int position) {
+
+
+    @Override
+    public void onApproveClick(EventPost post, int position) {
         post.setStatus("approved");
         post.setReviewedBy("Admin Hòa");
         post.setReviewedTime("Vừa xong");
@@ -238,13 +195,29 @@ public class AdminApprovePostsActivity extends AppCompatActivity {
         Toast.makeText(this, "Đã duyệt: " + post.getTitle(), Toast.LENGTH_SHORT).show();
     }
 
-    private void handleReject(EventPost post, int position) {
-        // In real app, show dialog to input rejection reason
+    @Override
+    public void onRejectClick(EventPost post, int position) {
         post.setStatus("rejected");
         post.setReviewedBy("Admin Hòa");
         post.setReviewedTime("Vừa xong");
         post.setRejectionReason("Thông tin không đầy đủ");
         adapter.notifyItemChanged(position);
         Toast.makeText(this, "Đã từ chối: " + post.getTitle(), Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onStatisticsClick(EventPost post, int position) {
+        Toast.makeText(this, "Xem thống kê: " + post.getTitle(), Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onEditClick(EventPost post, int position) {
+        Toast.makeText(this, "Chỉnh sửa: " + post.getTitle(), Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onReviewClick(EventPost post, int position) {
+        Toast.makeText(this, "Xem lại bài đăng: " + post.getTitle(), Toast.LENGTH_SHORT).show();
+        // TODO: Implement review dialog or navigate to detail screen
     }
 }

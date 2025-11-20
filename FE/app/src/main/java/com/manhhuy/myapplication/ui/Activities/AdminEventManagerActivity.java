@@ -1,15 +1,15 @@
 package com.manhhuy.myapplication.ui.Activities;
 
 import android.os.Bundle;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.manhhuy.myapplication.R;
-import com.manhhuy.myapplication.adapter.EventManagerAdapter;
+import com.manhhuy.myapplication.adapter.admin.event.EventManagerAdapter;
+import com.manhhuy.myapplication.adapter.admin.event.OnEventActionListener;
+import com.manhhuy.myapplication.databinding.ActivityEventManagerBinding;
 import com.manhhuy.myapplication.model.EventPost;
 
 import java.util.ArrayList;
@@ -17,25 +17,21 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
-public class AdminEventManagerActivity extends AppCompatActivity implements EventManagerAdapter.OnEventActionListener {
+public class AdminEventManagerActivity extends AppCompatActivity implements OnEventActionListener {
 
-    private RecyclerView recyclerViewEvents;
+    private ActivityEventManagerBinding binding;
     private EventManagerAdapter adapter;
     private List<EventPost> eventList;
-    
-    private TextView tvTotalEvents, tvActiveEvents, tvCompletedEvents;
-    private TextView tabAll, tabActive, tabCompleted;
-    private TextView chipEnvironment, chipEducation, chipHealth;
-    
+
     private String currentStatusFilter = "all";
     private String currentCategoryFilter = "all";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_event_manager);
+        binding = ActivityEventManagerBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
-        initViews();
         setupRecyclerView();
         loadSampleData();
         setupTabListeners();
@@ -43,32 +39,16 @@ public class AdminEventManagerActivity extends AppCompatActivity implements Even
         updateStatistics();
     }
 
-    private void initViews() {
-        recyclerViewEvents = findViewById(R.id.recyclerViewEvents);
-        
-        tvTotalEvents = findViewById(R.id.tvTotalEvents);
-        tvActiveEvents = findViewById(R.id.tvActiveEvents);
-        tvCompletedEvents = findViewById(R.id.tvCompletedEvents);
-        
-        tabAll = findViewById(R.id.tabAll);
-        tabActive = findViewById(R.id.tabActivity);
-        tabCompleted = findViewById(R.id.tabComplete);
-        
-        chipEnvironment = findViewById(R.id.chipEnvironment);
-        chipEducation = findViewById(R.id.chipEducation);
-        chipHealth = findViewById(R.id.chipHealth);
-    }
-
     private void setupRecyclerView() {
         eventList = new ArrayList<>();
         adapter = new EventManagerAdapter(this, eventList, this);
-        recyclerViewEvents.setLayoutManager(new LinearLayoutManager(this));
-        recyclerViewEvents.setAdapter(adapter);
+        binding.recyclerViewEvents.setLayoutManager(new LinearLayoutManager(this));
+        binding.recyclerViewEvents.setAdapter(adapter);
     }
 
     private void loadSampleData() {
         eventList.clear();
-        
+
         // Sample Event 1
         EventPost event1 = new EventPost();
         event1.setId(1);
@@ -137,105 +117,98 @@ public class AdminEventManagerActivity extends AppCompatActivity implements Even
     }
 
     private void setupTabListeners() {
-        tabAll.setOnClickListener(v -> {
-            selectTab(tabAll);
+        binding.tabAll.setOnClickListener(v -> {
             currentStatusFilter = "all";
+            updateTabUI(binding.tabAll);
             applyFilters();
         });
 
-        tabActive.setOnClickListener(v -> {
-            selectTab(tabActive);
+        binding.tabActivity.setOnClickListener(v -> {
             currentStatusFilter = "active";
+            updateTabUI(binding.tabActivity);
             applyFilters();
         });
 
-        tabCompleted.setOnClickListener(v -> {
-            selectTab(tabCompleted);
+        binding.tabComplete.setOnClickListener(v -> {
             currentStatusFilter = "completed";
+            updateTabUI(binding.tabComplete);
             applyFilters();
         });
     }
 
-    private void selectTab(TextView selectedTab) {
-        // Reset all tabs to unselected style
-        setTabStyle(tabAll, R.style.CategoryTabUnselected);
-        setTabStyle(tabActive, R.style.CategoryTabUnselected);
-        setTabStyle(tabCompleted, R.style.CategoryTabUnselected);
+    private void updateTabUI(android.widget.TextView selectedTab) {
+        // Reset tất cả tabs
+        resetTabStyle(binding.tabAll);
+        resetTabStyle(binding.tabActivity);
+        resetTabStyle(binding.tabComplete);
 
-        // Highlight selected tab with selected style
-        setTabStyle(selectedTab, R.style.CategoryTabSelected);
+        // Highlight tab được chọn
+        selectedTab.setBackgroundResource(R.drawable.bg_category_tab_selected_reward);
+        selectedTab.setTextColor(getResources().getColor(R.color.app_green_primary));
     }
 
-    private void setTabStyle(TextView tab, int styleRes) {
-        // Get style attributes
-        int[] attrs = {android.R.attr.background, android.R.attr.textColor};
-        
-        if (styleRes == R.style.CategoryTabSelected) {
-            tab.setBackgroundResource(R.drawable.bg_category_tab_selected_reward);
-            tab.setTextColor(getResources().getColor(R.color.app_green_primary));
-        } else {
-            tab.setBackgroundResource(R.drawable.bg_category_tab_unselected_reward);
-            tab.setTextColor(getResources().getColor(R.color.text_secondary));
-        }
+    private void resetTabStyle(android.widget.TextView tab) {
+        tab.setBackgroundResource(R.drawable.bg_category_tab_unselected_reward);
+        tab.setTextColor(getResources().getColor(R.color.text_secondary));
     }
 
     private void setupChipListeners() {
-        chipEnvironment.setOnClickListener(v -> {
-            selectChip(chipEnvironment);
+        binding.chipEnvironment.setOnClickListener(v -> {
             currentCategoryFilter = "Môi trường";
+            updateChipUI(binding.chipEnvironment);
             applyFilters();
         });
 
-        chipEducation.setOnClickListener(v -> {
-            selectChip(chipEducation);
+        binding.chipEducation.setOnClickListener(v -> {
             currentCategoryFilter = "Giáo dục";
+            updateChipUI(binding.chipEducation);
             applyFilters();
         });
 
-        chipHealth.setOnClickListener(v -> {
-            selectChip(chipHealth);
+        binding.chipHealth.setOnClickListener(v -> {
             currentCategoryFilter = "Y tế";
+            updateChipUI(binding.chipHealth);
             applyFilters();
         });
     }
 
-    private void selectChip(TextView selectedChip) {
-        // Reset all chips
-        chipEnvironment.setBackgroundResource(R.drawable.bg_chip_unselected_event);
-        chipEnvironment.setTextColor(getResources().getColor(R.color.text_primary));
-        
-        chipEducation.setBackgroundResource(R.drawable.bg_chip_unselected_event);
-        chipEducation.setTextColor(getResources().getColor(R.color.text_primary));
-        
-        chipHealth.setBackgroundResource(R.drawable.bg_chip_unselected_event);
-        chipHealth.setTextColor(getResources().getColor(R.color.text_primary));
+    private void updateChipUI(android.widget.TextView selectedChip) {
+        // Reset tất cả chips
+        resetChipStyle(binding.chipEnvironment);
+        resetChipStyle(binding.chipEducation);
+        resetChipStyle(binding.chipHealth);
 
-        // Highlight selected chip
+        // Highlight chip được chọn
         selectedChip.setBackgroundResource(R.drawable.bg_chip_selected_event);
         selectedChip.setTextColor(getResources().getColor(R.color.app_green_primary));
     }
 
+    private void resetChipStyle(android.widget.TextView chip) {
+        chip.setBackgroundResource(R.drawable.bg_chip_unselected_event);
+        chip.setTextColor(getResources().getColor(R.color.text_primary));
+    }
+
     private void applyFilters() {
         eventList.clear();
-        
+
         for (EventPost event : getAllEvents()) {
-            boolean matchesStatus = currentStatusFilter.equals("all") || 
-                                   event.getStatus().equals(currentStatusFilter);
-            boolean matchesCategory = currentCategoryFilter.equals("all") || 
-                                     (event.getTags() != null && event.getTags().contains(currentCategoryFilter));
-            
+            boolean matchesStatus = currentStatusFilter.equals("all") ||
+                    event.getStatus().equals(currentStatusFilter);
+            boolean matchesCategory = currentCategoryFilter.equals("all") ||
+                    (event.getTags() != null && event.getTags().contains(currentCategoryFilter));
+
             if (matchesStatus && matchesCategory) {
                 eventList.add(event);
             }
         }
-        
+
         adapter.notifyDataSetChanged();
         updateStatistics();
     }
 
     private List<EventPost> getAllEvents() {
         List<EventPost> allEvents = new ArrayList<>();
-        
+
         // Sample Event 1
         EventPost event1 = new EventPost();
         event1.setId(1);
@@ -314,9 +287,9 @@ public class AdminEventManagerActivity extends AppCompatActivity implements Even
             }
         }
 
-        tvTotalEvents.setText(String.valueOf(total));
-        tvActiveEvents.setText(String.valueOf(active));
-        tvCompletedEvents.setText(String.valueOf(completed));
+        binding.tvTotalEvents.setText(String.valueOf(total));
+        binding.tvActiveEvents.setText(String.valueOf(active));
+        binding.tvCompletedEvents.setText(String.valueOf(completed));
     }
 
     @Override

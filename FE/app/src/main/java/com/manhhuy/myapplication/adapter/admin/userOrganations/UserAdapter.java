@@ -1,15 +1,12 @@
-package com.manhhuy.myapplication.adapter;
+package com.manhhuy.myapplication.adapter.admin.userOrganations;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.imageview.ShapeableImageView;
 import com.manhhuy.myapplication.R;
 import com.manhhuy.myapplication.databinding.ItemUserBinding;
 import com.manhhuy.myapplication.model.User;
@@ -18,14 +15,8 @@ import java.util.List;
 
 public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder> {
 
-    private List<User> userList;
-    private OnUserActionListener listener;
-
-    public interface OnUserActionListener {
-        void onViewClick(User user);
-        void onLockUnlockClick(User user);
-        void onDeleteClick(User user);
-    }
+    private final List<User> userList;
+    private final OnUserActionListener listener;
 
     public UserAdapter(List<User> userList, OnUserActionListener listener) {
         this.userList = userList;
@@ -51,7 +42,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
     }
 
     public void updateList(List<User> newList) {
-        this.userList = newList;
+//        this.userList = newList;
         notifyDataSetChanged();
     }
 
@@ -100,23 +91,9 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
             }
 
             // Set click listeners
-            binding.btnView.setOnClickListener(v -> {
-                if (listener != null) {
-                    listener.onViewClick(user);
-                }
-            });
-
-            binding.btnLockUnlock.setOnClickListener(v -> {
-                if (listener != null) {
-                    listener.onLockUnlockClick(user);
-                }
-            });
-
-            binding.btnDelete.setOnClickListener(v -> {
-                if (listener != null) {
-                    listener.onDeleteClick(user);
-                }
-            });
+            binding.btnView.setOnClickListener(v -> listener.onViewClick(user));
+            binding.btnLockUnlock.setOnClickListener(v -> listener.onLockUnlockClick(user));
+            binding.btnDelete.setOnClickListener(v -> listener.onDeleteClick(user));
         }
     }
 }

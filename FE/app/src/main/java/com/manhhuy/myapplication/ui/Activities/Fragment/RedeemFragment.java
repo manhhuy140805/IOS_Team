@@ -14,7 +14,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.manhhuy.myapplication.R;
-import com.manhhuy.myapplication.adapter.RewardAdapter;
+import com.manhhuy.myapplication.adapter.admin.reward.RewardAdapter;
 import com.manhhuy.myapplication.databinding.FragmentRedeemBinding;
 
 import com.manhhuy.myapplication.model.RewardItem;
