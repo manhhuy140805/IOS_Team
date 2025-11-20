@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="16dp"
-    android:layout_marginVertical="8dp"
+    android:layout_marginBottom="12dp"
     app:cardCornerRadius="12dp"
     app:cardElevation="2dp"
-    android:background="@color/white">
+    app:cardBackgroundColor="@color/white">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -17,31 +16,32 @@
         android:padding="16dp">
 
         <!-- Header: Logo, Name, Email, Status Badge -->
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
 
             <!-- Organization Logo -->
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/ivOrgLogo"
-                android:layout_width="56dp"
-                android:layout_height="56dp"
-                android:layout_alignParentStart="true"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:src="@drawable/ic_organization"
-                android:scaleType="centerCrop"
+                android:scaleType="centerInside"
                 app:shapeAppearanceOverlay="@style/ShapeAppearance.Circle"
-                android:background="@color/app_green_light"
-                app:strokeColor="@color/gray_300"
-                app:strokeWidth="2dp"/>
+                android:background="@drawable/bg_tag_category"
+                android:backgroundTint="#E0F2F1"
+                app:tint="@color/app_green_primary"
+                android:padding="10dp"/>
 
             <!-- Name and Email -->
             <LinearLayout
                 android:id="@+id/llOrgInfo"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_toEndOf="@id/ivOrgLogo"
+                android:layout_weight="1"
                 android:layout_marginStart="12dp"
-                android:layout_centerVertical="true"
                 android:orientation="vertical">
 
                 <TextView
@@ -58,9 +58,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="contact@tumtam.org.vn"
-                    android:textSize="13sp"
-                    android:layout_marginTop="4dp"
-                    android:textColor="@color/text_secondary"/>
+                    android:textSize="12sp"
+                    android:layout_marginTop="2dp"
+                    android:textColor="@color/text_secondary"
+                    android:ellipsize="end"
+                    android:maxLines="1"/>
             </LinearLayout>
 
             <!-- Status Badge -->
@@ -68,23 +70,27 @@
                 android:id="@+id/tvOrgStatus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
                 android:text="Hoạt động"
-                android:textSize="12sp"
+                android:textSize="11sp"
                 android:textStyle="bold"
-                android:paddingHorizontal="12dp"
-                android:paddingVertical="6dp"
-                android:background="@drawable/bg_status_active"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="4dp"
+                android:background="@drawable/bg_status_active_event"
                 android:textColor="@color/app_green_primary"/>
 
-        </RelativeLayout>
+        </LinearLayout>
+
+        <!-- Divider -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#F0F0F0"
+            android:layout_marginVertical="12dp"/>
 
         <!-- Organization Details -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
             android:orientation="horizontal">
 
             <!-- Founded Date -->
@@ -92,23 +98,24 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:orientation="horizontal"
-                android:gravity="center_vertical">
+                android:orientation="vertical">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="📅"
-                    android:textSize="14sp"/>
+                    android:text="Thành lập"
+                    android:textSize="11sp"
+                    android:textColor="@color/text_secondary"/>
 
                 <TextView
                     android:id="@+id/tvFoundedDate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Thành lập: 10/05/2020"
+                    android:text="10/05/2020"
                     android:textSize="13sp"
-                    android:layout_marginStart="4dp"
-                    android:textColor="@color/text_secondary"/>
+                    android:textStyle="bold"
+                    android:textColor="@color/text_primary"
+                    android:layout_marginTop="2dp"/>
             </LinearLayout>
 
             <!-- Member Count -->
@@ -116,101 +123,102 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:orientation="horizontal"
-                android:gravity="center_vertical">
+                android:orientation="vertical">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="👥"
-                    android:textSize="14sp"/>
+                    android:text="Thành viên"
+                    android:textSize="11sp"
+                    android:textColor="@color/text_secondary"/>
 
                 <TextView
                     android:id="@+id/tvMemberCount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Thành viên: 145"
+                    android:text="145"
                     android:textSize="13sp"
-                    android:layout_marginStart="4dp"
-                    android:textColor="@color/text_secondary"/>
+                    android:textStyle="bold"
+                    android:textColor="@color/app_green_primary"
+                    android:layout_marginTop="2dp"/>
             </LinearLayout>
+            
+            <!-- Empty space for balance or future data -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"/>
 
         </LinearLayout>
 
         <!-- Violation Warning (if any) -->
         <LinearLayout
             android:id="@+id/llViolationWarning"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="12dp"
             android:orientation="horizontal"
             android:gravity="center_vertical"
+            android:background="@drawable/bg_category_tab_unselected_reward"
+            android:backgroundTint="#FFEBEE"
+            android:padding="8dp"
             android:visibility="gone">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="⚠️"
-                android:textSize="14sp"/>
+                android:textSize="12sp"/>
 
             <TextView
                 android:id="@+id/tvViolationType"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Vi phạm: Nội dung không phù hợp"
-                android:textSize="13sp"
-                android:layout_marginStart="4dp"
-                android:textColor="@color/orange"/>
+                android:textSize="12sp"
+                android:layout_marginStart="8dp"
+                android:textColor="#C62828"/>
         </LinearLayout>
 
         <!-- Action Buttons -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="12dp"
             android:orientation="horizontal"
-            android:gravity="center">
+            android:gravity="end">
 
-            <!-- View Button -->
-            <TextView
+            <ImageButton
                 android:id="@+id/btnView"
-                android:layout_width="0dp"
+                android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:layout_weight="1"
-                android:text="Xem"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:gravity="center"
-                android:background="@drawable/bg_button_view"
-                android:textColor="@color/cyan"
-                android:layout_marginEnd="8dp"/>
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_info"
+                app:tint="@color/text_secondary"
+                android:padding="8dp"
+                android:contentDescription="View Details"/>
 
-            <!-- Lock/Unlock Button -->
-            <TextView
+            <ImageButton
                 android:id="@+id/btnLockUnlock"
-                android:layout_width="0dp"
+                android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:layout_weight="1"
-                android:text="Khóa"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:gravity="center"
-                android:background="@drawable/bg_button_lock"
-                android:textColor="@color/orange"
-                android:layout_marginEnd="8dp"/>
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_lock"
+                app:tint="#FF9800"
+                android:padding="8dp"
+                android:layout_marginStart="8dp"
+                android:contentDescription="Lock/Unlock"/>
 
-            <!-- Delete Button -->
-            <TextView
+            <ImageButton
                 android:id="@+id/btnDelete"
-                android:layout_width="0dp"
+                android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:layout_weight="1"
-                android:text="Xóa"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:gravity="center"
-                android:background="@drawable/bg_button_delete"
-                android:textColor="@color/pink"/>
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_delete"
+                app:tint="#E53935"
+                android:padding="8dp"
+                android:layout_marginStart="8dp"
+                android:contentDescription="Delete"/>
 
         </LinearLayout>
 

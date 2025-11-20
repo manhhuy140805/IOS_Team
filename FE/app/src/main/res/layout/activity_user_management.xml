@@ -4,566 +4,564 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/md_theme_light_background"
     android:orientation="vertical">
 
-    <!-- Header with Back Button and Title -->
+    <!-- Green Header Section -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="16dp"
-        android:gravity="center_vertical"
-        android:layout_marginTop="30dp">
+        android:orientation="vertical"
+        android:background="@drawable/bg_header_green_rounded"
+        android:paddingBottom="24dp"
+        android:elevation="4dp"
+        android:outlineProvider="background">
 
-        <ImageView
-            android:id="@+id/btnBack"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@drawable/ic_back"
-            android:contentDescription="Back"
-     />
-
-        <TextView
-            android:layout_width="0dp"
+        <!-- Title Row -->
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Quản Lý Hệ Thống"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:textColor="@color/app_green_primary"
-            android:layout_marginStart="16dp"/>
+            android:orientation="horizontal"
+            android:paddingHorizontal="20dp"
+            android:paddingTop="40dp"
+            android:paddingBottom="16dp"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:id="@+id/btnBack"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:padding="4dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_back"
+                android:contentDescription="Back"
+                app:tint="@color/white"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Quản Lý Hệ Thống"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:layout_marginStart="12dp"/>
+
+        </LinearLayout>
+
+        <!-- Tabs: Users / Organizations -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/bg_search_bar"
+            android:backgroundTint="#33FFFFFF"
+            android:padding="4dp">
+
+            <LinearLayout
+                android:id="@+id/tabUsers"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:paddingVertical="8dp"
+                android:background="@drawable/bg_button_white_solid">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/ic_user"
+                    android:contentDescription="Users"
+                    android:layout_marginEnd="8dp"
+                    app:tint="@color/app_green_primary"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Người dùng"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/app_green_primary"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/tabOrganizations"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:paddingVertical="8dp"
+                android:background="@android:color/transparent">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/ic_organization"
+                    android:contentDescription="Organizations"
+                    android:layout_marginEnd="8dp"
+                    app:tint="#CCFFFFFF"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tổ chức"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:textColor="#CCFFFFFF"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- Statistics Cards (Dynamic Content) -->
+        <LinearLayout
+            android:id="@+id/llUserStats"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingHorizontal="20dp"
+            android:weightSum="3">
+
+            <!-- Total Users Card -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginEnd="6dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="0dp"
+                app:cardBackgroundColor="@color/white">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="12dp"
+                    android:gravity="center">
+
+                    <TextView
+                        android:id="@+id/tvTotalUsers"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="1,234"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/app_green_primary"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Tổng số"
+                        android:textSize="11sp"
+                        android:layout_marginTop="2dp"
+                        android:textColor="@color/text_secondary"/>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Active Users Card -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginHorizontal="3dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="0dp"
+                app:cardBackgroundColor="@color/white">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="12dp"
+                    android:gravity="center">
+
+                    <TextView
+                        android:id="@+id/tvActiveUsers"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="1,180"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/app_green_primary"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Hoạt động"
+                        android:textSize="11sp"
+                        android:layout_marginTop="2dp"
+                        android:textColor="@color/text_secondary"/>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Locked Users Card -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="6dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="0dp"
+                app:cardBackgroundColor="@color/white">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="12dp"
+                    android:gravity="center">
+
+                    <TextView
+                        android:id="@+id/tvLockedUsers"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="54"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:textColor="#E53935"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Bị khóa"
+                        android:textSize="11sp"
+                        android:layout_marginTop="2dp"
+                        android:textColor="@color/text_secondary"/>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+        </LinearLayout>
+
+        <!-- Org Stats (Initially Hidden) -->
+        <LinearLayout
+            android:id="@+id/llOrgStats"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingHorizontal="20dp"
+            android:weightSum="3"
+            android:visibility="gone">
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginEnd="6dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="0dp"
+                app:cardBackgroundColor="@color/white">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="12dp"
+                    android:gravity="center">
+
+                    <TextView
+                        android:id="@+id/tvTotalOrgs"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="87"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/app_green_primary"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Tổng số"
+                        android:textSize="11sp"
+                        android:layout_marginTop="2dp"
+                        android:textColor="@color/text_secondary"/>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginHorizontal="3dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="0dp"
+                app:cardBackgroundColor="@color/white">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="12dp"
+                    android:gravity="center">
+
+                    <TextView
+                        android:id="@+id/tvActiveOrgs"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="79"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/app_green_primary"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Hoạt động"
+                        android:textSize="11sp"
+                        android:layout_marginTop="2dp"
+                        android:textColor="@color/text_secondary"/>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="6dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="0dp"
+                app:cardBackgroundColor="@color/white">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="12dp"
+                    android:gravity="center">
+
+                    <TextView
+                        android:id="@+id/tvLockedOrgs"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="8"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:textColor="#E53935"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Bị khóa"
+                        android:textSize="11sp"
+                        android:layout_marginTop="2dp"
+                        android:textColor="@color/text_secondary"/>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+        </LinearLayout>
 
     </LinearLayout>
 
-    <!-- ScrollView Container for Scrollable Content -->
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="match_parent"
         android:fillViewport="true">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingTop="16dp">
 
-    <!-- Tabs: Users and Organizations -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="@color/white"
-        android:paddingVertical="12dp">
-
-        <LinearLayout
-            android:id="@+id/tabUsers"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="horizontal"
-            android:gravity="center"
-            android:paddingVertical="8dp">
-
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:src="@drawable/ic_user"
-                android:contentDescription="Users"
-                android:layout_marginEnd="8dp"
-                app:tint="@color/app_green_primary"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Users"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:textColor="@color/app_green_primary"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/tabOrganizations"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="horizontal"
-            android:gravity="center"
-            android:paddingVertical="8dp">
-
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:src="@drawable/ic_organization"
-                android:contentDescription="Organizations"
-                android:layout_marginEnd="8dp"
-                app:tint="@color/text_secondary"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Organizations"
-                android:textSize="16sp"
-                android:textColor="@color/text_secondary"/>
-
-        </LinearLayout>
-
-    </LinearLayout>
-
-    <!-- Tab Indicator -->
-    <View
-        android:id="@+id/tabIndicator"
-        android:layout_width="0dp"
-        android:layout_height="3dp"
-        android:background="@color/app_green_primary"/>
-
-    <!-- Statistics Cards -->
-    <LinearLayout
-        android:id="@+id/llUserStats"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_margin="16dp"
-        android:weightSum="3">
-
-        <!-- Total Users Card -->
-        <androidx.cardview.widget.CardView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginEnd="8dp"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="2dp"
-            android:background="@color/white">
-
+            <!-- User Search & Filters -->
             <LinearLayout
+                android:id="@+id/layoutUserFilters"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/cvUserSearch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="16dp"
+                    android:layout_marginBottom="16dp">
+
+                    <EditText
+                        android:id="@+id/etSearch"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:hint="🔍 Tìm kiếm user..."
+                        android:textSize="14sp"
+                        android:textColorHint="@color/text_secondary"
+                        android:paddingHorizontal="16dp"
+                        android:background="@drawable/bg_search_bar"
+                        android:drawablePadding="8dp"/>
+                </LinearLayout>
+
+                <HorizontalScrollView
+                    android:id="@+id/hvUserFilter"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:scrollbars="none"
+                    android:paddingHorizontal="16dp">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/btnFilterAll"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Tất cả"
+                            android:textSize="14sp"
+                            android:paddingHorizontal="20dp"
+                            android:paddingVertical="8dp"
+                            android:background="@drawable/bg_button_white_solid"
+                            android:backgroundTint="@color/app_green_primary"
+                            android:textColor="@color/white"
+                            android:layout_marginEnd="8dp"/>
+
+                        <TextView
+                            android:id="@+id/btnFilterActive"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Hoạt động"
+                            android:textSize="14sp"
+                            android:paddingHorizontal="20dp"
+                            android:paddingVertical="8dp"
+                            android:background="@drawable/bg_category_tab_unselected_reward"
+                            android:textColor="@color/text_secondary"
+                            android:layout_marginEnd="8dp"/>
+
+                        <TextView
+                            android:id="@+id/btnFilterLocked"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Bị khóa"
+                            android:textSize="14sp"
+                            android:paddingHorizontal="20dp"
+                            android:paddingVertical="8dp"
+                            android:background="@drawable/bg_category_tab_unselected_reward"
+                            android:textColor="@color/text_secondary"
+                            android:layout_marginEnd="8dp"/>
+
+                        <TextView
+                            android:id="@+id/btnFilterPending"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Mới đăng ký"
+                            android:textSize="14sp"
+                            android:paddingHorizontal="20dp"
+                            android:paddingVertical="8dp"
+                            android:background="@drawable/bg_category_tab_unselected_reward"
+                            android:textColor="@color/text_secondary"/>
+                    </LinearLayout>
+                </HorizontalScrollView>
+            </LinearLayout>
+
+            <!-- Org Search & Filters (Initially Hidden) -->
+            <LinearLayout
+                android:id="@+id/layoutOrgFilters"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="16dp"
-                android:gravity="center">
+                android:visibility="gone">
 
-                <TextView
-                    android:id="@+id/tvTotalUsers"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:id="@+id/cvOrgSearch"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="1,234"
-                    android:textSize="24sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/app_green_primary"/>
+                    android:paddingHorizontal="16dp"
+                    android:layout_marginBottom="16dp">
 
-                <TextView
-                    android:layout_width="wrap_content"
+                    <EditText
+                        android:id="@+id/etOrgSearch"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:hint="🔍 Tìm kiếm tổ chức..."
+                        android:textSize="14sp"
+                        android:textColorHint="@color/text_secondary"
+                        android:paddingHorizontal="16dp"
+                        android:background="@drawable/bg_search_bar"
+                        android:drawablePadding="8dp"/>
+                </LinearLayout>
+
+                <HorizontalScrollView
+                    android:id="@+id/hvOrgFilter"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Tổng users"
-                    android:textSize="12sp"
-                    android:layout_marginTop="4dp"
-                    android:textColor="@color/text_secondary"/>
+                    android:layout_marginBottom="16dp"
+                    android:scrollbars="none"
+                    android:paddingHorizontal="16dp">
 
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/btnOrgFilterAll"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Tất cả"
+                            android:textSize="14sp"
+                            android:paddingHorizontal="20dp"
+                            android:paddingVertical="8dp"
+                            android:background="@drawable/bg_button_white_solid"
+                            android:backgroundTint="@color/app_green_primary"
+                            android:textColor="@color/white"
+                            android:layout_marginEnd="8dp"/>
+
+                        <TextView
+                            android:id="@+id/btnOrgFilterActive"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Hoạt động"
+                            android:textSize="14sp"
+                            android:paddingHorizontal="20dp"
+                            android:paddingVertical="8dp"
+                            android:background="@drawable/bg_category_tab_unselected_reward"
+                            android:textColor="@color/text_secondary"
+                            android:layout_marginEnd="8dp"/>
+
+                        <TextView
+                            android:id="@+id/btnOrgFilterLocked"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Bị khóa"
+                            android:textSize="14sp"
+                            android:paddingHorizontal="20dp"
+                            android:paddingVertical="8dp"
+                            android:background="@drawable/bg_category_tab_unselected_reward"
+                            android:textColor="@color/text_secondary"
+                            android:layout_marginEnd="8dp"/>
+
+                        <TextView
+                            android:id="@+id/btnOrgFilterPending"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Chờ xác thực"
+                            android:textSize="14sp"
+                            android:paddingHorizontal="20dp"
+                            android:paddingVertical="8dp"
+                            android:background="@drawable/bg_category_tab_unselected_reward"
+                            android:textColor="@color/text_secondary"/>
+                    </LinearLayout>
+                </HorizontalScrollView>
             </LinearLayout>
 
-        </androidx.cardview.widget.CardView>
-
-        <!-- Active Users Card -->
-        <androidx.cardview.widget.CardView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginHorizontal="4dp"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="2dp"
-            android:background="@color/white">
-
-            <LinearLayout
+            <!-- Lists -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvUserList"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp"
-                android:gravity="center">
+                android:clipToPadding="false"
+                android:paddingBottom="24dp"
+                tools:listitem="@layout/item_user"/>
 
-                <TextView
-                    android:id="@+id/tvActiveUsers"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="1,180"
-                    android:textSize="24sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/app_green_primary"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Hoạt động"
-                    android:textSize="12sp"
-                    android:layout_marginTop="4dp"
-                    android:textColor="@color/text_secondary"/>
-
-            </LinearLayout>
-
-        </androidx.cardview.widget.CardView>
-
-        <!-- Locked Users Card -->
-        <androidx.cardview.widget.CardView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginStart="8dp"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="2dp"
-            android:background="@color/white">
-
-            <LinearLayout
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvOrgList"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp"
-                android:gravity="center">
-
-                <TextView
-                    android:id="@+id/tvLockedUsers"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="54"
-                    android:textSize="24sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/app_green_primary"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Bị khóa"
-                    android:textSize="12sp"
-                    android:layout_marginTop="4dp"
-                    android:textColor="@color/text_secondary"/>
-
-            </LinearLayout>
-
-        </androidx.cardview.widget.CardView>
-
-    </LinearLayout>
-
-    <!-- Search Bar -->
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cvUserSearch"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="16dp"
-        android:layout_marginBottom="16dp"
-        app:cardCornerRadius="24dp"
-        app:cardElevation="2dp"
-        android:background="@color/white">
-
-        <EditText
-            android:id="@+id/etSearch"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:hint="🔍 Tìm kiếm user theo tên, email..."
-            android:textSize="14sp"
-            android:paddingHorizontal="20dp"
-            android:background="@android:color/transparent"
-            android:textColor="@color/text_primary"
-            android:textColorHint="@color/text_secondary"/>
-
-    </androidx.cardview.widget.CardView>
-
-    <!-- Filter Buttons -->
-    <HorizontalScrollView
-        android:id="@+id/hvUserFilter"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:scrollbars="none">
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingHorizontal="16dp">
-
-            <TextView
-                android:id="@+id/btnFilterAll"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Tất cả"
-                android:textSize="14sp"
-                android:paddingHorizontal="20dp"
-                android:paddingVertical="8dp"
-                android:background="@drawable/bg_filter_selected"
-                android:textColor="@color/white"
-                android:layout_marginEnd="8dp"/>
-
-            <TextView
-                android:id="@+id/btnFilterActive"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Hoạt động"
-                android:textSize="14sp"
-                android:paddingHorizontal="20dp"
-                android:paddingVertical="8dp"
-                android:background="@drawable/bg_filter_unselected"
-                android:textColor="@color/text_secondary"
-                android:layout_marginEnd="8dp"/>
-
-            <TextView
-                android:id="@+id/btnFilterLocked"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Bị khóa"
-                android:textSize="14sp"
-                android:paddingHorizontal="20dp"
-                android:paddingVertical="8dp"
-                android:background="@drawable/bg_filter_unselected"
-                android:textColor="@color/text_secondary"
-                android:layout_marginEnd="8dp"/>
-
-            <TextView
-                android:id="@+id/btnFilterPending"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Mới đăng ký"
-                android:textSize="14sp"
-                android:paddingHorizontal="20dp"
-                android:paddingVertical="8dp"
-                android:background="@drawable/bg_filter_unselected"
-                android:textColor="@color/text_secondary"/>
-
-        </LinearLayout>
-
-    </HorizontalScrollView>
-
-    <!-- User List (RecyclerView) -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvUserList"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:listitem="@layout/item_user"/>
-
-    <!-- Organization Statistics Cards (hidden by default) -->
-    <LinearLayout
-        android:id="@+id/llOrgStats"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_margin="16dp"
-        android:weightSum="3"
-        android:visibility="gone">
-
-        <!-- Total Organizations Card -->
-        <androidx.cardview.widget.CardView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginEnd="8dp"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="2dp"
-            android:background="@color/white">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp"
-                android:gravity="center">
-
-                <TextView
-                    android:id="@+id/tvTotalOrgs"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="87"
-                    android:textSize="24sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/app_green_primary"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Tổng tổ chức"
-                    android:textSize="12sp"
-                    android:layout_marginTop="4dp"
-                    android:textColor="@color/text_secondary"/>
-
-            </LinearLayout>
-
-        </androidx.cardview.widget.CardView>
-
-        <!-- Active Organizations Card -->
-        <androidx.cardview.widget.CardView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginHorizontal="4dp"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="2dp"
-            android:background="@color/white">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp"
-                android:gravity="center">
-
-                <TextView
-                    android:id="@+id/tvActiveOrgs"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="79"
-                    android:textSize="24sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/app_green_primary"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Hoạt động"
-                    android:textSize="12sp"
-                    android:layout_marginTop="4dp"
-                    android:textColor="@color/text_secondary"/>
-
-            </LinearLayout>
-
-        </androidx.cardview.widget.CardView>
-
-        <!-- Locked Organizations Card -->
-        <androidx.cardview.widget.CardView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginStart="8dp"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="2dp"
-            android:background="@color/white">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp"
-                android:gravity="center">
-
-                <TextView
-                    android:id="@+id/tvLockedOrgs"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="8"
-                    android:textSize="24sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/app_green_primary"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Bị khóa"
-                    android:textSize="12sp"
-                    android:layout_marginTop="4dp"
-                    android:textColor="@color/text_secondary"/>
-
-            </LinearLayout>
-
-        </androidx.cardview.widget.CardView>
-
-    </LinearLayout>
-
-    <!-- Organization Search Bar (hidden by default) -->
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cvOrgSearch"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="16dp"
-        android:layout_marginBottom="16dp"
-        app:cardCornerRadius="24dp"
-        app:cardElevation="2dp"
-        android:background="@color/white"
-        android:visibility="gone">
-
-        <EditText
-            android:id="@+id/etOrgSearch"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:hint="🔍 Tìm kiếm tổ chức theo tên, email..."
-            android:textSize="14sp"
-            android:paddingHorizontal="20dp"
-            android:background="@android:color/transparent"
-            android:textColor="@color/text_primary"
-            android:textColorHint="@color/text_secondary"/>
-
-    </androidx.cardview.widget.CardView>
-
-    <!-- Organization Filter Buttons (hidden by default) -->
-    <HorizontalScrollView
-        android:id="@+id/hvOrgFilter"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:scrollbars="none"
-        android:visibility="gone">
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingHorizontal="16dp">
-
-            <TextView
-                android:id="@+id/btnOrgFilterAll"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Tất cả"
-                android:textSize="14sp"
-                android:paddingHorizontal="20dp"
-                android:paddingVertical="8dp"
-                android:background="@drawable/bg_filter_selected"
-                android:textColor="@color/white"
-                android:layout_marginEnd="8dp"/>
-
-            <TextView
-                android:id="@+id/btnOrgFilterActive"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Hoạt động"
-                android:textSize="14sp"
-                android:paddingHorizontal="20dp"
-                android:paddingVertical="8dp"
-                android:background="@drawable/bg_filter_unselected"
-                android:textColor="@color/text_secondary"
-                android:layout_marginEnd="8dp"/>
-
-            <TextView
-                android:id="@+id/btnOrgFilterLocked"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Bị khóa"
-                android:textSize="14sp"
-                android:paddingHorizontal="20dp"
-                android:paddingVertical="8dp"
-                android:background="@drawable/bg_filter_unselected"
-                android:textColor="@color/text_secondary"
-                android:layout_marginEnd="8dp"/>
-
-            <TextView
-                android:id="@+id/btnOrgFilterPending"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Chờ xác thực"
-                android:textSize="14sp"
-                android:paddingHorizontal="20dp"
-                android:paddingVertical="8dp"
-                android:background="@drawable/bg_filter_unselected"
-                android:textColor="@color/text_secondary"/>
-
-        </LinearLayout>
-
-    </HorizontalScrollView>
-
-    <!-- Organization List (RecyclerView) -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvOrgList"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        tools:listitem="@layout/item_organization"/>
+                android:clipToPadding="false"
+                android:paddingBottom="24dp"
+                android:visibility="gone"
+                tools:listitem="@layout/item_organization"/>
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
-
 </LinearLayout>

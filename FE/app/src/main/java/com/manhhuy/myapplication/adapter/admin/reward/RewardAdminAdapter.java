@@ -81,18 +81,26 @@ public class RewardAdminAdapter extends RecyclerView.Adapter<RewardAdminAdapter.
 
         if (stock == 0) {
             holder.binding.tvStatus.setText("Tạm ngưng");
-            holder.binding.tvStatus.setBackgroundResource(R.drawable.bg_button_lock);
             holder.binding.tvStatus.setTextColor(context.getResources().getColor(R.color.status_rejected));
-            holder.binding.btnPause.setText("Kích hoạt");
+            // Change button to "Activate" style
+            holder.binding.btnPause.setImageResource(R.drawable.ic_check);
+            holder.binding.btnPause.setColorFilter(context.getResources().getColor(R.color.app_green_primary));
         } else if (stock <= 5) {
             holder.binding.tvStatus.setText("Sắp hết hàng");
-            holder.binding.tvStatus.setBackgroundResource(R.drawable.bg_button_delete);
             holder.binding.tvStatus.setTextColor(context.getResources().getColor(R.color.status_rejected));
+            // Keep pause button
+            holder.binding.btnPause.setImageResource(R.drawable.ic_pause);
+            holder.binding.btnPause.setColorFilter(context.getResources().getColor(R.color.text_secondary));
         } else {
             holder.binding.tvStatus.setText("Đang hoạt động");
-            holder.binding.tvStatus.setBackgroundResource(R.drawable.bg_status_active_reward);
             holder.binding.tvStatus.setTextColor(context.getResources().getColor(R.color.app_green_primary));
+            // Keep pause button
+            holder.binding.btnPause.setImageResource(R.drawable.ic_pause);
+            holder.binding.btnPause.setColorFilter(context.getResources().getColor(R.color.text_secondary));
         }
+        
+        // Clear background that might have been set in previous version
+        holder.binding.tvStatus.setBackground(null);
     }
 
     private void setRewardIcon(ImageView imageView, RewardItem reward) {

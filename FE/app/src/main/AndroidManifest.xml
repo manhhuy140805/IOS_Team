@@ -17,6 +17,7 @@
         <activity
             android:name=".ui.Activities.UserManagementActivity"
             android:exported="true" >
+
         </activity>
         <activity
             android:name=".ui.Activities.CertificateActivity"
@@ -41,10 +42,7 @@
         <activity
             android:name=".ui.Activities.MainActivity"
             android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+
         </activity>
         <activity
             android:name=".ui.Activities.AddEventActivity"
@@ -53,6 +51,10 @@
         <activity
             android:name=".ui.Activities.AdminEventManagerActivity"
             android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".ui.Activities.AdminApprovePostsActivity"

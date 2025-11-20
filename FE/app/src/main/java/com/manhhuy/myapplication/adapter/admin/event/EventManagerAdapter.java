@@ -22,7 +22,7 @@ public class EventManagerAdapter extends RecyclerView.Adapter<EventManagerAdapte
     private final Context context;
     private final List<EventPost> eventList;
     private final List<EventPost> eventListFull;
-    private final com.manhhuy.myapplication.adapter.admin.event.OnEventActionListener listener;
+    private final OnEventActionListener listener;
 
     public EventManagerAdapter(Context context, List<EventPost> eventList, OnEventActionListener listener) {
         this.context = context;
@@ -43,9 +43,10 @@ public class EventManagerAdapter extends RecyclerView.Adapter<EventManagerAdapte
     public void onBindViewHolder(@NonNull EventViewHolder holder, int position) {
         EventPost event = eventList.get(position);
 
+        // Bind data
         holder.binding.tvEventTitle.setText(event.getTitle());
         holder.binding.tvOrganization.setText(event.getOrganizationName());
-        holder.binding.tvPoints.setText("⭐ " + event.getRewardPoints() + " điểm");
+        holder.binding.tvPoints.setText(event.getRewardPoints() + " điểm");
         holder.binding.tvLocation.setText("📍 " + event.getLocation());
 
         // Format date
@@ -55,8 +56,7 @@ public class EventManagerAdapter extends RecyclerView.Adapter<EventManagerAdapte
         }
 
         // Set participants
-        holder.binding.tvParticipants
-                .setText("👥 " + event.getCurrentParticipants() + "/" + event.getMaxParticipants() + " người");
+        holder.binding.tvParticipants.setText("👥 " + event.getCurrentParticipants() + "/" + event.getMaxParticipants() + " người");
 
         // Set status
         String status = event.getStatus();
@@ -70,35 +70,22 @@ public class EventManagerAdapter extends RecyclerView.Adapter<EventManagerAdapte
             holder.binding.tvStatus.setTextColor(context.getResources().getColor(R.color.button_blue));
         }
 
-        // Set tags
+        // Set tags (Only showing first tag as per new design)
         List<String> tags = event.getTags();
         if (tags != null && !tags.isEmpty()) {
             holder.binding.tvTag1.setVisibility(View.VISIBLE);
             holder.binding.tvTag1.setText(tags.get(0));
-
-            if (tags.size() > 1) {
-                holder.binding.tvTag2.setVisibility(View.VISIBLE);
-                holder.binding.tvTag2.setText(tags.get(1));
-            } else {
-                holder.binding.tvTag2.setVisibility(View.GONE);
-            }
-
-            if (tags.size() > 2) {
-                holder.binding.tvTag3.setVisibility(View.VISIBLE);
-                holder.binding.tvTag3.setText(tags.get(2));
-            } else {
-                holder.binding.tvTag3.setVisibility(View.GONE);
-            }
         } else {
             holder.binding.tvTag1.setVisibility(View.GONE);
-            holder.binding.tvTag2.setVisibility(View.GONE);
-            holder.binding.tvTag3.setVisibility(View.GONE);
         }
 
         // Button listeners
         holder.binding.btnView.setOnClickListener(v -> listener.onViewClick(event));
         holder.binding.btnEdit.setOnClickListener(v -> listener.onEditClick(event));
         holder.binding.btnDelete.setOnClickListener(v -> listener.onDeleteClick(event));
+        
+        // Also make the whole card clickable for details
+        holder.itemView.setOnClickListener(v -> listener.onViewClick(event));
     }
 
     @Override

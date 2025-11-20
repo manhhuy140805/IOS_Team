@@ -9,3 +9,4 @@ public interface OnRewardActionListener {
 
     void onDeleteClick(RewardItem reward, int position);
 }
+ 

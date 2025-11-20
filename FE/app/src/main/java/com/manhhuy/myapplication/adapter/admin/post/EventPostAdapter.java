@@ -69,7 +69,8 @@ public class EventPostAdapter extends RecyclerView.Adapter<EventPostAdapter.View
         String status = post.getStatus();
         if ("pending".equals(status)) {
             holder.binding.tvStatus.setText("⏳ Chờ duyệt");
-            holder.binding.tvStatus.setBackgroundResource(R.drawable.status_pending);
+            holder.binding.tvStatus.setBackgroundResource(R.drawable.bg_status_pending_light);
+            holder.binding.tvStatus.setTextColor(Color.parseColor("#EF6C00"));
             holder.binding.layoutActionButtons.setVisibility(View.VISIBLE);
             holder.binding.layoutApprovedButtons.setVisibility(View.GONE);
             holder.binding.layoutRejectionReason.setVisibility(View.GONE);
@@ -77,7 +78,8 @@ public class EventPostAdapter extends RecyclerView.Adapter<EventPostAdapter.View
             
         } else if ("approved".equals(status)) {
             holder.binding.tvStatus.setText("✓ Đã duyệt");
-            holder.binding.tvStatus.setBackgroundResource(R.drawable.status_approved);
+            holder.binding.tvStatus.setBackgroundResource(R.drawable.bg_status_approved_light);
+            holder.binding.tvStatus.setTextColor(Color.parseColor("#2E7D32"));
             holder.binding.layoutActionButtons.setVisibility(View.GONE);
             holder.binding.layoutApprovedButtons.setVisibility(View.VISIBLE);
             holder.binding.layoutRejectionReason.setVisibility(View.GONE);
@@ -89,7 +91,8 @@ public class EventPostAdapter extends RecyclerView.Adapter<EventPostAdapter.View
             
         } else if ("rejected".equals(status)) {
             holder.binding.tvStatus.setText("✕ Từ chối");
-            holder.binding.tvStatus.setBackgroundResource(R.drawable.status_rejected);
+            holder.binding.tvStatus.setBackgroundResource(R.drawable.bg_status_rejected_light);
+            holder.binding.tvStatus.setTextColor(Color.parseColor("#C62828"));
             holder.binding.layoutActionButtons.setVisibility(View.GONE);
             holder.binding.layoutApprovedButtons.setVisibility(View.GONE);
             holder.binding.layoutRejectionReason.setVisibility(View.VISIBLE);

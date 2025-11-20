@@ -1,5 +1,6 @@
 package com.manhhuy.myapplication.adapter.admin.userOrganations;
 
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,27 +59,30 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
             // Set basic info
             binding.tvUserName.setText(user.getName());
             binding.tvUserEmail.setText(user.getEmail());
-            binding.tvJoinDate.setText("Tham gia: " + user.getJoinDate());
-            binding.tvActivityCount.setText("Hoạt động: " + user.getActivityCount());
-            binding.tvLastActive.setText("Giờ: " + user.getLastActive());
+            binding.tvJoinDate.setText(user.getJoinDate());
+            binding.tvActivityCount.setText(String.valueOf(user.getActivityCount()));
+            binding.tvLastActive.setText(user.getLastActive() != null ? user.getLastActive() + " trước" : "N/A");
 
             // Set status badge
             binding.tvUserStatus.setText(user.getStatus());
             switch (user.getStatus()) {
                 case "Hoạt động":
-                    binding.tvUserStatus.setBackgroundResource(R.drawable.bg_status_active);
+                    binding.tvUserStatus.setBackgroundResource(R.drawable.bg_status_active_event);
                     binding.tvUserStatus.setTextColor(itemView.getContext().getColor(R.color.app_green_primary));
-                    binding.btnLockUnlock.setText("Khóa");
+                    binding.btnLockUnlock.setImageResource(R.drawable.ic_lock);
+                    binding.btnLockUnlock.setColorFilter(Color.parseColor("#FF9800")); // Orange for lock action
                     break;
                 case "Bị khóa":
-                    binding.tvUserStatus.setBackgroundResource(R.drawable.bg_button_lock);
-                    binding.tvUserStatus.setTextColor(itemView.getContext().getColor(R.color.pink));
-                    binding.btnLockUnlock.setText("Mở khóa");
+                    binding.tvUserStatus.setBackgroundResource(R.drawable.bg_status_rejected_light);
+                    binding.tvUserStatus.setTextColor(Color.parseColor("#C62828"));
+                    binding.btnLockUnlock.setImageResource(R.drawable.ic_lock_open);
+                    binding.btnLockUnlock.setColorFilter(Color.parseColor("#4CAF50")); // Green for unlock action
                     break;
                 case "Chờ xác thực":
-                    binding.tvUserStatus.setBackgroundResource(R.drawable.bg_status_pending);
-                    binding.tvUserStatus.setTextColor(itemView.getContext().getColor(R.color.orange));
-                    binding.btnLockUnlock.setText("Khóa");
+                    binding.tvUserStatus.setBackgroundResource(R.drawable.bg_status_pending_light);
+                    binding.tvUserStatus.setTextColor(Color.parseColor("#EF6C00"));
+                    binding.btnLockUnlock.setImageResource(R.drawable.ic_lock);
+                    binding.btnLockUnlock.setColorFilter(Color.parseColor("#FF9800"));
                     break;
             }
 

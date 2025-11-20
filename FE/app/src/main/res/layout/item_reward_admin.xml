@@ -3,209 +3,181 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="15dp"
-    android:elevation="3dp"
-    app:cardBackgroundColor="@android:color/white"
-    app:cardCornerRadius="15dp"
-    app:cardElevation="3dp">
+    android:layout_marginHorizontal="16dp"
+    android:layout_marginBottom="12dp"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="2dp"
+    app:cardBackgroundColor="@android:color/white">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="12dp">
 
+        <!-- Top Section: Image and Info -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="horizontal">
 
-            <!-- Reward Info Section -->
+            <!-- Reward Image -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="0dp"
+                app:cardBackgroundColor="#F5F5F5">
+
+                <ImageView
+                    android:id="@+id/ivRewardImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_gift" />
+            </androidx.cardview.widget.CardView>
+
+            <!-- Info -->
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="15dp">
+                android:layout_weight="1"
+                android:layout_marginStart="12dp"
+                android:orientation="vertical">
 
-                <!-- Reward Image -->
-                <androidx.cardview.widget.CardView
-                    android:layout_width="90dp"
-                    android:layout_height="90dp"
-                    app:cardBackgroundColor="@color/background_gray"
-                    app:cardCornerRadius="12dp"
-                    app:cardElevation="0dp">
-
-                    <ImageView
-                        android:id="@+id/ivRewardImage"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:contentDescription="Reward Image"
-                        android:scaleType="centerCrop" />
-                </androidx.cardview.widget.CardView>
-
-                <!-- Reward Details -->
                 <LinearLayout
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="15dp"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/tvRewardName"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="120dp"
-                        android:ellipsize="end"
-                        android:maxLines="2"
-                        android:text="Voucher The Coffee House 50K"
-                        android:textColor="@color/text_primary"
-                        android:textSize="15sp"
-                        android:textStyle="bold" />
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
 
                     <TextView
                         android:id="@+id/tvRewardCategory"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:text="Voucher • Đồ uống"
+                        android:text="Voucher"
+                        android:textSize="10sp"
                         android:textColor="@color/app_green_primary"
-                        android:textSize="11sp" />
+                        android:background="@drawable/bg_tag_category"
+                        android:paddingHorizontal="6dp"
+                        android:paddingVertical="2dp"
+                        android:layout_marginEnd="6dp"/>
 
                     <TextView
-                        android:id="@+id/tvRewardPoints"
+                        android:id="@+id/tvStatus"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:text="⭐ 500 điểm"
-                        android:textColor="@color/app_green_primary"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
+                        android:text="Hoạt động"
+                        android:textSize="10sp"
+                        android:textColor="#4CAF50"
+                        android:textStyle="bold"/>
+
                 </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tvRewardName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Voucher The Coffee House 50K"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/text_primary"
+                    android:maxLines="2"
+                    android:ellipsize="end"
+                    android:layout_marginTop="4dp"/>
+
+                <TextView
+                    android:id="@+id/tvRewardPoints"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="500 điểm"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/app_green_primary"
+                    android:layout_marginTop="4dp"/>
+
             </LinearLayout>
 
-        <!-- Stock and Redeemed Info -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingHorizontal="15dp"
-            android:paddingBottom="15dp">
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="📦"
-                    android:textSize="12sp" />
-
-                <TextView
-                    android:id="@+id/tvStock"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="6dp"
-                    android:text="Còn: 45"
-                    android:textColor="@color/text_secondary"
-                    android:textSize="12sp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="🎁"
-                    android:textSize="12sp" />
-
-                <TextView
-                    android:id="@+id/tvRedeemed"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="6dp"
-                    android:text="Đã đổi: 123"
-                    android:textColor="@color/text_secondary"
-                    android:textSize="12sp" />
-            </LinearLayout>
         </LinearLayout>
 
         <!-- Divider -->
         <View
             android:layout_width="match_parent"
-            android:layout_height="1dp" />
+            android:layout_height="1dp"
+            android:background="#F0F0F0"
+            android:layout_marginVertical="12dp"/>
 
-            <!-- Action Buttons -->
+        <!-- Bottom Section: Stats and Actions -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <!-- Stats -->
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="72dp"
-                android:orientation="horizontal"
-                android:padding="15dp"
-                android:weightSum="3">
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal">
 
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/btnEdit"
-                    android:layout_width="0dp"
-                    android:layout_height="36dp"
-                    android:layout_marginEnd="5dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/bg_button_edit"
-                    android:text="Sửa"
-                    android:textAllCaps="false"
-                    android:textColor="@color/app_green_primary"
-                    android:textSize="13sp"
-                    android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/tvStock"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Kho: 45"
+                    android:textSize="12sp"
+                    android:textColor="@color/text_secondary"
+                    android:layout_marginEnd="12dp"/>
 
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/btnPause"
-                    android:layout_width="0dp"
-                    android:layout_height="36dp"
-                    android:layout_marginHorizontal="5dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/bg_button_pause"
-                    android:text="Tạm ngưng"
-                    android:textAllCaps="false"
-                    android:textColor="#856404"
-                    android:textSize="13sp"
-                    android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/tvRedeemed"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Đã đổi: 123"
+                    android:textSize="12sp"
+                    android:textColor="@color/text_secondary"/>
 
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/btnDelete"
-                    android:layout_width="0dp"
-                    android:layout_height="36dp"
-                    android:layout_marginStart="5dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/bg_button_delete"
-                    android:text="Xóa"
-                    android:textAllCaps="false"
-                    android:textColor="#721c24"
-                    android:textSize="13sp"
-                    android:textStyle="bold" />
             </LinearLayout>
+
+            <!-- Actions -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/btnEdit"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:src="@drawable/ic_edit"
+                    app:tint="@color/text_secondary"
+                    android:padding="6dp"/>
+
+                <ImageButton
+                    android:id="@+id/btnPause"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:src="@drawable/ic_pause"
+                    app:tint="@color/text_secondary"
+                    android:padding="6dp"
+                    android:layout_marginHorizontal="4dp"/>
+
+                <ImageButton
+                    android:id="@+id/btnDelete"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:src="@drawable/ic_delete"
+                    app:tint="#E53935"
+                    android:padding="6dp"/>
+
+            </LinearLayout>
+
         </LinearLayout>
 
-        <!-- Status Badge (positioned absolutely at top right) -->
-        <TextView
-            android:id="@+id/tvStatus"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginTop="50dp"
-            android:layout_marginEnd="15dp"
-            android:background="@drawable/bg_status_active_reward"
-            android:paddingHorizontal="10dp"
-            android:paddingVertical="4dp"
-            android:text="Đang hoạt động"
-            android:textColor="@color/app_green_primary"
-            android:textSize="11sp"
-            android:textStyle="bold" />
-    </RelativeLayout>
+    </LinearLayout>
+
 </androidx.cardview.widget.CardView>

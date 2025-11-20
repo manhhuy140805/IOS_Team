@@ -223,23 +223,32 @@ public class UserManagementActivity extends AppCompatActivity
     }
 
     private void updateTabColors() {
-        // Cập nhật màu sắc và indicator cho tabs
         if (isUsersTab) {
             // Users tab active
+            binding.tabUsers.setBackgroundResource(R.drawable.bg_button_white_solid);
             ((ImageView) binding.tabUsers.getChildAt(0)).setColorFilter(getColor(R.color.app_green_primary));
             ((TextView) binding.tabUsers.getChildAt(1)).setTextColor(getColor(R.color.app_green_primary));
 
             // Organizations tab inactive
-            ((ImageView) binding.tabOrganizations.getChildAt(0)).setColorFilter(getColor(R.color.text_secondary));
-            ((TextView) binding.tabOrganizations.getChildAt(1)).setTextColor(getColor(R.color.text_secondary));
+            binding.tabOrganizations.setBackgroundResource(android.R.color.transparent);
+            ((ImageView) binding.tabOrganizations.getChildAt(0)).setColorFilter(getColor(R.color.white));
+            ((ImageView) binding.tabOrganizations.getChildAt(0)).setAlpha(0.8f);
+            ((TextView) binding.tabOrganizations.getChildAt(1)).setTextColor(getColor(R.color.white));
+            ((TextView) binding.tabOrganizations.getChildAt(1)).setAlpha(0.8f);
         } else {
             // Organizations tab active
+            binding.tabOrganizations.setBackgroundResource(R.drawable.bg_button_white_solid);
             ((ImageView) binding.tabOrganizations.getChildAt(0)).setColorFilter(getColor(R.color.app_green_primary));
+            ((ImageView) binding.tabOrganizations.getChildAt(0)).setAlpha(1.0f);
             ((TextView) binding.tabOrganizations.getChildAt(1)).setTextColor(getColor(R.color.app_green_primary));
+            ((TextView) binding.tabOrganizations.getChildAt(1)).setAlpha(1.0f);
 
             // Users tab inactive
-            ((ImageView) binding.tabUsers.getChildAt(0)).setColorFilter(getColor(R.color.text_secondary));
-            ((TextView) binding.tabUsers.getChildAt(1)).setTextColor(getColor(R.color.text_secondary));
+            binding.tabUsers.setBackgroundResource(android.R.color.transparent);
+            ((ImageView) binding.tabUsers.getChildAt(0)).setColorFilter(getColor(R.color.white));
+            ((ImageView) binding.tabUsers.getChildAt(0)).setAlpha(0.8f);
+            ((TextView) binding.tabUsers.getChildAt(1)).setTextColor(getColor(R.color.white));
+            ((TextView) binding.tabUsers.getChildAt(1)).setAlpha(0.8f);
         }
     }
 

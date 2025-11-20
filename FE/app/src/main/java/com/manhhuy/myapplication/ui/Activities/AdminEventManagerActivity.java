@@ -1,5 +1,6 @@
 package com.manhhuy.myapplication.ui.Activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -34,8 +35,7 @@ public class AdminEventManagerActivity extends AppCompatActivity implements OnEv
 
         setupRecyclerView();
         loadSampleData();
-        setupTabListeners();
-        setupChipListeners();
+        setupListeners();
         updateStatistics();
     }
 
@@ -46,77 +46,17 @@ public class AdminEventManagerActivity extends AppCompatActivity implements OnEv
         binding.recyclerViewEvents.setAdapter(adapter);
     }
 
-    private void loadSampleData() {
-        eventList.clear();
+    private void setupListeners() {
+        // Back button
+        binding.btnBack.setOnClickListener(v -> finish());
 
-        // Sample Event 1
-        EventPost event1 = new EventPost();
-        event1.setId(1);
-        event1.setTitle("Beach Cleanup");
-        event1.setOrganizationName("Green Vietnam");
-        event1.setLocation("Vũng Tàu");
-        event1.setRewardPoints(50);
-        event1.setStatus("active");
-        event1.setTags(Arrays.asList("Môi trường", "Ngoài trời"));
-        event1.setCurrentParticipants(15);
-        event1.setMaxParticipants(20);
-        Calendar cal1 = Calendar.getInstance();
-        cal1.set(2025, 9, 28);
-        event1.setEventDate(cal1.getTime());
-        eventList.add(event1);
+        // Add New Event Button
+        binding.btnAddReward.setOnClickListener(v -> {
+            Intent intent = new Intent(this, AddEventActivity.class);
+            startActivity(intent);
+        });
 
-        // Sample Event 2
-        EventPost event2 = new EventPost();
-        event2.setId(2);
-        event2.setTitle("Tree Planting Day");
-        event2.setOrganizationName("Eco Warriors");
-        event2.setLocation("Hà Nội");
-        event2.setRewardPoints(75);
-        event2.setStatus("active");
-        event2.setTags(Arrays.asList("Môi trường", "Cộng đồng"));
-        event2.setCurrentParticipants(8);
-        event2.setMaxParticipants(15);
-        Calendar cal2 = Calendar.getInstance();
-        cal2.set(2025, 10, 5);
-        event2.setEventDate(cal2.getTime());
-        eventList.add(event2);
-
-        // Sample Event 3
-        EventPost event3 = new EventPost();
-        event3.setId(3);
-        event3.setTitle("Education Workshop");
-        event3.setOrganizationName("Learn Together");
-        event3.setLocation("TP.HCM");
-        event3.setRewardPoints(40);
-        event3.setStatus("completed");
-        event3.setTags(Arrays.asList("Giáo dục", "Trong nhà"));
-        event3.setCurrentParticipants(25);
-        event3.setMaxParticipants(25);
-        Calendar cal3 = Calendar.getInstance();
-        cal3.set(2025, 9, 15);
-        event3.setEventDate(cal3.getTime());
-        eventList.add(event3);
-
-        // Sample Event 4
-        EventPost event4 = new EventPost();
-        event4.setId(4);
-        event4.setTitle("Health Checkup Camp");
-        event4.setOrganizationName("Care Foundation");
-        event4.setLocation("Đà Nẵng");
-        event4.setRewardPoints(60);
-        event4.setStatus("active");
-        event4.setTags(Arrays.asList("Y tế", "Cộng đồng"));
-        event4.setCurrentParticipants(12);
-        event4.setMaxParticipants(30);
-        Calendar cal4 = Calendar.getInstance();
-        cal4.set(2025, 10, 12);
-        event4.setEventDate(cal4.getTime());
-        eventList.add(event4);
-
-        adapter.notifyDataSetChanged();
-    }
-
-    private void setupTabListeners() {
+        // Status Tabs
         binding.tabAll.setOnClickListener(v -> {
             currentStatusFilter = "all";
             updateTabUI(binding.tabAll);
@@ -134,25 +74,8 @@ public class AdminEventManagerActivity extends AppCompatActivity implements OnEv
             updateTabUI(binding.tabComplete);
             applyFilters();
         });
-    }
 
-    private void updateTabUI(android.widget.TextView selectedTab) {
-        // Reset tất cả tabs
-        resetTabStyle(binding.tabAll);
-        resetTabStyle(binding.tabActivity);
-        resetTabStyle(binding.tabComplete);
-
-        // Highlight tab được chọn
-        selectedTab.setBackgroundResource(R.drawable.bg_category_tab_selected_reward);
-        selectedTab.setTextColor(getResources().getColor(R.color.app_green_primary));
-    }
-
-    private void resetTabStyle(android.widget.TextView tab) {
-        tab.setBackgroundResource(R.drawable.bg_category_tab_unselected_reward);
-        tab.setTextColor(getResources().getColor(R.color.text_secondary));
-    }
-
-    private void setupChipListeners() {
+        // Category Chips
         binding.chipEnvironment.setOnClickListener(v -> {
             currentCategoryFilter = "Môi trường";
             updateChipUI(binding.chipEnvironment);
@@ -172,13 +95,53 @@ public class AdminEventManagerActivity extends AppCompatActivity implements OnEv
         });
     }
 
+    // --- Navigation & Actions ---
+
+    @Override
+    public void onViewClick(EventPost event) {
+        Intent intent = new Intent(this, DetailEventActivity.class);
+        intent.putExtra("EVENT_ID", event.getId());
+        startActivity(intent);
+    }
+
+    @Override
+    public void onEditClick(EventPost event) {
+        Intent intent = new Intent(this, AddEventActivity.class); // Reusing AddEvent for Edit
+        intent.putExtra("EVENT_ID", event.getId());
+        intent.putExtra("IS_EDIT_MODE", true);
+        startActivity(intent);
+    }
+
+    @Override
+    public void onDeleteClick(EventPost event) {
+        // Show confirmation dialog here in real app
+        Toast.makeText(this, "Đã xóa sự kiện: " + event.getTitle(), Toast.LENGTH_SHORT).show();
+        // Remove from list and update adapter
+        // eventList.remove(event);
+        // adapter.notifyDataSetChanged();
+    }
+
+    // --- UI Helpers ---
+
+    private void updateTabUI(android.widget.TextView selectedTab) {
+        resetTabStyle(binding.tabAll);
+        resetTabStyle(binding.tabActivity);
+        resetTabStyle(binding.tabComplete);
+
+        selectedTab.setBackgroundResource(R.drawable.bg_category_tab_selected_reward);
+        selectedTab.setTextColor(getResources().getColor(R.color.app_green_primary));
+    }
+
+    private void resetTabStyle(android.widget.TextView tab) {
+        tab.setBackgroundResource(R.drawable.bg_category_tab_unselected_reward);
+        tab.setTextColor(getResources().getColor(R.color.text_secondary));
+    }
+
     private void updateChipUI(android.widget.TextView selectedChip) {
-        // Reset tất cả chips
         resetChipStyle(binding.chipEnvironment);
         resetChipStyle(binding.chipEducation);
         resetChipStyle(binding.chipHealth);
 
-        // Highlight chip được chọn
         selectedChip.setBackgroundResource(R.drawable.bg_chip_selected_event);
         selectedChip.setTextColor(getResources().getColor(R.color.app_green_primary));
     }
@@ -188,9 +151,10 @@ public class AdminEventManagerActivity extends AppCompatActivity implements OnEv
         chip.setTextColor(getResources().getColor(R.color.text_primary));
     }
 
+    // --- Data & Logic ---
+
     private void applyFilters() {
         eventList.clear();
-
         for (EventPost event : getAllEvents()) {
             boolean matchesStatus = currentStatusFilter.equals("all") ||
                     event.getStatus().equals(currentStatusFilter);
@@ -201,15 +165,38 @@ public class AdminEventManagerActivity extends AppCompatActivity implements OnEv
                 eventList.add(event);
             }
         }
-
         adapter.notifyDataSetChanged();
         updateStatistics();
+    }
+
+    private void updateStatistics() {
+        List<EventPost> allEvents = getAllEvents();
+        int total = allEvents.size();
+        int active = 0;
+        int completed = 0;
+
+        for (EventPost event : allEvents) {
+            if ("active".equals(event.getStatus())) {
+                active++;
+            } else if ("completed".equals(event.getStatus())) {
+                completed++;
+            }
+        }
+
+        binding.tvTotalEvents.setText(String.valueOf(total));
+        binding.tvActiveEvents.setText(String.valueOf(active));
+        binding.tvCompletedEvents.setText(String.valueOf(completed));
+    }
+
+    private void loadSampleData() {
+        eventList.clear();
+        eventList.addAll(getAllEvents());
+        adapter.notifyDataSetChanged();
     }
 
     private List<EventPost> getAllEvents() {
         List<EventPost> allEvents = new ArrayList<>();
 
-        // Sample Event 1
         EventPost event1 = new EventPost();
         event1.setId(1);
         event1.setTitle("Beach Cleanup");
@@ -271,39 +258,5 @@ public class AdminEventManagerActivity extends AppCompatActivity implements OnEv
         allEvents.add(event4);
 
         return allEvents;
-    }
-
-    private void updateStatistics() {
-        List<EventPost> allEvents = getAllEvents();
-        int total = allEvents.size();
-        int active = 0;
-        int completed = 0;
-
-        for (EventPost event : allEvents) {
-            if ("active".equals(event.getStatus())) {
-                active++;
-            } else if ("completed".equals(event.getStatus())) {
-                completed++;
-            }
-        }
-
-        binding.tvTotalEvents.setText(String.valueOf(total));
-        binding.tvActiveEvents.setText(String.valueOf(active));
-        binding.tvCompletedEvents.setText(String.valueOf(completed));
-    }
-
-    @Override
-    public void onViewClick(EventPost event) {
-        Toast.makeText(this, "Xem: " + event.getTitle(), Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onEditClick(EventPost event) {
-        Toast.makeText(this, "Sửa: " + event.getTitle(), Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onDeleteClick(EventPost event) {
-        Toast.makeText(this, "Xóa: " + event.getTitle(), Toast.LENGTH_SHORT).show();
     }
 }
