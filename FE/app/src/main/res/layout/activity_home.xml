@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/md_theme_light_background"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     tools:context=".ui.Activities.HomeActivity">
 
     <!-- ViewPager2 with smooth transitions -->
@@ -14,11 +14,8 @@
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:overScrollMode="never"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/tabLayout" />
+        android:layout_weight="1"
+        android:overScrollMode="never" />
 
     <!-- Modern TabLayout at bottom with gradient background -->
     <com.google.android.material.tabs.TabLayout
@@ -29,9 +26,6 @@
         android:elevation="16dp"
         android:paddingTop="8dp"
         android:paddingBottom="12dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:tabMode="fixed"
         app:tabGravity="fill"
         app:tabIconTint="@color/tab_icon_color"

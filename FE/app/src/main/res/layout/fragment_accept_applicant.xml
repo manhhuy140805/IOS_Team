@@ -12,7 +12,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
+        android:background="@color/app_green_primary"
         android:orientation="vertical"
         android:paddingHorizontal="20dp"
         android:paddingTop="24dp"
@@ -46,7 +46,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Duyệt Đăng Ký"
-                    android:textColor="@color/app_green_primary"
+                    android:textColor="@color/app_green_light"
                     android:textSize="24sp"
                     android:textStyle="bold" />
 
@@ -55,7 +55,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:text="Quản lý tình nguyện viên đăng ký"
-                    android:textColor="@color/app_green_primary"
+                    android:textColor="@color/app_green_light"
                     android:textSize="13sp" />
             </LinearLayout>
         </LinearLayout>

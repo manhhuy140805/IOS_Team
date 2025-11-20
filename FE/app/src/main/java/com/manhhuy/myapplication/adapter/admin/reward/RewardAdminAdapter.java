@@ -1,12 +1,9 @@
-package com.manhhuy.myapplication.adapter;
+package com.manhhuy.myapplication.adapter.admin.reward;
 
 import android.content.Context;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,15 +16,9 @@ import java.util.List;
 
 public class RewardAdminAdapter extends RecyclerView.Adapter<RewardAdminAdapter.RewardViewHolder> {
 
-    private Context context;
-    private List<RewardItem> rewardList;
-    private OnRewardActionListener listener;
-
-    public interface OnRewardActionListener {
-        void onEditClick(RewardItem reward, int position);
-        void onPauseClick(RewardItem reward, int position);
-        void onDeleteClick(RewardItem reward, int position);
-    }
+    private final Context context;
+    private final List<RewardItem> rewardList;
+    private final OnRewardActionListener listener;
 
     public RewardAdminAdapter(Context context, List<RewardItem> rewardList, OnRewardActionListener listener) {
         this.context = context;
@@ -62,23 +53,9 @@ public class RewardAdminAdapter extends RecyclerView.Adapter<RewardAdminAdapter.
         setRewardIcon(holder.binding.ivRewardImage, reward);
 
         // Button listeners
-        holder.binding.btnEdit.setOnClickListener(v -> {
-            if (listener != null) {
-                listener.onEditClick(reward, position);
-            }
-        });
-
-        holder.binding.btnPause.setOnClickListener(v -> {
-            if (listener != null) {
-                listener.onPauseClick(reward, position);
-            }
-        });
-
-        holder.binding.btnDelete.setOnClickListener(v -> {
-            if (listener != null) {
-                listener.onDeleteClick(reward, position);
-            }
-        });
+        holder.binding.btnEdit.setOnClickListener(v -> listener.onEditClick(reward, position));
+        holder.binding.btnPause.setOnClickListener(v -> listener.onPauseClick(reward, position));
+        holder.binding.btnDelete.setOnClickListener(v -> listener.onDeleteClick(reward, position));
     }
 
     @Override
