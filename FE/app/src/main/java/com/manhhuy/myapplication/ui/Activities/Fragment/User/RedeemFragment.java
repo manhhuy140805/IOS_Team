@@ -1,4 +1,4 @@
-package com.manhhuy.myapplication.ui.Activities.Fragment;
+package com.manhhuy.myapplication.ui.Activities.Fragment.User;
 
 import android.os.Bundle;
 

@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/md_theme_light_background"
-    tools:context=".ui.Activities.Fragment.SearchFragment">
+    tools:context=".ui.Activities.Fragment.Common.SearchFragment">
 
     <!-- Header Section with Green Rounded Background -->
     <LinearLayout

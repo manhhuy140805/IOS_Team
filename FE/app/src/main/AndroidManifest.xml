@@ -15,8 +15,12 @@
         android:theme="@style/Theme.MyApplication"
         tools:targetApi="31">
         <activity
-            android:name=".ui.Activities.CertificateActivity"
+            android:name=".ui.Activities.UserActivity"
             android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".ui.Activities.SendNotificationActivity"
@@ -33,10 +37,6 @@
         <activity
             android:name=".ui.Activities.HomeActivity"
             android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".ui.Activities.MainActivity"
@@ -46,6 +46,7 @@
         <activity
             android:name=".ui.Activities.AddEventActivity"
             android:exported="true">
+
         </activity>
     </application>
 

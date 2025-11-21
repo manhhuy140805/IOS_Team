@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/background_gray"
     android:orientation="vertical"
-    tools:context=".ui.Activities.Fragment.AcceptApplicantFragment">
+    tools:context=".ui.Activities.Fragment.Organization.AcceptApplicantFragment">
 
     <!-- Header with Green Rounded Background -->
     <LinearLayout

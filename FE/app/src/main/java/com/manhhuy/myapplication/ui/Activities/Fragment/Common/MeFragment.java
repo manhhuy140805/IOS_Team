@@ -1,6 +1,5 @@
-package com.manhhuy.myapplication.ui.Activities.Fragment;
+package com.manhhuy.myapplication.ui.Activities.Fragment.Common;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -14,7 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.manhhuy.myapplication.databinding.FragmentMeBinding;
-import com.manhhuy.myapplication.ui.Activities.CertificateActivity;
+import com.manhhuy.myapplication.ui.Activities.UserActivity;
 
 import java.util.Locale;
 
@@ -100,21 +99,28 @@ public class MeFragment extends Fragment {
 
         binding.layoutMyCertificates.setOnClickListener(v -> {
             try {
-                if (getActivity() != null) {
-                    Intent intent = new Intent(getActivity(), CertificateActivity.class);
-                    startActivity(intent);
+                if (getActivity() instanceof UserActivity) {
+                    ((UserActivity) getActivity()).switchToCertificateTab();
                 } else {
-                    Toast.makeText(getContext(), "Lỗi: Activity không khả dụng", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Xem chứng nhận", Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
-                Log.e(TAG, "Error starting CertificateActivity", e);
+                Log.e(TAG, "Error switching to certificate tab", e);
                 Toast.makeText(getContext(), "Lỗi: " + e.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
 
         // My Rewards
         binding.cardMyRewards.setOnClickListener(v -> {
-            Toast.makeText(getContext(), "Phần thưởng của tôi", Toast.LENGTH_SHORT).show();
+            try {
+                if (getActivity() instanceof UserActivity) {
+                    ((UserActivity) getActivity()).switchToRedeemTab();
+                } else {
+                    Toast.makeText(getContext(), "Phần thưởng của tôi", Toast.LENGTH_SHORT).show();
+                }
+            } catch (Exception e) {
+                Toast.makeText(getContext(), "Phần thưởng của tôi", Toast.LENGTH_SHORT).show();
+            }
         });
 
         // Edit Profile

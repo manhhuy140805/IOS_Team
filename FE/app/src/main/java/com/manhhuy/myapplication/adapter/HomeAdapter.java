@@ -5,14 +5,14 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-import com.manhhuy.myapplication.ui.Activities.Fragment.AdminApprovePostsFragment;
-import com.manhhuy.myapplication.ui.Activities.Fragment.AdminEventFragment;
-import com.manhhuy.myapplication.ui.Activities.Fragment.AdminRewardFragment;
-import com.manhhuy.myapplication.ui.Activities.Fragment.AdminUserFragment;
-import com.manhhuy.myapplication.ui.Activities.Fragment.HomeFragment;
-import com.manhhuy.myapplication.ui.Activities.Fragment.MeFragment;
-import com.manhhuy.myapplication.ui.Activities.Fragment.RedeemFragment;
-import com.manhhuy.myapplication.ui.Activities.Fragment.SearchFragment;
+import com.manhhuy.myapplication.ui.Activities.Fragment.Admin.AdminApprovePostsFragment;
+import com.manhhuy.myapplication.ui.Activities.Fragment.Admin.AdminEventFragment;
+import com.manhhuy.myapplication.ui.Activities.Fragment.Admin.AdminRewardFragment;
+import com.manhhuy.myapplication.ui.Activities.Fragment.Admin.AdminUserFragment;
+import com.manhhuy.myapplication.ui.Activities.Fragment.Common.HomeFragment;
+import com.manhhuy.myapplication.ui.Activities.Fragment.Common.MeFragment;
+import com.manhhuy.myapplication.ui.Activities.Fragment.User.RedeemFragment;
+import com.manhhuy.myapplication.ui.Activities.Fragment.Common.SearchFragment;
 import com.manhhuy.myapplication.utils.MockUserManager;
 
 public class HomeAdapter extends FragmentStateAdapter {

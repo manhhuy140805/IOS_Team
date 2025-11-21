@@ -1,4 +1,4 @@
-package com.manhhuy.myapplication.ui.Activities.Fragment;
+package com.manhhuy.myapplication.ui.Activities.Fragment.Common;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,6 +18,7 @@ import com.manhhuy.myapplication.databinding.FragmentHomeBinding;
 import com.manhhuy.myapplication.model.SearchResult;
 import com.manhhuy.myapplication.ui.Activities.DetailEventActivity;
 import com.manhhuy.myapplication.ui.Activities.HomeActivity;
+import com.manhhuy.myapplication.ui.Activities.UserActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -95,7 +96,9 @@ public class HomeFragment extends Fragment {
         // Search bar click listener
         binding.searchContainer.setOnClickListener(v -> {
             if (getActivity() instanceof HomeActivity) {
-                 ((HomeActivity) getActivity()).switchToSearchTab();
+                ((HomeActivity) getActivity()).switchToSearchTab();
+            } else if (getActivity() instanceof UserActivity) {
+                ((UserActivity) getActivity()).switchToSearchTab();
             } else {
                 Toast.makeText(getContext(), "Chuyển đến trang tìm kiếm", Toast.LENGTH_SHORT).show();
             }
