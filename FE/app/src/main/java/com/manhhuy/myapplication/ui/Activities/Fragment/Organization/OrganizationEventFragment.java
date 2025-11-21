@@ -1,4 +1,4 @@
-package com.manhhuy.myapplication.ui.Activities.Fragment.Admin;
+package com.manhhuy.myapplication.ui.Activities.Fragment.Organization;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -25,7 +25,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
-public class AdminEventFragment extends Fragment implements OnEventActionListener {
+public class OrganizationEventFragment extends Fragment implements OnEventActionListener {
 
     private ActivityEventManagerBinding binding;
     private EventManagerAdapter adapter;
@@ -34,8 +34,12 @@ public class AdminEventFragment extends Fragment implements OnEventActionListene
     private String currentStatusFilter = "all";
     private String currentCategoryFilter = "all";
 
-    public AdminEventFragment() {
+    public OrganizationEventFragment() {
         // Required empty public constructor
+    }
+
+    public static OrganizationEventFragment newInstance() {
+        return new OrganizationEventFragment();
     }
 
     @Override
@@ -110,8 +114,6 @@ public class AdminEventFragment extends Fragment implements OnEventActionListene
         });
     }
 
-    // --- Navigation & Actions ---
-
     @Override
     public void onViewClick(EventPost event) {
         Intent intent = new Intent(getContext(), DetailEventActivity.class);
@@ -121,7 +123,7 @@ public class AdminEventFragment extends Fragment implements OnEventActionListene
 
     @Override
     public void onEditClick(EventPost event) {
-        Intent intent = new Intent(getContext(), AddEventActivity.class); // Reusing AddEvent for Edit
+        Intent intent = new Intent(getContext(), AddEventActivity.class);
         intent.putExtra("EVENT_ID", event.getId());
         intent.putExtra("IS_EDIT_MODE", true);
         startActivity(intent);
@@ -129,11 +131,7 @@ public class AdminEventFragment extends Fragment implements OnEventActionListene
 
     @Override
     public void onDeleteClick(EventPost event) {
-        // Show confirmation dialog here in real app
         Toast.makeText(getContext(), "Đã xóa sự kiện: " + event.getTitle(), Toast.LENGTH_SHORT).show();
-        // Remove from list and update adapter
-        // eventList.remove(event);
-        // adapter.notifyDataSetChanged();
     }
 
     @Override
@@ -143,8 +141,6 @@ public class AdminEventFragment extends Fragment implements OnEventActionListene
         intent.putExtra("EVENT_TITLE", event.getTitle());
         startActivity(intent);
     }
-
-    // --- UI Helpers ---
 
     private void updateTabUI(android.widget.TextView selectedTab) {
         resetTabStyle(binding.tabAll);
@@ -173,8 +169,6 @@ public class AdminEventFragment extends Fragment implements OnEventActionListene
         chip.setBackgroundResource(R.drawable.bg_chip_unselected_event);
         chip.setTextColor(getResources().getColor(R.color.text_primary));
     }
-
-    // --- Data & Logic ---
 
     private void applyFilters() {
         eventList.clear();

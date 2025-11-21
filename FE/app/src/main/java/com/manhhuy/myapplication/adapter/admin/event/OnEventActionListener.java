@@ -8,4 +8,6 @@ public interface OnEventActionListener {
     void onEditClick(EventPost event);
 
     void onDeleteClick(EventPost event);
+    
+    void onNotificationClick(EventPost event);
 }

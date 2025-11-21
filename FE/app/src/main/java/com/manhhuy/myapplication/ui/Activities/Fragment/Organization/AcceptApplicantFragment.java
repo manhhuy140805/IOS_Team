@@ -185,11 +185,8 @@ public class AcceptApplicantFragment extends Fragment implements AplicationAdapt
     }
 
     private void setupListeners() {
-        btnBack.setOnClickListener(v -> {
-            if (getActivity() != null) {
-                getActivity().finish();
-            }
-        });
+        // Back button - Hide in fragment when used as tab
+        btnBack.setVisibility(View.GONE);
 
         tabAll.setOnClickListener(v -> selectTab(tabAll, -1));
         tabPending.setOnClickListener(v -> selectTab(tabPending, 0));
