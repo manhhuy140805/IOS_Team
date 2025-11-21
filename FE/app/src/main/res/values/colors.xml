@@ -86,6 +86,8 @@
     <color name="white">#FFFFFF</color>
     <color name="gray_300">#E0E0E0</color>
     <color name="background_gray">#F5F5F5</color>
+    <color name="gray_400">#BDBDBD</color>
+    <color name="gray_500">#9E9E9E</color>
 
     <!-- Redeem / Tag Colors -->
     <color name="cyan">#00BCD4</color>

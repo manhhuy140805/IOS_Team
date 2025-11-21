@@ -5,7 +5,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
-import com.manhhuy.myapplication.databinding.SearchResultItemBinding;
+import com.manhhuy.myapplication.databinding.EventItemBinding;
 import com.manhhuy.myapplication.model.SearchResult;
 import java.util.List;
 
@@ -29,7 +29,7 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
     @NonNull
     @Override
     public SearchResultViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        SearchResultItemBinding binding = SearchResultItemBinding.inflate(
+        EventItemBinding binding = EventItemBinding.inflate(
                 LayoutInflater.from(parent.getContext()),
                 parent,
                 false
@@ -54,40 +54,44 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
     }
 
     public class SearchResultViewHolder extends RecyclerView.ViewHolder {
-        private final SearchResultItemBinding binding;
+        private final EventItemBinding binding;
 
-        public SearchResultViewHolder(SearchResultItemBinding binding) {
+        public SearchResultViewHolder(EventItemBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
         }
 
         public void bind(SearchResult result) {
-            binding.searchResultTitle.setText(result.getTitle());
-            binding.searchResultOrganization.setText(result.getOrganization());
-            binding.searchResultLocation.setText(result.getLocation());
+            binding.eventTitle.setText(result.getTitle());
+            binding.eventOrganization.setText(result.getOrganization());
+            binding.eventLocation.setText(result.getLocation());
             
             // Load image from URL or drawable
             if (result.getImageUrl() != null && !result.getImageUrl().isEmpty()) {
                 Glide.with(binding.getRoot().getContext())
                         .load(result.getImageUrl())
                         .centerCrop()
-                        .into(binding.searchResultImage);
+                        .into(binding.eventImage);
             } else {
-                binding.searchResultImage.setImageResource(result.getImageResId());
+                binding.eventImage.setImageResource(result.getImageResId());
             }
             
-            // Set description
-            binding.searchResultDescription.setText(result.getDescription() != null ? 
-                    result.getDescription() : "");
-            
+            // Set category
+            if (result.getCategory() != null) {
+                binding.eventCategory.setText(result.getCategory());
+                binding.eventCategory.setVisibility(android.view.View.VISIBLE);
+            } else {
+                binding.eventCategory.setVisibility(android.view.View.GONE);
+            }
+
             // Set deadline
-            binding.searchResultDeadline.setText(result.getDeadline() != null ? 
+            binding.eventDeadline.setText(result.getDeadline() != null ? 
                     result.getDeadline() : "N/A");
             
             // Set slots
             String slotsText = result.getTotalSlots() > 0 ? 
-                    result.getTotalSlots() + " slots" : "No slots";
-            binding.searchResultSlots.setText(slotsText);
+                    "Còn " + result.getTotalSlots() + " chỗ" : "Hết chỗ";
+            binding.eventSlots.setText(slotsText);
 
             binding.getRoot().setOnClickListener(v -> {
                 if (listener != null) {

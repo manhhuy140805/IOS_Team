@@ -49,9 +49,7 @@ public class HomeActivity extends AppCompatActivity {
     private void setupViewPager() {
         HomeAdapter homeAdapter = new HomeAdapter(this);
         binding.viewPager.setAdapter(homeAdapter);
-        binding.viewPager.setOffscreenPageLimit(5); // Pre-load all tabs for smooth transition
-        binding.viewPager.setPageTransformer(new ZoomOutPageTransformer()); // Add smooth page transition
-
+        binding.viewPager.setPageTransformer(new ZoomOutPageTransformer()); 
         new TabLayoutMediator(binding.tabLayout, binding.viewPager,
                 (tab, position) -> {
                     tab.setText(tabTitles[position]);
@@ -65,14 +63,16 @@ public class HomeActivity extends AppCompatActivity {
             public void handleOnBackPressed() {
                 int currentItem = binding.viewPager.getCurrentItem();
                 if (currentItem == 0) {
-                    // Ở tab đầu → thoát Activity
                     finish();
                 } else {
-                    // Lùi về tab trước
                     binding.viewPager.setCurrentItem(currentItem - 1, true);
                 }
             }
         });
 
+    }
+
+    public void switchToSearchTab() {
+        binding.viewPager.setCurrentItem(1, true);
     }
 }

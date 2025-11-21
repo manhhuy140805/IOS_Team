@@ -3,10 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="12dp"
-    app:cardCornerRadius="12dp"
-    app:cardElevation="2dp"
-    app:cardBackgroundColor="@android:color/white">
+    android:layout_marginBottom="16dp"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="4dp"
+    app:cardBackgroundColor="@color/white">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -23,16 +23,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scaleType="centerCrop"
-                android:contentDescription="@string/app_name" />
+                android:contentDescription="@string/app_name"
+                android:src="@drawable/banner_event_default"/>
 
             <!-- Compensation Badge -->
             <androidx.cardview.widget.CardView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                app:cardCornerRadius="6dp"
-                app:cardElevation="2dp"
-                app:cardBackgroundColor="@android:color/white"
+                android:layout_margin="12dp"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="0dp"
+                app:cardBackgroundColor="#FFF3E0"
                 android:layout_gravity="top|end">
 
                 <LinearLayout
@@ -40,10 +41,8 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:gravity="center_vertical"
-                    android:paddingStart="10dp"
-                    android:paddingEnd="10dp"
-                    android:paddingTop="6dp"
-                    android:paddingBottom="6dp">
+                    android:paddingHorizontal="10dp"
+                    android:paddingVertical="6dp">
 
                     <ImageView
                         android:layout_width="16dp"
@@ -51,7 +50,7 @@
                         android:src="@drawable/ic_coin"
                         android:scaleType="centerInside"
                         android:contentDescription="@string/app_name"
-                        app:tint="@android:color/holo_orange_dark" />
+                        app:tint="#EF6C00" />
 
                     <TextView
                         android:id="@+id/compensation"
@@ -60,8 +59,8 @@
                         android:text="500 pts"
                         android:textSize="12sp"
                         android:textStyle="bold"
-                        android:textColor="@android:color/holo_orange_dark"
-                        android:layout_marginStart="6dp" />
+                        android:textColor="#EF6C00"
+                        android:layout_marginStart="4dp" />
 
                 </LinearLayout>
 
@@ -74,59 +73,145 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="14dp">
+            android:padding="16dp">
+
+            <!-- Tags -->
+            <LinearLayout
+                android:id="@+id/tagsContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="12dp">
+                
+                <!-- Placeholder for tags, populated dynamically -->
+                <TextView
+                    android:id="@+id/eventCategory"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Môi trường"
+                    android:textSize="10sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/app_green_primary"
+                    android:background="@drawable/bg_tag_category"
+                    android:backgroundTint="#E8F5E9"
+                    android:paddingHorizontal="8dp"
+                    android:paddingVertical="4dp"/>
+            </LinearLayout>
 
             <!-- Title -->
             <TextView
                 android:id="@+id/eventTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Event Title"
-                android:textSize="15sp"
+                android:text="Tên sự kiện"
+                android:textSize="18sp"
                 android:textStyle="bold"
-                android:textColor="@android:color/black"
+                android:textColor="@color/text_primary"
                 android:maxLines="2"
                 android:ellipsize="end"
-                android:layout_marginBottom="8dp" />
+                android:layout_marginBottom="12dp" />
 
-            <!-- Organization & Location -->
+            <!-- Organization -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginBottom="10dp">
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="8dp">
+
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:src="@drawable/ic_organization"
+                    android:scaleType="centerInside"
+                    android:contentDescription="@string/app_name"
+                    app:tint="@color/app_green_primary" />
+
+                <TextView
+                    android:id="@+id/eventOrganization"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Tên tổ chức"
+                    android:textSize="13sp"
+                    android:textColor="@color/text_secondary"
+                    android:layout_marginStart="8dp"
+                    android:maxLines="1"
+                    android:ellipsize="end" />
+
+            </LinearLayout>
+
+            <!-- Location -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="16dp">
+
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:src="@drawable/ic_location_pin"
+                    android:scaleType="centerInside"
+                    android:contentDescription="@string/app_name"
+                    app:tint="@color/app_green_primary" />
+
+                <TextView
+                    android:id="@+id/eventLocation"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Địa điểm"
+                    android:textSize="13sp"
+                    android:textColor="@color/text_secondary"
+                    android:layout_marginStart="8dp"
+                    android:maxLines="1"
+                    android:ellipsize="end" />
+
+            </LinearLayout>
+
+            <!-- Divider -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#F0F0F0"
+                android:layout_marginBottom="12dp"/>
+
+            <!-- Footer: Deadline & Slots -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
 
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:layout_marginBottom="6dp">
+                    android:gravity="center_vertical">
 
                     <ImageView
                         android:layout_width="14dp"
                         android:layout_height="14dp"
-                        android:src="@drawable/ic_organization"
-                        android:scaleType="centerInside"
-                        android:contentDescription="@string/app_name"
-                        app:tint="@android:color/darker_gray" />
+                        android:src="@drawable/ic_calendar"
+                        app:tint="@color/gray_500"/>
 
                     <TextView
-                        android:id="@+id/eventOrganization"
-                        android:layout_width="0dp"
+                        android:id="@+id/eventDeadline"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Organization"
+                        android:text="25/12/2024"
                         android:textSize="12sp"
-                        android:textColor="@android:color/darker_gray"
-                        android:layout_marginStart="8dp"
-                        android:maxLines="1"
-                        android:ellipsize="end" />
+                        android:textColor="@color/text_secondary"
+                        android:layout_marginStart="6dp" />
 
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:gravity="center_vertical">
@@ -134,107 +219,18 @@
                     <ImageView
                         android:layout_width="14dp"
                         android:layout_height="14dp"
-                        android:src="@drawable/ic_location_pin"
-                        android:scaleType="centerInside"
-                        android:contentDescription="@string/app_name"
-                        app:tint="@android:color/darker_gray" />
-
-                    <TextView
-                        android:id="@+id/eventLocation"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Location"
-                        android:textSize="12sp"
-                        android:textColor="@android:color/darker_gray"
-                        android:layout_marginStart="8dp"
-                        android:maxLines="1"
-                        android:ellipsize="end" />
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <!-- Categories/Tags -->
-            <LinearLayout
-                android:id="@+id/tagsContainer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:layout_marginBottom="10dp" />
-
-            <!-- Footer: Deadline & Slots -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:layout_marginTop="8dp"
-                android:paddingTop="8dp"
-                android:background="#F5F5F5"
-                android:layout_marginStart="-14dp"
-                android:layout_marginEnd="-14dp"
-                android:layout_marginBottom="-14dp"
-                android:paddingStart="14dp"
-                android:paddingEnd="14dp"
-                android:paddingBottom="14dp">
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Deadline"
-                        android:textSize="10sp"
-                        android:textColor="@android:color/darker_gray" />
-
-                    <TextView
-                        android:id="@+id/eventDeadline"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Dec 25, 2024"
-                        android:textSize="12sp"
-                        android:textStyle="bold"
-                        android:textColor="@android:color/black"
-                        android:layout_marginTop="2dp" />
-
-                </LinearLayout>
-
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="30dp"
-                    android:background="@android:color/darker_gray"
-                    android:alpha="0.2"
-                    android:layout_marginStart="12dp"
-                    android:layout_marginEnd="12dp" />
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Available Slots"
-                        android:textSize="10sp"
-                        android:textColor="@android:color/darker_gray" />
+                        android:src="@drawable/ic_user"
+                        app:tint="@color/app_green_primary"/>
 
                     <TextView
                         android:id="@+id/eventSlots"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="12 slots left"
+                        android:text="Còn 12 chỗ"
                         android:textSize="12sp"
                         android:textStyle="bold"
-                        android:textColor="@android:color/black"
-                        android:layout_marginTop="2dp" />
+                        android:textColor="@color/app_green_primary"
+                        android:layout_marginStart="6dp" />
 
                 </LinearLayout>
 

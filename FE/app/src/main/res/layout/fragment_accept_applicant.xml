@@ -4,41 +4,45 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F5F5F5"
+    android:background="@color/background_gray"
     android:orientation="vertical"
     tools:context=".ui.Activities.Fragment.AcceptApplicantFragment">
 
-    <!-- Header with Gradient Background -->
+    <!-- Header with Green Rounded Background -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/app_green_primary"
+        android:background="@drawable/bg_header_green_rounded"
         android:orientation="vertical"
         android:paddingHorizontal="20dp"
         android:paddingTop="24dp"
-        android:paddingBottom="20dp">
+        android:paddingBottom="30dp"
+        android:elevation="4dp">
 
         <!-- Back Button and Title -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:layout_marginBottom="20dp">
 
             <ImageView
                 android:id="@+id/btnBack"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:background="@drawable/bg_button_white_solid"
+                android:backgroundTint="#33FFFFFF"
                 android:clickable="true"
                 android:focusable="true"
-                android:padding="6dp"
-                android:src="@drawable/ic_back" />
+                android:padding="8dp"
+                android:src="@drawable/ic_back"
+                app:tint="@color/white" />
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
+                android:layout_marginStart="16dp"
                 android:layout_weight="1"
                 android:orientation="vertical">
 
@@ -46,16 +50,16 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Duyệt Đăng Ký"
-                    android:textColor="@color/app_green_light"
-                    android:textSize="24sp"
+                    android:textColor="@color/white"
+                    android:textSize="22sp"
                     android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:text="Quản lý tình nguyện viên đăng ký"
-                    android:textColor="@color/app_green_light"
+                    android:layout_marginTop="2dp"
+                    android:text="Quản lý tình nguyện viên"
+                    android:textColor="#E0F2F1"
                     android:textSize="13sp" />
             </LinearLayout>
         </LinearLayout>
@@ -64,96 +68,120 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
             android:orientation="horizontal"
             android:weightSum="3">
 
             <!-- Pending -->
-            <LinearLayout
+            <androidx.cardview.widget.CardView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
                 android:layout_weight="1"
-                android:background="@drawable/bg_tab_filter"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:padding="12dp">
+                android:layout_marginEnd="8dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp"
+                app:cardBackgroundColor="@color/white">
 
-                <TextView
-                    android:id="@+id/tvPendingCount"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="8"
-                    android:textColor="#000000"
-                    android:textSize="28sp"
-                    android:textStyle="bold" />
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="12dp">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:text="Chờ duyệt"
-                    android:textColor="@color/app_green_primary"
-                    android:textSize="12sp" />
-            </LinearLayout>
+                    <TextView
+                        android:id="@+id/tvPendingCount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="8"
+                        android:textColor="@color/text_primary"
+                        android:textSize="24sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="Chờ duyệt"
+                        android:textColor="@color/status_pending"
+                        android:textSize="12sp"
+                        android:textStyle="bold"/>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
 
             <!-- Accepted -->
-            <LinearLayout
+            <androidx.cardview.widget.CardView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="4dp"
                 android:layout_weight="1"
-                android:background="@drawable/bg_tab_filter"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:padding="12dp">
+                android:layout_marginHorizontal="4dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp"
+                app:cardBackgroundColor="@color/white">
 
-                <TextView
-                    android:id="@+id/tvAcceptedCount"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="24"
-                    android:textColor="#000000"
-                    android:textSize="28sp"
-                    android:textStyle="bold" />
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="12dp">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:text="Đã chấp nhận"
-                    android:textColor="@color/app_green_primary"
-                    android:textSize="12sp" />
-            </LinearLayout>
+                    <TextView
+                        android:id="@+id/tvAcceptedCount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="24"
+                        android:textColor="@color/text_primary"
+                        android:textSize="24sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="Đã duyệt"
+                        android:textColor="@color/status_approved"
+                        android:textSize="12sp"
+                        android:textStyle="bold"/>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
 
             <!-- Rejected -->
-            <LinearLayout
+            <androidx.cardview.widget.CardView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
                 android:layout_weight="1"
-                android:background="@drawable/bg_tab_filter"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:padding="12dp">
+                android:layout_marginStart="8dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp"
+                app:cardBackgroundColor="@color/white">
 
-                <TextView
-                    android:id="@+id/tvRejectedCount"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="3"
-                    android:textColor="#000000"
-                    android:textSize="28sp"
-                    android:textStyle="bold" />
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="12dp">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:text="Đã từ chối"
-                    android:textColor="@color/app_green_primary"
-                    android:textSize="12sp" />
-            </LinearLayout>
+                    <TextView
+                        android:id="@+id/tvRejectedCount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="3"
+                        android:textColor="@color/text_primary"
+                        android:textSize="24sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="Từ chối"
+                        android:textColor="@color/status_rejected"
+                        android:textSize="12sp"
+                        android:textStyle="bold"/>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
         </LinearLayout>
     </LinearLayout>
 
@@ -161,14 +189,17 @@
     <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="16dp"
         android:paddingHorizontal="16dp"
+        android:clipToPadding="false"
         android:scrollbars="none">
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:paddingStart="4dp"
+            android:paddingEnd="20dp">
 
             <TextView
                 android:id="@+id/tabAll"
@@ -177,11 +208,10 @@
                 android:background="@drawable/bg_tab_selected_event_manager"
                 android:clickable="true"
                 android:focusable="true"
-                android:foreground="?android:attr/selectableItemBackground"
                 android:paddingHorizontal="20dp"
-                android:paddingVertical="10dp"
+                android:paddingVertical="8dp"
                 android:text="Tất cả"
-                android:textColor="#000000"
+                android:textColor="@color/white"
                 android:textSize="14sp"
                 android:textStyle="bold" />
 
@@ -189,92 +219,98 @@
                 android:id="@+id/tabPending"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="12dp"
                 android:background="@drawable/bg_tab_unselected_event_manager"
                 android:clickable="true"
                 android:focusable="true"
-                android:foreground="?android:attr/selectableItemBackground"
                 android:paddingHorizontal="20dp"
-                android:paddingVertical="10dp"
+                android:paddingVertical="8dp"
                 android:text="Chờ duyệt"
-                android:textColor="@color/app_green_primary"
-                android:textSize="14sp" />
+                android:textColor="@color/text_secondary"
+                android:textSize="14sp"
+                android:textStyle="bold"/>
 
             <TextView
                 android:id="@+id/tabAccepted"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="12dp"
                 android:background="@drawable/bg_tab_unselected_event_manager"
                 android:clickable="true"
                 android:focusable="true"
-                android:foreground="?android:attr/selectableItemBackground"
                 android:paddingHorizontal="20dp"
-                android:paddingVertical="10dp"
-                android:text="Đã chấp nhận"
-                android:textColor="@color/app_green_primary"
-                android:textSize="14sp" />
+                android:paddingVertical="8dp"
+                android:text="Đã duyệt"
+                android:textColor="@color/text_secondary"
+                android:textSize="14sp"
+                android:textStyle="bold"/>
 
             <TextView
                 android:id="@+id/tabRejected"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="12dp"
                 android:background="@drawable/bg_tab_unselected_event_manager"
                 android:clickable="true"
                 android:focusable="true"
-                android:foreground="?android:attr/selectableItemBackground"
                 android:paddingHorizontal="20dp"
-                android:paddingVertical="10dp"
+                android:paddingVertical="8dp"
                 android:text="Đã từ chối"
-                android:textColor="@color/app_green_primary"
-                android:textSize="14sp" />
+                android:textColor="@color/text_secondary"
+                android:textSize="14sp"
+                android:textStyle="bold"/>
         </LinearLayout>
     </HorizontalScrollView>
 
-    <!-- RecyclerView -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvApplicants"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="8dp"
-        android:layout_weight="1"
-        android:clipToPadding="false"
-        android:paddingBottom="8dp"
-        tools:listitem="@layout/item_applicant" />
-
-    <!-- Empty State -->
-    <LinearLayout
-        android:id="@+id/emptyState"
+    <!-- Content Area -->
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:visibility="gone">
+        android:layout_marginTop="12dp">
 
-        <ImageView
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:alpha="0.3"
-            android:src="@drawable/ic_contact"
-            app:tint="#BDBDBD" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvApplicants"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:paddingHorizontal="16dp"
+            android:paddingBottom="16dp"
+            tools:listitem="@layout/item_applicant" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="Chưa có đơn đăng ký nào"
-            android:textColor="#9E9E9E"
-            android:textSize="16sp"
-            android:textStyle="bold" />
+        <LinearLayout
+            android:id="@+id/emptyState"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="Các đơn đăng ký sẽ xuất hiện ở đây"
-            android:textColor="#BDBDBD"
-            android:textSize="13sp" />
-    </LinearLayout>
+            <ImageView
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:alpha="0.5"
+                android:src="@drawable/ic_contact"
+                app:tint="@color/gray_300" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Chưa có đơn đăng ký nào"
+                android:textColor="@color/text_secondary"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Các đơn đăng ký sẽ xuất hiện ở đây"
+                android:textColor="@color/gray_500"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+    </FrameLayout>
+
 </LinearLayout>

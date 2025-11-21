@@ -1,45 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/md_theme_light_background"
-    android:orientation="vertical"
+    android:background="@color/background_gray"
     tools:context=".ui.Activities.HomeActivity">
 
-    <!-- ViewPager2 with smooth transitions -->
+    <!-- ViewPager2 -->
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:overScrollMode="never" />
+        android:overScrollMode="never"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/bottomNavContainer"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
-    <!-- Modern TabLayout at bottom with gradient background -->
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tabLayout"
+    <!-- Bottom Navigation Container with Shadow -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/bottomNavContainer"
         android:layout_width="match_parent"
-        android:layout_height="72dp"
-        android:background="@drawable/tab_background"
-        android:elevation="16dp"
-        android:paddingTop="8dp"
-        android:paddingBottom="12dp"
-        app:tabMode="fixed"
-        app:tabGravity="fill"
-        app:tabIconTint="@color/tab_icon_color"
-        app:tabTextColor="#7E7E8E"
-        app:tabSelectedTextColor="#FFFFFF"
-        app:tabIndicator="@drawable/tab_indicator"
-        app:tabIndicatorColor="#E94560"
-        app:tabIndicatorHeight="3dp"
-        app:tabIndicatorFullWidth="false"
-        app:tabIndicatorGravity="top"
-        app:tabRippleColor="#40E94560"
-        app:tabTextAppearance="@style/CustomTabText"
-        app:tabPaddingStart="0dp"
-        app:tabPaddingEnd="0dp"
-        app:tabInlineLabel="false" />
-</LinearLayout>
+        android:layout_height="wrap_content"
+        app:cardElevation="16dp"
+        app:cardCornerRadius="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            app:tabMode="fixed"
+            app:tabGravity="fill"
+            app:tabIconTint="@color/tab_icon_color"
+            app:tabTextColor="@color/tab_text_color"
+            app:tabSelectedTextColor="@color/app_green_primary"
+            app:tabIndicatorHeight="0dp"
+            app:tabRippleColor="@color/app_green_light"
+            app:tabInlineLabel="false" />
+
+    </androidx.cardview.widget.CardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

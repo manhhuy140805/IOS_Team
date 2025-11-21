@@ -4,30 +4,33 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F5F5F5"
+    android:background="@color/background_gray"
     android:orientation="vertical"
     tools:context=".ui.Activities.Fragment.RedeemFragment">
-    <!-- Header with Points Card -->
-    <androidx.cardview.widget.CardView
+
+    <!-- Header Section -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="0dp"
-        app:cardCornerRadius="0dp"
-        app:cardElevation="8dp">
+        android:background="@drawable/bg_header_green_rounded"
+        android:orientation="vertical"
+        android:paddingHorizontal="20dp"
+        android:paddingTop="20dp"
+        android:paddingBottom="30dp"
+        android:elevation="4dp">
 
+        <!-- Title & Subtitle -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/app_green_primary"
             android:orientation="vertical"
-            android:padding="20dp">
+            android:layout_marginBottom="20dp">
 
-            <!-- Title -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Đổi Thưởng"
-                android:textColor="@color/app_green_light"
+                android:textColor="@color/white"
                 android:textSize="24sp"
                 android:textStyle="bold" />
 
@@ -36,87 +39,114 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:text="Sử dụng điểm tích lũy để nhận quà tặng"
-                android:textColor="@color/app_green_light"
-                android:textSize="12sp" />
+                android:textColor="#E0F2F1"
+                android:textSize="14sp" />
 
-            <!-- Points Display -->
+        </LinearLayout>
+
+        <!-- Points Card -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="4dp"
+            app:cardBackgroundColor="@color/white">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:background="@drawable/bg_category_tab"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:padding="12dp">
-
-                <ImageView
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:src="@drawable/ic_coin"
-                    />
+                android:orientation="vertical"
+                android:padding="16dp">
 
                 <LinearLayout
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="12dp"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
 
-                    <TextView
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:src="@drawable/ic_coin"
+                        app:tint="#FFC107"/>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="12dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Điểm hiện có"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:id="@+id/tvTotalPoints"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="1,250"
+                            android:textColor="@color/text_primary"
+                            android:textSize="28sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/tvViewHistory"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Điểm của bạn"
-                        android:textColor="#000000"
-                        android:textSize="12sp" />
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:background="@drawable/bg_button_white_solid"
+                        android:backgroundTint="#F5F5F5"
+                        android:paddingHorizontal="12dp"
+                        android:paddingVertical="8dp"
+                        android:clickable="true"
+                        android:focusable="true">
 
-                    <TextView
-                        android:id="@+id/tvTotalPoints"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="1,250"
-                        android:textColor="#000000"
-                        android:textSize="28sp"
-                        android:textStyle="bold" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Lịch sử"
+                            android:textColor="@color/text_primary"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
+                        
+                        <ImageView
+                            android:layout_width="12dp"
+                            android:layout_height="12dp"
+                            android:src="@drawable/ic_arrow_right"
+                            app:tint="@color/text_primary"
+                            android:layout_marginStart="4dp"/>
+                    </LinearLayout>
+
                 </LinearLayout>
 
-                <TextView
-                    android:id="@+id/tvViewHistory"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/bg_category_tab"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:foreground="?android:attr/selectableItemBackground"
-                    android:paddingHorizontal="12dp"
-                    android:paddingVertical="6dp"
-                    android:text="Lịch sử"
-                    android:textColor="#000000"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
-
-                <ImageView
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
-                    android:layout_marginStart="4dp"
-                    android:src="@drawable/ic_arrow_right"
-                    />
             </LinearLayout>
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
+
+        </androidx.cardview.widget.CardView>
+
+    </LinearLayout>
 
     <!-- Category Tabs -->
     <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:paddingHorizontal="16dp"
+        android:clipToPadding="false"
         android:scrollbars="none">
 
         <LinearLayout
             android:id="@+id/categoryContainer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp">
 
             <TextView
                 android:id="@+id/tabAll"
@@ -124,15 +154,11 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/bg_tab_selected_event_manager"
                 android:clickable="true"
-                android:drawableStart="@drawable/ic_gift"
-                android:drawablePadding="6dp"
-                android:drawableTint="#FFFFFF"
                 android:focusable="true"
-                android:foreground="?android:attr/selectableItemBackground"
-                android:paddingHorizontal="16dp"
+                android:paddingHorizontal="20dp"
                 android:paddingVertical="10dp"
                 android:text="Tất cả"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/white"
                 android:textSize="14sp"
                 android:textStyle="bold" />
 
@@ -140,55 +166,46 @@
                 android:id="@+id/tabVoucher"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="12dp"
                 android:background="@drawable/bg_tab_unselected_event_manager"
                 android:clickable="true"
-                android:drawableStart="@drawable/ic_voucher"
-                android:drawablePadding="6dp"
-                android:drawableTint="#00BCD4"
                 android:focusable="true"
-                android:foreground="?android:attr/selectableItemBackground"
-                android:paddingHorizontal="16dp"
+                android:paddingHorizontal="20dp"
                 android:paddingVertical="10dp"
                 android:text="Voucher"
-                android:textColor="#00BCD4"
-                android:textSize="14sp" />
+                android:textColor="@color/text_secondary"
+                android:textSize="14sp"
+                android:textStyle="bold"/>
 
             <TextView
                 android:id="@+id/tabGift"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="12dp"
                 android:background="@drawable/bg_tab_unselected_event_manager"
                 android:clickable="true"
-                android:drawableStart="@drawable/ic_gift"
-                android:drawablePadding="6dp"
-                android:drawableTint="#E91E63"
                 android:focusable="true"
-                android:foreground="?android:attr/selectableItemBackground"
-                android:paddingHorizontal="16dp"
+                android:paddingHorizontal="20dp"
                 android:paddingVertical="10dp"
                 android:text="Quà tặng"
-                android:textColor="#E91E63"
-                android:textSize="14sp" />
+                android:textColor="@color/text_secondary"
+                android:textSize="14sp"
+                android:textStyle="bold"/>
 
             <TextView
                 android:id="@+id/tabOpportunity"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="12dp"
                 android:background="@drawable/bg_tab_unselected_event_manager"
                 android:clickable="true"
-                android:drawableStart="@drawable/ic_discount"
-                android:drawablePadding="6dp"
-                android:drawableTint="#FF9800"
                 android:focusable="true"
-                android:foreground="?android:attr/selectableItemBackground"
-                android:paddingHorizontal="16dp"
+                android:paddingHorizontal="20dp"
                 android:paddingVertical="10dp"
                 android:text="Cơ hội"
-                android:textColor="#FF9800"
-                android:textSize="14sp" />
+                android:textColor="@color/text_secondary"
+                android:textSize="14sp"
+                android:textStyle="bold"/>
         </LinearLayout>
     </HorizontalScrollView>
 
@@ -196,8 +213,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="24dp"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
@@ -214,74 +231,79 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:text="Phổ biến nhất"
-            android:textColor="#212121"
-            android:textSize="16sp"
+            android:textColor="@color/text_primary"
+            android:textSize="18sp"
             android:textStyle="bold" />
     </LinearLayout>
 
-    <!-- RecyclerView for Rewards -->
-
-    <!-- Empty State -->
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvRewards"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="8dp"
-        android:layout_weight="1"
-        android:clipToPadding="false"
-        android:paddingBottom="8dp"
-        tools:listitem="@layout/item_reward" />
-
-    <LinearLayout
-        android:id="@+id/emptyState"
+    <!-- Content Area -->
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:visibility="gone">
+        android:layout_marginTop="12dp">
 
-        <ImageView
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:alpha="0.3"
-            android:src="@drawable/ic_gift"
-            app:tint="#BDBDBD" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvRewards"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:paddingHorizontal="16dp"
+            android:paddingBottom="16dp"
+            tools:listitem="@layout/item_reward" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="Chưa có thưởng cho thư mục này"
-            android:textColor="#9E9E9E"
-            android:textSize="14sp" />
+        <LinearLayout
+            android:id="@+id/emptyState"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="Hãy tham gia thêm các hoạt động để nhận điểm!"
-            android:textColor="#BDBDBD"
-            android:textSize="12sp" />
-    </LinearLayout>
+            <ImageView
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:alpha="0.5"
+                android:src="@drawable/ic_gift"
+                app:tint="@color/gray_300" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Chưa có phần thưởng nào"
+                android:textColor="@color/text_secondary"
+                android:textSize="16sp"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Hãy quay lại sau nhé!"
+                android:textColor="@color/gray_500"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+    </FrameLayout>
 
     <!-- Footer Note -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#FFFFFF"
+        android:background="@color/white"
         android:gravity="center"
         android:orientation="vertical"
-        android:paddingVertical="12dp">
+        android:paddingVertical="12dp"
+        android:elevation="8dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Mọi ưu đãi hoặc phần thưởng này bất kỳ điểm nào khác không được hoàn lại"
+            android:text="Điểm thưởng không có giá trị quy đổi thành tiền mặt"
             android:textAlignment="center"
-            android:textColor="#9E9E9E"
-            android:textSize="10sp" />
+            android:textColor="@color/gray_500"
+            android:textSize="11sp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -290,9 +312,10 @@
             android:clickable="true"
             android:focusable="true"
             android:foreground="?android:attr/selectableItemBackground"
-            android:text="Xem chính sách điểm • Điều khoản đổi thưởng"
+            android:text="Chính sách - Điều khoản"
             android:textColor="@color/app_green_primary"
-            android:textSize="10sp"
+            android:textSize="11sp"
             android:textStyle="bold" />
     </LinearLayout>
+
 </LinearLayout>
