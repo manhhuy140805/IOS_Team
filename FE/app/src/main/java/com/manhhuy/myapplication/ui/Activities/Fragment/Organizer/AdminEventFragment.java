@@ -1,4 +1,4 @@
-package com.manhhuy.myapplication.ui.Activities.Fragment;
+package com.manhhuy.myapplication.ui.Activities.Fragment.Organizer;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,7 +15,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.manhhuy.myapplication.R;
 import com.manhhuy.myapplication.adapter.admin.event.EventManagerAdapter;
 import com.manhhuy.myapplication.adapter.admin.event.OnEventActionListener;
-import com.manhhuy.myapplication.databinding.ActivityEventManagerBinding;
+
+import com.manhhuy.myapplication.databinding.FragmentEventManagerBinding;
 import com.manhhuy.myapplication.model.EventPost;
 import com.manhhuy.myapplication.ui.Activities.AddEventActivity;
 import com.manhhuy.myapplication.ui.Activities.DetailEventActivity;
@@ -27,7 +28,7 @@ import java.util.List;
 
 public class AdminEventFragment extends Fragment implements OnEventActionListener {
 
-    private ActivityEventManagerBinding binding;
+    private FragmentEventManagerBinding binding;
     private EventManagerAdapter adapter;
     private List<EventPost> eventList;
 
@@ -41,7 +42,7 @@ public class AdminEventFragment extends Fragment implements OnEventActionListene
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        binding = ActivityEventManagerBinding.inflate(inflater, container, false);
+        binding = FragmentEventManagerBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
 

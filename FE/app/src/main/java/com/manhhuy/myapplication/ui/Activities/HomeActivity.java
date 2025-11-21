@@ -50,10 +50,10 @@ public class HomeActivity extends AppCompatActivity {
         binding.viewPager.setPageTransformer(new ZoomOutPageTransformer());
         
         if (role == com.manhhuy.myapplication.utils.MockUserManager.Role.ADMIN) {
-            tabTitles = new String[] { "Người dùng", "Sự kiện", "Đổi thưởng", "Duyệt bài", "Cá nhân" };
+            tabTitles = new String[] { "Người dùng", "Đổi thưởng", "Duyệt bài", "Cá nhân" };
             tabIcons = new int[] {
                     R.drawable.ic_group,
-                    R.drawable.ic_event,
+
                     R.drawable.ic_rewards,
                     R.drawable.ic_check,
                     R.drawable.ic_profile

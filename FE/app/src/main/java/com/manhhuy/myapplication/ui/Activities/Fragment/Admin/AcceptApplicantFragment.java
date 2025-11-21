@@ -1,4 +1,4 @@
-package com.manhhuy.myapplication.ui.Activities.Fragment;
+package com.manhhuy.myapplication.ui.Activities.Fragment.Admin;
 
 import android.os.Bundle;
 

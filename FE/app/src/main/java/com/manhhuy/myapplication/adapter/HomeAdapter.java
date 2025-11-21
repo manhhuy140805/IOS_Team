@@ -5,9 +5,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-import com.manhhuy.myapplication.ui.Activities.Fragment.AdminApprovePostsFragment;
-import com.manhhuy.myapplication.ui.Activities.Fragment.AdminEventFragment;
-import com.manhhuy.myapplication.ui.Activities.Fragment.AdminRewardFragment;
+import com.manhhuy.myapplication.ui.Activities.Fragment.Admin.AdminApprovePostsFragment;
+import com.manhhuy.myapplication.ui.Activities.Fragment.Organizer.AdminEventFragment;
+import com.manhhuy.myapplication.ui.Activities.Fragment.Admin.AdminRewardFragment;
 import com.manhhuy.myapplication.ui.Activities.Fragment.AdminUserFragment;
 import com.manhhuy.myapplication.ui.Activities.Fragment.HomeFragment;
 import com.manhhuy.myapplication.ui.Activities.Fragment.MeFragment;

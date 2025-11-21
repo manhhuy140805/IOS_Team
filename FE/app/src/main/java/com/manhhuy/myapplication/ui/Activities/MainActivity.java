@@ -33,6 +33,10 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
         });
 
+        binding.tvForgotPassword.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, ForgotPasswordActivity.class);
+            startActivity(intent);
+        });
     }
 
     @Override

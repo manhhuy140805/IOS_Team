@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="16dp"
     android:layout_marginBottom="16dp"
     app:cardBackgroundColor="@android:color/white"
-    app:cardCornerRadius="12dp"
-    app:cardElevation="2dp">
+    app:cardCornerRadius="16dp"
+    app:cardUseCompatPadding="true"
+    app:cardElevation="6dp"
+    app:strokeWidth="1dp"
+    app:strokeColor="#22000000">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -18,7 +21,8 @@
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="160dp"
-            app:cardCornerRadius="12dp"
+            app:cardCornerRadius="16dp"
+            app:cardUseCompatPadding="false"
             app:cardElevation="0dp">
 
             <ImageView
@@ -27,7 +31,7 @@
                 android:layout_height="match_parent"
                 android:contentDescription="Event Image"
                 android:scaleType="centerCrop"
-                android:src="@drawable/ic_launcher_background"/>
+                android:src="@drawable/logokhoa" />
 
             <!-- Status Badge Overlay -->
             <TextView
@@ -42,7 +46,7 @@
                 android:text="Đang hoạt động"
                 android:textColor="@color/app_green_primary"
                 android:textSize="11sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
         </androidx.cardview.widget.CardView>
 
@@ -70,7 +74,7 @@
                     android:background="@drawable/bg_tag_category"
                     android:paddingHorizontal="6dp"
                     android:paddingVertical="2dp"
-                    android:layout_marginEnd="8dp"/>
+                    android:layout_marginEnd="8dp" />
 
                 <TextView
                     android:id="@+id/tvOrganization"
@@ -78,7 +82,7 @@
                     android:layout_height="wrap_content"
                     android:text="Green Vietnam"
                     android:textSize="12sp"
-                    android:textColor="@color/text_secondary"/>
+                    android:textColor="@color/text_secondary" />
 
             </LinearLayout>
 
@@ -91,7 +95,7 @@
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:maxLines="2"
-                android:ellipsize="end"/>
+                android:ellipsize="end" />
 
             <!-- Info Row -->
             <LinearLayout
@@ -113,7 +117,7 @@
                         android:text="📅 28/10/2025"
                         android:textColor="@color/text_secondary"
                         android:textSize="12sp"
-                        android:layout_marginBottom="4dp"/>
+                        android:layout_marginBottom="4dp" />
 
                     <TextView
                         android:id="@+id/tvLocation"
@@ -121,7 +125,7 @@
                         android:layout_height="wrap_content"
                         android:text="📍 Vũng Tàu"
                         android:textColor="@color/text_secondary"
-                        android:textSize="12sp"/>
+                        android:textSize="12sp" />
 
                 </LinearLayout>
 
@@ -132,7 +136,7 @@
                     android:text="50 điểm"
                     android:textColor="@color/app_green_primary"
                     android:textSize="16sp"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
 
             </LinearLayout>
 
@@ -141,7 +145,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="#F0F0F0"
-                android:layout_marginVertical="12dp"/>
+                android:layout_marginVertical="12dp" />
 
             <!-- Actions -->
             <LinearLayout
@@ -157,7 +161,7 @@
                     android:layout_weight="1"
                     android:text="👥 15/20 người"
                     android:textColor="@color/text_secondary"
-                    android:textSize="12sp"/>
+                    android:textSize="12sp" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -171,7 +175,7 @@
                         android:background="?attr/selectableItemBackgroundBorderless"
                         android:src="@drawable/ic_info"
                         app:tint="@color/text_secondary"
-                        android:padding="6dp"/>
+                        android:padding="6dp" />
 
                     <ImageButton
                         android:id="@+id/btnEdit"
@@ -181,7 +185,7 @@
                         android:src="@drawable/ic_edit"
                         app:tint="@color/text_secondary"
                         android:padding="6dp"
-                        android:layout_marginHorizontal="8dp"/>
+                        android:layout_marginHorizontal="8dp" />
 
                     <ImageButton
                         android:id="@+id/btnDelete"
@@ -190,7 +194,7 @@
                         android:background="?attr/selectableItemBackgroundBorderless"
                         android:src="@drawable/ic_delete"
                         app:tint="#E53935"
-                        android:padding="6dp"/>
+                        android:padding="6dp" />
 
                 </LinearLayout>
 
@@ -198,4 +202,4 @@
 
         </LinearLayout>
     </LinearLayout>
-</androidx.cardview.widget.CardView>
+</com.google.android.material.card.MaterialCardView>
