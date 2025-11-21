@@ -19,19 +19,16 @@ public class HomeActivity extends AppCompatActivity {
 
     private ActivityHomeBinding binding;
 
-    private final String[] tabTitles = new String[] { "Home", "Event", "Rewards", "Applicants", "Profile" };
-    private final int[] tabIcons = new int[] {
-            R.drawable.ic_home,
-            R.drawable.ic_event,
-            R.drawable.ic_rewards,
-            R.drawable.ic_group,
-            R.drawable.ic_profile
-    };
+    private String[] tabTitles;
+    private int[] tabIcons;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
+
+        // Set mock role here (Change to CUSTOMER to test customer view)
+        com.manhhuy.myapplication.utils.MockUserManager.setRole(com.manhhuy.myapplication.utils.MockUserManager.Role.ADMIN);
 
         binding = ActivityHomeBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -47,9 +44,30 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void setupViewPager() {
-        HomeAdapter homeAdapter = new HomeAdapter(this);
+        com.manhhuy.myapplication.utils.MockUserManager.Role role = com.manhhuy.myapplication.utils.MockUserManager.getCurrentRole();
+        HomeAdapter homeAdapter = new HomeAdapter(this, role);
         binding.viewPager.setAdapter(homeAdapter);
-        binding.viewPager.setPageTransformer(new ZoomOutPageTransformer()); 
+        binding.viewPager.setPageTransformer(new ZoomOutPageTransformer());
+        
+        if (role == com.manhhuy.myapplication.utils.MockUserManager.Role.ADMIN) {
+            tabTitles = new String[] { "Người dùng", "Sự kiện", "Đổi thưởng", "Duyệt bài", "Cá nhân" };
+            tabIcons = new int[] {
+                    R.drawable.ic_group,
+                    R.drawable.ic_event,
+                    R.drawable.ic_rewards,
+                    R.drawable.ic_check,
+                    R.drawable.ic_profile
+            };
+        } else {
+            tabTitles = new String[] { "Trang chủ", "Tìm kiếm", "Đổi thưởng", "Cá nhân" };
+            tabIcons = new int[] {
+                    R.drawable.ic_home,
+                    R.drawable.ic_search,
+                    R.drawable.ic_rewards,
+                    R.drawable.ic_profile
+            };
+        }
+
         new TabLayoutMediator(binding.tabLayout, binding.viewPager,
                 (tab, position) -> {
                     tab.setText(tabTitles[position]);

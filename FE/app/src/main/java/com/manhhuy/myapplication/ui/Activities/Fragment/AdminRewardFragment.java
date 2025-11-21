@@ -1,10 +1,15 @@
-package com.manhhuy.myapplication.ui.Activities;
+package com.manhhuy.myapplication.ui.Activities.Fragment;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.manhhuy.myapplication.R;
@@ -16,7 +21,7 @@ import com.manhhuy.myapplication.model.RewardItem;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AdminRewardManagementActivity extends AppCompatActivity implements OnRewardActionListener {
+public class AdminRewardFragment extends Fragment implements OnRewardActionListener {
 
     private ActivityAdminRewardManagementBinding binding;
     private RewardAdminAdapter adapter;
@@ -26,12 +31,20 @@ public class AdminRewardManagementActivity extends AppCompatActivity implements 
 
     private int selectedCategory = 0; // 0=all, 1=voucher, 2=gift, 3=experience, 4=low stock
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        binding = ActivityAdminRewardManagementBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
+    public AdminRewardFragment() {
+        // Required empty public constructor
+    }
 
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        binding = ActivityAdminRewardManagementBinding.inflate(inflater, container, false);
+        return binding.getRoot();
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         setupViews();
         setupRecyclerView();
         loadMockData();
@@ -39,17 +52,17 @@ public class AdminRewardManagementActivity extends AppCompatActivity implements 
     }
 
     private void setupViews() {
-        binding.btnBack.setOnClickListener(v -> finish());
+        binding.btnBack.setVisibility(View.GONE); // Hide back button in fragment
 
         binding.fabAddReward.setOnClickListener(v -> {
-            Toast.makeText(this, "Thêm quà mới", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Thêm quà mới", Toast.LENGTH_SHORT).show();
             // TODO: Open add reward dialog/activity
         });
     }
 
     private void setupRecyclerView() {
-        adapter = new RewardAdminAdapter(this, filteredList, this);
-        binding.recyclerViewRewards.setLayoutManager(new LinearLayoutManager(this));
+        adapter = new RewardAdminAdapter(getContext(), filteredList, this);
+        binding.recyclerViewRewards.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.recyclerViewRewards.setAdapter(adapter);
     }
 
@@ -199,19 +212,25 @@ public class AdminRewardManagementActivity extends AppCompatActivity implements 
     // Implement OnRewardActionListener interface
     @Override
     public void onEditClick(RewardItem reward, int position) {
-        Toast.makeText(this, "Sửa: " + reward.getName(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), "Sửa: " + reward.getName(), Toast.LENGTH_SHORT).show();
         // TODO: Open edit dialog
     }
 
     @Override
     public void onPauseClick(RewardItem reward, int position) {
-        Toast.makeText(this, "Tạm ngưng: " + reward.getName(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), "Tạm ngưng: " + reward.getName(), Toast.LENGTH_SHORT).show();
         // TODO: Toggle pause status
     }
 
     @Override
     public void onDeleteClick(RewardItem reward, int position) {
-        Toast.makeText(this, "Xóa: " + reward.getName(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), "Xóa: " + reward.getName(), Toast.LENGTH_SHORT).show();
         // TODO: Show confirmation dialog and delete
+    }
+    
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
     }
 }

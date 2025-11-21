@@ -1,15 +1,19 @@
-package com.manhhuy.myapplication.ui.Activities;
+package com.manhhuy.myapplication.ui.Activities.Fragment;
 
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.manhhuy.myapplication.R;
@@ -24,8 +28,7 @@ import com.manhhuy.myapplication.model.User;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserManagementActivity extends AppCompatActivity
-        implements OnUserActionListener, OnOrganizationActionListener {
+public class AdminUserFragment extends Fragment implements OnUserActionListener, OnOrganizationActionListener {
 
     private ActivityUserManagementBinding binding;
     private UserAdapter userAdapter;
@@ -40,12 +43,20 @@ public class UserManagementActivity extends AppCompatActivity
     private String currentOrgFilter = "Tất cả";
     private boolean isUsersTab = true;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        binding = ActivityUserManagementBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
+    public AdminUserFragment() {
+        // Required empty public constructor
+    }
 
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        binding = ActivityUserManagementBinding.inflate(inflater, container, false);
+        return binding.getRoot();
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         setupRecyclerView();
         loadSampleData();
         setupListeners();
@@ -55,12 +66,12 @@ public class UserManagementActivity extends AppCompatActivity
     private void setupRecyclerView() {
         // Setup User RecyclerView
         userAdapter = new UserAdapter(filteredUserList, this);
-        binding.rvUserList.setLayoutManager(new LinearLayoutManager(this));
+        binding.rvUserList.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.rvUserList.setAdapter(userAdapter);
 
         // Setup Organization RecyclerView
         organizationAdapter = new OrganizationAdapter(filteredOrgList, this);
-        binding.rvOrgList.setLayoutManager(new LinearLayoutManager(this));
+        binding.rvOrgList.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.rvOrgList.setAdapter(organizationAdapter);
     }
 
@@ -135,7 +146,7 @@ public class UserManagementActivity extends AppCompatActivity
     }
 
     private void setupListeners() {
-        binding.btnBack.setOnClickListener(v -> finish());
+        binding.btnBack.setVisibility(View.GONE); // Hide back button in fragment
 
         // Tab click listeners
         binding.tabUsers.setOnClickListener(v -> switchToUsersTab());
@@ -226,28 +237,28 @@ public class UserManagementActivity extends AppCompatActivity
         if (isUsersTab) {
             // Users tab active
             binding.tabUsers.setBackgroundResource(R.drawable.bg_button_white_solid);
-            ((ImageView) binding.tabUsers.getChildAt(0)).setColorFilter(getColor(R.color.app_green_primary));
-            ((TextView) binding.tabUsers.getChildAt(1)).setTextColor(getColor(R.color.app_green_primary));
+            ((ImageView) binding.tabUsers.getChildAt(0)).setColorFilter(getResources().getColor(R.color.app_green_primary));
+            ((TextView) binding.tabUsers.getChildAt(1)).setTextColor(getResources().getColor(R.color.app_green_primary));
 
             // Organizations tab inactive
             binding.tabOrganizations.setBackgroundResource(android.R.color.transparent);
-            ((ImageView) binding.tabOrganizations.getChildAt(0)).setColorFilter(getColor(R.color.white));
+            ((ImageView) binding.tabOrganizations.getChildAt(0)).setColorFilter(getResources().getColor(R.color.white));
             ((ImageView) binding.tabOrganizations.getChildAt(0)).setAlpha(0.8f);
-            ((TextView) binding.tabOrganizations.getChildAt(1)).setTextColor(getColor(R.color.white));
+            ((TextView) binding.tabOrganizations.getChildAt(1)).setTextColor(getResources().getColor(R.color.white));
             ((TextView) binding.tabOrganizations.getChildAt(1)).setAlpha(0.8f);
         } else {
             // Organizations tab active
             binding.tabOrganizations.setBackgroundResource(R.drawable.bg_button_white_solid);
-            ((ImageView) binding.tabOrganizations.getChildAt(0)).setColorFilter(getColor(R.color.app_green_primary));
+            ((ImageView) binding.tabOrganizations.getChildAt(0)).setColorFilter(getResources().getColor(R.color.app_green_primary));
             ((ImageView) binding.tabOrganizations.getChildAt(0)).setAlpha(1.0f);
-            ((TextView) binding.tabOrganizations.getChildAt(1)).setTextColor(getColor(R.color.app_green_primary));
+            ((TextView) binding.tabOrganizations.getChildAt(1)).setTextColor(getResources().getColor(R.color.app_green_primary));
             ((TextView) binding.tabOrganizations.getChildAt(1)).setAlpha(1.0f);
 
             // Users tab inactive
             binding.tabUsers.setBackgroundResource(android.R.color.transparent);
-            ((ImageView) binding.tabUsers.getChildAt(0)).setColorFilter(getColor(R.color.white));
+            ((ImageView) binding.tabUsers.getChildAt(0)).setColorFilter(getResources().getColor(R.color.white));
             ((ImageView) binding.tabUsers.getChildAt(0)).setAlpha(0.8f);
-            ((TextView) binding.tabUsers.getChildAt(1)).setTextColor(getColor(R.color.white));
+            ((TextView) binding.tabUsers.getChildAt(1)).setTextColor(getResources().getColor(R.color.white));
             ((TextView) binding.tabUsers.getChildAt(1)).setAlpha(0.8f);
         }
     }
@@ -263,7 +274,7 @@ public class UserManagementActivity extends AppCompatActivity
 
         // Highlight button được chọn
         selectedButton.setBackgroundResource(R.drawable.bg_filter_selected);
-        selectedButton.setTextColor(getColor(R.color.white));
+        selectedButton.setTextColor(getResources().getColor(R.color.white));
 
         // Apply filter
         filterUsers(binding.etSearch.getText().toString());
@@ -279,7 +290,7 @@ public class UserManagementActivity extends AppCompatActivity
 
         // Highlight selected button
         selectedButton.setBackgroundResource(R.drawable.bg_filter_selected);
-        selectedButton.setTextColor(getColor(R.color.white));
+        selectedButton.setTextColor(getResources().getColor(R.color.white));
 
         // Apply filter
         filterOrganizations(binding.etOrgSearch.getText().toString());
@@ -287,7 +298,7 @@ public class UserManagementActivity extends AppCompatActivity
 
     private void resetFilterButton(TextView button) {
         button.setBackgroundResource(R.drawable.bg_filter_unselected);
-        button.setTextColor(getColor(R.color.text_secondary));
+        button.setTextColor(getResources().getColor(R.color.text_secondary));
     }
 
     private void filterUsers(String searchText) {
@@ -364,7 +375,7 @@ public class UserManagementActivity extends AppCompatActivity
 
     @Override
     public void onViewClick(User user) {
-        Toast.makeText(this, "Xem chi tiết: " + user.getName(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), "Xem chi tiết: " + user.getName(), Toast.LENGTH_SHORT).show();
         // TODO: Implement view user details
     }
 
@@ -372,7 +383,7 @@ public class UserManagementActivity extends AppCompatActivity
     public void onLockUnlockClick(User user) {
         String action = user.getStatus().equals("Bị khóa") ? "mở khóa" : "khóa";
 
-        new AlertDialog.Builder(this)
+        new AlertDialog.Builder(requireContext())
                 .setTitle("Xác nhận")
                 .setMessage("Bạn có chắc muốn " + action + " tài khoản " + user.getName() + "?")
                 .setPositiveButton("Đồng ý", (dialog, which) -> {
@@ -384,7 +395,7 @@ public class UserManagementActivity extends AppCompatActivity
                     }
                     userAdapter.notifyDataSetChanged();
                     updateStatistics();
-                    Toast.makeText(this, "Đã " + action + " tài khoản", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Đã " + action + " tài khoản", Toast.LENGTH_SHORT).show();
                 })
                 .setNegativeButton("Hủy", null)
                 .show();
@@ -392,7 +403,7 @@ public class UserManagementActivity extends AppCompatActivity
 
     @Override
     public void onDeleteClick(User user) {
-        new AlertDialog.Builder(this)
+        new AlertDialog.Builder(requireContext())
                 .setTitle("Xác nhận xóa")
                 .setMessage("Bạn có chắc muốn xóa tài khoản " + user.getName() + "? Hành động này không thể hoàn tác.")
                 .setPositiveButton("Xóa", (dialog, which) -> {
@@ -400,7 +411,7 @@ public class UserManagementActivity extends AppCompatActivity
                     filteredUserList.remove(user);
                     userAdapter.notifyDataSetChanged();
                     updateStatistics();
-                    Toast.makeText(this, "Đã xóa tài khoản", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Đã xóa tài khoản", Toast.LENGTH_SHORT).show();
                 })
                 .setNegativeButton("Hủy", null)
                 .show();
@@ -408,13 +419,13 @@ public class UserManagementActivity extends AppCompatActivity
 
     @Override
     public void onViewClick(Organization organization) {
-        Toast.makeText(this, "Xem chi tiết: " + organization.getName(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), "Xem chi tiết: " + organization.getName(), Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onLockUnlockClick(Organization organization) {
         String action = organization.getStatus().equals("Bị khóa") ? "mở khóa" : "khóa";
-        new AlertDialog.Builder(this)
+        new AlertDialog.Builder(requireContext())
                 .setTitle("Xác nhận")
                 .setMessage("Bạn có chắc muốn " + action + " tổ chức " + organization.getName() + "?")
                 .setPositiveButton("Đồng ý", (dialog, which) -> {
@@ -426,7 +437,7 @@ public class UserManagementActivity extends AppCompatActivity
                     }
                     organizationAdapter.notifyDataSetChanged();
                     updateStatistics();
-                    Toast.makeText(this, "Đã " + action + " tổ chức", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Đã " + action + " tổ chức", Toast.LENGTH_SHORT).show();
                 })
                 .setNegativeButton("Hủy", null)
                 .show();
@@ -434,7 +445,7 @@ public class UserManagementActivity extends AppCompatActivity
 
     @Override
     public void onDeleteClick(Organization organization) {
-        new AlertDialog.Builder(this)
+        new AlertDialog.Builder(requireContext())
                 .setTitle("Xác nhận xóa")
                 .setMessage("Bạn có chắc muốn xóa tổ chức " + organization.getName() + "?")
                 .setPositiveButton("Xóa", (dialog, which) -> {
@@ -442,9 +453,15 @@ public class UserManagementActivity extends AppCompatActivity
                     filteredOrgList.remove(organization);
                     organizationAdapter.notifyDataSetChanged();
                     updateStatistics();
-                    Toast.makeText(this, "Đã xóa tổ chức", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Đã xóa tổ chức", Toast.LENGTH_SHORT).show();
                 })
                 .setNegativeButton("Hủy", null)
                 .show();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
     }
 }

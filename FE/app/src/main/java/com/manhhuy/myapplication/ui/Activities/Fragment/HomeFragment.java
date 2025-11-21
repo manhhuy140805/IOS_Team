@@ -1,5 +1,6 @@
 package com.manhhuy.myapplication.ui.Activities.Fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,7 @@ import com.manhhuy.myapplication.R;
 import com.manhhuy.myapplication.adapter.SearchResultAdapter;
 import com.manhhuy.myapplication.databinding.FragmentHomeBinding;
 import com.manhhuy.myapplication.model.SearchResult;
+import com.manhhuy.myapplication.ui.Activities.DetailEventActivity;
 import com.manhhuy.myapplication.ui.Activities.HomeActivity;
 
 import java.util.ArrayList;
@@ -26,6 +28,7 @@ public class HomeFragment extends Fragment {
     private SearchResultAdapter featuredAdapter;
 
     public HomeFragment() {
+        // Required empty public constructor
     }
 
     public static HomeFragment newInstance() {
@@ -83,8 +86,8 @@ public class HomeFragment extends Fragment {
         binding.eventsRecyclerView.setAdapter(featuredAdapter);
         
         featuredAdapter.setListener(result -> {
-            Toast.makeText(getContext(), "Đã chọn: " + result.getTitle(), Toast.LENGTH_SHORT).show();
-            // TODO: Navigate to detail page
+            Intent intent = new Intent(getContext(), DetailEventActivity.class);
+            startActivity(intent);
         });
     }
 

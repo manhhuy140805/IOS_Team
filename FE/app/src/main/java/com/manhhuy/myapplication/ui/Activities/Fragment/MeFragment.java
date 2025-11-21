@@ -1,6 +1,8 @@
 package com.manhhuy.myapplication.ui.Activities.Fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -12,18 +14,19 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.manhhuy.myapplication.databinding.FragmentMeBinding;
+import com.manhhuy.myapplication.ui.Activities.CertificateActivity;
 
 import java.util.Locale;
 
 public class MeFragment extends Fragment {
 
+    private static final String TAG = "MeFragment";
     private FragmentMeBinding binding;
 
     // Fake user data matching the User entity
     private String fullName = "Hiếu Võ Lập Trình";
     private String email = "vndhieuak@gmail.com";
     private String phone = "+84 987 654 321";
-// Using default icon
     private String role = "VOLUNTEER"; // VOLUNTEER, ORGANIZER, ADMIN
     private String status = "ACTIVE"; // ACTIVE, LOCKED, PENDING
     private int eventsParticipated = 12;
@@ -69,10 +72,6 @@ public class MeFragment extends Fragment {
         // Set statistics
         binding.tvEventsCount.setText(String.valueOf(eventsParticipated));
         binding.tvPointsCount.setText(String.format(Locale.getDefault(), "%,d", pointsEarned));
-
-        // If we have avatar URL, we would load it with Glide or Picasso here
-        // For now, using default drawable
-        // TODO: Load avatar with Glide.with(this).load(avatarUrl).into(binding.ivAvatar);
     }
 
     private String getRoleText(String role) {
@@ -92,49 +91,47 @@ public class MeFragment extends Fragment {
         // Settings button
         binding.ivSettings.setOnClickListener(v -> {
             Toast.makeText(getContext(), "Cài đặt", Toast.LENGTH_SHORT).show();
-            // Navigate to settings screen
         });
 
         // My Events
         binding.cardMyEvents.setOnClickListener(v -> {
             Toast.makeText(getContext(), "Sự kiện của tôi", Toast.LENGTH_SHORT).show();
-            // Navigate to my events screen
         });
 
-        // My Certificates
-        binding.cardMyCertificates.setOnClickListener(v -> {
-            Toast.makeText(getContext(), "Chứng chỉ của tôi", Toast.LENGTH_SHORT).show();
-            // Navigate to certificates screen
+        binding.layoutMyCertificates.setOnClickListener(v -> {
+            try {
+                if (getActivity() != null) {
+                    Intent intent = new Intent(getActivity(), CertificateActivity.class);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(getContext(), "Lỗi: Activity không khả dụng", Toast.LENGTH_SHORT).show();
+                }
+            } catch (Exception e) {
+                Log.e(TAG, "Error starting CertificateActivity", e);
+                Toast.makeText(getContext(), "Lỗi: " + e.getMessage(), Toast.LENGTH_LONG).show();
+            }
         });
 
         // My Rewards
         binding.cardMyRewards.setOnClickListener(v -> {
             Toast.makeText(getContext(), "Phần thưởng của tôi", Toast.LENGTH_SHORT).show();
-            // Navigate to rewards screen
         });
 
         // Edit Profile
         binding.cardEditProfile.setOnClickListener(v -> {
             Toast.makeText(getContext(), "Chỉnh sửa hồ sơ", Toast.LENGTH_SHORT).show();
-            // Navigate to edit profile screen
         });
 
         // Logout
         binding.cardLogout.setOnClickListener(v -> {
             Toast.makeText(getContext(), "Đăng xuất", Toast.LENGTH_SHORT).show();
-            // Show confirmation dialog and logout
             handleLogout();
         });
     }
 
     private void handleLogout() {
-        // TODO: Clear session, navigate to login screen
-        // For now, just show a message
         if (getActivity() != null) {
-            // Clear any stored tokens/session
-            // Intent intent = new Intent(getActivity(), LoginActivity.class);
-            // intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            // startActivity(intent);
+            // TODO: Clear session and navigate to login
         }
     }
 

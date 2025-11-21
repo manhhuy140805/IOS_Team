@@ -1,9 +1,14 @@
-package com.manhhuy.myapplication.ui.Activities;
+package com.manhhuy.myapplication.ui.Activities.Fragment;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.manhhuy.myapplication.R;
@@ -17,7 +22,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-public class AdminApprovePostsActivity extends AppCompatActivity implements OnItemClickListenerInterface {
+public class AdminApprovePostsFragment extends Fragment implements OnItemClickListenerInterface {
 
     private ActivityAdminApprovePostsBinding binding;
     private EventPostAdapter adapter;
@@ -26,31 +31,40 @@ public class AdminApprovePostsActivity extends AppCompatActivity implements OnIt
     
     private String currentFilter = "all";
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        binding = ActivityAdminApprovePostsBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
+    public AdminApprovePostsFragment() {
+        // Required empty public constructor
+    }
 
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        binding = ActivityAdminApprovePostsBinding.inflate(inflater, container, false);
+        return binding.getRoot();
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         setupRecyclerView();
         loadSampleData();
         setupListeners();
     }
 
     private void setupRecyclerView() {
-        binding.recyclerViewPosts.setLayoutManager(new LinearLayoutManager(this));
+        binding.recyclerViewPosts.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new EventPostAdapter(new ArrayList<>(), this);
         binding.recyclerViewPosts.setAdapter(adapter);
     }
 
     private void setupListeners() {
-        binding.btnBack.setOnClickListener(v -> finish());
+        // Hide back button in fragment
+        binding.btnBack.setVisibility(View.GONE);
 
         binding.btnMenu.setOnClickListener(v ->
-            Toast.makeText(this, "Menu", Toast.LENGTH_SHORT).show());
+            Toast.makeText(getContext(), "Menu", Toast.LENGTH_SHORT).show());
         
         binding.btnLoadMore.setOnClickListener(v ->
-            Toast.makeText(this, "Đang tải thêm...", Toast.LENGTH_SHORT).show());
+            Toast.makeText(getContext(), "Đang tải thêm...", Toast.LENGTH_SHORT).show());
         
         // Tab listeners
         binding.tabAll.setOnClickListener(v -> filterPosts("all"));
@@ -184,15 +198,13 @@ public class AdminApprovePostsActivity extends AppCompatActivity implements OnIt
         }
     }
 
-
-
     @Override
     public void onApproveClick(EventPost post, int position) {
         post.setStatus("approved");
         post.setReviewedBy("Admin Hòa");
         post.setReviewedTime("Vừa xong");
         adapter.notifyItemChanged(position);
-        Toast.makeText(this, "Đã duyệt: " + post.getTitle(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), "Đã duyệt: " + post.getTitle(), Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -202,22 +214,28 @@ public class AdminApprovePostsActivity extends AppCompatActivity implements OnIt
         post.setReviewedTime("Vừa xong");
         post.setRejectionReason("Thông tin không đầy đủ");
         adapter.notifyItemChanged(position);
-        Toast.makeText(this, "Đã từ chối: " + post.getTitle(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), "Đã từ chối: " + post.getTitle(), Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onStatisticsClick(EventPost post, int position) {
-        Toast.makeText(this, "Xem thống kê: " + post.getTitle(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), "Xem thống kê: " + post.getTitle(), Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onEditClick(EventPost post, int position) {
-        Toast.makeText(this, "Chỉnh sửa: " + post.getTitle(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), "Chỉnh sửa: " + post.getTitle(), Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onReviewClick(EventPost post, int position) {
-        Toast.makeText(this, "Xem lại bài đăng: " + post.getTitle(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), "Xem lại bài đăng: " + post.getTitle(), Toast.LENGTH_SHORT).show();
         // TODO: Implement review dialog or navigate to detail screen
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
     }
 }

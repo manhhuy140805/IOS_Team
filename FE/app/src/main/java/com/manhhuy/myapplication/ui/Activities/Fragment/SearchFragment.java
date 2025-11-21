@@ -1,5 +1,6 @@
 package com.manhhuy.myapplication.ui.Activities.Fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -17,6 +18,7 @@ import com.manhhuy.myapplication.R;
 import com.manhhuy.myapplication.adapter.SearchResultAdapter;
 import com.manhhuy.myapplication.databinding.FragmentSearchBinding;
 import com.manhhuy.myapplication.model.SearchResult;
+import com.manhhuy.myapplication.ui.Activities.DetailEventActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,8 +63,8 @@ public class SearchFragment extends Fragment {
         binding.searchResultsRecyclerView.setAdapter(adapter);
 
         adapter.setListener(result -> {
-            Toast.makeText(getContext(), "Đã chọn: " + result.getTitle(), Toast.LENGTH_SHORT).show();
-            // TODO: Navigate to detail page
+            Intent intent = new Intent(getContext(), DetailEventActivity.class);
+            startActivity(intent);
         });
     }
 

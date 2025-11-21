@@ -1,10 +1,15 @@
-package com.manhhuy.myapplication.ui.Activities;
+package com.manhhuy.myapplication.ui.Activities.Fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.manhhuy.myapplication.R;
@@ -12,13 +17,15 @@ import com.manhhuy.myapplication.adapter.admin.event.EventManagerAdapter;
 import com.manhhuy.myapplication.adapter.admin.event.OnEventActionListener;
 import com.manhhuy.myapplication.databinding.ActivityEventManagerBinding;
 import com.manhhuy.myapplication.model.EventPost;
+import com.manhhuy.myapplication.ui.Activities.AddEventActivity;
+import com.manhhuy.myapplication.ui.Activities.DetailEventActivity;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
-public class AdminEventManagerActivity extends AppCompatActivity implements OnEventActionListener {
+public class AdminEventFragment extends Fragment implements OnEventActionListener {
 
     private ActivityEventManagerBinding binding;
     private EventManagerAdapter adapter;
@@ -27,12 +34,20 @@ public class AdminEventManagerActivity extends AppCompatActivity implements OnEv
     private String currentStatusFilter = "all";
     private String currentCategoryFilter = "all";
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        binding = ActivityEventManagerBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
+    public AdminEventFragment() {
+        // Required empty public constructor
+    }
 
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        binding = ActivityEventManagerBinding.inflate(inflater, container, false);
+        return binding.getRoot();
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         setupRecyclerView();
         loadSampleData();
         setupListeners();
@@ -41,18 +56,18 @@ public class AdminEventManagerActivity extends AppCompatActivity implements OnEv
 
     private void setupRecyclerView() {
         eventList = new ArrayList<>();
-        adapter = new EventManagerAdapter(this, eventList, this);
-        binding.recyclerViewEvents.setLayoutManager(new LinearLayoutManager(this));
+        adapter = new EventManagerAdapter(getContext(), eventList, this);
+        binding.recyclerViewEvents.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.recyclerViewEvents.setAdapter(adapter);
     }
 
     private void setupListeners() {
-        // Back button
-        binding.btnBack.setOnClickListener(v -> finish());
+        // Back button - Hide in fragment
+        binding.btnBack.setVisibility(View.GONE);
 
         // Add New Event Button
         binding.btnAddReward.setOnClickListener(v -> {
-            Intent intent = new Intent(this, AddEventActivity.class);
+            Intent intent = new Intent(getContext(), AddEventActivity.class);
             startActivity(intent);
         });
 
@@ -99,14 +114,14 @@ public class AdminEventManagerActivity extends AppCompatActivity implements OnEv
 
     @Override
     public void onViewClick(EventPost event) {
-        Intent intent = new Intent(this, DetailEventActivity.class);
+        Intent intent = new Intent(getContext(), DetailEventActivity.class);
         intent.putExtra("EVENT_ID", event.getId());
         startActivity(intent);
     }
 
     @Override
     public void onEditClick(EventPost event) {
-        Intent intent = new Intent(this, AddEventActivity.class); // Reusing AddEvent for Edit
+        Intent intent = new Intent(getContext(), AddEventActivity.class); // Reusing AddEvent for Edit
         intent.putExtra("EVENT_ID", event.getId());
         intent.putExtra("IS_EDIT_MODE", true);
         startActivity(intent);
@@ -115,7 +130,7 @@ public class AdminEventManagerActivity extends AppCompatActivity implements OnEv
     @Override
     public void onDeleteClick(EventPost event) {
         // Show confirmation dialog here in real app
-        Toast.makeText(this, "Đã xóa sự kiện: " + event.getTitle(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), "Đã xóa sự kiện: " + event.getTitle(), Toast.LENGTH_SHORT).show();
         // Remove from list and update adapter
         // eventList.remove(event);
         // adapter.notifyDataSetChanged();
@@ -258,5 +273,11 @@ public class AdminEventManagerActivity extends AppCompatActivity implements OnEv
         allEvents.add(event4);
 
         return allEvents;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
     }
 }
