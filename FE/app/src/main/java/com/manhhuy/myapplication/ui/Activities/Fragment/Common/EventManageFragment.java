@@ -1,5 +1,5 @@
-package com.manhhuy.myapplication.ui.Activities.Fragment.Admin;
 
+package com.manhhuy.myapplication.ui.Activities.Fragment.Common;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -15,7 +15,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.manhhuy.myapplication.R;
 import com.manhhuy.myapplication.adapter.admin.event.EventManagerAdapter;
 import com.manhhuy.myapplication.adapter.admin.event.OnEventActionListener;
-import com.manhhuy.myapplication.databinding.ActivityEventManagerBinding;
+
+import com.manhhuy.myapplication.databinding.FragmentEventManagerBinding;
 import com.manhhuy.myapplication.model.EventPost;
 import com.manhhuy.myapplication.ui.Activities.AddEventActivity;
 import com.manhhuy.myapplication.ui.Activities.DetailEventActivity;
@@ -25,23 +26,23 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
-public class AdminEventFragment extends Fragment implements OnEventActionListener {
+public class EventManageFragment extends Fragment implements OnEventActionListener {
 
-    private ActivityEventManagerBinding binding;
+    private FragmentEventManagerBinding binding;
     private EventManagerAdapter adapter;
     private List<EventPost> eventList;
 
     private String currentStatusFilter = "all";
     private String currentCategoryFilter = "all";
 
-    public AdminEventFragment() {
+    public EventManageFragment() {
         // Required empty public constructor
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        binding = ActivityEventManagerBinding.inflate(inflater, container, false);
+        binding = FragmentEventManagerBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
 

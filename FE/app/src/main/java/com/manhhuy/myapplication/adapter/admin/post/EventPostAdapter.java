@@ -25,11 +25,19 @@ public class EventPostAdapter extends RecyclerView.Adapter<EventPostAdapter.View
         this.eventPosts = eventPosts;
         this.listener = listener;
     }
+    static class ViewHolder extends RecyclerView.ViewHolder {
+        ItemEventPostBinding binding;
 
+        ViewHolder(ItemEventPostBinding binding) {
+            super(binding.getRoot());
+            this.binding = binding;
+        }
+    }
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         ItemEventPostBinding binding = ItemEventPostBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+//        View view = inflater.inflate(R.layout.item_event_post, parent, false); // vì khai báo trong recycle view rồi nên có thể làm theo cách ở trên
         return new ViewHolder(binding);
     }
 
@@ -106,7 +114,7 @@ public class EventPostAdapter extends RecyclerView.Adapter<EventPostAdapter.View
             holder.binding.tvPostedInfo.setText(rejectedInfo);
         }
         
-        // Set click listeners
+        // gọi ngược lên fragment
         holder.binding.btnApprove.setOnClickListener(v -> {
             if (listener != null) {
                 listener.onApproveClick(post, position);
@@ -148,12 +156,5 @@ public class EventPostAdapter extends RecyclerView.Adapter<EventPostAdapter.View
         notifyDataSetChanged();
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
-        ItemEventPostBinding binding;
 
-        ViewHolder(ItemEventPostBinding binding) {
-            super(binding.getRoot());
-            this.binding = binding;
-        }
-    }
 }

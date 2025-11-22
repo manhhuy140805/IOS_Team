@@ -1,9 +1,11 @@
 package com.manhhuy.myapplication.ui.Activities.Fragment.Admin;
 
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -14,7 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.manhhuy.myapplication.R;
 import com.manhhuy.myapplication.adapter.admin.post.EventPostAdapter;
 import com.manhhuy.myapplication.adapter.admin.post.OnItemClickListenerInterface;
-import com.manhhuy.myapplication.databinding.ActivityAdminApprovePostsBinding;
+import com.manhhuy.myapplication.databinding.FragmentAdminApprovePostsBinding;
 import com.manhhuy.myapplication.model.EventPost;
 
 import java.util.ArrayList;
@@ -24,11 +26,11 @@ import java.util.List;
 
 public class AdminApprovePostsFragment extends Fragment implements OnItemClickListenerInterface {
 
-    private ActivityAdminApprovePostsBinding binding;
+    private FragmentAdminApprovePostsBinding binding;
     private EventPostAdapter adapter;
     private List<EventPost> allPosts;
     private List<EventPost> filteredPosts;
-    
+
     private String currentFilter = "all";
 
     public AdminApprovePostsFragment() {
@@ -38,7 +40,7 @@ public class AdminApprovePostsFragment extends Fragment implements OnItemClickLi
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        binding = ActivityAdminApprovePostsBinding.inflate(inflater, container, false);
+        binding = FragmentAdminApprovePostsBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
 
@@ -61,11 +63,11 @@ public class AdminApprovePostsFragment extends Fragment implements OnItemClickLi
         binding.btnBack.setVisibility(View.GONE);
 
         binding.btnMenu.setOnClickListener(v ->
-            Toast.makeText(getContext(), "Menu", Toast.LENGTH_SHORT).show());
-        
+                Toast.makeText(getContext(), "Menu", Toast.LENGTH_SHORT).show());
+
         binding.btnLoadMore.setOnClickListener(v ->
-            Toast.makeText(getContext(), "Đang tải thêm...", Toast.LENGTH_SHORT).show());
-        
+                Toast.makeText(getContext(), "Đang tải thêm...", Toast.LENGTH_SHORT).show());
+
         // Tab listeners
         binding.tabAll.setOnClickListener(v -> filterPosts("all"));
         binding.tabPending.setOnClickListener(v -> filterPosts("pending"));
@@ -75,7 +77,7 @@ public class AdminApprovePostsFragment extends Fragment implements OnItemClickLi
 
     private void loadSampleData() {
         allPosts = new ArrayList<>();
-        
+
         // Sample pending post 1
         EventPost post1 = new EventPost();
         post1.setId(1);
@@ -91,7 +93,7 @@ public class AdminApprovePostsFragment extends Fragment implements OnItemClickLi
         post1.setPostedTime("2 giờ trước");
         post1.setStatus("pending");
         allPosts.add(post1);
-        
+
         // Sample approved post
         EventPost post2 = new EventPost();
         post2.setId(2);
@@ -109,7 +111,7 @@ public class AdminApprovePostsFragment extends Fragment implements OnItemClickLi
         post2.setReviewedBy("Admin Hòa");
         post2.setReviewedTime("1 ngày trước");
         allPosts.add(post2);
-        
+
         // Sample pending post 2
         EventPost post3 = new EventPost();
         post3.setId(3);
@@ -125,7 +127,7 @@ public class AdminApprovePostsFragment extends Fragment implements OnItemClickLi
         post3.setPostedTime("5 giờ trước");
         post3.setStatus("pending");
         allPosts.add(post3);
-        
+
         // Sample rejected post
         EventPost post4 = new EventPost();
         post4.setId(4);
@@ -144,16 +146,16 @@ public class AdminApprovePostsFragment extends Fragment implements OnItemClickLi
         post4.setReviewedTime("3 ngày trước");
         post4.setRejectionReason("Thông tin không đầy đủ, thiếu địa chỉ cụ thể và thời gian");
         allPosts.add(post4);
-        
+
         filterPosts("all");
     }
 
     private void filterPosts(String filter) {
         currentFilter = filter;
-        
+
         // Update tab UI
         updateTabUI();
-        
+
         // Filter posts based on status
         filteredPosts = new ArrayList<>();
         for (EventPost post : allPosts) {
@@ -161,41 +163,47 @@ public class AdminApprovePostsFragment extends Fragment implements OnItemClickLi
                 filteredPosts.add(post);
             }
         }
-        
+
         // Update adapter with filtered data
         adapter.updateData(filteredPosts);
     }
 
     private void updateTabUI() {
-        // Reset all tabs to default state
-        binding.tabAll.setBackgroundResource(R.drawable.tab_unselected);
-        binding.tabAll.setTextColor(getResources().getColor(android.R.color.darker_gray));
-        binding.tabPending.setBackgroundResource(R.drawable.tab_unselected);
-        binding.tabPending.setTextColor(getResources().getColor(android.R.color.darker_gray));
-        binding.tabApproved.setBackgroundResource(R.drawable.tab_unselected);
-        binding.tabApproved.setTextColor(getResources().getColor(android.R.color.darker_gray));
-        binding.tabRejected.setBackgroundResource(R.drawable.tab_unselected);
-        binding.tabRejected.setTextColor(getResources().getColor(android.R.color.darker_gray));
+        // Style mặc định: tab không được chọn
+        styleTabUnselected(binding.tabAll);
+        styleTabUnselected(binding.tabPending);
+        styleTabUnselected(binding.tabApproved);
+        styleTabUnselected(binding.tabRejected);
 
-        // Highlight the selected tab
+        // Gắn style cho tab đang được chọn
         switch (currentFilter) {
             case "all":
-                binding.tabAll.setBackgroundResource(R.drawable.tab_selected);
-                binding.tabAll.setTextColor(getResources().getColor(android.R.color.white));
+                styleTabSelected(binding.tabAll);
                 break;
             case "pending":
-                binding.tabPending.setBackgroundResource(R.drawable.tab_selected);
-                binding.tabPending.setTextColor(getResources().getColor(android.R.color.white));
+                styleTabSelected(binding.tabPending);
                 break;
             case "approved":
-                binding.tabApproved.setBackgroundResource(R.drawable.tab_selected);
-                binding.tabApproved.setTextColor(getResources().getColor(android.R.color.white));
+                styleTabSelected(binding.tabApproved);
                 break;
             case "rejected":
-                binding.tabRejected.setBackgroundResource(R.drawable.tab_selected);
-                binding.tabRejected.setTextColor(getResources().getColor(android.R.color.white));
+                styleTabSelected(binding.tabRejected);
                 break;
         }
+    }
+
+    private void styleTabSelected(TextView tab) {
+        tab.setBackgroundResource(R.drawable.bg_button_white_solid);
+        tab.setTextColor(getResources().getColor(R.color.app_green_primary));
+        tab.setAlpha(1f);
+        tab.setTypeface(tab.getTypeface(), Typeface.BOLD);
+    }
+
+    private void styleTabUnselected(TextView tab) {
+        tab.setBackgroundResource(R.drawable.bg_category_tab_unselected_reward);
+        tab.setTextColor(getResources().getColor(R.color.app_green_primary));
+        tab.setAlpha(0.8f);
+        tab.setTypeface(tab.getTypeface(), Typeface.NORMAL);
     }
 
     @Override

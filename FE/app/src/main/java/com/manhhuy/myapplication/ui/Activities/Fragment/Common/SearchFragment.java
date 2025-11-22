@@ -19,6 +19,7 @@ import com.manhhuy.myapplication.adapter.SearchResultAdapter;
 import com.manhhuy.myapplication.databinding.FragmentSearchBinding;
 import com.manhhuy.myapplication.model.SearchResult;
 import com.manhhuy.myapplication.ui.Activities.DetailEventActivity;
+import com.manhhuy.myapplication.ui.Activities.MainActivity;
 
 import java.util.ArrayList;
 import java.util.List;

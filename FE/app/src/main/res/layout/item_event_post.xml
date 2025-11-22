@@ -27,7 +27,7 @@
                 android:layout_height="match_parent"
                 android:contentDescription="Event Image"
                 android:scaleType="centerCrop"
-                android:src="@drawable/ic_launcher_background"/>
+                android:src="@drawable/logokhoa"/>
 
             <!-- Status Badge Overlay -->
             <TextView

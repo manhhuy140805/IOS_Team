@@ -24,7 +24,7 @@
                 android:layout_height="match_parent"
                 android:scaleType="centerCrop"
                 android:contentDescription="@string/app_name"
-                android:src="@drawable/banner_event_default"/>
+                android:src="@drawable/logokhoa"/>
 
             <!-- Compensation Badge -->
             <androidx.cardview.widget.CardView

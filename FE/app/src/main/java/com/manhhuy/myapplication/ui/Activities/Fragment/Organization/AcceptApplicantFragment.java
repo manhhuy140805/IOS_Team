@@ -1,5 +1,4 @@
 package com.manhhuy.myapplication.ui.Activities.Fragment.Organization;
-
 import android.os.Bundle;
 
 import androidx.core.content.ContextCompat;

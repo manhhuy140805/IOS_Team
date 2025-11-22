@@ -29,10 +29,18 @@ public class MainActivity extends AppCompatActivity {
         });
 
         binding.btnSignIn.setOnClickListener(v -> {
-             Intent intent = new Intent(MainActivity.this, HomeActivity.class);
-                startActivity(intent);
+            Intent intent = new Intent(MainActivity.this, HomeActivity.class);
+            startActivity(intent);
         });
 
+        binding.tvForgotPassword.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, ForgotPasswordActivity.class);
+            startActivity(intent);
+        });
+        binding.tvRegisterLink.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, RegisterActivity.class);
+            startActivity(intent);
+        });
     }
 
     @Override

@@ -6,7 +6,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import com.manhhuy.myapplication.ui.Activities.Fragment.Admin.AdminApprovePostsFragment;
-import com.manhhuy.myapplication.ui.Activities.Fragment.Admin.AdminEventFragment;
+import com.manhhuy.myapplication.ui.Activities.Fragment.Common.EventManageFragment;
 import com.manhhuy.myapplication.ui.Activities.Fragment.Admin.AdminRewardFragment;
 import com.manhhuy.myapplication.ui.Activities.Fragment.Admin.AdminUserFragment;
 import com.manhhuy.myapplication.ui.Activities.Fragment.Common.HomeFragment;
@@ -31,7 +31,7 @@ public class HomeAdapter extends FragmentStateAdapter {
                 case 0:
                     return new AdminUserFragment();
                 case 1:
-                    return new AdminEventFragment();
+                    return new EventManageFragment();
                 case 2:
                     return new AdminRewardFragment();
                 case 3:
