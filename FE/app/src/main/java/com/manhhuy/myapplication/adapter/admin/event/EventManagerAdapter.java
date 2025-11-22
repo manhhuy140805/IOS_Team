@@ -80,6 +80,7 @@ public class EventManagerAdapter extends RecyclerView.Adapter<EventManagerAdapte
         }
 
         // Button listeners
+        holder.binding.btnNotification.setOnClickListener(v -> listener.onNotificationClick(event));
         holder.binding.btnView.setOnClickListener(v -> listener.onViewClick(event));
         holder.binding.btnEdit.setOnClickListener(v -> listener.onEditClick(event));
         holder.binding.btnDelete.setOnClickListener(v -> listener.onDeleteClick(event));
