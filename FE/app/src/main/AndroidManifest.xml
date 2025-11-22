@@ -17,10 +17,6 @@
         <activity
             android:name=".ui.Activities.OrganizationActivity"
             android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
 
@@ -34,12 +30,10 @@
         <activity
             android:name=".ui.Activities.SendNotificationActivity"
             android:exported="true">
-
         </activity>
         <activity
             android:name=".ui.Activities.DetailEventActivity"
             android:exported="true">
-
         </activity>
         <activity
             android:name=".ui.Activities.RegisterActivity"
@@ -49,6 +43,10 @@
         <activity
             android:name=".ui.Activities.HomeActivity"
             android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".ui.Activities.MainActivity"
