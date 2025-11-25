@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/bg_header_green_rounded"
-            android:elevation="4dp"
+            android:elevation="8dp"
             android:paddingBottom="60dp">
 
             <!-- Settings Icon -->
@@ -33,7 +33,7 @@
                 app:tint="@color/app_green_primary" />
 
             <!-- Profile Card -->
-            <androidx.cardview.widget.CardView
+            <com.google.android.material.card.MaterialCardView
                 android:id="@+id/profileCard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -41,7 +41,9 @@
                 android:layout_marginTop="60dp"
                 android:layout_marginEnd="16dp"
                 app:cardCornerRadius="16dp"
-                app:cardElevation="4dp">
+                app:cardElevation="10dp"
+                app:strokeWidth="2dp"
+                app:strokeColor="#E0E0E0">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -137,7 +139,7 @@
                         android:textColor="@color/gray_500"
                         android:textSize="11sp" />
                 </LinearLayout>
-            </androidx.cardview.widget.CardView>
+            </com.google.android.material.card.MaterialCardView>
         </RelativeLayout>
 
         <!-- Stats Section -->
@@ -149,13 +151,15 @@
             android:orientation="horizontal">
 
             <!-- Events Participated -->
-            <androidx.cardview.widget.CardView
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:layout_weight="1"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="2dp">
+                app:cardElevation="8dp"
+                app:strokeWidth="2dp"
+                app:strokeColor="#E0E0E0">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -189,16 +193,18 @@
                         android:textColor="@color/app_green_light"
                         android:textSize="12sp" />
                 </LinearLayout>
-            </androidx.cardview.widget.CardView>
+            </com.google.android.material.card.MaterialCardView>
 
             <!-- Points -->
-            <androidx.cardview.widget.CardView
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_weight="1"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="2dp">
+                app:cardElevation="8dp"
+                app:strokeWidth="2dp"
+                app:strokeColor="#E0E0E0">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -232,7 +238,7 @@
                         android:textColor="#FFF3E0"
                         android:textSize="12sp" />
                 </LinearLayout>
-            </androidx.cardview.widget.CardView>
+            </com.google.android.material.card.MaterialCardView>
         </LinearLayout>
 
         <!-- Menu Section Title -->
@@ -255,13 +261,15 @@
             android:orientation="vertical">
 
             <!-- My Events -->
-            <androidx.cardview.widget.CardView
+            <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardMyEvents"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="2dp">
+                app:cardElevation="6dp"
+                app:strokeWidth="1.5dp"
+                app:strokeColor="#E0E0E0">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -316,16 +324,18 @@
                         android:src="@drawable/ic_arrow_right"
                         app:tint="@color/gray_400" />
                 </LinearLayout>
-            </androidx.cardview.widget.CardView>
+            </com.google.android.material.card.MaterialCardView>
 
             <!-- My Certificates -->
-            <androidx.cardview.widget.CardView
+            <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardMyCertificates"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="2dp">
+                app:cardElevation="6dp"
+                app:strokeWidth="1.5dp"
+                app:strokeColor="#E0E0E0">
 
                 <LinearLayout
                     android:id="@+id/layoutMyCertificates"
@@ -381,16 +391,18 @@
                         android:src="@drawable/ic_arrow_right"
                         app:tint="@color/gray_400" />
                 </LinearLayout>
-            </androidx.cardview.widget.CardView>
+            </com.google.android.material.card.MaterialCardView>
 
             <!-- My Rewards -->
-            <androidx.cardview.widget.CardView
+            <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardMyRewards"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="2dp">
+                app:cardElevation="6dp"
+                app:strokeWidth="1.5dp"
+                app:strokeColor="#E0E0E0">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -445,16 +457,18 @@
                         android:src="@drawable/ic_arrow_right"
                         app:tint="@color/gray_400" />
                 </LinearLayout>
-            </androidx.cardview.widget.CardView>
+            </com.google.android.material.card.MaterialCardView>
 
             <!-- Edit Profile -->
-            <androidx.cardview.widget.CardView
+            <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardEditProfile"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="2dp">
+                app:cardElevation="6dp"
+                app:strokeWidth="1.5dp"
+                app:strokeColor="#E0E0E0">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -509,16 +523,18 @@
                         android:src="@drawable/ic_arrow_right"
                         app:tint="@color/gray_400" />
                 </LinearLayout>
-            </androidx.cardview.widget.CardView>
+            </com.google.android.material.card.MaterialCardView>
 
             <!-- Logout -->
-            <androidx.cardview.widget.CardView
+            <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardLogout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="2dp">
+                app:cardElevation="6dp"
+                app:strokeWidth="1.5dp"
+                app:strokeColor="#E0E0E0">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -573,7 +589,7 @@
                         android:src="@drawable/ic_arrow_right"
                         app:tint="@color/gray_400" />
                 </LinearLayout>
-            </androidx.cardview.widget.CardView>
+            </com.google.android.material.card.MaterialCardView>
         </LinearLayout>
 
         <!-- Footer -->

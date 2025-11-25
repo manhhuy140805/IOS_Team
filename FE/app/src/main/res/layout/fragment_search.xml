@@ -19,7 +19,7 @@
         android:paddingEnd="16dp"
         android:paddingTop="16dp"
         android:paddingBottom="24dp"
-        android:elevation="4dp">
+        android:elevation="8dp">
 
         <!-- Back Button & Title -->
         <LinearLayout
@@ -136,14 +136,16 @@
             android:padding="16dp">
 
             <!-- Filter Panel -->
-            <androidx.cardview.widget.CardView
+            <com.google.android.material.card.MaterialCardView
                 android:id="@+id/filterPanel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
                 android:visibility="gone"
                 app:cardCornerRadius="16dp"
-                app:cardElevation="2dp"
+                app:cardElevation="8dp"
+                app:strokeWidth="2dp"
+                app:strokeColor="#E0E0E0"
                 app:cardBackgroundColor="@android:color/white">
 
                 <LinearLayout
@@ -385,7 +387,7 @@
 
                 </LinearLayout>
 
-            </androidx.cardview.widget.CardView>
+            </com.google.android.material.card.MaterialCardView>
 
             <!-- Results Label -->
             <LinearLayout

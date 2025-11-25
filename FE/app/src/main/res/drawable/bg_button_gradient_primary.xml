@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="#20FFFFFF">
+    <item>
+        <layer-list>
+            <!-- Shadow layer 3 (deepest) -->
+            <item
+                android:top="5dp">
+                <shape android:shape="rectangle">
+                    <corners android:radius="14dp"/>
+                    <solid android:color="#25000000"/>
+                </shape>
+            </item>
+
+            <!-- Shadow layer 2 -->
+            <item
+                android:top="3dp"
+                android:bottom="2dp">
+                <shape android:shape="rectangle">
+                    <corners android:radius="14dp"/>
+                    <solid android:color="#35000000"/>
+                </shape>
+            </item>
+
+            <!-- Shadow layer 1 (closest) -->
+            <item
+                android:top="2dp"
+                android:bottom="3dp">
+                <shape android:shape="rectangle">
+                    <corners android:radius="14dp"/>
+                    <solid android:color="#40000000"/>
+                </shape>
+            </item>
+
+            <!-- Border -->
+            <item
+                android:bottom="5dp">
+                <shape android:shape="rectangle">
+                    <corners android:radius="14dp"/>
+                    <solid android:color="#009970"/>
+                </shape>
+            </item>
+
+            <!-- Gradient button -->
+            <item
+                android:bottom="6dp"
+                android:left="1dp"
+                android:right="1dp"
+                android:top="1dp">
+                <shape android:shape="rectangle">
+                    <corners android:radius="13dp"/>
+                    <gradient
+                        android:angle="135"
+                        android:startColor="#00D9A8"
+                        android:centerColor="#00C997"
+                        android:endColor="#00B886"
+                        android:type="linear"/>
+                </shape>
+            </item>
+        </layer-list>
+    </item>
+</ripple>
+

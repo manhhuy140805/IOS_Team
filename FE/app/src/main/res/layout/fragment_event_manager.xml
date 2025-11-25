@@ -14,7 +14,7 @@
         android:orientation="vertical"
         android:background="@drawable/bg_header_green_rounded"
         android:paddingBottom="24dp"
-        android:elevation="4dp"
+        android:elevation="8dp"
         android:outlineProvider="background">
 
         <!-- Title Row -->
@@ -70,13 +70,15 @@
             android:weightSum="3">
 
             <!-- Total Events Card -->
-            <androidx.cardview.widget.CardView
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:layout_marginEnd="8dp"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="0dp"
+                app:cardElevation="6dp"
+                app:strokeWidth="1.5dp"
+                app:strokeColor="#E0E0E0"
                 app:cardBackgroundColor="@color/white">
 
                 <LinearLayout
@@ -105,16 +107,18 @@
 
                 </LinearLayout>
 
-            </androidx.cardview.widget.CardView>
+            </com.google.android.material.card.MaterialCardView>
 
             <!-- Active Events Card -->
-            <androidx.cardview.widget.CardView
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:layout_marginHorizontal="4dp"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="0dp"
+                app:cardElevation="6dp"
+                app:strokeWidth="1.5dp"
+                app:strokeColor="#E0E0E0"
                 app:cardBackgroundColor="@color/white">
 
                 <LinearLayout
@@ -143,16 +147,18 @@
 
                 </LinearLayout>
 
-            </androidx.cardview.widget.CardView>
+            </com.google.android.material.card.MaterialCardView>
 
             <!-- Completed Events Card -->
-            <androidx.cardview.widget.CardView
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:layout_marginStart="8dp"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="0dp"
+                app:cardElevation="6dp"
+                app:strokeWidth="1.5dp"
+                app:strokeColor="#E0E0E0"
                 app:cardBackgroundColor="@color/white">
 
                 <LinearLayout
@@ -181,7 +187,7 @@
 
                 </LinearLayout>
 
-            </androidx.cardview.widget.CardView>
+            </com.google.android.material.card.MaterialCardView>
 
         </LinearLayout>
     </LinearLayout>

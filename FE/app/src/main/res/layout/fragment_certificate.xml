@@ -51,12 +51,14 @@
         </RelativeLayout>
 
         <!-- Success Card -->
-        <androidx.cardview.widget.CardView
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
             app:cardCornerRadius="16dp"
-            app:cardElevation="2dp">
+            app:cardElevation="8dp"
+            app:strokeWidth="2dp"
+            app:strokeColor="#E0E0E0">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -92,15 +94,17 @@
                     android:textColor="@color/app_green_primary"
                     android:textSize="14sp" />
             </LinearLayout>
-        </androidx.cardview.widget.CardView>
+        </com.google.android.material.card.MaterialCardView>
 
         <!-- Certificate Badge Card -->
-        <androidx.cardview.widget.CardView
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
             app:cardCornerRadius="16dp"
-            app:cardElevation="2dp">
+            app:cardElevation="8dp"
+            app:strokeWidth="2dp"
+            app:strokeColor="#E0E0E0">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -135,15 +139,17 @@
                     android:textColor="@color/app_green_primary"
                     android:textSize="14sp" />
             </LinearLayout>
-        </androidx.cardview.widget.CardView>
+        </com.google.android.material.card.MaterialCardView>
 
         <!-- Certificate Details Card -->
-        <androidx.cardview.widget.CardView
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
             app:cardCornerRadius="16dp"
-            app:cardElevation="2dp">
+            app:cardElevation="8dp"
+            app:strokeWidth="2dp"
+            app:strokeColor="#E0E0E0">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -422,15 +428,17 @@
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
-        </androidx.cardview.widget.CardView>
+        </com.google.android.material.card.MaterialCardView>
 
         <!-- QR Code Card -->
-        <androidx.cardview.widget.CardView
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
             app:cardCornerRadius="16dp"
-            app:cardElevation="2dp">
+            app:cardElevation="8dp"
+            app:strokeWidth="2dp"
+            app:strokeColor="#E0E0E0">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -455,15 +463,17 @@
                     android:src="@drawable/qr_code_placeholder"
                     android:contentDescription="QR Code" />
             </LinearLayout>
-        </androidx.cardview.widget.CardView>
+        </com.google.android.material.card.MaterialCardView>
 
         <!-- Points Card -->
-        <androidx.cardview.widget.CardView
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
             app:cardCornerRadius="16dp"
-            app:cardElevation="2dp">
+            app:cardElevation="8dp"
+            app:strokeWidth="2dp"
+            app:strokeColor="#E0E0E0">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -527,7 +537,7 @@
                         android:textStyle="bold" />
                 </LinearLayout>
             </LinearLayout>
-        </androidx.cardview.widget.CardView>
+        </com.google.android.material.card.MaterialCardView>
 
         <!-- Download PDF Button -->
         <androidx.appcompat.widget.AppCompatButton

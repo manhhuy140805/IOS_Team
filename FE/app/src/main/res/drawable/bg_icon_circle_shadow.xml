@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Outer shadow 4 -->
+    <item
+        android:top="7dp">
+        <shape android:shape="oval">
+            <solid android:color="#20000000"/>
+            <size android:width="100dp" android:height="100dp"/>
+        </shape>
+    </item>
+
+    <!-- Outer shadow 3 -->
+    <item
+        android:top="5dp"
+        android:bottom="2dp"
+        android:left="2dp"
+        android:right="2dp">
+        <shape android:shape="oval">
+            <solid android:color="#30000000"/>
+            <size android:width="96dp" android:height="96dp"/>
+        </shape>
+    </item>
+
+    <!-- Outer shadow 2 -->
+    <item
+        android:top="4dp"
+        android:bottom="3dp"
+        android:left="3dp"
+        android:right="3dp">
+        <shape android:shape="oval">
+            <solid android:color="#3800C997"/>
+            <size android:width="94dp" android:height="94dp"/>
+        </shape>
+    </item>
+
+    <!-- Inner shadow -->
+    <item
+        android:top="3dp"
+        android:bottom="4dp"
+        android:left="4dp"
+        android:right="4dp">
+        <shape android:shape="oval">
+            <solid android:color="#4500C997"/>
+            <size android:width="92dp" android:height="92dp"/>
+        </shape>
+    </item>
+
+    <!-- Border -->
+    <item
+        android:bottom="7dp"
+        android:left="7dp"
+        android:right="7dp"
+        android:top="7dp">
+        <shape android:shape="oval">
+            <solid android:color="#FFFFFF"/>
+            <size android:width="86dp" android:height="86dp"/>
+        </shape>
+    </item>
+
+    <!-- Main circle with gradient -->
+    <item
+        android:bottom="9dp"
+        android:left="9dp"
+        android:right="9dp"
+        android:top="9dp">
+        <shape android:shape="oval">
+            <gradient
+                android:angle="135"
+                android:startColor="#00D9A8"
+                android:endColor="#00C997"
+                android:type="linear"/>
+            <size android:width="82dp" android:height="82dp"/>
+        </shape>
+    </item>
+</layer-list>
+

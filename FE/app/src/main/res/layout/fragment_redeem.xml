@@ -17,7 +17,7 @@
         android:paddingHorizontal="20dp"
         android:paddingTop="20dp"
         android:paddingBottom="30dp"
-        android:elevation="4dp">
+        android:elevation="8dp">
 
         <!-- Title & Subtitle -->
         <LinearLayout
@@ -45,11 +45,13 @@
         </LinearLayout>
 
         <!-- Points Card -->
-        <androidx.cardview.widget.CardView
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:cardCornerRadius="16dp"
-            app:cardElevation="4dp"
+            app:cardElevation="10dp"
+            app:strokeWidth="2dp"
+            app:strokeColor="#E0E0E0"
             app:cardBackgroundColor="@color/white">
 
             <LinearLayout
@@ -127,7 +129,7 @@
 
             </LinearLayout>
 
-        </androidx.cardview.widget.CardView>
+        </com.google.android.material.card.MaterialCardView>
 
     </LinearLayout>
 
@@ -295,7 +297,7 @@
         android:gravity="center"
         android:orientation="vertical"
         android:paddingVertical="12dp"
-        android:elevation="8dp">
+        android:elevation="12dp">
 
         <TextView
             android:layout_width="wrap_content"

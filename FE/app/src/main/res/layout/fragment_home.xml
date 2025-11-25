@@ -100,12 +100,14 @@
             </LinearLayout>
 
             <!-- Impact Points Card -->
-            <androidx.cardview.widget.CardView
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="24dp"
                 app:cardCornerRadius="16dp"
-                app:cardElevation="6dp"
+                app:cardElevation="12dp"
+                app:strokeWidth="2dp"
+                app:strokeColor="#E0E0E0"
                 app:cardBackgroundColor="@color/white">
 
                 <LinearLayout
@@ -207,11 +209,11 @@
                             android:textColor="@color/app_green_primary"
                             android:textStyle="bold"
                             android:textSize="12sp"/>
-                    </LinearLayout>
+</LinearLayout>
 
                 </LinearLayout>
 
-            </androidx.cardview.widget.CardView>
+            </com.google.android.material.card.MaterialCardView>
 
             <!-- Search Bar -->
             <LinearLayout

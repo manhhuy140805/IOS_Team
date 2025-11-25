@@ -17,7 +17,7 @@
         android:paddingHorizontal="20dp"
         android:paddingTop="24dp"
         android:paddingBottom="30dp"
-        android:elevation="4dp">
+        android:elevation="8dp">
 
         <!-- Back Button and Title -->
         <LinearLayout
@@ -72,13 +72,15 @@
             android:weightSum="3">
 
             <!-- Pending -->
-            <androidx.cardview.widget.CardView
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:layout_marginEnd="8dp"
+                android:layout_marginEnd="4dp"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="2dp"
+                app:cardElevation="6dp"
+                app:strokeWidth="1.5dp"
+                app:strokeColor="#E0E0E0"
                 app:cardBackgroundColor="@color/white">
 
                 <LinearLayout
@@ -106,16 +108,18 @@
                         android:textSize="12sp"
                         android:textStyle="bold"/>
                 </LinearLayout>
-            </androidx.cardview.widget.CardView>
+            </com.google.android.material.card.MaterialCardView>
 
             <!-- Accepted -->
-            <androidx.cardview.widget.CardView
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:layout_marginHorizontal="4dp"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="2dp"
+                app:cardElevation="6dp"
+                app:strokeWidth="1.5dp"
+                app:strokeColor="#E0E0E0"
                 app:cardBackgroundColor="@color/white">
 
                 <LinearLayout
@@ -143,16 +147,18 @@
                         android:textSize="12sp"
                         android:textStyle="bold"/>
                 </LinearLayout>
-            </androidx.cardview.widget.CardView>
+            </com.google.android.material.card.MaterialCardView>
 
             <!-- Rejected -->
-            <androidx.cardview.widget.CardView
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="4dp"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="2dp"
+                app:cardElevation="6dp"
+                app:strokeWidth="1.5dp"
+                app:strokeColor="#E0E0E0"
                 app:cardBackgroundColor="@color/white">
 
                 <LinearLayout
@@ -180,7 +186,7 @@
                         android:textSize="12sp"
                         android:textStyle="bold"/>
                 </LinearLayout>
-            </androidx.cardview.widget.CardView>
+            </com.google.android.material.card.MaterialCardView>
 
         </LinearLayout>
     </LinearLayout>

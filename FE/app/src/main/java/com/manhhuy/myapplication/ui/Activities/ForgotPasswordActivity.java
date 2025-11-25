@@ -33,9 +33,9 @@ public class ForgotPasswordActivity extends AppCompatActivity {
     }
 
     private void setupListeners() {
-        binding.layoutBack.setOnClickListener(v -> finish());
+        binding.backButtonContainer.setOnClickListener(v -> finish());
 
-        binding.btnSendReset.setOnClickListener(v -> {
+        binding.btnSendResetLink.setOnClickListener(v -> {
             String email = binding.editTextEmail.getText().toString().trim();
             if (email.isEmpty()) {
                 Toast.makeText(this, "Vui lòng nhập email", Toast.LENGTH_SHORT).show();
