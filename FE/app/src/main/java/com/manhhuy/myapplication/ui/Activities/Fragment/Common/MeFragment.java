@@ -129,9 +129,23 @@ public class MeFragment extends Fragment {
         });
 
         binding.cardLogout.setOnClickListener(v -> {
-            Intent intent = new Intent(getContext(), MainActivity.class);
-            startActivity(intent);
+            showLogoutConfirmationDialog();
         });
+    }
+
+    private void showLogoutConfirmationDialog() {
+        if (getActivity() == null) return;
+
+        new AlertDialog.Builder(requireActivity())
+                .setTitle("Đăng xuất")
+                .setMessage("Bạn có chắc chắn muốn đăng xuất khỏi tài khoản?")
+                .setPositiveButton("Đăng xuất", (dialog, which) -> {
+                    handleLogout();
+                })
+                .setNegativeButton("Hủy", (dialog, which) -> {
+                    dialog.dismiss();
+                })
+                .show();
     }
 
     private void handleLogout() {

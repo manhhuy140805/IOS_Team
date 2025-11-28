@@ -1,6 +1,8 @@
 package com.manhhuy.myapplication.ui.Activities.Fragment.Organization;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -9,13 +11,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.manhhuy.myapplication.R;
 import com.manhhuy.myapplication.adapter.AplicationAdapter;
+import com.manhhuy.myapplication.databinding.FragmentAcceptApplicantBinding;
 import com.manhhuy.myapplication.model.Applicant;
 
 import java.util.ArrayList;
@@ -23,12 +24,7 @@ import java.util.List;
 
 public class AcceptApplicantFragment extends Fragment implements AplicationAdapter.OnApplicantActionListener {
 
-    // UI Components
-    private ImageView btnBack;
-    private TextView tvPendingCount, tvAcceptedCount, tvRejectedCount;
-    private TextView tabAll, tabPending, tabAccepted, tabRejected;
-    private RecyclerView rvApplicants;
-    private LinearLayout emptyState;
+    private FragmentAcceptApplicantBinding binding;
 
     // Data
     private List<Applicant> applicantList;
@@ -44,30 +40,20 @@ public class AcceptApplicantFragment extends Fragment implements AplicationAdapt
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_accept_applicant, container, false);
+        binding = FragmentAcceptApplicantBinding.inflate(inflater, container, false);
+        return binding.getRoot();
+    }
 
-        initViews(view);
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
         loadMockData();
         setupRecyclerView();
         setupListeners();
         updateCounts();
-
-        return view;
-    }
-
-    private void initViews(View view) {
-        btnBack = view.findViewById(R.id.btnBack);
-        tvPendingCount = view.findViewById(R.id.tvPendingCount);
-        tvAcceptedCount = view.findViewById(R.id.tvAcceptedCount);
-        tvRejectedCount = view.findViewById(R.id.tvRejectedCount);
-        tabAll = view.findViewById(R.id.tabAll);
-        tabPending = view.findViewById(R.id.tabPending);
-        tabAccepted = view.findViewById(R.id.tabAccepted);
-        tabRejected = view.findViewById(R.id.tabRejected);
-        rvApplicants = view.findViewById(R.id.rvApplicants);
-        emptyState = view.findViewById(R.id.emptyState);
     }
 
     private void loadMockData() {
@@ -177,30 +163,30 @@ public class AcceptApplicantFragment extends Fragment implements AplicationAdapt
 
     private void setupRecyclerView() {
         adapter = new AplicationAdapter(requireContext(), applicantList, this);
-        rvApplicants.setLayoutManager(new LinearLayoutManager(requireContext()));
-        rvApplicants.setAdapter(adapter);
+        binding.rvApplicants.setLayoutManager(new LinearLayoutManager(requireContext()));
+        binding.rvApplicants.setAdapter(adapter);
 
         updateEmptyState();
     }
 
     private void setupListeners() {
         // Back button - Hide in fragment when used as tab
-        btnBack.setVisibility(View.GONE);
+        binding.btnBack.setVisibility(View.GONE);
 
-        tabAll.setOnClickListener(v -> selectTab(tabAll, -1));
-        tabPending.setOnClickListener(v -> selectTab(tabPending, 0));
-        tabAccepted.setOnClickListener(v -> selectTab(tabAccepted, 1));
-        tabRejected.setOnClickListener(v -> selectTab(tabRejected, 2));
+        binding.tabAll.setOnClickListener(v -> selectTab(binding.tabAll, -1));
+        binding.tabPending.setOnClickListener(v -> selectTab(binding.tabPending, 0));
+        binding.tabAccepted.setOnClickListener(v -> selectTab(binding.tabAccepted, 1));
+        binding.tabRejected.setOnClickListener(v -> selectTab(binding.tabRejected, 2));
     }
 
     private void selectTab(TextView selectedTab, int filter) {
         currentFilter = filter;
 
         // Reset all tabs
-        resetTab(tabAll);
-        resetTab(tabPending);
-        resetTab(tabAccepted);
-        resetTab(tabRejected);
+        resetTab(binding.tabAll);
+        resetTab(binding.tabPending);
+        resetTab(binding.tabAccepted);
+        resetTab(binding.tabRejected);
 
         // Highlight selected
         selectedTab.setBackgroundResource(R.drawable.bg_category_tab_selected_reward);
@@ -217,18 +203,18 @@ public class AcceptApplicantFragment extends Fragment implements AplicationAdapt
     }
 
     private void updateCounts() {
-        tvPendingCount.setText(String.valueOf(adapter.getPendingCount()));
-        tvAcceptedCount.setText(String.valueOf(adapter.getAcceptedCount()));
-        tvRejectedCount.setText(String.valueOf(adapter.getRejectedCount()));
+        binding.tvPendingCount.setText(String.valueOf(adapter.getPendingCount()));
+        binding.tvAcceptedCount.setText(String.valueOf(adapter.getAcceptedCount()));
+        binding.tvRejectedCount.setText(String.valueOf(adapter.getRejectedCount()));
     }
 
     private void updateEmptyState() {
         if (adapter.getItemCount() == 0) {
-            rvApplicants.setVisibility(View.GONE);
-            emptyState.setVisibility(View.VISIBLE);
+            binding.rvApplicants.setVisibility(View.GONE);
+            binding.emptyState.setVisibility(View.VISIBLE);
         } else {
-            rvApplicants.setVisibility(View.VISIBLE);
-            emptyState.setVisibility(View.GONE);
+            binding.rvApplicants.setVisibility(View.VISIBLE);
+            binding.emptyState.setVisibility(View.GONE);
         }
     }
 
@@ -258,5 +244,11 @@ public class AcceptApplicantFragment extends Fragment implements AplicationAdapt
                 "Xem chi tiết: " + applicant.getName(),
                 Toast.LENGTH_SHORT).show();
         // TODO: Open detail screen
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
     }
 }
