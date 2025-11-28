@@ -75,16 +75,4 @@ public class UserActivity extends AppCompatActivity {
             }
         });
     }
-
-    public void switchToSearchTab() {
-        binding.viewPager.setCurrentItem(1, true);
-    }
-
-    public void switchToRedeemTab() {
-        binding.viewPager.setCurrentItem(2, true);
-    }
-
-    public void switchToCertificateTab() {
-        binding.viewPager.setCurrentItem(3, true);
-    }
 }
