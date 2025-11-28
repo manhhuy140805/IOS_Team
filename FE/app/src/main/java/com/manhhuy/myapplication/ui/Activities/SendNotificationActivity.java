@@ -215,8 +215,7 @@ public class SendNotificationActivity extends AppCompatActivity {
                 break;
         }
 
-        // TODO: Implement actual notification sending logic here
-        // For now, just show a success message
+
         Toast.makeText(this,
                 "Đã gửi thông báo đến: " + recipientType,
                 Toast.LENGTH_LONG).show();

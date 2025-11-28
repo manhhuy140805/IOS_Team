@@ -17,7 +17,7 @@ import com.manhhuy.myapplication.adapter.SearchResultAdapter;
 import com.manhhuy.myapplication.databinding.FragmentHomeBinding;
 import com.manhhuy.myapplication.model.SearchResult;
 import com.manhhuy.myapplication.ui.Activities.DetailEventActivity;
-import com.manhhuy.myapplication.ui.Activities.HomeActivity;
+import com.manhhuy.myapplication.ui.Activities.AdminActivity;
 import com.manhhuy.myapplication.ui.Activities.UserActivity;
 
 import java.util.ArrayList;
@@ -95,8 +95,8 @@ public class HomeFragment extends Fragment {
     private void setupClickListeners() {
         // Search bar click listener
         binding.searchContainer.setOnClickListener(v -> {
-            if (getActivity() instanceof HomeActivity) {
-                ((HomeActivity) getActivity()).switchToSearchTab();
+            if (getActivity() instanceof AdminActivity) {
+                ((AdminActivity) getActivity()).switchToSearchTab();
             } else if (getActivity() instanceof UserActivity) {
                 ((UserActivity) getActivity()).switchToSearchTab();
             } else {

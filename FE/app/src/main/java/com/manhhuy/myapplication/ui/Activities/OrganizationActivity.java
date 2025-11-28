@@ -44,8 +44,7 @@ public class OrganizationActivity extends AppCompatActivity {
         OrganizationAdapter organizationAdapter = new OrganizationAdapter(this);
         binding.viewPager.setAdapter(organizationAdapter);
         binding.viewPager.setPageTransformer(new ZoomOutPageTransformer());
-        
-        // Tab titles and icons for Organization
+
         tabTitles = new String[] { "Sự kiện", "Thông báo", "Cá nhân" };
         tabIcons = new int[] {
                 R.drawable.ic_event,
@@ -74,11 +73,5 @@ public class OrganizationActivity extends AppCompatActivity {
         });
     }
 
-    public void switchToNotificationTab() {
-        binding.viewPager.setCurrentItem(1, true);
-    }
 
-    public void switchToEventTab() {
-        binding.viewPager.setCurrentItem(0, true);
-    }
 }

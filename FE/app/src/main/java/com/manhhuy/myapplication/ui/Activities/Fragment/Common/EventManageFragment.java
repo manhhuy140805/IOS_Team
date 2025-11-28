@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.manhhuy.myapplication.R;
 import com.manhhuy.myapplication.adapter.admin.event.EventManagerAdapter;
-import com.manhhuy.myapplication.adapter.admin.event.OnEventActionListener;
+import com.manhhuy.myapplication.adapter.admin.event.OnEventActionListenerInterface;
 
 import com.manhhuy.myapplication.databinding.FragmentEventManagerBinding;
 import com.manhhuy.myapplication.model.EventPost;
@@ -26,7 +26,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
-public class EventManageFragment extends Fragment implements OnEventActionListener {
+public class EventManageFragment extends Fragment implements OnEventActionListenerInterface {
 
     private FragmentEventManagerBinding binding;
     private EventManagerAdapter adapter;

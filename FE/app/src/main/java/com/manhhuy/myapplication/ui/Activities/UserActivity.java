@@ -16,9 +16,7 @@ import com.manhhuy.myapplication.databinding.ActivityUserBinding;
 import com.manhhuy.myapplication.utils.ZoomOutPageTransformer;
 
 public class UserActivity extends AppCompatActivity {
-
     private ActivityUserBinding binding;
-
     private String[] tabTitles;
     private int[] tabIcons;
 
@@ -26,16 +24,13 @@ public class UserActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-
         binding = ActivityUserBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
         ViewCompat.setOnApplyWindowInsetsListener(binding.main, (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-
         setupViewPager();
         setupBackPress();
     }
@@ -44,8 +39,7 @@ public class UserActivity extends AppCompatActivity {
         UserAdapter userAdapter = new UserAdapter(this);
         binding.viewPager.setAdapter(userAdapter);
         binding.viewPager.setPageTransformer(new ZoomOutPageTransformer());
-        
-        // Tab titles and icons for User
+
         tabTitles = new String[] { "Trang chủ", "Tìm kiếm", "Đổi thưởng", "Chứng nhận", "Cá nhân" };
         tabIcons = new int[] {
                 R.drawable.ic_home,
