@@ -90,7 +90,6 @@ public class AdminActivity extends AppCompatActivity {
         });
 
     }
-
     public void switchToSearchTab() {
         binding.viewPager.setCurrentItem(1, true);
     }
