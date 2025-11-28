@@ -72,6 +72,11 @@ public class OrganizationActivity extends AppCompatActivity {
             }
         });
     }
+    public void switchToNotificationTab() {
+        binding.viewPager.setCurrentItem(1, true);
+    }
 
-
+    public void switchToEventTab() {
+        binding.viewPager.setCurrentItem(0, true);
+    }
 }
