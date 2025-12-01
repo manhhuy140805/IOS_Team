@@ -5,6 +5,8 @@ import io.volunteerapp.volunteer_app.DTO.response.EventResponse;
 import io.volunteerapp.volunteer_app.model.Event;
 import org.mapstruct.*;
 
+import java.util.HashSet;
+
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface EventMapper {
 
@@ -12,6 +14,13 @@ public interface EventMapper {
     @Mapping(target = "creator", ignore = true)
     @Mapping(target = "eventEventRegistrations", ignore = true)
     Event toEntity(EventRequest eventRequest);
+
+    @AfterMapping
+    default void afterMapping(@MappingTarget Event event) {
+        if (event.getEventEventRegistrations() == null) {
+            event.setEventEventRegistrations(new HashSet<>());
+        }
+    }
 
     @Mapping(source = "creator.id", target = "creatorId")
     @Mapping(source = "creator.fullName", target = "creatorName")
