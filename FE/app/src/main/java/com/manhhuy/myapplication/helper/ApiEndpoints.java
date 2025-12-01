@@ -23,22 +23,14 @@ import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
-/**
- * Tất cả API endpoints trong một interface
- * Base URL: /api/v1/
- */
 public interface ApiEndpoints {
-    
-    // ==================== AUTH APIs ====================
-    
+
     @POST("auth/register")
     Call<RestResponse<UserResponse>> register(@Body RegisterRequest request);
     
     @POST("auth/login")
     Call<RestResponse<LoginResponse>> login(@Body LoginRequest request);
-    
-    // ==================== USER APIs ====================
-    
+
     @GET("users/me")
     Call<RestResponse<UserResponse>> getCurrentUser();
     
@@ -56,9 +48,7 @@ public interface ApiEndpoints {
     
     @POST("users/{id}/promote-to-admin")
     Call<RestResponse<UserResponse>> promoteToAdmin(@Path("id") Integer id);
-    
-    // ==================== EVENT APIs ====================
-    
+
     @GET("events")
     Call<PageResponse<EventResponse>> getAllEvents(
             @Query("page") int page,
@@ -101,8 +91,7 @@ public interface ApiEndpoints {
     
     @DELETE("events/{id}")
     Call<Void> deleteEvent(@Path("id") Integer id);
-    
-    // ==================== EVENT REGISTRATION APIs ====================
+
     
     @POST("event-registrations/register")
     Call<EventRegistrationResponse> registerForEvent(@Body EventRegistrationRequest request);

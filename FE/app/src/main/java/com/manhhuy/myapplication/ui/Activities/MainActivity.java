@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
                 intent = new Intent(MainActivity.this, AdminActivity.class);
             } else if (email.equals("user@gmail.com") && password.equals("123456")) {
                 intent = new Intent(MainActivity.this, UserActivity.class);
-            } else if (email.equals("organazation@gmail.com") && password.equals("123456")) {
+            } else if (email.equals("organization@gmail.com") && password.equals("123456")) {
                 intent = new Intent(MainActivity.this, OrganizationActivity.class);
             } else {
                 Toast.makeText(this, "Email hoặc mật khẩu không đúng", Toast.LENGTH_SHORT).show();
