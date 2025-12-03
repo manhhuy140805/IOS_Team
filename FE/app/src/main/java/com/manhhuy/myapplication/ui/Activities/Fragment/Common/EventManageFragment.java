@@ -40,8 +40,7 @@ public class EventManageFragment extends Fragment implements OnEventActionListen
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
         binding = FragmentEventManagerBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
@@ -63,7 +62,6 @@ public class EventManageFragment extends Fragment implements OnEventActionListen
     }
 
     private void setupListeners() {
-        // Back button - Hide in fragment
         binding.btnBack.setVisibility(View.GONE);
 
         // Add New Event Button
@@ -130,11 +128,7 @@ public class EventManageFragment extends Fragment implements OnEventActionListen
 
     @Override
     public void onDeleteClick(EventPost event) {
-        // Show confirmation dialog here in real app
         Toast.makeText(getContext(), "Đã xóa sự kiện: " + event.getTitle(), Toast.LENGTH_SHORT).show();
-        // Remove from list and update adapter
-        // eventList.remove(event);
-        // adapter.notifyDataSetChanged();
     }
 
     @Override

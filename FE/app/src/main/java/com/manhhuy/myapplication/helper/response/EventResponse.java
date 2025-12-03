@@ -5,21 +5,28 @@ public class EventResponse {
     private String title;
     private String description;
     private String location;
-    private String startDate;
-    private String endDate;
-    private Integer maxParticipants;
-    private Integer currentParticipants;
+    private String imageUrl;
+    private String eventStartTime;
+    private String eventEndTime;
+    private Integer numOfVolunteers;
+    private Integer rewardPoints;
     private String status;
-    private Integer eventTypeId;
-    private String eventTypeName;
-    private Boolean hasCertificate;
-    private Boolean hasReward;
-    private Integer rewardId;
-    private String rewardName;
-    private Integer createdBy;
-    private String creatorName;
+    private String category;
     private String createdAt;
     private String updatedAt;
+    
+    // Creator info
+    private Integer creatorId;
+    private String creatorName;
+    private String creatorEmail;
+    
+    // Event type info
+    private Integer eventTypeId;
+    private String eventTypeName;
+    
+    // Registration stats
+    private Integer currentParticipants;
+    private Integer availableSlots;
     
     public EventResponse() {}
     
@@ -55,36 +62,44 @@ public class EventResponse {
         this.location = location;
     }
     
-    public String getStartDate() {
-        return startDate;
+    public String getImageUrl() {
+        return imageUrl;
     }
     
-    public void setStartDate(String startDate) {
-        this.startDate = startDate;
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
     
-    public String getEndDate() {
-        return endDate;
+    public String getEventStartTime() {
+        return eventStartTime;
     }
     
-    public void setEndDate(String endDate) {
-        this.endDate = endDate;
+    public void setEventStartTime(String eventStartTime) {
+        this.eventStartTime = eventStartTime;
     }
     
-    public Integer getMaxParticipants() {
-        return maxParticipants;
+    public String getEventEndTime() {
+        return eventEndTime;
     }
     
-    public void setMaxParticipants(Integer maxParticipants) {
-        this.maxParticipants = maxParticipants;
+    public void setEventEndTime(String eventEndTime) {
+        this.eventEndTime = eventEndTime;
     }
     
-    public Integer getCurrentParticipants() {
-        return currentParticipants;
+    public Integer getNumOfVolunteers() {
+        return numOfVolunteers;
     }
     
-    public void setCurrentParticipants(Integer currentParticipants) {
-        this.currentParticipants = currentParticipants;
+    public void setNumOfVolunteers(Integer numOfVolunteers) {
+        this.numOfVolunteers = numOfVolunteers;
+    }
+    
+    public Integer getRewardPoints() {
+        return rewardPoints;
+    }
+    
+    public void setRewardPoints(Integer rewardPoints) {
+        this.rewardPoints = rewardPoints;
     }
     
     public String getStatus() {
@@ -93,6 +108,54 @@ public class EventResponse {
     
     public void setStatus(String status) {
         this.status = status;
+    }
+    
+    public String getCategory() {
+        return category;
+    }
+    
+    public void setCategory(String category) {
+        this.category = category;
+    }
+    
+    public String getCreatedAt() {
+        return createdAt;
+    }
+    
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
+    }
+    
+    public String getUpdatedAt() {
+        return updatedAt;
+    }
+    
+    public void setUpdatedAt(String updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+    
+    public Integer getCreatorId() {
+        return creatorId;
+    }
+    
+    public void setCreatorId(Integer creatorId) {
+        this.creatorId = creatorId;
+    }
+    
+    public String getCreatorName() {
+        return creatorName;
+    }
+    
+    public void setCreatorName(String creatorName) {
+        this.creatorName = creatorName;
+    }
+    
+    public String getCreatorEmail() {
+        return creatorEmail;
+    }
+    
+    public void setCreatorEmail(String creatorEmail) {
+        this.creatorEmail = creatorEmail;
     }
     
     public Integer getEventTypeId() {
@@ -111,67 +174,19 @@ public class EventResponse {
         this.eventTypeName = eventTypeName;
     }
     
-    public Boolean getHasCertificate() {
-        return hasCertificate;
+    public Integer getCurrentParticipants() {
+        return currentParticipants;
     }
     
-    public void setHasCertificate(Boolean hasCertificate) {
-        this.hasCertificate = hasCertificate;
+    public void setCurrentParticipants(Integer currentParticipants) {
+        this.currentParticipants = currentParticipants;
     }
     
-    public Boolean getHasReward() {
-        return hasReward;
+    public Integer getAvailableSlots() {
+        return availableSlots;
     }
     
-    public void setHasReward(Boolean hasReward) {
-        this.hasReward = hasReward;
-    }
-    
-    public Integer getRewardId() {
-        return rewardId;
-    }
-    
-    public void setRewardId(Integer rewardId) {
-        this.rewardId = rewardId;
-    }
-    
-    public String getRewardName() {
-        return rewardName;
-    }
-    
-    public void setRewardName(String rewardName) {
-        this.rewardName = rewardName;
-    }
-    
-    public Integer getCreatedBy() {
-        return createdBy;
-    }
-    
-    public void setCreatedBy(Integer createdBy) {
-        this.createdBy = createdBy;
-    }
-    
-    public String getCreatorName() {
-        return creatorName;
-    }
-    
-    public void setCreatorName(String creatorName) {
-        this.creatorName = creatorName;
-    }
-    
-    public String getCreatedAt() {
-        return createdAt;
-    }
-    
-    public void setCreatedAt(String createdAt) {
-        this.createdAt = createdAt;
-    }
-    
-    public String getUpdatedAt() {
-        return updatedAt;
-    }
-    
-    public void setUpdatedAt(String updatedAt) {
-        this.updatedAt = updatedAt;
+    public void setAvailableSlots(Integer availableSlots) {
+        this.availableSlots = availableSlots;
     }
 }

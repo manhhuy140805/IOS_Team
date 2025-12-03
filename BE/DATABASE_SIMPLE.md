@@ -5,7 +5,6 @@
 - email
 - password
 - full_name
-- phone
 - avatar_url
 - role (string)(default -> VOLUNTEER)
 - status (string)
