@@ -44,7 +44,7 @@ public class EventService {
     public PageResponse<EventResponse> getAllEvents(
             int page, int size, String sortBy, String sortDirection,
             String title, String location, String status, Integer eventTypeId,
-            Date startDateFrom, Date startDateTo, Boolean hasCertificate, Boolean hasReward) {
+            Date startDateFrom, Date startDateTo, Boolean hasReward) {
 
         Sort sort = sortDirection.equalsIgnoreCase("desc")
                 ? Sort.by(sortBy).descending()
@@ -57,7 +57,6 @@ public class EventService {
                 .and(EventSepcification.hasEventType(eventTypeId))
                 .and(EventSepcification.eventStartTimeAfter(startDateFrom))
                 .and(EventSepcification.eventStartTimeBefore(startDateTo))
-                .and(EventSepcification.hasCertificate(hasCertificate))
                 .and(EventSepcification.hasRewardPoints(hasReward));
 
         Page<Event> eventPage = eventRepository.findAll(specification, pageable);
@@ -137,10 +136,7 @@ public class EventService {
         event.setEventType(eventType);
 
         if (event.getStatus() == null || event.getStatus().isEmpty()) {
-            event.setStatus("DRAFT");
-        }
-        if (event.getHasCertificate() == null) {
-            event.setHasCertificate(false);
+            event.setStatus("PENDING");
         }
 
         Event savedEvent = eventRepository.save(event);
@@ -179,10 +175,13 @@ public class EventService {
         EventResponse response = eventMapper.toResponse(event);
 
         // Calculate registration stats
-        int totalRegistrations = event.getEventEventRegistrations().size();
-        int availableSlots = event.getNumOfVolunteers() - totalRegistrations;
+        long approvedCount = event.getEventEventRegistrations().stream()
+                .filter(reg -> "APPROVED".equals(reg.getStatus()))
+                .count();
+        int currentParticipants = (int) approvedCount;
+        int availableSlots = event.getNumOfVolunteers() - currentParticipants;
 
-        response.setTotalRegistrations(totalRegistrations);
+        response.setCurrentParticipants(currentParticipants);
         response.setAvailableSlots(Math.max(0, availableSlots));
 
         return response;

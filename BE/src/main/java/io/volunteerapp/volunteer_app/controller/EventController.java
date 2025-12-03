@@ -37,12 +37,11 @@ public class EventController {
             @RequestParam(name = "eventTypeId", required = false) Integer eventTypeId,
             @RequestParam(name = "startDateFrom", required = false) Date startDateFrom,
             @RequestParam(name = "startDateTo", required = false) Date startDateTo,
-            @RequestParam(name = "hasCertificate", required = false) Boolean hasCertificate,
             @RequestParam(name = "hasReward", required = false) Boolean hasReward) {
 
         PageResponse<EventResponse> response = eventService.getAllEvents(
                 page, size, sortBy, sortDirection, title, location, status,
-                eventTypeId, startDateFrom, startDateTo, hasCertificate, hasReward);
+                eventTypeId, startDateFrom, startDateTo, hasReward);
         return ResponseEntity.ok(response);
     }
 

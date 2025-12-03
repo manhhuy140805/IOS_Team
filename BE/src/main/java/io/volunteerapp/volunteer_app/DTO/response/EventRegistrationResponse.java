@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.sql.Date;
+import java.time.Instant;
 
 @Getter
 @Setter
@@ -18,7 +19,12 @@ public class EventRegistrationResponse {
     private Integer userId;
     private String userName;
     private String userEmail;
+    private String userPhone;
+    private String userAvatarUrl;
     private String status;
-    private Boolean checkIn;
+    private String notes;
     private Date joinDate;
+    private Boolean checkedIn;
+    private Instant checkedInAt;
+    private String notificationContent;
 }

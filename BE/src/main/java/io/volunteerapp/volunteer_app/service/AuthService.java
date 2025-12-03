@@ -104,10 +104,13 @@ public class AuthService {
     private UserResponse convertToUserResponse(User user) {
         return new UserResponse(
                 user.getId(),
-                user.getFullName(),
                 user.getEmail(),
+                user.getFullName(),
                 user.getPhone(),
+                user.getAvatarUrl(),
                 user.getRole(),
-                user.getStatus());
+                user.getStatus(),
+                user.getTotalPoints(),
+                user.getAddress());
     }
 }

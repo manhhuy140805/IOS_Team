@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Date;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -59,8 +60,8 @@ public class EventRegistrationService {
         EventRegistration registration = new EventRegistration();
         registration.setUser(currentUser);
         registration.setEvent(event);
-        registration.setStatus("pending");
-        registration.setCheckIn(false);
+        registration.setStatus("PENDING");
+        registration.setCheckedIn(false);
         registration.setJoinDate(Date.valueOf(LocalDate.now()));
 
         EventRegistration saved = registrationRepository.save(registration);
@@ -150,8 +151,9 @@ public class EventRegistrationService {
         EventRegistration registration = registrationRepository.findById(registrationId)
                 .orElseThrow(() -> new RuntimeException("Registration not found with id: " + registrationId));
 
-        registration.setCheckIn(true);
-        registration.setStatus("confirmed");
+        registration.setCheckedIn(true);
+        registration.setCheckedInAt(Instant.now());
+        registration.setStatus("COMPLETED");
         EventRegistration updated = registrationRepository.save(registration);
         return convertToResponse(updated);
     }
@@ -164,9 +166,14 @@ public class EventRegistrationService {
         response.setUserId(registration.getUser().getId());
         response.setUserName(registration.getUser().getFullName());
         response.setUserEmail(registration.getUser().getEmail());
+        response.setUserPhone(registration.getUser().getPhone());
+        response.setUserAvatarUrl(registration.getUser().getAvatarUrl());
         response.setStatus(registration.getStatus());
-        response.setCheckIn(registration.getCheckIn());
+        response.setNotes(registration.getNotes());
+        response.setCheckedIn(registration.getCheckedIn());
+        response.setCheckedInAt(registration.getCheckedInAt());
         response.setJoinDate(registration.getJoinDate());
+        response.setNotificationContent(registration.getNotificationContent());
         return response;
     }
 

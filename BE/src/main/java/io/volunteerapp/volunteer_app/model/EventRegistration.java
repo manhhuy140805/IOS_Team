@@ -1,15 +1,9 @@
 package io.volunteerapp.volunteer_app.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 
 import java.sql.Date;
+import java.time.Instant;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -24,13 +18,27 @@ public class EventRegistration {
     private Integer id;
 
     @Column(nullable = false)
-    private String status = "pending"; // nào ổn rồi làm kiểu enum sau nhé
+    private String status = "PENDING";
 
-    @Column(nullable = false)
-    private Boolean checkIn;
+    @Column(length = 1000)
+    private String notes;
 
     @Column(nullable = false)
     private Date joinDate;
+
+    @Column(nullable = false)
+    private Boolean checkedIn = false;
+
+    private Instant checkedInAt;
+
+    @Column(length = 1000)
+    private String notificationContent;
+
+    @Column(nullable = false)
+    private Instant createdAt;
+
+    @Column(nullable = false)
+    private Instant updatedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
@@ -40,4 +48,14 @@ public class EventRegistration {
     @JoinColumn(name = "event_id", nullable = false)
     private Event event;
 
+    @PrePersist
+    public void handleBeforeCreate() {
+        this.createdAt = Instant.now();
+        this.updatedAt = Instant.now();
+    }
+
+    @PreUpdate
+    public void handleBeforeUpdate() {
+        this.updatedAt = Instant.now();
+    }
 }
