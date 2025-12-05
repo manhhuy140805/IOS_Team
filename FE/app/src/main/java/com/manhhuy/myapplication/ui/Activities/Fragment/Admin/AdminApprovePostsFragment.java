@@ -34,12 +34,12 @@ public class AdminApprovePostsFragment extends Fragment implements OnItemClickLi
     private String currentFilter = "all";
 
     public AdminApprovePostsFragment() {
-        // Required empty public constructor
+
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+            Bundle savedInstanceState) {
         binding = FragmentAdminApprovePostsBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
@@ -62,11 +62,10 @@ public class AdminApprovePostsFragment extends Fragment implements OnItemClickLi
         // Hide back button in fragment
         binding.btnBack.setVisibility(View.GONE);
 
-        binding.btnMenu.setOnClickListener(v ->
-                Toast.makeText(getContext(), "Menu", Toast.LENGTH_SHORT).show());
+        binding.btnMenu.setOnClickListener(v -> Toast.makeText(getContext(), "Menu", Toast.LENGTH_SHORT).show());
 
-        binding.btnLoadMore.setOnClickListener(v ->
-                Toast.makeText(getContext(), "Đang tải thêm...", Toast.LENGTH_SHORT).show());
+        binding.btnLoadMore
+                .setOnClickListener(v -> Toast.makeText(getContext(), "Đang tải thêm...", Toast.LENGTH_SHORT).show());
 
         // Tab listeners
         binding.tabAll.setOnClickListener(v -> filterPosts("all"));

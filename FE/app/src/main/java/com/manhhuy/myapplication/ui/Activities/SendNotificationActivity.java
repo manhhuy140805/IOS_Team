@@ -3,6 +3,7 @@ package com.manhhuy.myapplication.ui.Activities;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -168,15 +169,14 @@ public class SendNotificationActivity extends AppCompatActivity {
         binding.rbUnconfirmedUsers.setChecked(type == 2);
 
         // Update card backgrounds
-        updateRecipientCardBackground(binding.radioAllUsers, type == 0);
-        updateRecipientCardBackground(binding.radioConfirmedUsers, type == 1);
-        updateRecipientCardBackground(binding.radioUnconfirmedUsers, type == 2);
+        updateRecipientCardBackground(binding.llAllUsersBackground, type == 0);
+        updateRecipientCardBackground(binding.llConfirmedUsersBackground, type == 1);
+        updateRecipientCardBackground(binding.llUnconfirmedUsersBackground, type == 2);
     }
 
-    private void updateRecipientCardBackground(CardView card, boolean isSelected) {
+    private void updateRecipientCardBackground(LinearLayout layout, boolean isSelected) {
         int backgroundRes = isSelected ? R.drawable.bg_radio_selected : R.drawable.bg_radio_normal;
-        card.setCardBackgroundColor(ContextCompat.getColor(this, android.R.color.transparent));
-        // The background is set via the LinearLayout inside the CardView
+        layout.setBackgroundResource(backgroundRes);
     }
 
     private void sendNotification() {
@@ -215,8 +215,7 @@ public class SendNotificationActivity extends AppCompatActivity {
                 break;
         }
 
-        // TODO: Implement actual notification sending logic here
-        // For now, just show a success message
+
         Toast.makeText(this,
                 "Đã gửi thông báo đến: " + recipientType,
                 Toast.LENGTH_LONG).show();

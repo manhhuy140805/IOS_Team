@@ -22,9 +22,9 @@ public class EventManagerAdapter extends RecyclerView.Adapter<EventManagerAdapte
     private final Context context;
     private final List<EventPost> eventList;
     private final List<EventPost> eventListFull;
-    private final OnEventActionListener listener;
+    private final OnEventActionListenerInterface listener;
 
-    public EventManagerAdapter(Context context, List<EventPost> eventList, OnEventActionListener listener) {
+    public EventManagerAdapter(Context context, List<EventPost> eventList, OnEventActionListenerInterface listener) {
         this.context = context;
         this.eventList = eventList;
         this.eventListFull = new ArrayList<>(eventList);

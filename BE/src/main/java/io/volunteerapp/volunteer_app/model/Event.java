@@ -24,37 +24,33 @@ public class Event {
     @Column(nullable = false)
     private String title;
 
+    @Column(length = 5000)
     private String description;
 
-    // vị trí đưa ra
     private String location;
 
-    // thời gian mở đăng ky khác với thời gian diễn ra sự kiện
-    // đây là thời gian diễn ra sự kiện
+    private String imageUrl;
+
     @Column(nullable = false)
     private Date eventStartTime;
 
     @Column(nullable = false)
     private Date eventEndTime;
 
-    // đây là thời gian cho phép đăng ky sự kiện
-    private Date registrationOpenTime;
-    private Date registrationCloseTime;
-
-    // số lượng người đăng kí tối đa
     @Column(nullable = false)
     private Integer numOfVolunteers;
 
-    // số sao thưởng có thể null vì có thể sự kiện không có thưởng
     private Integer rewardPoints;
 
-    private String status;
+    @Column(nullable = false)
+    private String status = "PENDING";
 
-    @Column(nullable = true)
-    private Boolean hasCertificate = false;
+    private String category;
 
+    @Column(nullable = false)
     private Instant createdAt;
 
+    @Column(nullable = false)
     private Instant updatedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -69,8 +65,9 @@ public class Event {
     private Set<EventRegistration> eventEventRegistrations = new HashSet<>();
 
     @PrePersist
-    public void hanleBeforeCreate() {
+    public void handleBeforeCreate() {
         this.createdAt = Instant.now();
+        this.updatedAt = Instant.now();
     }
 
     @PreUpdate

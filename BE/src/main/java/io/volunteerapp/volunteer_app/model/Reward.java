@@ -3,7 +3,7 @@ package io.volunteerapp.volunteer_app.model;
 import jakarta.persistence.*;
 
 import java.time.Instant;
-import java.time.OffsetDateTime;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 import lombok.Getter;
@@ -22,8 +22,13 @@ public class Reward {
     @Column(nullable = false)
     private String name;
 
-    @Column(name = "\"description\"")
+    @Column(length = 2000)
     private String description;
+
+    @Column(nullable = false)
+    private String type = "GIFT";
+
+    private String imageUrl;
 
     @Column(nullable = false)
     private Integer pointsRequired;
@@ -31,8 +36,19 @@ public class Reward {
     @Column(nullable = false)
     private Integer quantity;
 
+    @Column(nullable = false)
+    private String status = "ACTIVE";
+
+    private LocalDate expiryDate;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "provider_id")
+    private User provider;
+
+    @Column(nullable = false)
     private Instant createdAt;
 
+    @Column(nullable = false)
     private Instant updatedAt;
 
     @OneToMany(mappedBy = "reward")
@@ -41,6 +57,7 @@ public class Reward {
     @PrePersist
     public void handleBeforeCreate() {
         this.createdAt = Instant.now();
+        this.updatedAt = Instant.now();
     }
 
     @PreUpdate

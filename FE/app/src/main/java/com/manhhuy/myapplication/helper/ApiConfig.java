@@ -18,17 +18,11 @@ public class ApiConfig {
     
     private static Retrofit retrofit = null;
     private static Context appContext;
-    
-    /**
-     * Khởi tạo context cho ApiConfig
-     */
+
     public static void init(Context context) {
         appContext = context.getApplicationContext();
     }
-    
-    /**
-     * Lấy Retrofit instance với authentication
-     */
+
     public static Retrofit getClient() {
         if (retrofit == null) {
             HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();

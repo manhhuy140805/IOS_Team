@@ -410,8 +410,7 @@
                             android:textSize="14sp"
                             android:paddingHorizontal="20dp"
                             android:paddingVertical="8dp"
-                            android:background="@drawable/bg_button_white_solid"
-                            android:backgroundTint="@color/app_green_primary"
+                            android:background="@drawable/bg_filter_selected"
                             android:textColor="@color/white"
                             android:layout_marginEnd="8dp"/>
 

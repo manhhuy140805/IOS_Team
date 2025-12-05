@@ -3,13 +3,14 @@ package io.volunteerapp.volunteer_app.model;
 import jakarta.persistence.*;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table(name = "users") // Đổi tên table vì "user" là reserved keyword trong PostgreSQL
+@Table(name = "users")
 @Getter
 @Setter
 public class User {
@@ -19,26 +20,37 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private String fullName;
-
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String email;
 
     @Column(nullable = false)
     private String password;
 
-    @Column
+    private String fullName;
+
     private String phone;
 
-    @Column
     private String avatarUrl;
 
     @Column(nullable = false)
-    private String role;
+    private String role = "VOLUNTEER";
 
     @Column(nullable = false)
-    private String status;
+    private String status = "ACTIVE";
 
+    @Column(nullable = false)
+    private Integer totalPoints = 0;
+
+    private String address;
+
+    private LocalDate dateOfBirth;
+
+    private String gender;
+
+    @Column(nullable = false)
+    private Boolean violation = false;
+
+    @Column(nullable = false)
     private Instant createdAt;
 
     @Column(nullable = false)
@@ -56,6 +68,7 @@ public class User {
     @PrePersist
     public void handleBeforeCreate() {
         this.createdAt = Instant.now();
+        this.updatedAt = Instant.now();
     }
 
     @PreUpdate

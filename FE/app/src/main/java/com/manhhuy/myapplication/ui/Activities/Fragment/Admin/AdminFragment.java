@@ -28,7 +28,7 @@ import com.manhhuy.myapplication.model.User;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AdminUserFragment extends Fragment implements OnUserActionListener, OnOrganizationActionListener {
+public class AdminFragment extends Fragment implements OnUserActionListener, OnOrganizationActionListener {
 
     private ActivityUserManagementBinding binding;
     private UserAdapter userAdapter;
@@ -43,7 +43,7 @@ public class AdminUserFragment extends Fragment implements OnUserActionListener,
     private String currentOrgFilter = "Tất cả";
     private boolean isUsersTab = true;
 
-    public AdminUserFragment() {
+    public AdminFragment() {
         // Required empty public constructor
     }
 

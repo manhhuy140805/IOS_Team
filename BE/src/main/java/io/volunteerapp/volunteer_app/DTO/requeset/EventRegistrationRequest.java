@@ -15,5 +15,5 @@ public class EventRegistrationRequest {
     @NotNull(message = "Event ID is required")
     private Integer eventId;
 
-    private String note; // Optional note from user
+    private String notes; // Optional note from user
 }

@@ -17,14 +17,13 @@ public class EventResponse {
     private String title;
     private String description;
     private String location;
+    private String imageUrl;
     private Date eventStartTime;
     private Date eventEndTime;
-    private Date registrationOpenTime;
-    private Date registrationCloseTime;
     private Integer numOfVolunteers;
     private Integer rewardPoints;
     private String status;
-    private Boolean hasCertificate;
+    private String category;
     private Instant createdAt;
     private Instant updatedAt;
 
@@ -38,6 +37,6 @@ public class EventResponse {
     private String eventTypeName;
 
     // Registration stats
-    private Integer totalRegistrations;
+    private Integer currentParticipants;
     private Integer availableSlots;
 }

@@ -4,12 +4,12 @@ public class UserResponse {
     private Integer id;
     private String email;
     private String fullName;
-    private String phoneNumber;
-    private String address;
+    private String phone;
+    private String avatarUrl;
     private String role;
+    private String status;
     private Integer totalPoints;
-    private String createdAt;
-    private String updatedAt;
+    private String address;
     
     public UserResponse() {}
     
@@ -37,12 +37,28 @@ public class UserResponse {
         this.fullName = fullName;
     }
     
-    public String getPhoneNumber() {
-        return phoneNumber;
+    public String getPhone() {
+        return phone;
     }
     
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+    
+    public String getAvatarUrl() {
+        return avatarUrl;
+    }
+    
+    public void setAvatarUrl(String avatarUrl) {
+        this.avatarUrl = avatarUrl;
+    }
+    
+    public String getStatus() {
+        return status;
+    }
+    
+    public void setStatus(String status) {
+        this.status = status;
     }
     
     public String getAddress() {
@@ -67,21 +83,5 @@ public class UserResponse {
     
     public void setTotalPoints(Integer totalPoints) {
         this.totalPoints = totalPoints;
-    }
-    
-    public String getCreatedAt() {
-        return createdAt;
-    }
-    
-    public void setCreatedAt(String createdAt) {
-        this.createdAt = createdAt;
-    }
-    
-    public String getUpdatedAt() {
-        return updatedAt;
-    }
-    
-    public void setUpdatedAt(String updatedAt) {
-        this.updatedAt = updatedAt;
     }
 }

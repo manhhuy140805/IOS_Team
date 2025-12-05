@@ -507,6 +507,7 @@
                 app:cardElevation="2dp">
 
                 <LinearLayout
+                    android:id="@+id/llAllUsersBackground"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/bg_radio_selected"
@@ -560,6 +561,7 @@
                 app:cardElevation="2dp">
 
                 <LinearLayout
+                    android:id="@+id/llConfirmedUsersBackground"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/bg_radio_normal"
@@ -613,6 +615,7 @@
                 app:cardElevation="2dp">
 
                 <LinearLayout
+                    android:id="@+id/llUnconfirmedUsersBackground"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/bg_radio_normal"

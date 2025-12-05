@@ -11,13 +11,15 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.manhhuy.myapplication.R;
-import com.manhhuy.myapplication.adapter.HomeAdapter;
-import com.manhhuy.myapplication.databinding.ActivityHomeBinding;
+
+import com.manhhuy.myapplication.adapter.AdminAdapter;
+import com.manhhuy.myapplication.databinding.ActivityAdminBinding;
+
 import com.manhhuy.myapplication.utils.ZoomOutPageTransformer;
 
-public class HomeActivity extends AppCompatActivity {
+public class AdminActivity extends AppCompatActivity {
 
-    private ActivityHomeBinding binding;
+    private ActivityAdminBinding binding;
 
     private String[] tabTitles;
     private int[] tabIcons;
@@ -27,10 +29,9 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
 
-        // Set mock role here (Change to CUSTOMER to test customer view)
-        com.manhhuy.myapplication.utils.MockUserManager.setRole(com.manhhuy.myapplication.utils.MockUserManager.Role.ADMIN);
 
-        binding = ActivityHomeBinding.inflate(getLayoutInflater());
+
+        binding = ActivityAdminBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         ViewCompat.setOnApplyWindowInsetsListener(binding.main, (v, insets) -> {
@@ -44,29 +45,19 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void setupViewPager() {
-        com.manhhuy.myapplication.utils.MockUserManager.Role role = com.manhhuy.myapplication.utils.MockUserManager.getCurrentRole();
-        HomeAdapter homeAdapter = new HomeAdapter(this, role);
+
+        AdminAdapter homeAdapter = new AdminAdapter(this);
         binding.viewPager.setAdapter(homeAdapter);
         binding.viewPager.setPageTransformer(new ZoomOutPageTransformer());
-        
-        if (role == com.manhhuy.myapplication.utils.MockUserManager.Role.ADMIN) {
-            tabTitles = new String[] { "Người dùng", "Sự kiện",  "Đổi thưởng", "Duyệt bài", "Cá nhân" };
-            tabIcons = new int[] {
-                    R.drawable.ic_group,
-                    R.drawable.ic_event,
-                    R.drawable.ic_rewards,
-                    R.drawable.ic_check,
-                    R.drawable.ic_profile
-            };
-        } else {
-            tabTitles = new String[] { "Trang chủ", "Tìm kiếm", "Đổi thưởng", "Cá nhân" };
-            tabIcons = new int[] {
-                    R.drawable.ic_home,
-                    R.drawable.ic_search,
-                    R.drawable.ic_rewards,
-                    R.drawable.ic_profile
-            };
-        }
+
+        tabTitles = new String[] { "Người dùng", "Sự kiện", "Đổi thưởng", "Duyệt bài", "Cá nhân" };
+        tabIcons = new int[] {
+                R.drawable.ic_group,
+                R.drawable.ic_event,
+                R.drawable.ic_rewards,
+                R.drawable.ic_check,
+                R.drawable.ic_profile
+        };
 
         new TabLayoutMediator(binding.tabLayout, binding.viewPager,
                 (tab, position) -> {
@@ -89,7 +80,6 @@ public class HomeActivity extends AppCompatActivity {
         });
 
     }
-
     public void switchToSearchTab() {
         binding.viewPager.setCurrentItem(1, true);
     }

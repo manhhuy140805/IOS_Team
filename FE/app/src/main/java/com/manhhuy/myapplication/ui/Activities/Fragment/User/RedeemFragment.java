@@ -106,7 +106,6 @@ public class RedeemFragment extends Fragment {
 
         // Highlight tab được chọn
         selectedTab.setBackgroundResource(R.drawable.bg_category_tab_selected_reward);
-        selectedTab.setTextColor(ContextCompat.getColor(requireContext(), android.R.color.white));
 
         // Update drawable tint cho selected tab
         if (selectedTab.getCompoundDrawables()[0] != null) {

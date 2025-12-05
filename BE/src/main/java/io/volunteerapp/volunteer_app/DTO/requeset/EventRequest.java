@@ -24,15 +24,13 @@ public class EventRequest {
     @NotBlank(message = "Location is required")
     private String location;
 
+    private String imageUrl;
+
     @NotNull(message = "Event start time is required")
     private Date eventStartTime;
 
     @NotNull(message = "Event end time is required")
     private Date eventEndTime;
-
-    private Date registrationOpenTime;
-
-    private Date registrationCloseTime;
 
     @NotNull(message = "Number of volunteers is required")
     @Min(value = 1, message = "Number of volunteers must be at least 1")
@@ -42,7 +40,7 @@ public class EventRequest {
 
     private String status;
 
-    private Boolean hasCertificate;
+    private String category;
 
     @NotNull(message = "Event type ID is required")
     private Integer eventTypeId;

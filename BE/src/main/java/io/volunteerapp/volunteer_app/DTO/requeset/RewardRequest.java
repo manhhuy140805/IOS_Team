@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -19,11 +21,22 @@ public class RewardRequest {
 
     private String description;
 
+    @NotBlank(message = "Type is required")
+    private String type; // VOUCHER, GIFT, EXPERIENCE
+
+    private String imageUrl;
+
     @NotNull(message = "Points required is required")
-    @Min(value = 0, message = "Points required must be at least 0")
+    @Min(value = 1, message = "Points required must be at least 1")
     private Integer pointsRequired;
 
     @NotNull(message = "Quantity is required")
-    @Min(value = 1, message = "Quantity must be at least 1")
+    @Min(value = 0, message = "Quantity must be at least 0")
     private Integer quantity;
+
+    private String status;
+
+    private LocalDate expiryDate;
+
+    private Integer providerId;
 }

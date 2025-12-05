@@ -27,7 +27,7 @@ public interface EventMapper {
     @Mapping(source = "creator.email", target = "creatorEmail")
     @Mapping(source = "eventType.id", target = "eventTypeId")
     @Mapping(source = "eventType.name", target = "eventTypeName")
-    @Mapping(target = "totalRegistrations", ignore = true)
+    @Mapping(target = "currentParticipants", ignore = true)
     @Mapping(target = "availableSlots", ignore = true)
     EventResponse toResponse(Event event);
 

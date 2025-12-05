@@ -1,10 +1,12 @@
 package com.manhhuy.myapplication.ui.Activities.Fragment.Common;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -13,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.manhhuy.myapplication.databinding.FragmentMeBinding;
+import com.manhhuy.myapplication.ui.Activities.MainActivity;
 import com.manhhuy.myapplication.ui.Activities.UserActivity;
 
 import java.util.Locale;
@@ -42,7 +45,7 @@ public class MeFragment extends Fragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+            Bundle savedInstanceState) {
         binding = FragmentMeBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
@@ -87,12 +90,11 @@ public class MeFragment extends Fragment {
     }
 
     private void setupClickListeners() {
-        // Settings button
+
         binding.ivSettings.setOnClickListener(v -> {
             Toast.makeText(getContext(), "Cài đặt", Toast.LENGTH_SHORT).show();
         });
 
-        // My Events
         binding.cardMyEvents.setOnClickListener(v -> {
             Toast.makeText(getContext(), "Sự kiện của tôi", Toast.LENGTH_SHORT).show();
         });
@@ -110,7 +112,6 @@ public class MeFragment extends Fragment {
             }
         });
 
-        // My Rewards
         binding.cardMyRewards.setOnClickListener(v -> {
             try {
                 if (getActivity() instanceof UserActivity) {
@@ -123,21 +124,36 @@ public class MeFragment extends Fragment {
             }
         });
 
-        // Edit Profile
         binding.cardEditProfile.setOnClickListener(v -> {
             Toast.makeText(getContext(), "Chỉnh sửa hồ sơ", Toast.LENGTH_SHORT).show();
         });
 
-        // Logout
         binding.cardLogout.setOnClickListener(v -> {
-            Toast.makeText(getContext(), "Đăng xuất", Toast.LENGTH_SHORT).show();
-            handleLogout();
+            showLogoutConfirmationDialog();
         });
+    }
+
+    private void showLogoutConfirmationDialog() {
+        if (getActivity() == null) return;
+
+        new AlertDialog.Builder(requireActivity())
+                .setTitle("Đăng xuất")
+                .setMessage("Bạn có chắc chắn muốn đăng xuất khỏi tài khoản?")
+                .setPositiveButton("Đăng xuất", (dialog, which) -> {
+                    handleLogout();
+                })
+                .setNegativeButton("Hủy", (dialog, which) -> {
+                    dialog.dismiss();
+                })
+                .show();
     }
 
     private void handleLogout() {
         if (getActivity() != null) {
-            // TODO: Clear session and navigate to login
+            Intent intent = new Intent(requireActivity(), MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            requireActivity().finish();
         }
     }
 

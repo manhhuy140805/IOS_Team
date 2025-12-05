@@ -2,6 +2,7 @@ package com.manhhuy.myapplication.ui.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -29,8 +30,29 @@ public class MainActivity extends AppCompatActivity {
         });
 
         binding.btnSignIn.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, HomeActivity.class);
+            String email = binding.editTextEmail.getText().toString().trim();
+            String password = binding.editTextPassword.getText().toString().trim();
+
+            if (email.isEmpty() || password.isEmpty()) {
+                Toast.makeText(this, "Vui lòng nhập email và mật khẩu", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            Intent intent;
+
+            if (email.equals("admin@gmail.com") && password.equals("123456")) {
+                intent = new Intent(MainActivity.this, AdminActivity.class);
+            } else if (email.equals("user@gmail.com") && password.equals("123456")) {
+                intent = new Intent(MainActivity.this, UserActivity.class);
+            } else if (email.equals("organization@gmail.com") && password.equals("123456")) {
+                intent = new Intent(MainActivity.this, OrganizationActivity.class);
+            } else {
+                Toast.makeText(this, "Email hoặc mật khẩu không đúng", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
             startActivity(intent);
+            finish();
         });
 
         binding.tvForgotPassword.setOnClickListener(v -> {

@@ -7,12 +7,14 @@ public class EventRegistrationResponse {
     private Integer userId;
     private String userName;
     private String userEmail;
+    private String userPhone;
+    private String userAvatarUrl;
     private String status;
     private String notes;
+    private String joinDate;
     private Boolean checkedIn;
     private String checkedInAt;
-    private String registeredAt;
-    private String updatedAt;
+    private String notificationContent;
     
     public EventRegistrationResponse() {}
     
@@ -64,6 +66,22 @@ public class EventRegistrationResponse {
         this.userEmail = userEmail;
     }
     
+    public String getUserPhone() {
+        return userPhone;
+    }
+    
+    public void setUserPhone(String userPhone) {
+        this.userPhone = userPhone;
+    }
+    
+    public String getUserAvatarUrl() {
+        return userAvatarUrl;
+    }
+    
+    public void setUserAvatarUrl(String userAvatarUrl) {
+        this.userAvatarUrl = userAvatarUrl;
+    }
+    
     public String getStatus() {
         return status;
     }
@@ -78,6 +96,14 @@ public class EventRegistrationResponse {
     
     public void setNotes(String notes) {
         this.notes = notes;
+    }
+    
+    public String getJoinDate() {
+        return joinDate;
+    }
+    
+    public void setJoinDate(String joinDate) {
+        this.joinDate = joinDate;
     }
     
     public Boolean getCheckedIn() {
@@ -96,19 +122,11 @@ public class EventRegistrationResponse {
         this.checkedInAt = checkedInAt;
     }
     
-    public String getRegisteredAt() {
-        return registeredAt;
+    public String getNotificationContent() {
+        return notificationContent;
     }
     
-    public void setRegisteredAt(String registeredAt) {
-        this.registeredAt = registeredAt;
-    }
-    
-    public String getUpdatedAt() {
-        return updatedAt;
-    }
-    
-    public void setUpdatedAt(String updatedAt) {
-        this.updatedAt = updatedAt;
+    public void setNotificationContent(String notificationContent) {
+        this.notificationContent = notificationContent;
     }
 }

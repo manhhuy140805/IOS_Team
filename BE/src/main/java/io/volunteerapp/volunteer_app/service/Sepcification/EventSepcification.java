@@ -76,15 +76,6 @@ public class EventSepcification {
         };
     }
 
-    public static Specification<Event> hasCertificate(Boolean hasCertificate) {
-        return (root, query, criteriaBuilder) -> {
-            if (hasCertificate == null) {
-                return criteriaBuilder.conjunction();
-            }
-            return criteriaBuilder.equal(root.get("hasCertificate"), hasCertificate);
-        };
-    }
-
     public static Specification<Event> hasRewardPoints(Boolean hasReward) {
         return (root, query, criteriaBuilder) -> {
             if (hasReward == null) {
