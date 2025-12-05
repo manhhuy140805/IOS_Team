@@ -3,6 +3,7 @@ package io.volunteerapp.volunteer_app.service;
 import io.volunteerapp.volunteer_app.DTO.requeset.UpdateUserRequest;
 import io.volunteerapp.volunteer_app.DTO.response.UserResponse;
 import io.volunteerapp.volunteer_app.Util.RestResponse;
+import io.volunteerapp.volunteer_app.mapper.UserMapper;
 import io.volunteerapp.volunteer_app.model.User;
 import io.volunteerapp.volunteer_app.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,9 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private UserMapper userMapper;
 
     public ResponseEntity<RestResponse<UserResponse>> getUserById(Integer userId) {
 
@@ -70,19 +74,8 @@ public class UserService {
 
         User user = userOptional.get();
 
-        // 2. Cập nhật thông tin (chỉ cập nhật field không null)
-        if (request.getFullName() != null) {
-            user.setFullName(request.getFullName());
-        }
-        if (request.getPhone() != null) {
-            user.setPhone(request.getPhone());
-        }
-        if (request.getRole() != null) {
-            user.setRole(request.getRole());
-        }
-        if (request.getStatus() != null) {
-            user.setStatus(request.getStatus());
-        }
+        // 2. Cập nhật thông tin sử dụng mapper (chỉ cập nhật field không null)
+        userMapper.updateEntityFromRequest(request, user);
 
         // 3. Lưu vào database
         User updatedUser = userRepository.save(user);

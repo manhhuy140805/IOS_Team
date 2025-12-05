@@ -5,7 +5,9 @@ import io.volunteerapp.volunteer_app.DTO.requeset.RewardRequest;
 import io.volunteerapp.volunteer_app.DTO.response.RewardResponse;
 import io.volunteerapp.volunteer_app.mapper.RewardMapper;
 import io.volunteerapp.volunteer_app.model.Reward;
+import io.volunteerapp.volunteer_app.model.User;
 import io.volunteerapp.volunteer_app.repository.RewardRepository;
+import io.volunteerapp.volunteer_app.repository.UserRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -19,10 +21,12 @@ import java.util.List;
 public class RewardService {
 
     private final RewardRepository rewardRepository;
+    private final UserRepository userRepository;
     private final RewardMapper rewardMapper;
 
-    public RewardService(RewardRepository rewardRepository, RewardMapper rewardMapper) {
+    public RewardService(RewardRepository rewardRepository, UserRepository userRepository, RewardMapper rewardMapper) {
         this.rewardRepository = rewardRepository;
+        this.userRepository = userRepository;
         this.rewardMapper = rewardMapper;
     }
 
@@ -56,6 +60,15 @@ public class RewardService {
     @Transactional
     public RewardResponse createReward(RewardRequest rewardRequest) {
         Reward reward = rewardMapper.toEntity(rewardRequest);
+
+        // Set provider if providerId is provided
+        if (rewardRequest.getProviderId() != null) {
+            User provider = userRepository.findById(rewardRequest.getProviderId())
+                    .orElseThrow(
+                            () -> new RuntimeException("Provider not found with id: " + rewardRequest.getProviderId()));
+            reward.setProvider(provider);
+        }
+
         Reward savedReward = rewardRepository.save(reward);
         return rewardMapper.toResponse(savedReward);
     }
@@ -65,6 +78,15 @@ public class RewardService {
     public RewardResponse updateReward(Integer id, RewardRequest rewardRequest) {
         Reward reward = rewardRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Reward not found with id: " + id));
+
+        // Update provider if providerId is provided
+        if (rewardRequest.getProviderId() != null &&
+                (reward.getProvider() == null || !reward.getProvider().getId().equals(rewardRequest.getProviderId()))) {
+            User provider = userRepository.findById(rewardRequest.getProviderId())
+                    .orElseThrow(
+                            () -> new RuntimeException("Provider not found with id: " + rewardRequest.getProviderId()));
+            reward.setProvider(provider);
+        }
 
         rewardMapper.updateEntityFromRequest(rewardRequest, reward);
         Reward updatedReward = rewardRepository.save(reward);

@@ -3,6 +3,7 @@ package io.volunteerapp.volunteer_app.service;
 import io.volunteerapp.volunteer_app.DTO.PageResponse;
 import io.volunteerapp.volunteer_app.DTO.requeset.EventRegistrationRequest;
 import io.volunteerapp.volunteer_app.DTO.response.EventRegistrationResponse;
+import io.volunteerapp.volunteer_app.mapper.EventRegistrationMapper;
 import io.volunteerapp.volunteer_app.model.Event;
 import io.volunteerapp.volunteer_app.model.EventRegistration;
 import io.volunteerapp.volunteer_app.model.User;
@@ -29,13 +30,16 @@ public class EventRegistrationService {
     private final EventRegistrationRepository registrationRepository;
     private final EventRepository eventRepository;
     private final UserRepository userRepository;
+    private final EventRegistrationMapper registrationMapper;
 
     public EventRegistrationService(EventRegistrationRepository registrationRepository,
             EventRepository eventRepository,
-            UserRepository userRepository) {
+            UserRepository userRepository,
+            EventRegistrationMapper registrationMapper) {
         this.registrationRepository = registrationRepository;
         this.eventRepository = eventRepository;
         this.userRepository = userRepository;
+        this.registrationMapper = registrationMapper;
     }
 
     // Register for an event

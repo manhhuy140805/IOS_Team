@@ -22,9 +22,6 @@ public class EventController {
         this.eventService = eventService;
     }
 
-    /**
-     * Get all events with filters and pagination (Public access)
-     */
     @GetMapping("")
     public ResponseEntity<PageResponse<EventResponse>> getAllEvents(
             @RequestParam(name = "page", defaultValue = "0") int page,
@@ -45,18 +42,12 @@ public class EventController {
         return ResponseEntity.ok(response);
     }
 
-    /**
-     * Get event by ID (Public access)
-     */
     @GetMapping("/{id}")
     public ResponseEntity<EventResponse> getEventById(@PathVariable Integer id) {
         EventResponse response = eventService.getEventById(id);
         return ResponseEntity.ok(response);
     }
 
-    /**
-     * Get events created by current user (Authenticated users)
-     */
     @GetMapping("/my-events")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<PageResponse<EventResponse>> getMyEvents(
@@ -69,9 +60,6 @@ public class EventController {
         return ResponseEntity.ok(response);
     }
 
-    /**
-     * Get events by user ID (Admin only)
-     */
     @GetMapping("/user/{userId}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<PageResponse<EventResponse>> getEventsByUserId(
@@ -83,9 +71,6 @@ public class EventController {
         return ResponseEntity.ok(response);
     }
 
-    /**
-     * Create new event (Admin only)
-     */
     @PostMapping("")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<EventResponse> createEvent(@Valid @RequestBody EventRequest eventRequest) {
@@ -93,9 +78,6 @@ public class EventController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    /**
-     * Update event (Admin only)
-     */
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<EventResponse> updateEvent(
@@ -106,9 +88,6 @@ public class EventController {
         return ResponseEntity.ok(response);
     }
 
-    /**
-     * Delete event (Admin only)
-     */
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deleteEvent(@PathVariable Integer id) {

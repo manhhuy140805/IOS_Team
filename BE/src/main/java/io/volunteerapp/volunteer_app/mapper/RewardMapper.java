@@ -9,15 +9,19 @@ import org.mapstruct.*;
 public interface RewardMapper {
 
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "provider", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "rewardUserRewards", ignore = true)
     Reward toEntity(RewardRequest rewardRequest);
 
+    @Mapping(source = "provider.id", target = "providerId")
+    @Mapping(source = "provider.fullName", target = "providerName")
     RewardResponse toResponse(Reward reward);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "provider", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "rewardUserRewards", ignore = true)
