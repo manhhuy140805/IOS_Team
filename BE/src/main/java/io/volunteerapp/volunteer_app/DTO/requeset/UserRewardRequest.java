@@ -14,4 +14,6 @@ public class UserRewardRequest {
 
     @NotNull(message = "Reward ID is required")
     private Integer rewardId;
+
+    private String notes; // Optional notes from user
 }

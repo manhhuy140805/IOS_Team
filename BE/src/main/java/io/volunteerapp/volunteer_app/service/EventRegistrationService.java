@@ -67,9 +67,12 @@ public class EventRegistrationService {
         registration.setStatus("PENDING");
         registration.setCheckedIn(false);
         registration.setJoinDate(Date.valueOf(LocalDate.now()));
+        if (request.getNotes() != null) {
+            registration.setNotes(request.getNotes());
+        }
 
         EventRegistration saved = registrationRepository.save(registration);
-        return convertToResponse(saved);
+        return registrationMapper.toResponse(saved);
     }
 
     // Get registrations for an event (Admin only)
@@ -89,7 +92,7 @@ public class EventRegistrationService {
         }
 
         List<EventRegistrationResponse> responses = registrationPage.getContent().stream()
-                .map(this::convertToResponse)
+                .map(registrationMapper::toResponse)
                 .toList();
 
         return new PageResponse<>(
@@ -113,7 +116,7 @@ public class EventRegistrationService {
         }
 
         List<EventRegistrationResponse> responses = registrationPage.getContent().stream()
-                .map(this::convertToResponse)
+                .map(registrationMapper::toResponse)
                 .toList();
 
         return new PageResponse<>(
@@ -146,7 +149,7 @@ public class EventRegistrationService {
 
         registration.setStatus(status);
         EventRegistration updated = registrationRepository.save(registration);
-        return convertToResponse(updated);
+        return registrationMapper.toResponse(updated);
     }
 
     // Check-in user (Admin only)
@@ -159,26 +162,7 @@ public class EventRegistrationService {
         registration.setCheckedInAt(Instant.now());
         registration.setStatus("COMPLETED");
         EventRegistration updated = registrationRepository.save(registration);
-        return convertToResponse(updated);
-    }
-
-    private EventRegistrationResponse convertToResponse(EventRegistration registration) {
-        EventRegistrationResponse response = new EventRegistrationResponse();
-        response.setId(registration.getId());
-        response.setEventId(registration.getEvent().getId());
-        response.setEventTitle(registration.getEvent().getTitle());
-        response.setUserId(registration.getUser().getId());
-        response.setUserName(registration.getUser().getFullName());
-        response.setUserEmail(registration.getUser().getEmail());
-        response.setUserPhone(registration.getUser().getPhone());
-        response.setUserAvatarUrl(registration.getUser().getAvatarUrl());
-        response.setStatus(registration.getStatus());
-        response.setNotes(registration.getNotes());
-        response.setCheckedIn(registration.getCheckedIn());
-        response.setCheckedInAt(registration.getCheckedInAt());
-        response.setJoinDate(registration.getJoinDate());
-        response.setNotificationContent(registration.getNotificationContent());
-        return response;
+        return registrationMapper.toResponse(updated);
     }
 
     private User getCurrentUser() {
