@@ -1,4 +1,5 @@
 package com.manhhuy.myapplication.ui.Activities.Fragment.Organization;
+
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -198,7 +199,7 @@ public class AcceptApplicantFragment extends Fragment implements AplicationAdapt
     }
 
     private void resetTab(TextView tab) {
-        tab.setBackgroundResource(R.drawable.bg_tab_filter);
+        tab.setBackgroundResource(R.drawable.bg_white);
         tab.setTextColor(ContextCompat.getColor(requireContext(), R.color.cyan));
     }
 

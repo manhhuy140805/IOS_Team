@@ -49,7 +49,7 @@ public class AdminFragment extends Fragment implements OnUserActionListener, OnO
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+            Bundle savedInstanceState) {
         binding = ActivityUserManagementBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
@@ -236,9 +236,11 @@ public class AdminFragment extends Fragment implements OnUserActionListener, OnO
     private void updateTabColors() {
         if (isUsersTab) {
             // Users tab active
-            binding.tabUsers.setBackgroundResource(R.drawable.bg_button_white_solid);
-            ((ImageView) binding.tabUsers.getChildAt(0)).setColorFilter(getResources().getColor(R.color.app_green_primary));
-            ((TextView) binding.tabUsers.getChildAt(1)).setTextColor(getResources().getColor(R.color.app_green_primary));
+            binding.tabUsers.setBackgroundResource(R.drawable.bg_button_gray_solid);
+            ((ImageView) binding.tabUsers.getChildAt(0))
+                    .setColorFilter(getResources().getColor(R.color.app_green_primary));
+            ((TextView) binding.tabUsers.getChildAt(1))
+                    .setTextColor(getResources().getColor(R.color.app_green_primary));
 
             // Organizations tab inactive
             binding.tabOrganizations.setBackgroundResource(android.R.color.transparent);
@@ -248,10 +250,12 @@ public class AdminFragment extends Fragment implements OnUserActionListener, OnO
             ((TextView) binding.tabOrganizations.getChildAt(1)).setAlpha(0.8f);
         } else {
             // Organizations tab active
-            binding.tabOrganizations.setBackgroundResource(R.drawable.bg_button_white_solid);
-            ((ImageView) binding.tabOrganizations.getChildAt(0)).setColorFilter(getResources().getColor(R.color.app_green_primary));
+            binding.tabOrganizations.setBackgroundResource(R.drawable.bg_button_gray_solid);
+            ((ImageView) binding.tabOrganizations.getChildAt(0))
+                    .setColorFilter(getResources().getColor(R.color.app_green_primary));
             ((ImageView) binding.tabOrganizations.getChildAt(0)).setAlpha(1.0f);
-            ((TextView) binding.tabOrganizations.getChildAt(1)).setTextColor(getResources().getColor(R.color.app_green_primary));
+            ((TextView) binding.tabOrganizations.getChildAt(1))
+                    .setTextColor(getResources().getColor(R.color.app_green_primary));
             ((TextView) binding.tabOrganizations.getChildAt(1)).setAlpha(1.0f);
 
             // Users tab inactive
@@ -297,7 +301,7 @@ public class AdminFragment extends Fragment implements OnUserActionListener, OnO
     }
 
     private void resetFilterButton(TextView button) {
-        button.setBackgroundResource(R.drawable.bg_filter_unselected);
+        button.setBackgroundResource(R.drawable.bg_primary);
         button.setTextColor(getResources().getColor(R.color.text_secondary));
     }
 

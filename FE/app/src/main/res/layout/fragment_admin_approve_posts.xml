@@ -80,7 +80,7 @@
                     android:textSize="14sp"
                     android:paddingHorizontal="20dp"
                     android:paddingVertical="8dp"
-                    android:background="@drawable/bg_button_white_solid"
+                    android:background="@drawable/bg_button_gray_solid"
                     android:textColor="@color/app_green_primary"
                     android:textStyle="bold"
                     android:layout_marginEnd="8dp"/>

@@ -68,7 +68,7 @@
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:padding="8dp"
-                        android:background="@drawable/bg_button_white_solid"
+                        android:background="@drawable/bg_button_gray_solid"
                         android:backgroundTint="#33FFFFFF"
                         android:src="@drawable/ic_mail"
                         app:tint="@color/white" />

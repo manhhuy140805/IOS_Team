@@ -108,7 +108,7 @@ public class RewardAdapter extends RecyclerView.Adapter<RewardAdapter.RewardView
             holder.binding.btnRedeem.setText("Đổi ngay");
         } else {
             holder.binding.btnRedeem.setEnabled(false);
-            holder.binding.btnRedeem.setBackgroundResource(R.drawable.bg_button_lock);
+            holder.binding.btnRedeem.setBackgroundResource(R.drawable.bg_button_white);
             holder.binding.btnRedeem.setTextColor(ContextCompat.getColor(context, android.R.color.darker_gray));
             holder.binding.btnRedeem.setText("Chưa đủ điểm");
         }

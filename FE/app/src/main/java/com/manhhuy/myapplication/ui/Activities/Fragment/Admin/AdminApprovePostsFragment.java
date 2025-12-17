@@ -192,7 +192,7 @@ public class AdminApprovePostsFragment extends Fragment implements OnItemClickLi
     }
 
     private void styleTabSelected(TextView tab) {
-        tab.setBackgroundResource(R.drawable.bg_button_white_solid);
+        tab.setBackgroundResource(R.drawable.bg_button_gray_solid);
         tab.setTextColor(getResources().getColor(R.color.app_green_primary));
         tab.setAlpha(1f);
         tab.setTypeface(tab.getTypeface(), Typeface.BOLD);

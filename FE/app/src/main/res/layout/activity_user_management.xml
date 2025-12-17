@@ -68,7 +68,7 @@
                 android:orientation="horizontal"
                 android:gravity="center"
                 android:paddingVertical="8dp"
-                android:background="@drawable/bg_button_white_solid">
+                android:background="@drawable/bg_button_gray_solid">
 
                 <ImageView
                     android:layout_width="20dp"
@@ -500,7 +500,7 @@
                             android:textSize="14sp"
                             android:paddingHorizontal="20dp"
                             android:paddingVertical="8dp"
-                            android:background="@drawable/bg_button_white_solid"
+                            android:background="@drawable/bg_button_gray_solid"
                             android:backgroundTint="@color/app_green_primary"
                             android:textColor="@color/white"
                             android:layout_marginEnd="8dp"/>

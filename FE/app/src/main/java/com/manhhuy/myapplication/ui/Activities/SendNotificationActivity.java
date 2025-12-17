@@ -73,8 +73,7 @@ public class SendNotificationActivity extends AppCompatActivity {
         binding.rbConfirmedUsers.setOnClickListener(v -> selectRecipient(1));
         binding.rbUnconfirmedUsers.setOnClickListener(v -> selectRecipient(2));
 
-        // Bottom Buttons
-        binding.btnCancel.setOnClickListener(v -> finish());
+
 
         binding.btnSendNotification.setOnClickListener(v -> sendNotification());
     }

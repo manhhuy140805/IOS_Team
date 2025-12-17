@@ -5,11 +5,11 @@
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="16dp"
     android:layout_marginBottom="12dp"
+    app:cardBackgroundColor="@color/white"
     app:cardCornerRadius="12dp"
     app:cardElevation="8dp"
-    app:cardBackgroundColor="@color/white"
-    app:strokeWidth="2dp"
-    app:strokeColor="#E0E0E0">
+    app:strokeColor="#E0E0E0"
+    app:strokeWidth="2dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -21,27 +21,27 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical">
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
             <!-- Avatar -->
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/ivUserAvatar"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:src="@mipmap/ic_launcher"
                 android:scaleType="centerCrop"
+                android:src="@mipmap/ic_launcher"
                 app:shapeAppearanceOverlay="@style/ShapeAppearance.Circle"
                 app:strokeColor="#E0E0E0"
-                app:strokeWidth="1dp"/>
+                app:strokeWidth="1dp" />
 
             <!-- Name and Email -->
             <LinearLayout
                 android:id="@+id/llUserInfo"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:layout_marginStart="12dp"
+                android:layout_weight="1"
                 android:orientation="vertical">
 
                 <TextView
@@ -49,20 +49,20 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Nguyễn Văn An"
+                    android:textColor="@color/text_primary"
                     android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/text_primary"/>
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/tvUserEmail"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="an.nguyen@email.com"
-                    android:textSize="12sp"
                     android:layout_marginTop="2dp"
-                    android:textColor="@color/text_secondary"
                     android:ellipsize="end"
-                    android:maxLines="1"/>
+                    android:maxLines="1"
+                    android:text="an.nguyen@email.com"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="12sp" />
             </LinearLayout>
 
             <!-- Status Badge -->
@@ -70,13 +70,13 @@
                 android:id="@+id/tvUserStatus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Hoạt động"
-                android:textSize="11sp"
-                android:textStyle="bold"
+                android:background="@drawable/bg_status_active_event"
                 android:paddingHorizontal="10dp"
                 android:paddingVertical="4dp"
-                android:background="@drawable/bg_status_active_event"
-                android:textColor="@color/app_green_primary"/>
+                android:text="Hoạt động"
+                android:textColor="@color/app_green_primary"
+                android:textSize="11sp"
+                android:textStyle="bold" />
 
         </LinearLayout>
 
@@ -84,8 +84,8 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="#F0F0F0"
-            android:layout_marginVertical="12dp"/>
+            android:layout_marginVertical="12dp"
+            android:background="#F0F0F0" />
 
         <!-- User Details -->
         <LinearLayout
@@ -104,18 +104,18 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Tham gia"
-                    android:textSize="11sp"
-                    android:textColor="@color/text_secondary"/>
+                    android:textColor="@color/text_secondary"
+                    android:textSize="11sp" />
 
                 <TextView
                     android:id="@+id/tvJoinDate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
                     android:text="15/10/2024"
-                    android:textSize="13sp"
-                    android:textStyle="bold"
                     android:textColor="@color/text_primary"
-                    android:layout_marginTop="2dp"/>
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
             </LinearLayout>
 
             <!-- Activity Count -->
@@ -129,18 +129,18 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Hoạt động"
-                    android:textSize="11sp"
-                    android:textColor="@color/text_secondary"/>
+                    android:textColor="@color/text_secondary"
+                    android:textSize="11sp" />
 
                 <TextView
                     android:id="@+id/tvActivityCount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
                     android:text="12"
-                    android:textSize="13sp"
-                    android:textStyle="bold"
                     android:textColor="@color/app_green_primary"
-                    android:layout_marginTop="2dp"/>
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
             </LinearLayout>
 
             <!-- Last Active -->
@@ -154,18 +154,18 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Gần nhất"
-                    android:textSize="11sp"
-                    android:textColor="@color/text_secondary"/>
+                    android:textColor="@color/text_secondary"
+                    android:textSize="11sp" />
 
                 <TextView
                     android:id="@+id/tvLastActive"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
                     android:text="48h trước"
-                    android:textSize="13sp"
-                    android:textStyle="bold"
                     android:textColor="@color/text_primary"
-                    android:layout_marginTop="2dp"/>
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
             </LinearLayout>
         </LinearLayout>
 
@@ -175,10 +175,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
             android:background="@drawable/bg_category_tab_unselected_reward"
             android:backgroundTint="#FFEBEE"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
             android:padding="8dp"
             android:visibility="gone">
 
@@ -186,16 +186,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="⚠️"
-                android:textSize="12sp"/>
+                android:textSize="12sp" />
 
             <TextView
                 android:id="@+id/tvViolationType"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Vi phạm: Spam"
-                android:textSize="12sp"
                 android:layout_marginStart="8dp"
-                android:textColor="#C62828"/>
+                android:text="Vi phạm: Spam"
+                android:textColor="#C62828"
+                android:textSize="12sp" />
         </LinearLayout>
 
         <!-- Action Buttons -->
@@ -203,40 +203,40 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:orientation="horizontal"
-            android:gravity="end">
+            android:gravity="end"
+            android:orientation="horizontal">
 
             <ImageButton
                 android:id="@+id/btnView"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/ic_info"
-                app:tint="@color/text_secondary"
+                android:contentDescription="View Details"
                 android:padding="8dp"
-                android:contentDescription="View Details"/>
+                android:src="@drawable/ic_info"
+                app:tint="@color/text_secondary" />
 
             <ImageButton
                 android:id="@+id/btnLockUnlock"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/ic_lock"
-                app:tint="#FF9800"
-                android:padding="8dp"
                 android:layout_marginStart="8dp"
-                android:contentDescription="Lock/Unlock"/>
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Lock/Unlock"
+                android:padding="8dp"
+                android:src="@drawable/ic_lock"
+                app:tint="#FF9800" />
 
             <ImageButton
                 android:id="@+id/btnDelete"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/ic_delete"
-                app:tint="#E53935"
-                android:padding="8dp"
                 android:layout_marginStart="8dp"
-                android:contentDescription="Delete"/>
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Delete"
+                android:padding="8dp"
+                android:src="@drawable/ic_delete"
+                app:tint="@color/button_red" />
 
         </LinearLayout>
 

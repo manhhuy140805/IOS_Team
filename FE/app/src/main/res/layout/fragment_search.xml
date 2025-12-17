@@ -1,346 +1,107 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/md_theme_light_background"
-    tools:context=".ui.Activities.Fragment.Common.SearchFragment">
+    xmlns:tools="http://schemas.android.com/tools" android:id="@+id/main" android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:background="@color/md_theme_light_background" tools:context=".ui.Activities.Fragment.Common.SearchFragment">
 
     <!-- Header Section with Green Rounded Background -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="@drawable/bg_header_green_rounded"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:paddingTop="16dp"
-        android:paddingBottom="24dp"
-        android:elevation="8dp">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:background="@drawable/bg_header_green_rounded" android:paddingStart="16dp" android:paddingEnd="16dp" android:paddingTop="16dp" android:paddingBottom="24dp" android:elevation="8dp">
 
         <!-- Back Button & Title -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:layout_marginBottom="20dp">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:layout_marginBottom="20dp">
 
-            <ImageButton
-                android:id="@+id/backButton"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:background="@drawable/bg_button_white_solid"
-                android:src="@drawable/ic_back"
-                android:padding="10dp"
-                android:scaleType="centerInside"
-                android:contentDescription="@string/app_name"
-                app:tint="@color/app_green_primary"/>
+            <ImageButton android:id="@+id/backButton" android:layout_width="40dp" android:layout_height="40dp" android:background="@drawable/bg_button_gray_solid" android:src="@drawable/ic_back" android:padding="10dp" android:scaleType="centerInside" android:contentDescription="@string/app_name" app:tint="@color/app_green_primary"/>
 
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical"
-                android:layout_marginStart="16dp">
+            <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:layout_marginStart="16dp">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Tìm kiếm"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/white" />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Tìm kiếm" android:textSize="20sp" android:textStyle="bold" android:textColor="@color/white" />
 
-                <TextView
-                    android:id="@+id/viewMoreFilters"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="cơ hội được tìm thấy"
-                    android:textSize="13sp"
-                    android:textColor="@color/white"
-                    android:alpha="0.9"
-                    android:layout_marginTop="2dp" />
+                <TextView android:id="@+id/viewMoreFilters" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="cơ hội được tìm thấy" android:textSize="13sp" android:textColor="@color/white" android:alpha="0.9" android:layout_marginTop="2dp" />
 
             </LinearLayout>
 
         </LinearLayout>
 
         <!-- Search Bar with Filters -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical">
 
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="48dp"
-                android:layout_weight="1"
-                android:background="@drawable/bg_search_bar"
-                android:backgroundTint="@color/white"
-                android:gravity="center_vertical"
-                android:paddingHorizontal="12dp"
-                android:layout_marginEnd="12dp">
+            <LinearLayout android:layout_width="0dp" android:layout_height="48dp" android:layout_weight="1" android:background="@drawable/bg_search_bar" android:backgroundTint="@color/white" android:gravity="center_vertical" android:paddingHorizontal="12dp" android:layout_marginEnd="12dp">
 
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:src="@drawable/ic_search"
-                    app:tint="@color/gray_500"
-                    android:contentDescription="@string/app_name" />
+                <ImageView android:layout_width="20dp" android:layout_height="20dp" android:src="@drawable/ic_search" app:tint="@color/gray_500" android:contentDescription="@string/app_name" />
 
-                <EditText
-                    android:id="@+id/searchKeyword"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@null"
-                    android:hint="Tìm kiếm sự kiện, tổ chức..."
-                    android:paddingStart="12dp"
-                    android:textColor="@color/text_primary"
-                    android:textColorHint="@color/gray_400"
-                    android:textSize="14sp"
-                    android:inputType="text"
-                    android:maxLines="1" />
+                <EditText android:id="@+id/searchKeyword" android:layout_width="match_parent" android:layout_height="match_parent" android:background="@null" android:hint="Tìm kiếm sự kiện, tổ chức..." android:paddingStart="12dp" android:textColor="@color/text_primary" android:textColorHint="@color/gray_400" android:textSize="14sp" android:inputType="text" android:maxLines="1" />
 
             </LinearLayout>
 
-            <ImageButton
-                android:id="@+id/filterButton"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:background="@drawable/bg_button_white_solid"
-                android:src="@drawable/ic_filter"
-                android:padding="12dp"
-                android:scaleType="centerInside"
-                android:contentDescription="@string/app_name"
-                app:tint="@color/app_green_primary" />
+            <ImageButton android:id="@+id/filterButton" android:layout_width="48dp" android:layout_height="48dp" android:background="@drawable/bg_button_gray_solid" android:src="@drawable/ic_filter" android:padding="12dp" android:scaleType="centerInside" android:contentDescription="@string/app_name" app:tint="@color/app_green_primary" />
 
         </LinearLayout>
 
     </LinearLayout>
 
     <!-- Content -->
-    <androidx.core.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true">
+    <androidx.core.widget.NestedScrollView android:layout_width="match_parent" android:layout_height="match_parent" android:fillViewport="true">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="16dp">
 
             <!-- Filter Panel -->
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/filterPanel"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
-                android:visibility="gone"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="8dp"
-                app:strokeWidth="2dp"
-                app:strokeColor="#E0E0E0"
-                app:cardBackgroundColor="@android:color/white">
+            <com.google.android.material.card.MaterialCardView android:id="@+id/filterPanel" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="20dp" android:visibility="gone" app:cardCornerRadius="16dp" app:cardElevation="8dp" app:strokeWidth="2dp" app:strokeColor="#E0E0E0" app:cardBackgroundColor="@android:color/white">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="20dp">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="20dp">
 
                     <!-- Filter Header -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
-                        android:layout_marginBottom="20dp">
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:layout_marginBottom="20dp">
 
-                        <ImageView
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:src="@drawable/ic_filter"
-                            android:scaleType="centerInside"
-                            android:contentDescription="@string/app_name"
-                            app:tint="@color/app_green_primary"
-                            android:layout_marginEnd="12dp" />
+                        <ImageView android:layout_width="20dp" android:layout_height="20dp" android:src="@drawable/ic_filter" android:scaleType="centerInside" android:contentDescription="@string/app_name" app:tint="@color/app_green_primary" android:layout_marginEnd="12dp" />
 
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Bộ lọc"
-                            android:textSize="16sp"
-                            android:textStyle="bold"
-                            android:textColor="@color/text_primary" />
+                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Bộ lọc" android:textSize="16sp" android:textStyle="bold" android:textColor="@color/text_primary" />
 
-                        <TextView
-                            android:id="@+id/clearFiltersBtn"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Xóa tất cả"
-                            android:textSize="13sp"
-                            android:textColor="@color/app_green_primary"
-                            android:textStyle="bold"
-                            android:padding="4dp"/>
+                        <TextView android:id="@+id/clearFiltersBtn" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Xóa tất cả" android:textSize="13sp" android:textColor="@color/app_green_primary" android:textStyle="bold" android:padding="4dp"/>
 
                     </LinearLayout>
 
                     <!-- Category Filter - RecyclerView Horizontal -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:layout_marginBottom="20dp">
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:layout_marginBottom="20dp">
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Danh mục"
-                            android:textSize="14sp"
-                            android:textStyle="bold"
-                            android:textColor="@color/text_primary"
-                            android:layout_marginBottom="12dp" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Danh mục" android:textSize="14sp" android:textStyle="bold" android:textColor="@color/text_primary" android:layout_marginBottom="12dp" />
 
-                        <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/categoryFiltersRecyclerView"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:scrollbars="none"
-                            android:clipToPadding="false"
-                            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+                        <androidx.recyclerview.widget.RecyclerView android:id="@+id/categoryFiltersRecyclerView" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:scrollbars="none" android:clipToPadding="false" app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
                         <!-- CheckBoxes for category filters -->
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:gravity="center_vertical"
-                            android:layout_marginTop="12dp">
+                        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:layout_marginTop="12dp">
 
-                            <CheckBox
-                                android:id="@+id/categoryEnvironment"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Môi trường"
-                                android:textSize="14sp"
-                                android:buttonTint="@color/app_green_primary"/>
+                            <CheckBox android:id="@+id/categoryEnvironment" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Môi trường" android:textSize="14sp" android:buttonTint="@color/app_green_primary"/>
 
-                            <CheckBox
-                                android:id="@+id/categoryEducation"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Giáo dục"
-                                android:textSize="14sp"
-                                android:layout_marginStart="16dp"
-                                android:buttonTint="@color/app_green_primary"/>
+                            <CheckBox android:id="@+id/categoryEducation" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Giáo dục" android:textSize="14sp" android:layout_marginStart="16dp" android:buttonTint="@color/app_green_primary"/>
 
-                            <CheckBox
-                                android:id="@+id/categoryHealth"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Y tế"
-                                android:textSize="14sp"
-                                android:layout_marginStart="16dp"
-                                android:buttonTint="@color/app_green_primary"/>
+                            <CheckBox android:id="@+id/categoryHealth" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Y tế" android:textSize="14sp" android:layout_marginStart="16dp" android:buttonTint="@color/app_green_primary"/>
 
                         </LinearLayout>
 
                     </LinearLayout>
 
                     <!-- Divider -->
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="#F0F0F0"
-                        android:layout_marginBottom="20dp" />
+                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#F0F0F0" android:layout_marginBottom="20dp" />
 
                     <!-- Date Range Filter -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:layout_marginBottom="24dp">
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:layout_marginBottom="24dp">
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Hạn đăng ký"
-                            android:textSize="14sp"
-                            android:textStyle="bold"
-                            android:textColor="@color/text_primary"
-                            android:layout_marginBottom="12dp" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Hạn đăng ký" android:textSize="14sp" android:textStyle="bold" android:textColor="@color/text_primary" android:layout_marginBottom="12dp" />
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:gravity="center_vertical">
+                        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical">
 
-                            <LinearLayout
-                                android:layout_width="0dp"
-                                android:layout_height="48dp"
-                                android:layout_weight="1"
-                                android:background="@drawable/bg_search_bar"
-                                android:backgroundTint="#F5F5F5"
-                                android:gravity="center_vertical"
-                                android:paddingHorizontal="12dp"
-                                android:layout_marginEnd="8dp">
+                            <LinearLayout android:layout_width="0dp" android:layout_height="48dp" android:layout_weight="1" android:background="@drawable/bg_search_bar" android:backgroundTint="#F5F5F5" android:gravity="center_vertical" android:paddingHorizontal="12dp" android:layout_marginEnd="8dp">
 
-                                <ImageView
-                                    android:layout_width="20dp"
-                                    android:layout_height="20dp"
-                                    android:src="@drawable/ic_calendar"
-                                    app:tint="@color/gray_500"
-                                    android:layout_marginEnd="8dp" />
+                                <ImageView android:layout_width="20dp" android:layout_height="20dp" android:src="@drawable/ic_calendar" app:tint="@color/gray_500" android:layout_marginEnd="8dp" />
 
-                                <EditText
-                                    android:id="@+id/startDate"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:background="@null"
-                                    android:hint="Từ ngày"
-                                    android:textSize="13sp"
-                                    android:inputType="date"
-                                    android:textColor="@color/text_primary"
-                                    android:textColorHint="@color/gray_400"/>
+                                <EditText android:id="@+id/startDate" android:layout_width="match_parent" android:layout_height="match_parent" android:background="@null" android:hint="Từ ngày" android:textSize="13sp" android:inputType="date" android:textColor="@color/text_primary" android:textColorHint="@color/gray_400"/>
 
                             </LinearLayout>
 
-                            <LinearLayout
-                                android:layout_width="0dp"
-                                android:layout_height="48dp"
-                                android:layout_weight="1"
-                                android:background="@drawable/bg_search_bar"
-                                android:backgroundTint="#F5F5F5"
-                                android:gravity="center_vertical"
-                                android:paddingHorizontal="12dp"
-                                android:layout_marginStart="8dp">
+                            <LinearLayout android:layout_width="0dp" android:layout_height="48dp" android:layout_weight="1" android:background="@drawable/bg_search_bar" android:backgroundTint="#F5F5F5" android:gravity="center_vertical" android:paddingHorizontal="12dp" android:layout_marginStart="8dp">
 
-                                <ImageView
-                                    android:layout_width="20dp"
-                                    android:layout_height="20dp"
-                                    android:src="@drawable/ic_calendar"
-                                    app:tint="@color/gray_500"
-                                    android:layout_marginEnd="8dp" />
+                                <ImageView android:layout_width="20dp" android:layout_height="20dp" android:src="@drawable/ic_calendar" app:tint="@color/gray_500" android:layout_marginEnd="8dp" />
 
-                                <EditText
-                                    android:id="@+id/endDate"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:background="@null"
-                                    android:hint="Đến ngày"
-                                    android:textSize="13sp"
-                                    android:inputType="date"
-                                    android:textColor="@color/text_primary"
-                                    android:textColorHint="@color/gray_400"/>
+                                <EditText android:id="@+id/endDate" android:layout_width="match_parent" android:layout_height="match_parent" android:background="@null" android:hint="Đến ngày" android:textSize="13sp" android:inputType="date" android:textColor="@color/text_primary" android:textColorHint="@color/gray_400"/>
 
                             </LinearLayout>
 
@@ -349,39 +110,11 @@
                     </LinearLayout>
 
                     <!-- Action Buttons -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center">
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center">
 
-                        <androidx.appcompat.widget.AppCompatButton
-                            android:id="@+id/resetFilterBtn"
-                            android:layout_width="0dp"
-                            android:layout_height="48dp"
-                            android:layout_weight="1"
-                            android:layout_marginEnd="8dp"
-                            android:background="@drawable/bg_search_bar"
-                            android:backgroundTint="@color/white"
-                            android:text="Đặt lại"
-                            android:textColor="@color/app_green_primary"
-                            android:textSize="14sp"
-                            android:textStyle="bold"
-                            android:textAllCaps="false"
-                            style="?android:attr/borderlessButtonStyle"/>
+                        <androidx.appcompat.widget.AppCompatButton android:id="@+id/resetFilterBtn" android:layout_width="0dp" android:layout_height="48dp" android:layout_weight="1" android:layout_marginEnd="8dp" android:background="@drawable/bg_search_bar" android:backgroundTint="@color/white" android:text="Đặt lại" android:textColor="@color/app_green_primary" android:textSize="14sp" android:textStyle="bold" android:textAllCaps="false" style="?android:attr/borderlessButtonStyle"/>
 
-                        <androidx.appcompat.widget.AppCompatButton
-                            android:id="@+id/applyFilterBtn"
-                            android:layout_width="0dp"
-                            android:layout_height="48dp"
-                            android:layout_weight="1"
-                            android:layout_marginStart="8dp"
-                            android:background="@drawable/bg_button_green_primary"
-                            android:text="Áp dụng"
-                            android:textColor="@color/white"
-                            android:textSize="14sp"
-                            android:textStyle="bold"
-                            android:textAllCaps="false"/>
+                        <androidx.appcompat.widget.AppCompatButton android:id="@+id/applyFilterBtn" android:layout_width="0dp" android:layout_height="48dp" android:layout_weight="1" android:layout_marginStart="8dp" android:background="@drawable/bg_button_base" android:backgroundTint="@color/button_blue" android:text="Áp dụng" android:textColor="@color/white" android:textSize="14sp" android:textStyle="bold" android:textAllCaps="false"/>
 
                     </LinearLayout>
 
@@ -390,79 +123,25 @@
             </com.google.android.material.card.MaterialCardView>
 
             <!-- Results Label -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:layout_marginBottom="16dp">
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:layout_marginBottom="16dp">
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Kết quả"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/text_primary" />
+                <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Kết quả" android:textSize="16sp" android:textStyle="bold" android:textColor="@color/text_primary" />
 
-                <Spinner
-                    android:id="@+id/sortSpinner"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:entries="@array/sort_options"
-                    android:background="@drawable/bg_search_bar"
-                    android:backgroundTint="@color/white"
-                    android:padding="8dp"/>
+                <Spinner android:id="@+id/sortSpinner" android:layout_width="wrap_content" android:layout_height="wrap_content" android:entries="@array/sort_options" android:background="@drawable/bg_search_bar" android:backgroundTint="@color/white" android:padding="8dp"/>
 
             </LinearLayout>
 
             <!-- Search Results RecyclerView -->
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/searchResultsRecyclerView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginBottom="16dp"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+            <androidx.recyclerview.widget.RecyclerView android:id="@+id/searchResultsRecyclerView" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:layout_marginBottom="16dp" app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
             <!-- No Results Message -->
-            <LinearLayout
-                android:id="@+id/noResultsContainer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:gravity="center"
-                android:visibility="gone"
-                android:padding="40dp">
+            <LinearLayout android:id="@+id/noResultsContainer" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:gravity="center" android:visibility="gone" android:padding="40dp">
 
-                <ImageView
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:src="@drawable/ic_search"
-                    android:scaleType="centerInside"
-                    android:contentDescription="@string/app_name"
-                    app:tint="@color/gray_300"
-                    android:layout_marginBottom="16dp" />
+                <ImageView android:layout_width="100dp" android:layout_height="100dp" android:src="@drawable/ic_search" android:scaleType="centerInside" android:contentDescription="@string/app_name" app:tint="@color/gray_300" android:layout_marginBottom="16dp" />
 
-                <TextView
-                    android:id="@+id/noResultsMessage"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Không tìm thấy kết quả nào"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/text_secondary"
-                    android:gravity="center"
-                    android:layout_marginBottom="8dp" />
+                <TextView android:id="@+id/noResultsMessage" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Không tìm thấy kết quả nào" android:textSize="16sp" android:textStyle="bold" android:textColor="@color/text_secondary" android:gravity="center" android:layout_marginBottom="8dp" />
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Hãy thử tìm kiếm với từ khóa khác hoặc điều chỉnh bộ lọc"
-                    android:textSize="14sp"
-                    android:textColor="@color/text_secondary"
-                    android:gravity="center" />
+                <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Hãy thử tìm kiếm với từ khóa khác hoặc điều chỉnh bộ lọc" android:textSize="14sp" android:textColor="@color/text_secondary" android:gravity="center" />
 
             </LinearLayout>
 

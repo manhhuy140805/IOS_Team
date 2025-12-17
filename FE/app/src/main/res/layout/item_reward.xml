@@ -1,185 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_margin="8dp"
-    app:cardCornerRadius="12dp"
-    app:cardElevation="8dp"
-    app:strokeWidth="2dp"
-    app:strokeColor="#E0E0E0">
+    xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_margin="8dp" app:cardCornerRadius="12dp" app:cardElevation="8dp" app:strokeWidth="2dp" app:strokeColor="#E0E0E0">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/bg_reward_item"
-        android:orientation="horizontal"
-        android:padding="12dp">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:background="@drawable/bg_reward_item" android:orientation="horizontal" android:padding="12dp">
 
         <!-- Icon Container -->
-        <FrameLayout
-            android:id="@+id/iconContainer"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_gravity="center_vertical"
-            android:background="@drawable/bg_icon_purple">
+        <FrameLayout android:id="@+id/iconContainer" android:layout_width="60dp" android:layout_height="60dp" android:layout_gravity="center_vertical" android:background="@drawable/bg_icon_purple">
 
-            <ImageView
-                android:id="@+id/ivRewardIcon"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_gravity="center"
-                android:src="@drawable/ic_voucher"
-                app:tint="#FFFFFF" />
+            <ImageView android:id="@+id/ivRewardIcon" android:layout_width="40dp" android:layout_height="40dp" android:layout_gravity="center" android:src="@drawable/ic_voucher" app:tint="#FFFFFF" />
         </FrameLayout>
 
         <!-- Content -->
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:layout_weight="1"
-            android:orientation="vertical">
+        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginStart="12dp" android:layout_weight="1" android:orientation="vertical">
 
             <!-- Title and Points -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/tvRewardName"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:ellipsize="end"
-                    android:maxLines="2"
-                    android:text="Voucher Highlands Coffee 50k"
-                    android:textColor="#212121"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
+                <TextView android:id="@+id/tvRewardName" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:ellipsize="end" android:maxLines="2" android:text="Voucher Highlands Coffee 50k" android:textColor="#212121" android:textSize="14sp" android:textStyle="bold" />
 
-                <TextView
-                    android:id="@+id/tvRewardPoints"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:text="500"
-                    android:textColor="@color/app_green_primary"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+                <TextView android:id="@+id/tvRewardPoints" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="8dp" android:text="500" android:textColor="@color/app_green_primary" android:textSize="16sp" android:textStyle="bold" />
             </LinearLayout>
 
             <!-- Organization -->
-            <TextView
-                android:id="@+id/tvOrganization"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:text="Highlands Coffee"
-                android:textColor="#616161"
-                android:textSize="12sp" />
+            <TextView android:id="@+id/tvOrganization" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="Highlands Coffee" android:textColor="#616161" android:textSize="12sp" />
 
             <!-- Description -->
-            <TextView
-                android:id="@+id/tvDescription"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:ellipsize="end"
-                android:maxLines="2"
-                android:text="Giảm 50k cho hóa đơn từ 100.000đ trở lên"
-                android:textColor="#757575"
-                android:textSize="11sp" />
+            <TextView android:id="@+id/tvDescription" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:ellipsize="end" android:maxLines="2" android:text="Giảm 50k cho hóa đơn từ 100.000đ trở lên" android:textColor="#757575" android:textSize="11sp" />
 
             <!-- Tags -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:orientation="horizontal">
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/tvTag1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/bg_tag_green"
-                    android:paddingHorizontal="8dp"
-                    android:paddingVertical="4dp"
-                    android:text="Ẩm uống"
-                    android:textColor="#2E7D32"
-                    android:textSize="10sp"
-                    android:textStyle="bold" />
+                <TextView android:id="@+id/tvTag1" android:layout_width="wrap_content" android:layout_height="wrap_content" android:background="@drawable/bg_white" android:paddingHorizontal="8dp" android:paddingVertical="4dp" android:text="Ẩm uống" android:textColor="#2E7D32" android:textSize="10sp" android:textStyle="bold" />
 
-                <TextView
-                    android:id="@+id/tvTag2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="6dp"
-                    android:background="@drawable/bg_tag_blue"
-                    android:paddingHorizontal="8dp"
-                    android:paddingVertical="4dp"
-                    android:text="Phổ biến"
-                    android:textColor="#1565C0"
-                    android:textSize="10sp"
-                    android:textStyle="bold"
-                    android:visibility="visible" />
+                <TextView android:id="@+id/tvTag2" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="6dp" android:background="@drawable/bg_tag_blue" android:paddingHorizontal="8dp" android:paddingVertical="4dp" android:text="Phổ biến" android:textColor="#1565C0" android:textSize="10sp" android:textStyle="bold" android:visibility="visible" />
             </LinearLayout>
 
             <!-- Stock and Redeem Button -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:gravity="center_vertical" android:orientation="horizontal">
 
-                <ImageView
-                    android:layout_width="14dp"
-                    android:layout_height="14dp"
-                    android:src="@drawable/ic_gift"
-                    app:tint="#757575" />
+                <ImageView android:layout_width="14dp" android:layout_height="14dp" android:src="@drawable/ic_gift" app:tint="#757575" />
 
-                <TextView
-                    android:id="@+id/tvStock"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="4dp"
-                    android:layout_weight="1"
-                    android:text="48"
-                    android:textColor="#757575"
-                    android:textSize="11sp" />
+                <TextView android:id="@+id/tvStock" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginStart="4dp" android:layout_weight="1" android:text="48" android:textColor="#757575" android:textSize="11sp" />
 
-                <ImageView
-                    android:id="@+id/ivExpiry"
-                    android:layout_width="14dp"
-                    android:layout_height="14dp"
-                    android:layout_marginStart="8dp"
-                    android:src="@drawable/ic_history"
-                    app:tint="#757575" />
+                <ImageView android:id="@+id/ivExpiry" android:layout_width="14dp" android:layout_height="14dp" android:layout_marginStart="8dp" android:src="@drawable/ic_history" app:tint="#757575" />
 
-                <TextView
-                    android:id="@+id/tvExpiry"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="4dp"
-                    android:text="HSD: 01/12/2025"
-                    android:textColor="#757575"
-                    android:textSize="11sp" />
+                <TextView android:id="@+id/tvExpiry" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="4dp" android:text="HSD: 01/12/2025" android:textColor="#757575" android:textSize="11sp" />
 
-                <Button
-                    android:id="@+id/btnRedeem"
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:layout_marginStart="8dp"
-                    android:background="@drawable/bg_redeem_button"
-                    android:minWidth="0dp"
-                    android:paddingHorizontal="16dp"
-                    android:text="Đổi ngay"
-                    android:textAllCaps="false"
-                    android:textColor="#FFFFFF"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
+                <Button android:id="@+id/btnRedeem" android:layout_width="wrap_content" android:layout_height="40dp" android:layout_marginStart="8dp" android:background="@drawable/bg_redeem_button" android:minWidth="0dp" android:paddingHorizontal="16dp" android:text="Đổi ngay" android:textAllCaps="false" android:textColor="#FFFFFF" android:textSize="12sp" android:textStyle="bold" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
