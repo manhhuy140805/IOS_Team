@@ -1,9 +1,12 @@
 package com.manhhuy.myapplication.helper.response;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Generic wrapper cho API responses
  */
 public class RestResponse<T> {
+    @SerializedName("status")
     private int statusCode;
     private String message;
     private T data;

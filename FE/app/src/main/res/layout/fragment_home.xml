@@ -259,15 +259,6 @@
                     android:textStyle="bold"
                     android:textColor="@color/text_primary" />
 
-                <TextView
-                    android:id="@+id/viewAllCategories"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Xem tất cả"
-                    android:textSize="13sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/app_green_primary" />
-
             </LinearLayout>
 
             <androidx.recyclerview.widget.RecyclerView

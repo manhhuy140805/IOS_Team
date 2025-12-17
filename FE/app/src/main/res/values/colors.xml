@@ -105,6 +105,13 @@
     <color name="tag_education_bg">#FFF3E0</color>
     <color name="tag_education_text">#FF9500</color>
 
+    <!-- Category colors -->
+    <color name="category_community">#E3F2FD</color>
+    <color name="category_environment">#E8F8F5</color>
+    <color name="category_education">#FFF3E0</color>
+    <color name="category_health">#FCE4EC</color>
+    <color name="category_animal">#F3E5F5</color>
+
     <!-- Button -->
     <color name="button_blue">#0984E3</color>
 

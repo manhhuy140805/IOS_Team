@@ -7,6 +7,7 @@ import com.manhhuy.myapplication.helper.request.RegisterRequest;
 import com.manhhuy.myapplication.helper.request.UpdateUserRequest;
 import com.manhhuy.myapplication.helper.response.EventRegistrationResponse;
 import com.manhhuy.myapplication.helper.response.EventResponse;
+import com.manhhuy.myapplication.helper.response.EventTypeResponse;
 import com.manhhuy.myapplication.helper.response.LoginResponse;
 import com.manhhuy.myapplication.helper.response.PageResponse;
 import com.manhhuy.myapplication.helper.response.RestResponse;
@@ -48,6 +49,9 @@ public interface ApiEndpoints {
     
     @POST("users/{id}/promote-to-admin")
     Call<RestResponse<UserResponse>> promoteToAdmin(@Path("id") Integer id);
+
+    @GET("event-types")
+    Call<RestResponse<List<EventTypeResponse>>> getEventTypes();
 
     @GET("events")
     Call<PageResponse<EventResponse>> getAllEvents(

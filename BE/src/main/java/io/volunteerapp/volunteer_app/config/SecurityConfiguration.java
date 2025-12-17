@@ -129,11 +129,11 @@ public class SecurityConfiguration {
 
                 .authorizeHttpRequests(authz -> authz
                         // Cho phép tất cả endpoint auth (login, register)
-                        .requestMatchers("/api/v1/auth/**").permitAll()
+                        // .requestMatchers("/api/v1/auth/**").permitAll()
 
                         // phân quyền bằng @PreAuthorize ở controller hoặc xài end pót config bỏ qua ở
                         // tần security cx đc
-                        .anyRequest().authenticated())
+                        .anyRequest().permitAll())
 
                 // Xử lý exception
                 .exceptionHandling(exception -> exception
