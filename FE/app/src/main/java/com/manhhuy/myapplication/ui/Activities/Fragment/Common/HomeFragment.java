@@ -15,11 +15,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.manhhuy.myapplication.R;
 import com.manhhuy.myapplication.adapter.CategoryAdapter;
+import com.manhhuy.myapplication.adapter.EventAdapter;
 import com.manhhuy.myapplication.adapter.SearchResultAdapter;
 import com.manhhuy.myapplication.databinding.FragmentHomeBinding;
 import com.manhhuy.myapplication.helper.ApiConfig;
 import com.manhhuy.myapplication.helper.ApiEndpoints;
+import com.manhhuy.myapplication.helper.response.EventResponse;
 import com.manhhuy.myapplication.helper.response.EventTypeResponse;
+import com.manhhuy.myapplication.helper.response.PageResponse;
 import com.manhhuy.myapplication.helper.response.RestResponse;
 import com.manhhuy.myapplication.model.SearchResult;
 import com.manhhuy.myapplication.ui.Activities.DetailEventActivity;
@@ -38,6 +41,7 @@ public class HomeFragment extends Fragment {
     private static final String TAG = "HomeFragment";
     private FragmentHomeBinding binding;
     private SearchResultAdapter featuredAdapter;
+    private EventAdapter eventAdapter;
     private CategoryAdapter categoryAdapter;
     private ApiEndpoints apiEndpoints;
 
@@ -66,6 +70,7 @@ public class HomeFragment extends Fragment {
         setupCategoriesRecyclerView();
         loadEventTypes();
         setupFeaturedRecyclerView();
+        loadFeaturedEvents();
         setupClickListeners();
     }
 
@@ -124,43 +129,57 @@ public class HomeFragment extends Fragment {
     }
 
     private void setupFeaturedRecyclerView() {
-        List<SearchResult> featuredEvents = new ArrayList<>();
-        // Add some dummy data for featured events
-        featuredEvents.add(new SearchResult(
-                "Chiến dịch Mùa Hè Xanh 2025",
-                "Đoàn Thanh niên TP.HCM",
-                "TP. Hồ Chí Minh",
-                R.drawable.banner_event_default,
-                "Cộng đồng",
-                "Tình nguyện",
-                "Tham gia các hoạt động tình nguyện hè...",
-                "30/06/2025",
-                120,
-                200,
-                "1 tháng"
-        ));
-        
-        featuredEvents.add(new SearchResult(
-                "Hiến máu nhân đạo - Giọt hồng",
-                "Hội Chữ Thập Đỏ",
-                "Nhà Văn hóa Thanh niên",
-                R.drawable.banner_event_default,
-                "Y tế",
-                "Hiến máu",
-                "Ngày hội hiến máu tình nguyện...",
-                "15/12/2024",
-                85,
-                100,
-                "1 ngày"
-        ));
-
-        featuredAdapter = new SearchResultAdapter(featuredEvents);
+        eventAdapter = new EventAdapter(new ArrayList<>());
         binding.eventsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        binding.eventsRecyclerView.setAdapter(featuredAdapter);
+        binding.eventsRecyclerView.setAdapter(eventAdapter);
         
-        featuredAdapter.setListener(result -> {
+        eventAdapter.setListener(event -> {
             Intent intent = new Intent(getContext(), DetailEventActivity.class);
+            intent.putExtra("eventId", event.getId());
             startActivity(intent);
+        });
+    }
+
+    private void loadFeaturedEvents() {
+        // Load first page of events, sorted by createdAt desc, only ACTIVE events
+        Call<RestResponse<PageResponse<EventResponse>>> call = apiEndpoints.getAllEvents(
+                0, 10, "createdAt", "desc", 
+                null, null, "ACTIVE", null, null, null, null, null
+        );
+        
+        call.enqueue(new Callback<RestResponse<PageResponse<EventResponse>>>() {
+            @Override
+            public void onResponse(Call<RestResponse<PageResponse<EventResponse>>> call, 
+                                 Response<RestResponse<PageResponse<EventResponse>>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    RestResponse<PageResponse<EventResponse>> restResponse = response.body();
+                    
+                    if (restResponse.getStatusCode() == 200 && restResponse.getData() != null) {
+                        PageResponse<EventResponse> pageResponse = restResponse.getData();
+                        List<EventResponse> events = pageResponse.getContent();
+                        eventAdapter.setEvents(events);
+                        Log.d(TAG, "Loaded " + events.size() + " events");
+                    } else {
+                        Log.e(TAG, "API returned error: " + restResponse.getMessage());
+                        Toast.makeText(getContext(), 
+                                "Không thể tải sự kiện: " + restResponse.getMessage(), 
+                                Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Log.e(TAG, "Response not successful: " + response.code());
+                    Toast.makeText(getContext(), 
+                            "Không thể tải sự kiện", 
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<RestResponse<PageResponse<EventResponse>>> call, Throwable t) {
+                Log.e(TAG, "Failed to load events", t);
+                Toast.makeText(getContext(), 
+                        "Lỗi kết nối: " + t.getMessage(), 
+                        Toast.LENGTH_SHORT).show();
+            }
         });
     }
 
@@ -176,9 +195,6 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        binding.viewAllCategories.setOnClickListener(v -> 
-            Toast.makeText(getContext(), "Xem tất cả danh mục", Toast.LENGTH_SHORT).show()
-        );
 
         binding.viewAllFeatured.setOnClickListener(v -> 
             Toast.makeText(getContext(), "Xem tất cả sự kiện nổi bật", Toast.LENGTH_SHORT).show()

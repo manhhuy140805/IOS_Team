@@ -54,7 +54,7 @@ public interface ApiEndpoints {
     Call<RestResponse<List<EventTypeResponse>>> getEventTypes();
 
     @GET("events")
-    Call<PageResponse<EventResponse>> getAllEvents(
+    Call<RestResponse<PageResponse<EventResponse>>> getAllEvents(
             @Query("page") int page,
             @Query("size") int size,
             @Query("sortBy") String sortBy,
