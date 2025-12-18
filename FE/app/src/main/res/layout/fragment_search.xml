@@ -9,7 +9,7 @@
         <!-- Back Button & Title -->
         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:layout_marginBottom="20dp">
 
-            <ImageButton android:id="@+id/backButton" android:layout_width="40dp" android:layout_height="40dp" android:background="@drawable/bg_button_gray_solid" android:src="@drawable/ic_back" android:padding="10dp" android:scaleType="centerInside" android:contentDescription="@string/app_name" app:tint="@color/app_green_primary"/>
+            <ImageButton android:id="@+id/backButton" android:layout_width="40dp" android:layout_height="40dp" android:background="@drawable/bg_button_white" android:src="@drawable/ic_back" android:padding="10dp" android:scaleType="centerInside" android:contentDescription="@string/app_name" app:tint="@color/app_green_primary"/>
 
             <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:layout_marginStart="16dp">
 
@@ -24,15 +24,32 @@
         <!-- Search Bar with Filters -->
         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical">
 
-            <LinearLayout android:layout_width="0dp" android:layout_height="48dp" android:layout_weight="1" android:background="@drawable/bg_search_bar" android:backgroundTint="@color/white" android:gravity="center_vertical" android:paddingHorizontal="12dp" android:layout_marginEnd="12dp">
+            <LinearLayout android:layout_width="0dp" android:layout_height="48dp" android:layout_weight="1" android:background="@drawable/bg_search_bar" android:backgroundTint="@color/white" android:gravity="center_vertical" android:paddingHorizontal="12dp" android:layout_marginEnd="12dp" android:clickable="false" android:focusable="false">
 
                 <ImageView android:layout_width="20dp" android:layout_height="20dp" android:src="@drawable/ic_search" app:tint="@color/gray_500" android:contentDescription="@string/app_name" />
 
-                <EditText android:id="@+id/searchKeyword" android:layout_width="match_parent" android:layout_height="match_parent" android:background="@null" android:hint="Tìm kiếm sự kiện, tổ chức..." android:paddingStart="12dp" android:textColor="@color/text_primary" android:textColorHint="@color/gray_400" android:textSize="14sp" android:inputType="text" android:maxLines="1" />
+                <EditText
+                    android:id="@+id/searchKeyword"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@null"
+                    android:hint="Tìm kiếm sự kiện, tổ chức..."
+                    android:paddingStart="12dp"
+                    android:textColor="@color/text_primary"
+                    android:textColorHint="@color/gray_400"
+                    android:textSize="14sp"
+                    android:inputType="text"
+                    android:imeOptions="actionSearch"
+                    android:maxLines="1"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:enabled="true"
+                    android:importantForAutofill="no"
+                />
 
             </LinearLayout>
 
-            <ImageButton android:id="@+id/filterButton" android:layout_width="48dp" android:layout_height="48dp" android:background="@drawable/bg_button_gray_solid" android:src="@drawable/ic_filter" android:padding="12dp" android:scaleType="centerInside" android:contentDescription="@string/app_name" app:tint="@color/app_green_primary" />
+            <ImageButton android:id="@+id/filterButton" android:layout_width="48dp" android:layout_height="48dp" android:background="@drawable/bg_button_white" android:src="@drawable/ic_search" android:padding="12dp" android:scaleType="centerInside" android:contentDescription="@string/app_name" app:tint="@color/app_green_primary" />
 
         </LinearLayout>
 

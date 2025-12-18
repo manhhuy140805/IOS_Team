@@ -61,6 +61,19 @@ public class EventController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<PageResponse<EventResponse>> searchEvents(
+            @RequestParam(name = "query") String query,
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "size", defaultValue = "10") int size,
+            @RequestParam(name = "sortBy", defaultValue = "createdAt") String sortBy,
+            @RequestParam(name = "sortDirection", defaultValue = "desc") String sortDirection) {
+
+        PageResponse<EventResponse> response = eventService.searchEvents(
+                query, page, size, sortBy, sortDirection);
+        return ResponseEntity.ok(response);
+    }
+
     @GetMapping("/my-events")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<PageResponse<EventResponse>> getMyEvents(

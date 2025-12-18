@@ -80,7 +80,14 @@ public interface ApiEndpoints {
             @Query("sortBy") String sortBy,
             @Query("sortDirection") String sortDirection
     );
-    
+    @GET("events/search")
+    Call<RestResponse<PageResponse<EventResponse>>> searchEvents(
+            @Query("query") String query,
+            @Query("page") int page,
+            @Query("size") int size,
+            @Query("sortBy") String sortBy,
+            @Query("sortDirection") String sortDirection
+    );    
     @GET("events/my-events")
     Call<PageResponse<EventResponse>> getMyEvents(
             @Query("page") int page,

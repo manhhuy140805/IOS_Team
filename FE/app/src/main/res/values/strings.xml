@@ -2,11 +2,11 @@
     <string name="app_name">My Application</string>
 
     <string-array name="sort_options">
-        <item>Most Relevant</item>
-        <item>Recently Posted</item>
-        <item>Deadline Soon</item>
-        <item>Highest Points</item>
-        <item>Most Popular</item>
+        <item>Phù hợp nhất</item>
+        <item>Mới đăng</item>
+        <item>Sắp hết hạn</item>
+        <item>Điểm cao nhất</item>
+        <item>Phổ biến nhất</item>
     </string-array>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

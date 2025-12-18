@@ -128,6 +128,30 @@ public class EventService {
                 eventPage.getTotalPages());
     }
 
+    // Search events by query text (searches in title)
+    public PageResponse<EventResponse> searchEvents(
+            String query, int page, int size, String sortBy, String sortDirection) {
+        
+        Sort sort = sortDirection.equalsIgnoreCase("desc")
+                ? Sort.by(sortBy).descending()
+                : Sort.by(sortBy).ascending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        // Search only in title field
+        Specification<Event> specification = EventSepcification.hasTitle(query);
+        Page<Event> eventPage = eventRepository.findAll(specification, pageable);
+
+        List<EventResponse> responses = eventPage.getContent().stream()
+                .map(this::convertToResponse)
+                .toList();
+
+        return new PageResponse<>(
+                responses,
+                eventPage.getNumber(),
+                eventPage.getTotalElements(),
+                eventPage.getTotalPages());
+    }
+
     // Get events by user ID (for admin)
     public PageResponse<EventResponse> getEventsByUserId(Integer userId, int page, int size) {
         // Verify user exists

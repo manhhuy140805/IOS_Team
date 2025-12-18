@@ -113,15 +113,12 @@ public class HomeFragment extends Fragment {
                         eventTypes.add(0, allCategory);
                         
                         categoryAdapter.setCategories(eventTypes);
-                        Log.d(TAG, "Loaded " + eventTypes.size() + " event types");
                     } else {
-                        Log.e(TAG, "API returned error: " + restResponse.getMessage());
                         Toast.makeText(getContext(), 
                                 "Không thể tải danh mục: " + restResponse.getMessage(), 
                                 Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    Log.e(TAG, "Response not successful: " + response.code());
                     Toast.makeText(getContext(), 
                             "Không thể tải danh mục", 
                             Toast.LENGTH_SHORT).show();
@@ -130,7 +127,6 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void onFailure(Call<RestResponse<List<EventTypeResponse>>> call, Throwable t) {
-                Log.e(TAG, "Failed to load event types", t);
                 Toast.makeText(getContext(), 
                         "Lỗi kết nối: " + t.getMessage(), 
                         Toast.LENGTH_SHORT).show();
@@ -178,20 +174,16 @@ public class HomeFragment extends Fragment {
                             binding.emptyStateLayout.setVisibility(View.GONE);
                         }
                         
-                        Log.d(TAG, "Loaded " + events.size() + " events");
                     } else {
-                        Log.e(TAG, "API returned error: " + restResponse.getMessage());
                         showEmptyState("Không thể tải sự kiện");
                     }
                 } else {
-                    Log.e(TAG, "Response not successful: " + response.code());
                     showEmptyState("Không thể tải sự kiện");
                 }
             }
 
             @Override
             public void onFailure(Call<RestResponse<PageResponse<EventResponse>>> call, Throwable t) {
-                Log.e(TAG, "Failed to load events", t);
                 showEmptyState("Lỗi kết nối");
             }
         });
@@ -224,20 +216,16 @@ public class HomeFragment extends Fragment {
                             binding.emptyStateLayout.setVisibility(View.GONE);
                         }
                         
-                        Log.d(TAG, "Loaded " + events.size() + " events for type: " + typeName);
                     } else {
-                        Log.e(TAG, "API returned error: " + restResponse.getMessage());
                         showEmptyState("Không thể tải sự kiện " + typeName);
                     }
                 } else {
-                    Log.e(TAG, "Response not successful: " + response.code());
                     showEmptyState("Không thể tải sự kiện " + typeName);
                 }
             }
 
             @Override
             public void onFailure(Call<RestResponse<PageResponse<EventResponse>>> call, Throwable t) {
-                Log.e(TAG, "Failed to load events by type", t);
                 showEmptyState("Lỗi kết nối");
             }
         });
