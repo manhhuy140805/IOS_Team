@@ -1,6 +1,9 @@
 package com.manhhuy.myapplication.helper.response;
 
-public class EventResponse {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class EventResponse implements Parcelable {
     private Integer id;
     private String title;
     private String description;
@@ -29,6 +32,133 @@ public class EventResponse {
     private Integer availableSlots;
     
     public EventResponse() {}
+    
+    protected EventResponse(Parcel in) {
+        if (in.readByte() == 0) {
+            id = null;
+        } else {
+            id = in.readInt();
+        }
+        title = in.readString();
+        description = in.readString();
+        location = in.readString();
+        imageUrl = in.readString();
+        eventStartTime = in.readString();
+        eventEndTime = in.readString();
+        if (in.readByte() == 0) {
+            numOfVolunteers = null;
+        } else {
+            numOfVolunteers = in.readInt();
+        }
+        if (in.readByte() == 0) {
+            rewardPoints = null;
+        } else {
+            rewardPoints = in.readInt();
+        }
+        status = in.readString();
+        category = in.readString();
+        createdAt = in.readString();
+        updatedAt = in.readString();
+        if (in.readByte() == 0) {
+            creatorId = null;
+        } else {
+            creatorId = in.readInt();
+        }
+        creatorName = in.readString();
+        creatorEmail = in.readString();
+        if (in.readByte() == 0) {
+            eventTypeId = null;
+        } else {
+            eventTypeId = in.readInt();
+        }
+        eventTypeName = in.readString();
+        if (in.readByte() == 0) {
+            currentParticipants = null;
+        } else {
+            currentParticipants = in.readInt();
+        }
+        if (in.readByte() == 0) {
+            availableSlots = null;
+        } else {
+            availableSlots = in.readInt();
+        }
+    }
+    
+    public static final Creator<EventResponse> CREATOR = new Creator<EventResponse>() {
+        @Override
+        public EventResponse createFromParcel(Parcel in) {
+            return new EventResponse(in);
+        }
+
+        @Override
+        public EventResponse[] newArray(int size) {
+            return new EventResponse[size];
+        }
+    };
+    
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+    
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        if (id == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(id);
+        }
+        dest.writeString(title);
+        dest.writeString(description);
+        dest.writeString(location);
+        dest.writeString(imageUrl);
+        dest.writeString(eventStartTime);
+        dest.writeString(eventEndTime);
+        if (numOfVolunteers == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(numOfVolunteers);
+        }
+        if (rewardPoints == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(rewardPoints);
+        }
+        dest.writeString(status);
+        dest.writeString(category);
+        dest.writeString(createdAt);
+        dest.writeString(updatedAt);
+        if (creatorId == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(creatorId);
+        }
+        dest.writeString(creatorName);
+        dest.writeString(creatorEmail);
+        if (eventTypeId == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(eventTypeId);
+        }
+        dest.writeString(eventTypeName);
+        if (currentParticipants == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(currentParticipants);
+        }
+        if (availableSlots == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(availableSlots);
+        }
+    }
     
     public Integer getId() {
         return id;

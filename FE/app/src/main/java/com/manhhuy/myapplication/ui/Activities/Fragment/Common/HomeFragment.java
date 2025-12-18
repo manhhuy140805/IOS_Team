@@ -135,7 +135,7 @@ public class HomeFragment extends Fragment {
         
         eventAdapter.setListener(event -> {
             Intent intent = new Intent(getContext(), DetailEventActivity.class);
-            intent.putExtra("eventId", event.getId());
+            intent.putExtra("eventData", event);
             startActivity(intent);
         });
     }
