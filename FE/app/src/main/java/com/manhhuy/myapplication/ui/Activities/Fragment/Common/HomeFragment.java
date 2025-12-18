@@ -83,10 +83,13 @@ public class HomeFragment extends Fragment {
         binding.categoriesRecyclerView.setAdapter(categoryAdapter);
         
         categoryAdapter.setListener(category -> {
-            Toast.makeText(getContext(), 
-                    "Đã chọn: " + category.getName(), 
-                    Toast.LENGTH_SHORT).show();
-            // TODO: Navigate to filtered events list
+            if (category.getId() == null) {
+                // Load all events
+                loadFeaturedEvents();
+            } else {
+                // Load events by type
+                loadEventsByType(category.getId(), category.getName());
+            }
         });
     }
 
@@ -101,7 +104,14 @@ public class HomeFragment extends Fragment {
                     RestResponse<List<EventTypeResponse>> restResponse = response.body();
                     
                     if (restResponse.getStatusCode() == 200 && restResponse.getData() != null) {
-                        List<EventTypeResponse> eventTypes = restResponse.getData();
+                        List<EventTypeResponse> eventTypes = new ArrayList<>(restResponse.getData());
+                        
+                        // Add "Tất cả" category at the beginning
+                        EventTypeResponse allCategory = new EventTypeResponse();
+                        allCategory.setId(null);
+                        allCategory.setName("Tất cả");
+                        eventTypes.add(0, allCategory);
+                        
                         categoryAdapter.setCategories(eventTypes);
                         Log.d(TAG, "Loaded " + eventTypes.size() + " event types");
                     } else {
@@ -158,29 +168,85 @@ public class HomeFragment extends Fragment {
                         PageResponse<EventResponse> pageResponse = restResponse.getData();
                         List<EventResponse> events = pageResponse.getContent();
                         eventAdapter.setEvents(events);
+                        
+                        // Show/hide empty state
+                        if (events.isEmpty()) {
+                            binding.eventsRecyclerView.setVisibility(View.GONE);
+                            binding.emptyStateLayout.setVisibility(View.VISIBLE);
+                        } else {
+                            binding.eventsRecyclerView.setVisibility(View.VISIBLE);
+                            binding.emptyStateLayout.setVisibility(View.GONE);
+                        }
+                        
                         Log.d(TAG, "Loaded " + events.size() + " events");
                     } else {
                         Log.e(TAG, "API returned error: " + restResponse.getMessage());
-                        Toast.makeText(getContext(), 
-                                "Không thể tải sự kiện: " + restResponse.getMessage(), 
-                                Toast.LENGTH_SHORT).show();
+                        showEmptyState("Không thể tải sự kiện");
                     }
                 } else {
                     Log.e(TAG, "Response not successful: " + response.code());
-                    Toast.makeText(getContext(), 
-                            "Không thể tải sự kiện", 
-                            Toast.LENGTH_SHORT).show();
+                    showEmptyState("Không thể tải sự kiện");
                 }
             }
 
             @Override
             public void onFailure(Call<RestResponse<PageResponse<EventResponse>>> call, Throwable t) {
                 Log.e(TAG, "Failed to load events", t);
-                Toast.makeText(getContext(), 
-                        "Lỗi kết nối: " + t.getMessage(), 
-                        Toast.LENGTH_SHORT).show();
+                showEmptyState("Lỗi kết nối");
             }
         });
+    }
+    
+    private void loadEventsByType(Integer eventTypeId, String typeName) {
+        Call<RestResponse<PageResponse<EventResponse>>> call = apiEndpoints.getEventsByType(
+                eventTypeId, 0, 10, "createdAt", "desc"
+        );
+        
+        call.enqueue(new Callback<RestResponse<PageResponse<EventResponse>>>() {
+            @Override
+            public void onResponse(Call<RestResponse<PageResponse<EventResponse>>> call, 
+                                 Response<RestResponse<PageResponse<EventResponse>>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    RestResponse<PageResponse<EventResponse>> restResponse = response.body();
+                    
+                    if (restResponse.getStatusCode() == 200 && restResponse.getData() != null) {
+                        PageResponse<EventResponse> pageResponse = restResponse.getData();
+                        List<EventResponse> events = pageResponse.getContent();
+                        eventAdapter.setEvents(events);
+                        
+                        // Show/hide empty state
+                        if (events.isEmpty()) {
+                            binding.eventsRecyclerView.setVisibility(View.GONE);
+                            binding.emptyStateLayout.setVisibility(View.VISIBLE);
+                            binding.emptyStateText.setText("Không có sự kiện " + typeName);
+                        } else {
+                            binding.eventsRecyclerView.setVisibility(View.VISIBLE);
+                            binding.emptyStateLayout.setVisibility(View.GONE);
+                        }
+                        
+                        Log.d(TAG, "Loaded " + events.size() + " events for type: " + typeName);
+                    } else {
+                        Log.e(TAG, "API returned error: " + restResponse.getMessage());
+                        showEmptyState("Không thể tải sự kiện " + typeName);
+                    }
+                } else {
+                    Log.e(TAG, "Response not successful: " + response.code());
+                    showEmptyState("Không thể tải sự kiện " + typeName);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<RestResponse<PageResponse<EventResponse>>> call, Throwable t) {
+                Log.e(TAG, "Failed to load events by type", t);
+                showEmptyState("Lỗi kết nối");
+            }
+        });
+    }
+    
+    private void showEmptyState(String message) {
+        binding.eventsRecyclerView.setVisibility(View.GONE);
+        binding.emptyStateLayout.setVisibility(View.VISIBLE);
+        binding.emptyStateText.setText(message);
     }
 
     private void setupClickListeners() {

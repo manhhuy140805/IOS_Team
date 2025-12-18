@@ -101,6 +101,33 @@ public class EventService {
                 eventPage.getTotalPages());
     }
 
+    // Get events by event type
+    public PageResponse<EventResponse> getEventsByType(
+            Integer eventTypeId, int page, int size, String sortBy, String sortDirection) {
+        
+        // Verify event type exists
+        eventTypeRepository.findById(eventTypeId)
+                .orElseThrow(() -> new RuntimeException("Event type not found with id: " + eventTypeId));
+
+        Sort sort = sortDirection.equalsIgnoreCase("desc")
+                ? Sort.by(sortBy).descending()
+                : Sort.by(sortBy).ascending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        Specification<Event> specification = EventSepcification.hasEventType(eventTypeId);
+        Page<Event> eventPage = eventRepository.findAll(specification, pageable);
+
+        List<EventResponse> responses = eventPage.getContent().stream()
+                .map(this::convertToResponse)
+                .toList();
+
+        return new PageResponse<>(
+                responses,
+                eventPage.getNumber(),
+                eventPage.getTotalElements(),
+                eventPage.getTotalPages());
+    }
+
     // Get events by user ID (for admin)
     public PageResponse<EventResponse> getEventsByUserId(Integer userId, int page, int size) {
         // Verify user exists

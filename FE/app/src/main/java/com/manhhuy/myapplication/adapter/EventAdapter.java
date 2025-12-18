@@ -108,6 +108,13 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
                     "Còn " + availableSlots + " chỗ" : "Hết chỗ";
             binding.eventSlots.setText(slotsText);
 
+            // Set reward points
+            if (event.getRewardPoints() != null) {
+                binding.eventRewardPoints.setText(String.valueOf(event.getRewardPoints())+" điểm");
+            } else {
+                binding.eventRewardPoints.setText("0");
+            }
+
             itemView.setOnClickListener(v -> {
                 if (listener != null) {
                     listener.onEventClick(event);

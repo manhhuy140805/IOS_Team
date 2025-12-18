@@ -72,6 +72,15 @@ public interface ApiEndpoints {
     @GET("events/{id}")
     Call<EventResponse> getEventById(@Path("id") Integer id);
     
+    @GET("events/type/{eventTypeId}")
+    Call<RestResponse<PageResponse<EventResponse>>> getEventsByType(
+            @Path("eventTypeId") Integer eventTypeId,
+            @Query("page") int page,
+            @Query("size") int size,
+            @Query("sortBy") String sortBy,
+            @Query("sortDirection") String sortDirection
+    );
+    
     @GET("events/my-events")
     Call<PageResponse<EventResponse>> getMyEvents(
             @Query("page") int page,

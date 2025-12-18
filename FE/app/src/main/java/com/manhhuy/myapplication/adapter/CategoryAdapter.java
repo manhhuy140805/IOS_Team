@@ -83,6 +83,8 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
             if (categoryName == null) return R.drawable.ic_event;
             
             switch (categoryName) {
+                case "Tất cả":
+                    return R.drawable.ic_organization;
                 case "Cộng đồng":
                     return R.drawable.ic_group; 
                 case "Môi trường":

@@ -16,7 +16,7 @@
 
                     <ImageView android:layout_width="16dp" android:layout_height="16dp" android:src="@drawable/ic_coin" android:scaleType="centerInside" android:contentDescription="@string/app_name" app:tint="#EF6C00" />
 
-                    <TextView android:id="@+id/compensation" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="500 pts" android:textSize="12sp" android:textStyle="bold" android:textColor="#EF6C00" android:layout_marginStart="4dp" />
+                    <TextView android:id="@+id/eventRewardPoints" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="120" android:textSize="12sp" android:textStyle="bold" android:textColor="#EF6C00" android:layout_marginStart="4dp" />
 
                 </LinearLayout>
 
