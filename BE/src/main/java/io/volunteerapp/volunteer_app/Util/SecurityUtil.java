@@ -66,12 +66,6 @@ public class SecurityUtil {
         }
     }
 
-    /**
-     * Tạo JWT Refresh Token (thời gian sống lâu hơn)
-     * 
-     * @param user - User entity
-     * @return Refresh token string
-     */
     public String generateRefreshToken(User user) {
         try {
             JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
