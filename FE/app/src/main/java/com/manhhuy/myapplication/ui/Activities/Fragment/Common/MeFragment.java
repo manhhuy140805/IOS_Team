@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.manhhuy.myapplication.databinding.FragmentMeBinding;
+import com.manhhuy.myapplication.ui.Activities.Fragment.User.MyEventsActivity;
 import com.manhhuy.myapplication.ui.Activities.MainActivity;
 import com.manhhuy.myapplication.ui.Activities.UserActivity;
 
@@ -96,7 +97,8 @@ public class MeFragment extends Fragment {
         });
 
         binding.cardMyEvents.setOnClickListener(v -> {
-            Toast.makeText(getContext(), "Sự kiện của tôi", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(getActivity(), MyEventsActivity.class);
+            startActivity(intent);
         });
 
         binding.layoutMyCertificates.setOnClickListener(v -> {
