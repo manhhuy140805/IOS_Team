@@ -24,7 +24,7 @@ public class UserRewardController {
      * Claim a reward (Authenticated users)
      */
     @PostMapping("/claim")
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_VOLUNTEER', 'ROLE_ADMIN')")
     public ResponseEntity<UserRewardResponse> claimReward(@Valid @RequestBody UserRewardRequest userRewardRequest) {
         UserRewardResponse response = userRewardService.claimReward(userRewardRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
@@ -34,7 +34,7 @@ public class UserRewardController {
      * Get current user's rewards (Authenticated users)
      */
     @GetMapping("/my-rewards")
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_VOLUNTEER', 'ROLE_ADMIN')")
     public ResponseEntity<PageResponse<UserRewardResponse>> getMyRewards(
             @RequestParam(name = "page", defaultValue = "0") int page,
             @RequestParam(name = "size", defaultValue = "10") int size) {
@@ -47,7 +47,7 @@ public class UserRewardController {
      * Get user rewards by user ID (Admin only)
      */
     @GetMapping("/user/{userId}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<PageResponse<UserRewardResponse>> getUserRewards(
             @PathVariable Integer userId,
             @RequestParam(name = "page", defaultValue = "0") int page,
@@ -61,7 +61,7 @@ public class UserRewardController {
      * Update reward status (Admin only)
      */
     @PutMapping("/{id}/status")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<UserRewardResponse> updateRewardStatus(
             @PathVariable Integer id,
             @RequestParam String status) {
