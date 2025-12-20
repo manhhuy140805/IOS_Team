@@ -127,9 +127,9 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void onFailure(Call<RestResponse<List<EventTypeResponse>>> call, Throwable t) {
-                Toast.makeText(getContext(), 
-                        "Lỗi kết nối: " + t.getMessage(), 
-                        Toast.LENGTH_SHORT).show();
+                if (getContext() != null) {
+                    Toast.makeText(getContext(), "Lỗi kết nối", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }

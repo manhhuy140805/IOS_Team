@@ -10,6 +10,10 @@ public class UserResponse {
     private String status;
     private Integer totalPoints;
     private String address;
+    private String createdAt;     
+    private String updatedAt;     
+    private Boolean violation;   
+    private Integer activityCount; 
     
     public UserResponse() {}
     
@@ -83,5 +87,37 @@ public class UserResponse {
     
     public void setTotalPoints(Integer totalPoints) {
         this.totalPoints = totalPoints;
+    }
+    
+    public String getCreatedAt() {
+        return createdAt;
+    }
+    
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
+    }
+    
+    public String getUpdatedAt() {
+        return updatedAt;
+    }
+    
+    public void setUpdatedAt(String updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+    
+    public Boolean getViolation() {
+        return violation;
+    }
+    
+    public void setViolation(Boolean violation) {
+        this.violation = violation;
+    }
+    
+    public Integer getActivityCount() {
+        return activityCount;
+    }
+    
+    public void setActivityCount(Integer activityCount) {
+        this.activityCount = activityCount;
     }
 }

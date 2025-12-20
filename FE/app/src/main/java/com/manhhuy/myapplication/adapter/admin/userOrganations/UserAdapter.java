@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.manhhuy.myapplication.R;
 import com.manhhuy.myapplication.databinding.ItemUserBinding;
 import com.manhhuy.myapplication.model.User;
@@ -56,12 +57,23 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
         }
 
         public void bind(User user, OnUserActionListener listener) {
+            // Load avatar
+            if (user.getAvatarUrl() != null && !user.getAvatarUrl().isEmpty()) {
+                Glide.with(itemView.getContext())
+                    .load(user.getAvatarUrl())
+                    .placeholder(R.mipmap.ic_launcher)
+                    .error(R.mipmap.ic_launcher)
+                    .into(binding.ivUserAvatar);
+            } else {
+                binding.ivUserAvatar.setImageResource(R.mipmap.ic_launcher);
+            }
+            
             // Set basic info
             binding.tvUserName.setText(user.getName());
             binding.tvUserEmail.setText(user.getEmail());
             binding.tvJoinDate.setText(user.getJoinDate());
             binding.tvActivityCount.setText(String.valueOf(user.getActivityCount()));
-            binding.tvLastActive.setText(user.getLastActive() != null ? user.getLastActive() + " trước" : "N/A");
+            binding.tvLastActive.setText(String.valueOf(user.getPointsCount()));
 
             // Set status badge
             binding.tvUserStatus.setText(user.getStatus());

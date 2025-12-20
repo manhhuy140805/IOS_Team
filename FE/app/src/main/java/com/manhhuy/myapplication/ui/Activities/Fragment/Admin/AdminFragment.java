@@ -22,17 +22,26 @@ import com.manhhuy.myapplication.adapter.admin.userOrganations.OnUserActionListe
 import com.manhhuy.myapplication.adapter.admin.userOrganations.OrganizationAdapter;
 import com.manhhuy.myapplication.adapter.admin.userOrganations.UserAdapter;
 import com.manhhuy.myapplication.databinding.ActivityUserManagementBinding;
+import com.manhhuy.myapplication.helper.ApiConfig;
+import com.manhhuy.myapplication.helper.ApiEndpoints;
+import com.manhhuy.myapplication.helper.response.RestResponse;
+import com.manhhuy.myapplication.helper.response.UserResponse;
 import com.manhhuy.myapplication.model.Organization;
 import com.manhhuy.myapplication.model.User;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class AdminFragment extends Fragment implements OnUserActionListener, OnOrganizationActionListener {
 
     private ActivityUserManagementBinding binding;
     private UserAdapter userAdapter;
     private OrganizationAdapter organizationAdapter;
+    private ApiEndpoints apiEndpoints;
 
     private final List<User> userList = new ArrayList<>();
     private final List<User> filteredUserList = new ArrayList<>();
@@ -57,8 +66,13 @@ public class AdminFragment extends Fragment implements OnUserActionListener, OnO
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        
+        // Initialize API client
+        apiEndpoints = ApiConfig.getClient().create(ApiEndpoints.class);
+        
         setupRecyclerView();
-        loadSampleData();
+        loadUsersFromApi();
+        loadOrganizationsFromApi();
         setupListeners();
         updateStatistics();
     }
@@ -75,74 +89,104 @@ public class AdminFragment extends Fragment implements OnUserActionListener, OnO
         binding.rvOrgList.setAdapter(organizationAdapter);
     }
 
-    private void loadSampleData() {
-        loadUserData();
-        loadOrganizationData();
+    /**
+     * Load Users từ API
+     */
+    private void loadUsersFromApi() {
+        apiEndpoints.getAllUsers().enqueue(new Callback<RestResponse<List<UserResponse>>>() {
+            @Override
+            public void onResponse(Call<RestResponse<List<UserResponse>>> call,
+                                 Response<RestResponse<List<UserResponse>>> response) {
+                if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
+                    userList.clear();
+                    for (UserResponse ur : response.body().getData()) {
+                        User user = new User();
+                        user.setId(ur.getId());
+                        user.setFullName(ur.getFullName());
+                        user.setEmail(ur.getEmail());
+                        user.setAvatarUrl(ur.getAvatarUrl());
+                        user.setStatus(mapStatus(ur.getStatus()));
+                        user.setJoinDate(formatDate(ur.getCreatedAt()));
+                        user.setActivityCount(ur.getActivityCount() != null ? ur.getActivityCount() : 0);
+                        user.setPointsCount(ur.getTotalPoints() != null ? ur.getTotalPoints() : 0);
+                        user.setViolationType(ur.getViolation() != null && ur.getViolation() ? "Vi phạm" : null);
+                        userList.add(user);
+                    }
+                    filteredUserList.clear();
+                    filteredUserList.addAll(userList);
+                    userAdapter.updateList(filteredUserList);
+                    updateStatistics();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<RestResponse<List<UserResponse>>> call, Throwable t) {
+                if (getContext() != null) {
+                    Toast.makeText(getContext(), "Lỗi kết nối", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
-    private void loadUserData() {
-        userList.clear();
+    private String mapStatus(String status) {
+        if ("ACTIVE".equalsIgnoreCase(status)) return "Hoạt động";
+        if ("LOCKED".equalsIgnoreCase(status)) return "Bị khóa";
+        if ("PENDING".equalsIgnoreCase(status)) return "Chờ xác thực";
+        return "Hoạt động";
+    }
 
-        // Sample data matching the design
-        userList.add(new User("1", "Nguyễn Văn An", "an.nguyen@email.com",
-                "15/10/2024", 12, "48h", "Hoạt động", null));
-
-        userList.add(new User("2", "Lê Thị Hương", "huong.le@email.com",
-                "20/09/2024", 25, "102h", "Hoạt động", null));
-
-        userList.add(new User("3", "Trần Minh Khang", "khang.tran@email.com",
-                "05/08/2024", 8, null, "Bị khóa", "Spam"));
-
-        userList.add(new User("4", "Phạm Thị Lan", "lan.pham@email.com",
-                "24/10/2025", 0, null, "Chờ xác thực", null));
-
-        userList.add(new User("5", "Đỗ Văn Tùng", "tung.do@email.com",
-                "12/07/2024", 18, "76h", "Hoạt động", null));
-
-        // Add more sample users
-        for (int i = 6; i <= 15; i++) {
-            String status = i % 3 == 0 ? "Bị khóa" : (i % 5 == 0 ? "Chờ xác thực" : "Hoạt động");
-            String violation = status.equals("Bị khóa") ? "Spam" : null;
-            userList.add(new User(String.valueOf(i), "User " + i, "user" + i + "@email.com",
-                    "01/0" + (i % 9 + 1) + "/2024", i * 2, (i * 10) + "h", status, violation));
+    private String formatDate(String isoDate) {
+        if (isoDate == null || isoDate.isEmpty()) return "N/A";
+        try {
+            // Parse ISO 8601: "2024-10-15T10:30:00Z"
+            java.time.Instant instant = java.time.Instant.parse(isoDate);
+            java.time.LocalDate date = instant.atZone(java.time.ZoneId.systemDefault()).toLocalDate();
+            java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            return date.format(formatter);
+        } catch (Exception e) {
+            return "N/A";
         }
-
-        filteredUserList.clear();
-        filteredUserList.addAll(userList);
-        userAdapter.updateList(filteredUserList);
     }
 
-    private void loadOrganizationData() {
-        organizationList.clear();
+    /**
+     * Load Organizations từ API (filter users by role ORGANIZATION)
+     */
+    private void loadOrganizationsFromApi() {
+        apiEndpoints.getAllUsers().enqueue(new Callback<RestResponse<List<UserResponse>>>() {
+            @Override
+            public void onResponse(Call<RestResponse<List<UserResponse>>> call,
+                                 Response<RestResponse<List<UserResponse>>> response) {
+                if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
+                    organizationList.clear();
+                    for (UserResponse ur : response.body().getData()) {
+                        if ("ROLE_ORGANIZATION".equalsIgnoreCase(ur.getRole()) || 
+                            "ORGANIZATION".equalsIgnoreCase(ur.getRole())) {
+                            
+                            Organization org = new Organization();
+                            org.setId(String.valueOf(ur.getId()));
+                            org.setName(ur.getFullName());
+                            org.setEmail(ur.getEmail());
+                            org.setStatus(mapStatus(ur.getStatus()));
+                            org.setFoundedDate(formatDate(ur.getCreatedAt()));
+                            org.setMemberCount(ur.getActivityCount() != null ? ur.getActivityCount() : 0);
+                            org.setViolationType(ur.getViolation() != null && ur.getViolation() ? "Vi phạm" : null);
+                            organizationList.add(org);
+                        }
+                    }
+                    filteredOrgList.clear();
+                    filteredOrgList.addAll(organizationList);
+                    organizationAdapter.updateList(filteredOrgList);
+                    updateStatistics();
+                }
+            }
 
-        // Sample organization data
-        organizationList.add(new Organization("1", "Quỹ Từ Tâm Việt", "contact@tumtam.org.vn",
-                "10/05/2020", 145, "Hoạt động", null));
-
-        organizationList.add(new Organization("2", "Tổ Chức Tình Nguyện Xanh", "info@xanh.org.vn",
-                "15/03/2019", 287, "Hoạt động", null));
-
-        organizationList.add(new Organization("3", "Trung Tâm Hỗ Trợ Cộng Đồng", "support@hoho.org.vn",
-                "20/08/2021", 92, "Hoạt động", null));
-
-        organizationList.add(new Organization("4", "Quỹ Giáo Dục Tương Lai", "education@future.org.vn",
-                "12/01/2022", 156, "Chờ xác thực", null));
-
-        organizationList.add(new Organization("5", "Tổ Chức Chăm Sóc Sức Khỏe", "health@care.org.vn",
-                "05/11/2018", 78, "Bị khóa", "Nội dung không phù hợp"));
-
-        organizationList.add(new Organization("6", "Quỹ Bảo Vệ Môi Trường", "eco@green.org.vn",
-                "22/06/2020", 203, "Hoạt động", null));
-
-        organizationList.add(new Organization("7", "Tổ Chức Hỗ Trợ Trẻ Em", "children@support.org.vn",
-                "18/04/2019", 134, "Hoạt động", null));
-
-        organizationList.add(new Organization("8", "Quỹ Phát Triển Kỹ Năng", "skills@dev.org.vn",
-                "30/09/2021", 167, "Hoạt động", null));
-
-        filteredOrgList.clear();
-        filteredOrgList.addAll(organizationList);
-        organizationAdapter.updateList(filteredOrgList);
+            @Override
+            public void onFailure(Call<RestResponse<List<UserResponse>>> call, Throwable t) {
+                if (getContext() != null) {
+                    Toast.makeText(getContext(), "Lỗi kết nối", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     private void setupListeners() {
@@ -151,38 +195,6 @@ public class AdminFragment extends Fragment implements OnUserActionListener, OnO
         // Tab click listeners
         binding.tabUsers.setOnClickListener(v -> switchToUsersTab());
         binding.tabOrganizations.setOnClickListener(v -> switchToOrganizationsTab());
-
-        // User Search functionality
-        binding.etSearch.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                filterUsers(s.toString());
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-            }
-        });
-
-        // Organization Search functionality
-        binding.etOrgSearch.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                filterOrganizations(s.toString());
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-            }
-        });
 
         // User Filter buttons
         binding.btnFilterAll.setOnClickListener(v -> setUserFilter("Tất cả", binding.btnFilterAll));
@@ -199,148 +211,104 @@ public class AdminFragment extends Fragment implements OnUserActionListener, OnO
 
     private void switchToUsersTab() {
         isUsersTab = true;
-        // Hide organization UI
-        binding.llOrgStats.setVisibility(View.GONE);
-        binding.cvOrgSearch.setVisibility(View.GONE);
-        binding.hvOrgFilter.setVisibility(View.GONE);
-        binding.rvOrgList.setVisibility(View.GONE);
-
-        // Show user UI
-        binding.llUserStats.setVisibility(View.VISIBLE);
-        binding.cvUserSearch.setVisibility(View.VISIBLE);
-        binding.hvUserFilter.setVisibility(View.VISIBLE);
-        binding.rvUserList.setVisibility(View.VISIBLE);
-
-        // Update tab colors
+        toggleViews(View.VISIBLE, View.GONE);
         updateTabColors();
     }
 
     private void switchToOrganizationsTab() {
         isUsersTab = false;
-        // Hide user UI
-        binding.llUserStats.setVisibility(View.GONE);
-        binding.cvUserSearch.setVisibility(View.GONE);
-        binding.hvUserFilter.setVisibility(View.GONE);
-        binding.rvUserList.setVisibility(View.GONE);
-
-        // Show organization UI
-        binding.llOrgStats.setVisibility(View.VISIBLE);
-        binding.cvOrgSearch.setVisibility(View.VISIBLE);
-        binding.hvOrgFilter.setVisibility(View.VISIBLE);
-        binding.rvOrgList.setVisibility(View.VISIBLE);
-
-        // Update tab colors
+        toggleViews(View.GONE, View.VISIBLE);
         updateTabColors();
     }
 
+    private void toggleViews(int userVisibility, int orgVisibility) {
+        binding.llUserStats.setVisibility(userVisibility);
+        binding.cvUserSearch.setVisibility(View.GONE);
+        binding.hvUserFilter.setVisibility(userVisibility);
+        binding.rvUserList.setVisibility(userVisibility);
+
+        binding.llOrgStats.setVisibility(orgVisibility);
+        binding.cvOrgSearch.setVisibility(View.GONE);
+        binding.hvOrgFilter.setVisibility(orgVisibility);
+        binding.rvOrgList.setVisibility(orgVisibility);
+    }
+
     private void updateTabColors() {
-        if (isUsersTab) {
-            // Users tab active
-            binding.tabUsers.setBackgroundResource(R.drawable.bg_button_gray_solid);
-            ((ImageView) binding.tabUsers.getChildAt(0))
-                    .setColorFilter(getResources().getColor(R.color.app_green_primary));
-            ((TextView) binding.tabUsers.getChildAt(1))
-                    .setTextColor(getResources().getColor(R.color.app_green_primary));
+        ViewGroup activeTab = isUsersTab ? binding.tabUsers : binding.tabOrganizations;
+        ViewGroup inactiveTab = isUsersTab ? binding.tabOrganizations : binding.tabUsers;
 
-            // Organizations tab inactive
-            binding.tabOrganizations.setBackgroundResource(android.R.color.transparent);
-            ((ImageView) binding.tabOrganizations.getChildAt(0)).setColorFilter(getResources().getColor(R.color.white));
-            ((ImageView) binding.tabOrganizations.getChildAt(0)).setAlpha(0.8f);
-            ((TextView) binding.tabOrganizations.getChildAt(1)).setTextColor(getResources().getColor(R.color.white));
-            ((TextView) binding.tabOrganizations.getChildAt(1)).setAlpha(0.8f);
-        } else {
-            // Organizations tab active
-            binding.tabOrganizations.setBackgroundResource(R.drawable.bg_button_gray_solid);
-            ((ImageView) binding.tabOrganizations.getChildAt(0))
-                    .setColorFilter(getResources().getColor(R.color.app_green_primary));
-            ((ImageView) binding.tabOrganizations.getChildAt(0)).setAlpha(1.0f);
-            ((TextView) binding.tabOrganizations.getChildAt(1))
-                    .setTextColor(getResources().getColor(R.color.app_green_primary));
-            ((TextView) binding.tabOrganizations.getChildAt(1)).setAlpha(1.0f);
+        setTabActive(activeTab);
+        setTabInactive(inactiveTab);
+    }
 
-            // Users tab inactive
-            binding.tabUsers.setBackgroundResource(android.R.color.transparent);
-            ((ImageView) binding.tabUsers.getChildAt(0)).setColorFilter(getResources().getColor(R.color.white));
-            ((ImageView) binding.tabUsers.getChildAt(0)).setAlpha(0.8f);
-            ((TextView) binding.tabUsers.getChildAt(1)).setTextColor(getResources().getColor(R.color.white));
-            ((TextView) binding.tabUsers.getChildAt(1)).setAlpha(0.8f);
-        }
+    private void setTabActive(ViewGroup tab) {
+        tab.setBackgroundResource(R.drawable.bg_button_gray_solid);
+        ((ImageView) tab.getChildAt(0)).setColorFilter(getResources().getColor(R.color.app_green_primary));
+        ((ImageView) tab.getChildAt(0)).setAlpha(1.0f);
+        ((TextView) tab.getChildAt(1)).setTextColor(getResources().getColor(R.color.app_green_primary));
+        ((TextView) tab.getChildAt(1)).setAlpha(1.0f);
+    }
+
+    private void setTabInactive(ViewGroup tab) {
+        tab.setBackgroundResource(android.R.color.transparent);
+        ((ImageView) tab.getChildAt(0)).setColorFilter(getResources().getColor(R.color.white));
+        ((ImageView) tab.getChildAt(0)).setAlpha(0.8f);
+        ((TextView) tab.getChildAt(1)).setTextColor(getResources().getColor(R.color.white));
+        ((TextView) tab.getChildAt(1)).setAlpha(0.8f);
     }
 
     private void setUserFilter(String filter, TextView selectedButton) {
         currentUserFilter = filter;
-
-        // Reset tất cả filter buttons
-        resetFilterButton(binding.btnFilterAll);
-        resetFilterButton(binding.btnFilterActive);
-        resetFilterButton(binding.btnFilterLocked);
-        resetFilterButton(binding.btnFilterPending);
-
-        // Highlight button được chọn
-        selectedButton.setBackgroundResource(R.drawable.bg_filter_selected);
-        selectedButton.setTextColor(getResources().getColor(R.color.white));
-
-        // Apply filter
-        filterUsers(binding.etSearch.getText().toString());
+        resetAllFilterButtons(binding.btnFilterAll, binding.btnFilterActive, binding.btnFilterLocked, binding.btnFilterPending);
+        setFilterButtonSelected(selectedButton);
+        filterUsers("");
     }
 
     private void setOrgFilter(String filter, TextView selectedButton) {
         currentOrgFilter = filter;
-        // Reset all buttons
-        resetFilterButton(binding.btnOrgFilterAll);
-        resetFilterButton(binding.btnOrgFilterActive);
-        resetFilterButton(binding.btnOrgFilterLocked);
-        resetFilterButton(binding.btnOrgFilterPending);
-
-        // Highlight selected button
-        selectedButton.setBackgroundResource(R.drawable.bg_filter_selected);
-        selectedButton.setTextColor(getResources().getColor(R.color.white));
-
-        // Apply filter
-        filterOrganizations(binding.etOrgSearch.getText().toString());
+        resetAllFilterButtons(binding.btnOrgFilterAll, binding.btnOrgFilterActive, binding.btnOrgFilterLocked, binding.btnOrgFilterPending);
+        setFilterButtonSelected(selectedButton);
+        filterOrganizations("");
     }
 
-    private void resetFilterButton(TextView button) {
-        button.setBackgroundResource(R.drawable.bg_primary);
-        button.setTextColor(getResources().getColor(R.color.text_secondary));
+    private void resetAllFilterButtons(TextView... buttons) {
+        for (TextView button : buttons) {
+            button.setBackgroundResource(R.drawable.bg_filter_unselected);
+            button.setTextColor(getResources().getColor(R.color.text_secondary));
+        }
+    }
+
+    private void setFilterButtonSelected(TextView button) {
+        button.setBackgroundResource(R.drawable.bg_filter_selected);
+        button.setTextColor(getResources().getColor(R.color.white));
     }
 
     private void filterUsers(String searchText) {
         filteredUserList.clear();
-
         for (User user : userList) {
-            boolean matchesSearch = searchText.isEmpty() ||
-                    user.getName().toLowerCase().contains(searchText.toLowerCase()) ||
-                    user.getEmail().toLowerCase().contains(searchText.toLowerCase());
-
-            boolean matchesFilter = currentUserFilter.equals("Tất cả") ||
-                    user.getStatus().equals(currentUserFilter);
-
-            if (matchesSearch && matchesFilter) {
+            if (matchesSearchAndFilter(user.getName(), user.getEmail(), user.getStatus(), searchText, currentUserFilter)) {
                 filteredUserList.add(user);
             }
         }
-
         userAdapter.updateList(filteredUserList);
     }
 
     private void filterOrganizations(String searchText) {
         filteredOrgList.clear();
-
         for (Organization org : organizationList) {
-            boolean matchesSearch = searchText.isEmpty() ||
-                    org.getName().toLowerCase().contains(searchText.toLowerCase()) ||
-                    org.getEmail().toLowerCase().contains(searchText.toLowerCase());
-
-            boolean matchesFilter = currentOrgFilter.equals("Tất cả") ||
-                    org.getStatus().equals(currentOrgFilter);
-
-            if (matchesSearch && matchesFilter) {
+            if (matchesSearchAndFilter(org.getName(), org.getEmail(), org.getStatus(), searchText, currentOrgFilter)) {
                 filteredOrgList.add(org);
             }
         }
-
         organizationAdapter.updateList(filteredOrgList);
+    }
+
+    private boolean matchesSearchAndFilter(String name, String email, String status, String searchText, String filter) {
+        boolean matchesSearch = searchText.isEmpty() || 
+                name.toLowerCase().contains(searchText.toLowerCase()) || 
+                email.toLowerCase().contains(searchText.toLowerCase());
+        boolean matchesFilter = filter.equals("Tất cả") || status.equals(filter);
+        return matchesSearch && matchesFilter;
     }
 
     private void updateStatistics() {
@@ -409,13 +377,31 @@ public class AdminFragment extends Fragment implements OnUserActionListener, OnO
     public void onDeleteClick(User user) {
         new AlertDialog.Builder(requireContext())
                 .setTitle("Xác nhận xóa")
-                .setMessage("Bạn có chắc muốn xóa tài khoản " + user.getName() + "? Hành động này không thể hoàn tác.")
+                .setMessage("Bạn có chắc muốn xóa tài khoản " + user.getName() + "?")
                 .setPositiveButton("Xóa", (dialog, which) -> {
-                    userList.remove(user);
-                    filteredUserList.remove(user);
-                    userAdapter.notifyDataSetChanged();
-                    updateStatistics();
-                    Toast.makeText(getContext(), "Đã xóa tài khoản", Toast.LENGTH_SHORT).show();
+                    apiEndpoints.deleteUser(user.getId()).enqueue(new Callback<RestResponse<Void>>() {
+                        @Override
+                        public void onResponse(Call<RestResponse<Void>> call, Response<RestResponse<Void>> response) {
+                            if (response.isSuccessful()) {
+                                userList.remove(user);
+                                filteredUserList.remove(user);
+                                userAdapter.notifyDataSetChanged();
+                                updateStatistics();
+                                Toast.makeText(getContext(), "Đã xóa tài khoản", Toast.LENGTH_SHORT).show();
+                            } else if (response.code() == 400 && getContext() != null) {
+                                Toast.makeText(getContext(), "Không thể xóa: User đang có event liên quan", Toast.LENGTH_LONG).show();
+                            } else if (getContext() != null) {
+                                Toast.makeText(getContext(), "Lỗi xóa tài khoản", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<RestResponse<Void>> call, Throwable t) {
+                            if (getContext() != null) {
+                                Toast.makeText(getContext(), "Lỗi kết nối", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
                 })
                 .setNegativeButton("Hủy", null)
                 .show();

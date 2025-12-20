@@ -111,6 +111,11 @@ public class AuthService {
                 user.getRole(),
                 user.getStatus(),
                 user.getTotalPoints(),
-                user.getAddress());
+                user.getAddress(),
+                user.getCreatedAt(),
+                user.getUpdatedAt(),
+                user.getViolation(),
+                0  
+        );
     }
 }

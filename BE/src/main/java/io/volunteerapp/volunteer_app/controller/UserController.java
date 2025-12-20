@@ -34,12 +34,12 @@ public class UserController {
     }
 
     @GetMapping("")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    // @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<RestResponse<List<UserResponse>>> getAllUsers(
-            @AuthenticationPrincipal Jwt jwt) {
+            /* @AuthenticationPrincipal Jwt jwt */) {
 
         // Log để debug (optional)
-        System.out.println("Admin " + jwt.getSubject() + " đang xem danh sách user");
+        // System.out.println("Admin " + jwt.getSubject() + " đang xem danh sách user");
 
         // Gọi service để lấy danh sách
         return userService.getAllUsers();
@@ -65,10 +65,10 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    // @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<RestResponse<Void>> deleteUser(
-            @PathVariable Integer id,
-            @AuthenticationPrincipal Jwt jwt) {
+            @PathVariable Integer id
+            /* , @AuthenticationPrincipal Jwt jwt */) {
 
         return userService.deleteUser(id);
     }

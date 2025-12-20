@@ -137,6 +137,13 @@ public class UserService {
     }
 
     private UserResponse convertToUserResponse(User user) {
+        // Count activities: only for volunteers (event registrations)
+        int activityCount = 0;
+        if ("ROLE_VOLUNTEER".equals(user.getRole()) || "VOLUNTEER".equals(user.getRole()) || "ROLE_USER".equals(user.getRole())) {
+            activityCount = user.getUserEventRegistrations() != null ? user.getUserEventRegistrations().size() : 0;
+        }
+        // Organizations: set to 0 (bỏ member count)
+        
         return new UserResponse(
                 user.getId(),
                 user.getEmail(),
@@ -146,6 +153,11 @@ public class UserService {
                 user.getRole(),
                 user.getStatus(),
                 user.getTotalPoints(),
-                user.getAddress());
+                user.getAddress(),
+                user.getCreatedAt(),
+                user.getUpdatedAt(),
+                user.getViolation(),
+                activityCount
+        );
     }
 }
