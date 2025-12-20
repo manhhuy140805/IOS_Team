@@ -1,9 +1,12 @@
 package com.manhhuy.myapplication.ui.Activities;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -12,7 +15,15 @@ import androidx.core.view.WindowInsetsCompat;
 import com.bumptech.glide.Glide;
 import com.manhhuy.myapplication.R;
 import com.manhhuy.myapplication.databinding.ActivityDetailEventBinding;
+import com.manhhuy.myapplication.helper.ApiConfig;
+import com.manhhuy.myapplication.helper.ApiEndpoints;
+import com.manhhuy.myapplication.helper.request.EventRegistrationRequest;
+import com.manhhuy.myapplication.helper.response.EventRegistrationResponse;
 import com.manhhuy.myapplication.helper.response.EventResponse;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -21,8 +32,11 @@ import java.util.Locale;
 
 public class DetailEventActivity extends AppCompatActivity {
 
+    private static final String TAG = "DetailEventActivity";
     private ActivityDetailEventBinding binding;
     private EventResponse eventData;
+    private ProgressDialog progressDialog;
+    private boolean isRegistering = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +79,7 @@ public class DetailEventActivity extends AppCompatActivity {
         
         binding.btnRegisterEvent.setOnClickListener(v -> {
             if (eventData != null) {
-                Toast.makeText(this, "Đăng ký tham gia: " + eventData.getTitle(), Toast.LENGTH_SHORT).show();
+                showRegistrationConfirmDialog();
             }
         });
     }
@@ -177,9 +191,128 @@ public class DetailEventActivity extends AppCompatActivity {
         }
     }
     
+    /**
+     * Show confirmation dialog before registering for event
+     */
+    private void showRegistrationConfirmDialog() {
+        new AlertDialog.Builder(this)
+                .setTitle("Đăng ký tham gia sự kiện")
+                .setMessage("Bạn có chắc chắn muốn đăng ký tham gia sự kiện \"" + eventData.getTitle() + "\"?")
+                .setPositiveButton("Đăng ký", (dialog, which) -> {
+                    registerForEvent();
+                })
+                .setNegativeButton("Hủy", (dialog, which) -> {
+                    dialog.dismiss();
+                })
+                .show();
+    }
+    
+    /**
+     * Register user for the event via API
+     */
+    private void registerForEvent() {
+        if (isRegistering) return;
+        
+        // Check if user is logged in
+        String token = ApiConfig.getToken();
+        if (token == null || token.isEmpty()) {
+            Toast.makeText(this, "Vui lòng đăng nhập để đăng ký sự kiện", Toast.LENGTH_LONG).show();
+            return;
+        }
+        
+        isRegistering = true;
+        showProgressDialog("Đang đăng ký...");
+        
+        // Create registration request
+        EventRegistrationRequest request = new EventRegistrationRequest(
+                eventData.getId(),
+                "" // notes - có thể để trống hoặc thêm dialog nhập ghi chú
+        );
+        
+        ApiEndpoints apiService = ApiConfig.getClient().create(ApiEndpoints.class);
+        Call<EventRegistrationResponse> call = apiService.registerForEvent(request);
+        
+        call.enqueue(new Callback<EventRegistrationResponse>() {
+            @Override
+            public void onResponse(Call<EventRegistrationResponse> call, 
+                                 Response<EventRegistrationResponse> response) {
+                isRegistering = false;
+                dismissProgressDialog();
+                
+                if (response.isSuccessful() && response.body() != null) {
+                    EventRegistrationResponse registration = response.body();
+                    Log.d(TAG, "Registration successful: " + registration.getId());
+                    
+                    showSuccessDialog();
+                } else {
+                    String errorMsg = "Không thể đăng ký sự kiện";
+                    if (response.code() == 400) {
+                        errorMsg = "Bạn đã đăng ký sự kiện này rồi hoặc sự kiện đã đầy";
+                    } else if (response.code() == 401) {
+                        errorMsg = "Vui lòng đăng nhập lại";
+                    } else if (response.code() == 403) {
+                        errorMsg = "Bạn không có quyền đăng ký sự kiện này";
+                    }
+                    
+                    Log.e(TAG, "Registration failed: " + response.code() + " - " + response.message());
+                    Toast.makeText(DetailEventActivity.this, errorMsg, Toast.LENGTH_LONG).show();
+                }
+            }
+            
+            @Override
+            public void onFailure(Call<EventRegistrationResponse> call, Throwable t) {
+                isRegistering = false;
+                dismissProgressDialog();
+                
+                Log.e(TAG, "Network error: " + t.getMessage(), t);
+                Toast.makeText(DetailEventActivity.this, 
+                        "Lỗi kết nối: " + t.getMessage(), 
+                        Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+    
+    /**
+     * Show success dialog after successful registration
+     */
+    private void showSuccessDialog() {
+        new AlertDialog.Builder(this)
+                .setTitle("Đăng ký thành công!")
+                .setMessage("Bạn đã đăng ký tham gia sự kiện \"" + eventData.getTitle() + "\" thành công. " +
+                        "Vui lòng chờ ban tổ chức xác nhận.")
+                .setPositiveButton("OK", (dialog, which) -> {
+                    dialog.dismiss();
+                    // Optionally: finish() to go back
+                })
+                .setCancelable(false)
+                .show();
+    }
+    
+    /**
+     * Show progress dialog
+     */
+    private void showProgressDialog(String message) {
+        if (progressDialog == null) {
+            progressDialog = new ProgressDialog(this);
+            progressDialog.setCancelable(false);
+        }
+        progressDialog.setMessage(message);
+        progressDialog.show();
+    }
+    
+    /**
+     * Dismiss progress dialog
+     */
+    private void dismissProgressDialog() {
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
+    }
+    
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        dismissProgressDialog();
         binding = null;
     }
 }

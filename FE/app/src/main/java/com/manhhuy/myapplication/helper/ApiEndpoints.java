@@ -141,7 +141,7 @@ public interface ApiEndpoints {
     );
     
     @GET("event-registrations/my-registrations")
-    Call<PageResponse<EventRegistrationResponse>> getMyRegistrations(
+    Call<RestResponse<PageResponse<EventRegistrationResponse>>> getMyRegistrations(
             @Query("page") int page,
             @Query("size") int size,
             @Query("status") String status

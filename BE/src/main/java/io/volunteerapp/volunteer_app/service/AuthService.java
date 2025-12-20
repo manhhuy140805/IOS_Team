@@ -48,7 +48,7 @@ public class AuthService {
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setFullName(request.getFullName());
         user.setPhone(request.getPhone());
-        user.setRole("USER"); // Mặc định là USER
+        user.setRole("VOLUNTEER"); // Mặc định là VOLUNTEER
         user.setStatus("ACTIVE");
         user.setUpdatedAt(Instant.now());
 

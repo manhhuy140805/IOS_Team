@@ -16,7 +16,7 @@ import io.volunteerapp.volunteer_app.model.User;
 
 /**
  * Service xử lý JWT Token
- * - Tạo token với claim "scope" chứa quyền dạng "ROLE_ADMIN" hoặc "ROLE_USER"
+ * - Tạo token với claim "scope" chứa quyền dạng "ROLE_ADMIN" hoặc "ROLE_VOLUNTEER"
  * - Spring Security sẽ tự động parse scope thành authorities
  */
 @Service

@@ -8,12 +8,13 @@ import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.manhhuy.myapplication.adapter.EventAdapter;
+import com.manhhuy.myapplication.adapter.EventRegistrationAdapter;
 import com.manhhuy.myapplication.databinding.ActivityMyEventsBinding;
 import com.manhhuy.myapplication.helper.ApiConfig;
 import com.manhhuy.myapplication.helper.ApiEndpoints;
-import com.manhhuy.myapplication.helper.response.EventResponse;
+import com.manhhuy.myapplication.helper.response.EventRegistrationResponse;
 import com.manhhuy.myapplication.helper.response.PageResponse;
+import com.manhhuy.myapplication.helper.response.RestResponse;
 import com.manhhuy.myapplication.ui.Activities.DetailEventActivity;
 
 import java.util.ArrayList;
@@ -27,8 +28,8 @@ public class MyEventsActivity extends AppCompatActivity {
 
     private static final String TAG = "MyEventsActivity";
     private ActivityMyEventsBinding binding;
-    private EventAdapter eventAdapter;
-    private List<EventResponse> eventList = new ArrayList<>();
+    private EventRegistrationAdapter adapter;
+    private List<EventRegistrationResponse> registrationList = new ArrayList<>();
     private int currentPage = 0;
     private static final int PAGE_SIZE = 10;
     private boolean isLoading = false;
@@ -42,7 +43,7 @@ public class MyEventsActivity extends AppCompatActivity {
         setupToolbar();
         setupRecyclerView();
         setupClickListeners();
-        loadMyEvents();
+        loadMyRegistrations();
     }
 
     private void setupToolbar() {
@@ -50,85 +51,112 @@ public class MyEventsActivity extends AppCompatActivity {
     }
 
     private void setupRecyclerView() {
-        eventAdapter = new EventAdapter(eventList);
+        adapter = new EventRegistrationAdapter(registrationList);
         binding.recyclerViewEvents.setLayoutManager(new LinearLayoutManager(this));
-        binding.recyclerViewEvents.setAdapter(eventAdapter);
+        binding.recyclerViewEvents.setAdapter(adapter);
 
-        // Set click listener for event items
-        eventAdapter.setListener(event -> {
-            Intent intent = new Intent(MyEventsActivity.this, DetailEventActivity.class);
-            intent.putExtra("event", event);
-            startActivity(intent);
+        // Set click listener for registration items
+        adapter.setListener(registration -> {
+            // Open event detail using eventId
+            if (registration.getEventId() != null) {
+                Intent intent = new Intent(MyEventsActivity.this, DetailEventActivity.class);
+                intent.putExtra("eventId", registration.getEventId());
+                startActivity(intent);
+            }
         });
     }
 
     private void setupClickListeners() {
         binding.btnRetry.setOnClickListener(v -> {
             currentPage = 0;
-            eventList.clear();
-            loadMyEvents();
+            registrationList.clear();
+            loadMyRegistrations();
         });
     }
 
-    private void loadMyEvents() {
+    private void loadMyRegistrations() {
         if (isLoading) return;
 
         isLoading = true;
         showLoading();
 
-        // Get userId from JWT token
+        // Get token to ensure user is authenticated
         String token = ApiConfig.getToken();
-        Integer userId = null;
         
-        if (token != null && !token.isEmpty()) {
-            userId = com.manhhuy.myapplication.helper.JwtUtil.getUserId(token);
+        Log.d(TAG, "Token: " + (token != null ? "exists (length: " + token.length() + ")" : "null"));
+        
+        if (token == null || token.isEmpty()) {
+            Log.w(TAG, "No token found, user not logged in");
+            isLoading = false;
+            showError("Vui lòng đăng nhập để xem sự kiện của bạn");
+            return;
         }
         
-        // Fallback to userId = 1 if token not found or invalid
-        if (userId == null) {
-            Log.w(TAG, "Cannot get userId from token, using default userId = 1");
-            userId = 1;
-        }
-        
-        Log.d(TAG, "Loading events for userId: " + userId);
+        Log.d(TAG, "Loading my event registrations from: " + ApiConfig.getClient().baseUrl() + "event-registrations/my-registrations");
 
         ApiEndpoints apiService = ApiConfig.getClient().create(ApiEndpoints.class);
         
-        Call<PageResponse<EventResponse>> call = apiService.getEventsByUserId(
-                userId,
+        // Call getMyRegistrations - returns event registrations of the current user
+        Call<RestResponse<PageResponse<EventRegistrationResponse>>> call = apiService.getMyRegistrations(
                 currentPage,
-                PAGE_SIZE
+                PAGE_SIZE,
+                null  // status filter (null = all statuses)
         );
 
-        call.enqueue(new Callback<PageResponse<EventResponse>>() {
+        call.enqueue(new Callback<RestResponse<PageResponse<EventRegistrationResponse>>>() {
             @Override
-            public void onResponse(Call<PageResponse<EventResponse>> call, Response<PageResponse<EventResponse>> response) {
+            public void onResponse(Call<RestResponse<PageResponse<EventRegistrationResponse>>> call, 
+                                 Response<RestResponse<PageResponse<EventRegistrationResponse>>> response) {
                 isLoading = false;
 
+                Log.d(TAG, "Response code: " + response.code());
+                Log.d(TAG, "Response successful: " + response.isSuccessful());
+                
                 if (response.isSuccessful() && response.body() != null) {
-                    PageResponse<EventResponse> pageResponse = response.body();
-                    List<EventResponse> events = pageResponse.getContent();
+                    RestResponse<PageResponse<EventRegistrationResponse>> restResponse = response.body();
+                    PageResponse<EventRegistrationResponse> pageResponse = restResponse.getData();
+                    
+                    if (pageResponse == null) {
+                        Log.e(TAG, "PageResponse is null in RestResponse");
+                        showError("Không có dữ liệu");
+                        return;
+                    }
+                    
+                    List<EventRegistrationResponse> registrations = pageResponse.getContent();
 
-                    if (events != null && !events.isEmpty()) {
-                        eventList.clear();
-                        eventList.addAll(events);
-                        eventAdapter.setEvents(eventList);
+                    Log.d(TAG, "Page response: " + pageResponse);
+                    Log.d(TAG, "Registrations count: " + (registrations != null ? registrations.size() : "null"));
+
+                    if (registrations != null && !registrations.isEmpty()) {
+                        registrationList.clear();
+                        registrationList.addAll(registrations);
+                        adapter.setRegistrations(registrationList);
                         showContent();
                         
-                        Log.d(TAG, "Loaded " + events.size() + " events");
+                        Log.d(TAG, "Loaded " + registrations.size() + " registrations");
+                        for (EventRegistrationResponse reg : registrations) {
+                            Log.d(TAG, "Registration: " + reg.getEventTitle() + " - Status: " + reg.getStatus());
+                        }
                     } else {
+                        Log.d(TAG, "No registrations found, showing empty state");
                         if (currentPage == 0) {
                             showEmptyState();
                         }
                     }
                 } else {
                     Log.e(TAG, "API Error: " + response.code() + " - " + response.message());
+                    try {
+                        String errorBody = response.errorBody() != null ? response.errorBody().string() : "No error body";
+                        Log.e(TAG, "Error body: " + errorBody);
+                    } catch (Exception e) {
+                        Log.e(TAG, "Error reading error body", e);
+                    }
                     showError("Không thể tải dữ liệu: " + response.message());
                 }
             }
 
             @Override
-            public void onFailure(Call<PageResponse<EventResponse>> call, Throwable t) {
+            public void onFailure(Call<RestResponse<PageResponse<EventRegistrationResponse>>> call, Throwable t) {
                 isLoading = false;
                 Log.e(TAG, "Network Error: " + t.getMessage(), t);
                 showError("Lỗi kết nối: " + t.getMessage());
@@ -163,6 +191,16 @@ public class MyEventsActivity extends AppCompatActivity {
         binding.emptyState.setVisibility(View.GONE);
         binding.errorState.setVisibility(View.VISIBLE);
         binding.tvErrorMessage.setText(message);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Reload data when returning to this activity
+        if (registrationList.isEmpty()) {
+            currentPage = 0;
+            loadMyRegistrations();
+        }
     }
 
     @Override
