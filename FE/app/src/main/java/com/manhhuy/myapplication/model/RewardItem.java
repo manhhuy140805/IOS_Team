@@ -11,6 +11,7 @@ public class RewardItem {
     private String tag1;
     private String tag2;
     private int iconColorIndex; // 0=purple, 1=pink, 2=orange, 3=cyan
+    private String imageUrl; // URL hình ảnh từ API
 
     public RewardItem(String name, String organization, String description, String points,
             String stock, String expiry, int categoryType, String tag1, String tag2, int iconColorIndex) {
@@ -24,6 +25,22 @@ public class RewardItem {
         this.tag1 = tag1;
         this.tag2 = tag2;
         this.iconColorIndex = iconColorIndex;
+    }
+
+    public RewardItem(String name, String organization, String description, String points,
+            String stock, String expiry, int categoryType, String tag1, String tag2, 
+            int iconColorIndex, String imageUrl) {
+        this.name = name;
+        this.organization = organization;
+        this.description = description;
+        this.points = points;
+        this.stock = stock;
+        this.expiry = expiry;
+        this.categoryType = categoryType;
+        this.tag1 = tag1;
+        this.tag2 = tag2;
+        this.iconColorIndex = iconColorIndex;
+        this.imageUrl = imageUrl;
     }
 
     public String getName() {
@@ -104,5 +121,13 @@ public class RewardItem {
 
     public void setIconColorIndex(int iconColorIndex) {
         this.iconColorIndex = iconColorIndex;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }

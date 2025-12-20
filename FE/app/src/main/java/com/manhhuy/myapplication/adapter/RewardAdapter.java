@@ -1,6 +1,7 @@
-package com.manhhuy.myapplication.adapter.admin.reward;
+package com.manhhuy.myapplication.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,8 +11,10 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.manhhuy.myapplication.R;
 import com.manhhuy.myapplication.databinding.ItemRewardBinding;
+import com.manhhuy.myapplication.helper.response.RewardResponse;
 import com.manhhuy.myapplication.model.RewardItem;
 
 import java.util.ArrayList;
@@ -19,9 +22,10 @@ import java.util.List;
 
 public class RewardAdapter extends RecyclerView.Adapter<RewardAdapter.RewardViewHolder> {
 
+    private static final String TAG = "RewardAdapter";
     private Context context;
     private List<RewardItem> rewardList;
-    private List<RewardItem> rewardListFull; // For filtering
+    private List<RewardItem> rewardListFull;
     private int userPoints;
 
     public RewardAdapter(Context context, List<RewardItem> rewardList, int userPoints) {
@@ -59,42 +63,13 @@ public class RewardAdapter extends RecyclerView.Adapter<RewardAdapter.RewardView
             holder.binding.tvTag2.setVisibility(View.GONE);
         }
 
-        // Set icon background color
-        int backgroundRes;
-        int iconRes;
-        switch (item.getIconColorIndex()) {
-            case 0: // Purple
-                backgroundRes = R.drawable.bg_icon_purple;
-                break;
-            case 1: // Pink
-                backgroundRes = R.drawable.bg_icon_pink;
-                break;
-            case 2: // Orange
-                backgroundRes = R.drawable.bg_icon_orange;
-                break;
-            case 3: // Cyan
-                backgroundRes = R.drawable.bg_icon_cyan;
-                break;
-            default:
-                backgroundRes = R.drawable.bg_icon_purple;
-        }
-        holder.binding.iconContainer.setBackgroundResource(backgroundRes);
-
-        // Set icon based on category type
-        switch (item.getCategoryType()) {
-            case 1: // Voucher
-                iconRes = R.drawable.ic_voucher;
-                break;
-            case 2: // Gift
-                iconRes = R.drawable.ic_gift;
-                break;
-            case 3: // Opportunity
-                iconRes = R.drawable.ic_discount;
-                break;
-            default:
-                iconRes = R.drawable.ic_gift;
-        }
-        holder.binding.ivRewardIcon.setImageResource(iconRes);
+        // Load image từ URL bằng Glide
+        Glide.with(context)
+                .load(item.getImageUrl())
+                .placeholder(R.drawable.ic_gift)
+                .error(R.drawable.ic_gift)
+                .centerCrop()
+                .into(holder.binding.ivRewardIcon);
 
         // Check if user has enough points
         int itemPoints = parsePoints(item.getPoints());
@@ -151,6 +126,72 @@ public class RewardAdapter extends RecyclerView.Adapter<RewardAdapter.RewardView
         this.rewardList = rewards;
         this.rewardListFull = new ArrayList<>(rewards);
         notifyDataSetChanged();
+    }
+
+    // Set rewards from API response
+    public void setRewardsFromApi(List<RewardResponse> rewards) {
+        List<RewardItem> items = convertToRewardItems(rewards);
+        setCategories(items);
+    }
+
+    // Convert RewardResponse to RewardItem
+    private List<RewardItem> convertToRewardItems(List<RewardResponse> rewards) {
+        List<RewardItem> items = new ArrayList<>();
+        
+        for (RewardResponse reward : rewards) {
+            int categoryType = getCategoryTypeFromRewardType(reward.getType());
+            int iconColorIndex = categoryType % 4;
+            String expiry = reward.getExpiryDate() != null ? 
+                    formatExpiryDate(reward.getExpiryDate()) : "";
+            
+            RewardItem item = new RewardItem(
+                    reward.getName(),
+                    reward.getProviderName() != null ? reward.getProviderName() : "VolunConnect",
+                    reward.getDescription(),
+                    String.valueOf(reward.getPointsRequired()),
+                    "Còn " + reward.getQuantity(),
+                    expiry,
+                    categoryType,
+                    reward.getType(),
+                    reward.getStatus().equals("AVAILABLE") ? "Còn hàng" : "",
+                    iconColorIndex,
+                    reward.getImageUrl()
+            );
+            
+            items.add(item);
+        }
+        
+        return items;
+    }
+
+    private int getCategoryTypeFromRewardType(String type) {
+        if (type == null) return 0;
+        
+        String lowerType = type.toLowerCase();
+        if (lowerType.contains("voucher") || lowerType.contains("giảm giá")) {
+            return 1;
+        } else if (lowerType.contains("quà") || lowerType.contains("gift") || 
+                   lowerType.contains("mua sắm")) {
+            return 2;
+        } else if (lowerType.contains("cơ hội") || lowerType.contains("học") || 
+                   lowerType.contains("giáo dục") || lowerType.contains("kỹ năng")) {
+            return 3;
+        }
+        return 0;
+    }
+
+    private String formatExpiryDate(String date) {
+        if (date == null || date.isEmpty()) return "";
+        
+        try {
+            String[] parts = date.split("-");
+            if (parts.length == 3) {
+                return parts[2] + "/" + parts[1] + "/" + parts[0];
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Error formatting date", e);
+        }
+        return date;
     }
 
     // Filter by category

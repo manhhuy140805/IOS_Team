@@ -49,6 +49,25 @@ public class RewardService {
                 rewardPage.getTotalPages());
     }
 
+    // Get rewards by reward type ID with pagination
+    public PageResponse<RewardResponse> getRewardsByTypeId(Integer rewardTypeId, int page, int size, String sortBy, String sortDirection) {
+        Sort sort = sortDirection.equalsIgnoreCase("desc")
+                ? Sort.by(sortBy).descending()
+                : Sort.by(sortBy).ascending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        Page<Reward> rewardPage = rewardRepository.findByRewardType_Id(rewardTypeId, pageable);
+        List<RewardResponse> responses = rewardPage.getContent().stream()
+                .map(rewardMapper::toResponse)
+                .toList();
+
+        return new PageResponse<>(
+                responses,
+                rewardPage.getNumber(),
+                rewardPage.getTotalElements(),
+                rewardPage.getTotalPages());
+    }
+
     // Get reward by ID
     public RewardResponse getRewardById(Integer id) {
         Reward reward = rewardRepository.findById(id)

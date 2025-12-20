@@ -22,15 +22,22 @@ public class RewardController {
 
     /**
      * Get all rewards with pagination (Public access)
+     * Can filter by reward type ID using optional parameter
      */
     @GetMapping("")
     public ResponseEntity<PageResponse<RewardResponse>> getAllRewards(
+            @RequestParam(name = "rewardTypeId", required = false) Integer rewardTypeId,
             @RequestParam(name = "page", defaultValue = "0") int page,
             @RequestParam(name = "size", defaultValue = "10") int size,
             @RequestParam(name = "sortBy", defaultValue = "createdAt") String sortBy,
             @RequestParam(name = "sortDirection", defaultValue = "desc") String sortDirection) {
 
-        PageResponse<RewardResponse> response = rewardService.getAllRewards(page, size, sortBy, sortDirection);
+        PageResponse<RewardResponse> response;
+        if (rewardTypeId != null) {
+            response = rewardService.getRewardsByTypeId(rewardTypeId, page, size, sortBy, sortDirection);
+        } else {
+            response = rewardService.getAllRewards(page, size, sortBy, sortDirection);
+        }
         return ResponseEntity.ok(response);
     }
 
