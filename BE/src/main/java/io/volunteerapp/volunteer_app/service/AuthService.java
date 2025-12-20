@@ -8,7 +8,7 @@ import io.volunteerapp.volunteer_app.Util.RestResponse;
 import io.volunteerapp.volunteer_app.Util.SecurityUtil;
 import io.volunteerapp.volunteer_app.model.User;
 import io.volunteerapp.volunteer_app.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
