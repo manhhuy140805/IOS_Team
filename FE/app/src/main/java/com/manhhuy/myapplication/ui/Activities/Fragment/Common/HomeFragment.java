@@ -157,6 +157,8 @@ public class HomeFragment extends Fragment {
             @Override
             public void onResponse(Call<RestResponse<PageResponse<EventResponse>>> call, 
                                  Response<RestResponse<PageResponse<EventResponse>>> response) {
+                if (binding == null) return; // Fragment destroyed
+                
                 if (response.isSuccessful() && response.body() != null) {
                     RestResponse<PageResponse<EventResponse>> restResponse = response.body();
                     
@@ -184,6 +186,7 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void onFailure(Call<RestResponse<PageResponse<EventResponse>>> call, Throwable t) {
+                if (binding == null) return; // Fragment destroyed
                 showEmptyState("Lỗi kết nối");
             }
         });
@@ -198,6 +201,8 @@ public class HomeFragment extends Fragment {
             @Override
             public void onResponse(Call<RestResponse<PageResponse<EventResponse>>> call, 
                                  Response<RestResponse<PageResponse<EventResponse>>> response) {
+                if (binding == null) return; // Fragment destroyed
+                
                 if (response.isSuccessful() && response.body() != null) {
                     RestResponse<PageResponse<EventResponse>> restResponse = response.body();
                     
@@ -226,12 +231,14 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void onFailure(Call<RestResponse<PageResponse<EventResponse>>> call, Throwable t) {
+                if (binding == null) return; // Fragment destroyed
                 showEmptyState("Lỗi kết nối");
             }
         });
     }
     
     private void showEmptyState(String message) {
+        if (binding == null) return; // Fragment destroyed
         binding.eventsRecyclerView.setVisibility(View.GONE);
         binding.emptyStateLayout.setVisibility(View.VISIBLE);
         binding.emptyStateText.setText(message);

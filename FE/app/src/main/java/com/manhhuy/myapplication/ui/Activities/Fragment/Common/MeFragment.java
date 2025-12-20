@@ -102,9 +102,9 @@ public class MeFragment extends Fragment {
         binding.layoutMyCertificates.setOnClickListener(v -> {
             try {
                 if (getActivity() instanceof UserActivity) {
-                    ((UserActivity) getActivity()).switchToCertificateTab();
+                    ((UserActivity) getActivity()).switchToNofiticationTab();
                 } else {
-                    Toast.makeText(getContext(), "Xem chứng nhận", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Xem thông báo", Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
                 Log.e(TAG, "Error switching to certificate tab", e);
