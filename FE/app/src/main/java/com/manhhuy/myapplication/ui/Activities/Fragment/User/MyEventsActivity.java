@@ -76,11 +76,26 @@ public class MyEventsActivity extends AppCompatActivity {
         isLoading = true;
         showLoading();
 
+        // Get userId from JWT token
+        String token = ApiConfig.getToken();
+        Integer userId = null;
+        
+        if (token != null && !token.isEmpty()) {
+            userId = com.manhhuy.myapplication.helper.JwtUtil.getUserId(token);
+        }
+        
+        // Fallback to userId = 1 if token not found or invalid
+        if (userId == null) {
+            Log.w(TAG, "Cannot get userId from token, using default userId = 1");
+            userId = 1;
+        }
+        
+        Log.d(TAG, "Loading events for userId: " + userId);
+
         ApiEndpoints apiService = ApiConfig.getClient().create(ApiEndpoints.class);
         
-        // Using userId = 1 as sample since user info is not saved yet
         Call<PageResponse<EventResponse>> call = apiService.getEventsByUserId(
-                1, // Sample user ID
+                userId,
                 currentPage,
                 PAGE_SIZE
         );

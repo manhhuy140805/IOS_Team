@@ -22,7 +22,7 @@ public class UserController {
     private UserService userService;
 
     @GetMapping("/me")
-    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_VOLUNTEER', 'ROLE_ADMIN')")
     public ResponseEntity<RestResponse<UserResponse>> getCurrentUser(
             @AuthenticationPrincipal Jwt jwt) {
 
@@ -46,7 +46,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_VOLUNTEER', 'ROLE_ADMIN')")
     public ResponseEntity<RestResponse<UserResponse>> getUserById(
             @PathVariable Integer id,
             @AuthenticationPrincipal Jwt jwt) {
