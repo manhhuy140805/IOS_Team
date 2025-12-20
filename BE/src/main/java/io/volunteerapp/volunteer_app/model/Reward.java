@@ -30,6 +30,10 @@ public class Reward {
 
     private String imageUrl;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "reward_type_id")
+    private RewardType rewardType;
+
     @Column(nullable = false)
     private Integer pointsRequired;
 
