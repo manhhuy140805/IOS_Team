@@ -39,13 +39,14 @@ public class UserActivity extends AppCompatActivity {
         UserAdapter userAdapter = new UserAdapter(this);
         binding.viewPager.setAdapter(userAdapter);
         binding.viewPager.setPageTransformer(new ZoomOutPageTransformer());
+        binding.viewPager.setOffscreenPageLimit(1); // Giảm cache fragment
 
-        tabTitles = new String[] { "Trang chủ", "Tìm kiếm", "Đổi thưởng", "Chứng nhận", "Cá nhân" };
+        tabTitles = new String[] { "Trang chủ", "Tìm kiếm", "Đổi thưởng", "Thông báo", "Cá nhân" };
         tabIcons = new int[] {
                 R.drawable.ic_home,
                 R.drawable.ic_search,
                 R.drawable.ic_rewards,
-                R.drawable.ic_medal,
+                R.drawable.ic_notification,
                 R.drawable.ic_profile
         };
 
@@ -75,8 +76,7 @@ public class UserActivity extends AppCompatActivity {
     public void switchToRedeemTab() {
         binding.viewPager.setCurrentItem(2, true);
     }
-
-    public void switchToCertificateTab() {
+    public void switchToNofiticationTab() {
         binding.viewPager.setCurrentItem(3, true);
     }
 }

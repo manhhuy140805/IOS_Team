@@ -9,10 +9,12 @@ import com.manhhuy.myapplication.helper.response.EventRegistrationResponse;
 import com.manhhuy.myapplication.helper.response.EventResponse;
 import com.manhhuy.myapplication.helper.response.EventTypeResponse;
 import com.manhhuy.myapplication.helper.response.LoginResponse;
+import com.manhhuy.myapplication.helper.response.NotificationResponse;
 import com.manhhuy.myapplication.helper.response.PageResponse;
 import com.manhhuy.myapplication.helper.response.RestResponse;
 import com.manhhuy.myapplication.helper.response.RewardResponse;
 import com.manhhuy.myapplication.helper.response.RewardTypeResponse;
+import com.manhhuy.myapplication.helper.response.UserNotificationResponse;
 import com.manhhuy.myapplication.helper.response.UserResponse;
 
 import java.util.List;
@@ -156,4 +158,30 @@ public interface ApiEndpoints {
     
     @PUT("event-registrations/{registrationId}/check-in")
     Call<EventRegistrationResponse> checkInUser(@Path("registrationId") Integer registrationId);
+
+    // ========== Notification APIs ==========
+    
+    @GET("notifications/{id}")
+    Call<RestResponse<NotificationResponse>> getNotificationById(
+            @Path("id") Integer id,
+            @Query("userId") Integer userId
+    );
+    
+    @GET("notifications/user/{userId}")
+    Call<RestResponse<List<UserNotificationResponse>>> getUserNotifications(@Path("userId") Integer userId);
+    
+    @GET("notifications/user/{userId}/unread")
+    Call<RestResponse<List<UserNotificationResponse>>> getUnreadNotifications(@Path("userId") Integer userId);
+    
+    @GET("notifications/user/{userId}/read")
+    Call<RestResponse<List<UserNotificationResponse>>> getReadNotifications(@Path("userId") Integer userId);
+    
+    @PUT("notifications/user/{userId}/read-all")
+    Call<RestResponse<Void>> markAllAsRead(@Path("userId") Integer userId);
+    
+    @DELETE("notifications/user/{userId}/notification/{notificationId}")
+    Call<RestResponse<Void>> deleteUserNotification(
+            @Path("userId") Integer userId,
+            @Path("notificationId") Integer notificationId
+    );
 }

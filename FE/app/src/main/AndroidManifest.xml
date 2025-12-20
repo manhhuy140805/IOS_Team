@@ -41,6 +41,10 @@
             android:exported="true">
         </activity>
         <activity
+            android:name=".ui.Activities.NotificationDetailActivity"
+            android:exported="false">
+        </activity>
+        <activity
             android:name=".ui.Activities.RegisterActivity"
             android:exported="true">
         </activity>
