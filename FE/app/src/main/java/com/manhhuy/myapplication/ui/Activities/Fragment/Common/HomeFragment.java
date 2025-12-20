@@ -150,7 +150,7 @@ public class HomeFragment extends Fragment {
         // Load first page of events, sorted by createdAt desc, only ACTIVE events
         Call<RestResponse<PageResponse<EventResponse>>> call = apiEndpoints.getAllEvents(
                 0, 10, "createdAt", "desc", 
-                null, null, "ACTIVE", null, null, null, null, null
+                null, null, null, null, null, null, null, null
         );
         
         call.enqueue(new Callback<RestResponse<PageResponse<EventResponse>>>() {
