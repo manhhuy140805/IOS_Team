@@ -1,24 +1,3 @@
--- ================================================
--- VOLUNTEER APP DATABASE SCHEMA
--- ================================================
--- Created: 2025-12-20
--- Database: PostgreSQL
--- Description: Complete database schema with all tables and relationships
--- ================================================
-
--- Drop tables if exist (in reverse order of dependencies)
-DROP TABLE IF EXISTS user_reward CASCADE;
-DROP TABLE IF EXISTS event_registration CASCADE;
-DROP TABLE IF EXISTS reward CASCADE;
-DROP TABLE IF EXISTS event CASCADE;
-DROP TABLE IF EXISTS reward_type CASCADE;
-DROP TABLE IF EXISTS event_type CASCADE;
-DROP TABLE IF EXISTS users CASCADE;
-
--- ================================================
--- TABLE: users
--- Description: Store user accounts information
--- ================================================
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     email VARCHAR(255) NOT NULL UNIQUE,
@@ -96,10 +75,7 @@ CREATE TABLE event (
     CONSTRAINT chk_reward_points CHECK (reward_points >= 0)
 );
 
--- ================================================
--- TABLE: reward
--- Description: Store available rewards for redemption
--- ================================================
+
 CREATE TABLE reward (
     id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
