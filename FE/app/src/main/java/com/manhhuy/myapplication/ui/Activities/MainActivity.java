@@ -2,6 +2,7 @@ package com.manhhuy.myapplication.ui.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -11,14 +12,28 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.manhhuy.myapplication.databinding.ActivityMainBinding;
+import com.manhhuy.myapplication.helper.ApiConfig;
+import com.manhhuy.myapplication.helper.ApiService;
+import com.manhhuy.myapplication.helper.JwtUtil;
+import com.manhhuy.myapplication.helper.request.LoginRequest;
+import com.manhhuy.myapplication.helper.response.LoginResponse;
+import com.manhhuy.myapplication.helper.response.RestResponse;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
+    private static final String TAG = "MainActivity";
     private ActivityMainBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
+
+        // Khởi tạo ApiConfig
+        ApiConfig.init(this);
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -38,21 +53,8 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }
 
-            Intent intent;
-
-            if (email.equals("admin@gmail.com") && password.equals("123456")) {
-                intent = new Intent(MainActivity.this, AdminActivity.class);
-            } else if (email.equals("user@gmail.com") && password.equals("123456")) {
-                intent = new Intent(MainActivity.this, UserActivity.class);
-            } else if (email.equals("organization@gmail.com") && password.equals("123456")) {
-                intent = new Intent(MainActivity.this, OrganizationActivity.class);
-            } else {
-                Toast.makeText(this, "Email hoặc mật khẩu không đúng", Toast.LENGTH_SHORT).show();
-                return;
-            }
-
-            startActivity(intent);
-            finish();
+            // Call API login
+            login(email, password);
         });
 
         binding.tvForgotPassword.setOnClickListener(v -> {
@@ -62,6 +64,85 @@ public class MainActivity extends AppCompatActivity {
         binding.tvRegisterLink.setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.this, RegisterActivity.class);
             startActivity(intent);
+        });
+    }
+
+    /**
+     * Call API login
+     */
+    private void login(String email, String password) {
+        // Disable button để tránh click nhiều lần
+        binding.btnSignIn.setEnabled(false);
+        binding.btnSignIn.setText("Đang đăng nhập...");
+
+        // Tạo LoginRequest
+        LoginRequest loginRequest = new LoginRequest(email, password);
+
+        // Call API
+        Call<RestResponse<LoginResponse>> call = ApiService.api().login(loginRequest);
+
+        call.enqueue(new Callback<RestResponse<LoginResponse>>() {
+            @Override
+            public void onResponse(Call<RestResponse<LoginResponse>> call,
+                    Response<RestResponse<LoginResponse>> response) {
+                binding.btnSignIn.setEnabled(true);
+                binding.btnSignIn.setText("Đăng nhập");
+
+                if (response.isSuccessful() && response.body() != null) {
+                    RestResponse<LoginResponse> restResponse = response.body();
+
+                    if (restResponse.getStatusCode() == 200 && restResponse.getData() != null) {
+                        LoginResponse loginResponse = restResponse.getData();
+                        String token = loginResponse.getAccessToken();
+
+                        // Lưu token
+                        ApiConfig.saveToken(token);
+
+                        // Decode token để lấy role
+                        String role = JwtUtil.getRole(token);
+                        String roleSimple = JwtUtil.getRoleSimple(token);
+
+                        Log.d(TAG, "Login successful. Role: " + role);
+                        Log.d(TAG, "Token info: " + JwtUtil.decodePayload(token));
+
+                        // Chuyển đến Activity phù hợp dựa trên role
+                        Intent intent;
+                        if ("ROLE_ADMIN".equals(role) || "ADMIN".equalsIgnoreCase(roleSimple)) {
+                            intent = new Intent(MainActivity.this, AdminActivity.class);
+                        } else if ("ROLE_ORGANIZATION".equals(role) || "ORGANIZATION".equalsIgnoreCase(roleSimple)) {
+                            intent = new Intent(MainActivity.this, OrganizationActivity.class);
+                        } else {
+                            // Mặc định là USER
+                            intent = new Intent(MainActivity.this, UserActivity.class);
+                        }
+
+                        startActivity(intent);
+                        finish();
+
+                    } else {
+                        // Lỗi từ server
+                        String errorMessage = restResponse.getMessage() != null
+                                ? restResponse.getMessage()
+                                : "Đăng nhập thất bại";
+                        Toast.makeText(MainActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    // Response không thành công
+                    Toast.makeText(MainActivity.this, "Đăng nhập thất bại. Vui lòng thử lại.", Toast.LENGTH_SHORT)
+                            .show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<RestResponse<LoginResponse>> call, Throwable t) {
+                binding.btnSignIn.setEnabled(true);
+                binding.btnSignIn.setText("Đăng nhập");
+
+                Log.e(TAG, "Login error", t);
+                Toast.makeText(MainActivity.this,
+                        "Lỗi kết nối: " + (t.getMessage() != null ? t.getMessage() : "Vui lòng kiểm tra kết nối mạng"),
+                        Toast.LENGTH_SHORT).show();
+            }
         });
     }
 
