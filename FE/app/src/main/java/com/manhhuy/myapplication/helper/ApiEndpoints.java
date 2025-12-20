@@ -11,6 +11,8 @@ import com.manhhuy.myapplication.helper.response.EventTypeResponse;
 import com.manhhuy.myapplication.helper.response.LoginResponse;
 import com.manhhuy.myapplication.helper.response.PageResponse;
 import com.manhhuy.myapplication.helper.response.RestResponse;
+import com.manhhuy.myapplication.helper.response.RewardResponse;
+import com.manhhuy.myapplication.helper.response.RewardTypeResponse;
 import com.manhhuy.myapplication.helper.response.UserResponse;
 
 import java.util.List;
@@ -52,6 +54,18 @@ public interface ApiEndpoints {
 
     @GET("event-types")
     Call<RestResponse<List<EventTypeResponse>>> getEventTypes();
+
+    @GET("reward-types")
+    Call<RestResponse<List<RewardTypeResponse>>> getRewardTypes();
+
+    @GET("rewards")
+    Call<RestResponse<PageResponse<RewardResponse>>> getAllRewards(
+            @Query("rewardTypeId") Integer rewardTypeId,
+            @Query("page") int page,
+            @Query("size") int size,
+            @Query("sortBy") String sortBy,
+            @Query("sortDirection") String sortDirection
+    );
 
     @GET("events")
     Call<RestResponse<PageResponse<EventResponse>>> getAllEvents(

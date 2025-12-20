@@ -45,17 +45,10 @@
             </com.google.android.material.card.MaterialCardView>
 
             <!-- Category Tabs -->
-            <HorizontalScrollView android:id="@+id/tabsContainer" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="24dp" android:clipToPadding="false" android:paddingHorizontal="16dp" android:scrollbars="none" app:layout_constraintTop_toBottomOf="@id/pointsCard">
+            <HorizontalScrollView android:id="@+id/tabsContainer" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="30dp" android:clipToPadding="false" android:paddingHorizontal="16dp" android:scrollbars="none" app:layout_constraintTop_toBottomOf="@id/pointsCard">
 
                 <LinearLayout android:id="@+id/categoryContainer" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" android:paddingEnd="16dp">
-
-                    <TextView android:id="@+id/tabAll" android:layout_width="wrap_content" android:layout_height="wrap_content" android:background="@drawable/bg_primary" android:clickable="true" android:focusable="true" android:paddingHorizontal="20dp" android:paddingVertical="10dp" android:text="Tất cả" android:textColor="@color/white" android:textSize="14sp" android:textStyle="bold" />
-
-                    <TextView android:id="@+id/tabVoucher" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="12dp" android:background="@drawable/bg_primary" android:clickable="true" android:focusable="true" android:paddingHorizontal="20dp" android:paddingVertical="10dp" android:text="Voucher" android:textColor="@color/text_secondary" android:textSize="14sp" android:textStyle="bold" />
-
-                    <TextView android:id="@+id/tabGift" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="12dp" android:background="@drawable/bg_primary" android:clickable="true" android:focusable="true" android:paddingHorizontal="20dp" android:paddingVertical="10dp" android:text="Quà tặng" android:textColor="@color/text_secondary" android:textSize="14sp" android:textStyle="bold" />
-
-                    <TextView android:id="@+id/tabOpportunity" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="12dp" android:background="@drawable/bg_primary" android:clickable="true" android:focusable="true" android:paddingHorizontal="20dp" android:paddingVertical="10dp" android:text="Cơ hội" android:textColor="@color/text_secondary" android:textSize="14sp" android:textStyle="bold" />
+                    <!-- Tabs sẽ được tạo động từ API -->
                 </LinearLayout>
             </HorizontalScrollView>
 
