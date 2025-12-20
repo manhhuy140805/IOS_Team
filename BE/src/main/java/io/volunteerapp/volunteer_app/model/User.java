@@ -65,6 +65,9 @@ public class User {
     @OneToMany(mappedBy = "user")
     private Set<UserReward> userUserRewards = new HashSet<>();
 
+    @OneToMany(mappedBy = "user")
+    private Set<UserNotification> userNotifications = new HashSet<>();
+
     @PrePersist
     public void handleBeforeCreate() {
         this.createdAt = Instant.now();
