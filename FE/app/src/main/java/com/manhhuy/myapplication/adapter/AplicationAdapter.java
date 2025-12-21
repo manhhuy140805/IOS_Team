@@ -133,6 +133,15 @@ public class AplicationAdapter extends RecyclerView.Adapter<AplicationAdapter.Ap
         notifyDataSetChanged();
     }
 
+    // Update data
+    public void updateData(List<Applicant> newData) {
+        applicantList.clear();
+        applicantList.addAll(newData);
+        applicantListFull.clear();
+        applicantListFull.addAll(newData);
+        notifyDataSetChanged();
+    }
+
     // Update applicant status
     public void updateApplicantStatus(int position, int newStatus) {
         if (position >= 0 && position < applicantList.size()) {

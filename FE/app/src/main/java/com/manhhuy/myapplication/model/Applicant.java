@@ -9,9 +9,10 @@ public class Applicant {
     private String note;
     private int status; // 0=pending, 1=accepted, 2=rejected
     private String avatarUrl;
+    private String registrationId;
 
     public Applicant(String name, String email, String activityName, String registrationDate,
-            String phone, String note, int status, String avatarUrl) {
+            String phone, String note, int status, String avatarUrl, String registrationId) {
         this.name = name;
         this.email = email;
         this.activityName = activityName;
@@ -20,6 +21,7 @@ public class Applicant {
         this.note = note;
         this.status = status;
         this.avatarUrl = avatarUrl;
+        this.registrationId = registrationId;
     }
 
     public String getName() {
@@ -84,5 +86,13 @@ public class Applicant {
 
     public void setAvatarUrl(String avatarUrl) {
         this.avatarUrl = avatarUrl;
+    }
+
+    public String getRegistrationId() {
+        return registrationId;
+    }
+
+    public void setRegistrationId(String registrationId) {
+        this.registrationId = registrationId;
     }
 }

@@ -1,6 +1,7 @@
 package com.manhhuy.myapplication.ui.Activities.Fragment.Organization;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,19 +19,34 @@ import android.widget.Toast;
 import com.manhhuy.myapplication.R;
 import com.manhhuy.myapplication.adapter.AplicationAdapter;
 import com.manhhuy.myapplication.databinding.FragmentAcceptApplicantBinding;
+import com.manhhuy.myapplication.helper.ApiConfig;
+import com.manhhuy.myapplication.helper.ApiEndpoints;
+import com.manhhuy.myapplication.helper.response.EventRegistrationResponse;
+import com.manhhuy.myapplication.helper.response.EventResponse;
+import com.manhhuy.myapplication.helper.response.PageResponse;
+import com.manhhuy.myapplication.helper.response.RestResponse;
 import com.manhhuy.myapplication.model.Applicant;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class AcceptApplicantFragment extends Fragment implements AplicationAdapter.OnApplicantActionListener {
 
+    private static final String TAG = "AcceptApplicantFragment";
     private FragmentAcceptApplicantBinding binding;
 
     // Data
     private List<Applicant> applicantList;
+    private List<EventRegistrationResponse> registrationList;
     private AplicationAdapter adapter;
     private int currentFilter = -1; // -1=all, 0=pending, 1=accepted, 2=rejected
+    
+    private boolean isLoading = false;
+    private List<EventResponse> myEvents;
 
     public AcceptApplicantFragment() {
         // Required empty public constructor
@@ -51,115 +67,170 @@ public class AcceptApplicantFragment extends Fragment implements AplicationAdapt
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        loadMockData();
+        applicantList = new ArrayList<>();
+        registrationList = new ArrayList<>();
+        
         setupRecyclerView();
         setupListeners();
-        updateCounts();
+        loadMyEvents();
     }
-
-    private void loadMockData() {
-        applicantList = new ArrayList<>();
-
-        // Mock data - 10 applicants
-        applicantList.add(new Applicant(
-                "Võ Nguyễn Đại Hiếu",
-                "abc.nguyen@email.com",
-                "Beach Cleanup",
-                "24/10/2025",
-                "0901234567",
-                "Tôi rất quan tâm đến môi trường và muốn đóng góp cho cộng đồng. Tôi có kinh nghiệm tham gia các hoạt động tương tự.",
-                0, // pending
-                ""));
-
-        applicantList.add(new Applicant(
-                "Trần Thị Bình",
-                "binh.tran@gmail.com",
-                "Teach English to Kids",
-                "23/10/2025",
-                "0912345678",
-                "Tôi là sinh viên năm 3 chuyên ngành tiếng Anh. Tôi yêu trẻ em và muốn giúp các em có cơ hội học tập tốt hơn.",
-                0, // pending
-                ""));
-
-        applicantList.add(new Applicant(
-                "Lê Minh Cường",
-                "cuong.le@email.com",
-                "Tree Planting Drive",
-                "22/10/2025",
-                "0923456789",
-                "",
-                1, // accepted
-                ""));
-
-        applicantList.add(new Applicant(
-                "Phạm Thị Dung",
-                "dung.pham@email.com",
-                "Food Bank Volunteer",
-                "24/10/2025",
-                "0923456789",
-                "Tôi muốn giúp đỡ những người gặp khó khăn. Tôi có thể góp nhận vào cuối tuần.",
-                0, // pending
-                ""));
-
-        applicantList.add(new Applicant(
-                "Hoàng Văn Em",
-                "em.hoang@email.com",
-                "Animal Shelter Helper",
-                "20/10/2025",
-                "0934567890",
-                "",
-                2, // rejected
-                ""));
-
-        applicantList.add(new Applicant(
-                "Nguyễn Văn An",
-                "an.nguyen@email.com",
-                "Community Garden",
-                "19/10/2025",
-                "0945678901",
-                "Tôi thích trồng cây và làm vườn. Rất mong được đóng góp.",
-                1, // accepted
-                ""));
-
-        applicantList.add(new Applicant(
-                "Đỗ Thị Hoa",
-                "hoa.do@email.com",
-                "Elder Care Program",
-                "18/10/2025",
-                "0956789012",
-                "Tôi có kinh nghiệm chăm sóc người cao tuổi và muốn mang lại niềm vui cho các cụ.",
-                1, // accepted
-                ""));
-
-        applicantList.add(new Applicant(
-                "Vũ Minh Khoa",
-                "khoa.vu@email.com",
-                "Youth Mentorship",
-                "17/10/2025",
-                "0967890123",
-                "",
-                0, // pending
-                ""));
-
-        applicantList.add(new Applicant(
-                "Lý Thị Mai",
-                "mai.ly@email.com",
-                "Charity Run",
-                "16/10/2025",
-                "0978901234",
-                "Tôi yêu thích chạy bộ và muốn kết hợp sở thích với hoạt động thiện nguyện.",
-                1, // accepted
-                ""));
-
-        applicantList.add(new Applicant(
-                "Bùi Văn Nam",
-                "nam.bui@email.com",
-                "Hospital Support",
-                "15/10/2025",
-                "0989012345",
-                "",
-                2, // rejected
-                ""));
+    
+    private void loadMyEvents() {
+        if (isLoading) return;
+        
+        isLoading = true;
+        showLoading();
+        
+        ApiEndpoints apiService = ApiConfig.getClient().create(ApiEndpoints.class);
+        Call<RestResponse<PageResponse<EventResponse>>> call = apiService.getMyEvents(
+                0, 100, "createdAt", "desc"
+        );
+        
+        call.enqueue(new Callback<RestResponse<PageResponse<EventResponse>>>() {
+            @Override
+            public void onResponse(Call<RestResponse<PageResponse<EventResponse>>> call,
+                                 Response<RestResponse<PageResponse<EventResponse>>> response) {
+                isLoading = false;
+                
+                if (response.isSuccessful() && response.body() != null) {
+                    RestResponse<PageResponse<EventResponse>> restResponse = response.body();
+                    PageResponse<EventResponse> pageResponse = restResponse.getData();
+                    
+                    if (pageResponse != null && pageResponse.getContent() != null) {
+                        myEvents = pageResponse.getContent();
+                        
+                        if (!myEvents.isEmpty()) {
+                            // Load registrations for first event
+                            loadEventRegistrations(myEvents.get(0).getId(), null);
+                        } else {
+                            hideLoading();
+                            showEmptyState();
+                        }
+                    }
+                } else {
+                    hideLoading();
+                    Toast.makeText(getContext(), "Không thể tải sự kiện", Toast.LENGTH_SHORT).show();
+                }
+            }
+            
+            @Override
+            public void onFailure(Call<RestResponse<PageResponse<EventResponse>>> call, Throwable t) {
+                isLoading = false;
+                hideLoading();
+                Toast.makeText(getContext(), "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    
+    private void loadEventRegistrations(Integer eventId, String status) {
+        if (isLoading) return;
+        
+        isLoading = true;
+        showLoading();
+        
+        ApiEndpoints apiService = ApiConfig.getClient().create(ApiEndpoints.class);
+        Call<RestResponse<PageResponse<EventRegistrationResponse>>> call = apiService.getEventRegistrations(
+                eventId, 0, 100, status
+        );
+        
+        call.enqueue(new Callback<RestResponse<PageResponse<EventRegistrationResponse>>>() {
+            @Override
+            public void onResponse(Call<RestResponse<PageResponse<EventRegistrationResponse>>> call,
+                                 Response<RestResponse<PageResponse<EventRegistrationResponse>>> response) {
+                isLoading = false;
+                hideLoading();
+                
+                Log.d(TAG, "Response successful: " + response.isSuccessful());
+                Log.d(TAG, "Response body null: " + (response.body() == null));
+                
+                if (response.isSuccessful() && response.body() != null) {
+                    RestResponse<PageResponse<EventRegistrationResponse>> restResponse = response.body();
+                    Log.d(TAG, "RestResponse data null: " + (restResponse.getData() == null));
+                    
+                    PageResponse<EventRegistrationResponse> pageResponse = restResponse.getData();
+                    
+                    if (pageResponse != null) {
+                        Log.d(TAG, "PageResponse content null: " + (pageResponse.getContent() == null));
+                        if (pageResponse.getContent() != null) {
+                            Log.d(TAG, "Content size: " + pageResponse.getContent().size());
+                        }
+                    }
+                    
+                    if (pageResponse != null && pageResponse.getContent() != null) {
+                        registrationList = pageResponse.getContent();
+                        
+                        applicantList.clear();
+                        for (EventRegistrationResponse reg : registrationList) {
+                            Applicant applicant = convertToApplicant(reg);
+                            applicantList.add(applicant);
+                            Log.d(TAG, "Added applicant: " + applicant.getName());
+                        }
+                        
+                        Log.d(TAG, "Total applicants before updateData: " + applicantList.size());
+                        adapter.updateData(new ArrayList<>(applicantList));
+                        updateCounts();
+                        updateEmptyState();
+                        
+                        Log.d(TAG, "Loaded " + applicantList.size() + " registrations");
+                    } else {
+                        Log.e(TAG, "PageResponse or content is null");
+                    }
+                } else {
+                    Log.e(TAG, "Response not successful or body is null");
+                    Toast.makeText(getContext(), "Không thể tải danh sách đăng ký", Toast.LENGTH_SHORT).show();
+                }
+            }
+            
+            @Override
+            public void onFailure(Call<RestResponse<PageResponse<EventRegistrationResponse>>> call, Throwable t) {
+                isLoading = false;
+                hideLoading();
+                Toast.makeText(getContext(), "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    
+    private Applicant convertToApplicant(EventRegistrationResponse reg) {
+        int status;
+        if ("APPROVED".equals(reg.getStatus())) {
+            status = 1;
+        } else if ("REJECTED".equals(reg.getStatus())) {
+            status = 2;
+        } else {
+            status = 0; // PENDING
+        }
+        
+        return new Applicant(
+                reg.getUserName() != null ? reg.getUserName() : "N/A",
+                reg.getUserEmail() != null ? reg.getUserEmail() : "",
+                reg.getEventTitle() != null ? reg.getEventTitle() : "",
+                reg.getJoinDate() != null ? reg.getJoinDate() : "",
+                reg.getUserPhone() != null ? reg.getUserPhone() : "",
+                reg.getNotes() != null ? reg.getNotes() : "",
+                status,
+                reg.getUserAvatarUrl() != null ? reg.getUserAvatarUrl() : "",
+                String.valueOf(reg.getId())
+        );
+    }
+    
+    private void showLoading() {
+        if (binding != null) {
+            binding.rvApplicants.setVisibility(View.GONE);
+            binding.emptyState.setVisibility(View.GONE);
+        }
+    }
+    
+    private void hideLoading() {
+        if (binding != null) {
+            binding.rvApplicants.setVisibility(View.VISIBLE);
+        }
+    }
+    
+    private void showEmptyState() {
+        if (binding != null) {
+            binding.rvApplicants.setVisibility(View.GONE);
+            binding.emptyState.setVisibility(View.VISIBLE);
+        }
     }
 
     private void setupRecyclerView() {
@@ -190,17 +261,23 @@ public class AcceptApplicantFragment extends Fragment implements AplicationAdapt
         resetTab(binding.tabRejected);
 
         // Highlight selected
-        selectedTab.setBackgroundResource(R.drawable.bg_category_tab_selected_reward);
+        selectedTab.setBackgroundResource(R.drawable.bg_filter_selected);
         selectedTab.setTextColor(ContextCompat.getColor(requireContext(), android.R.color.white));
 
-        // Filter
+        // Filter locally
         adapter.filterByStatus(filter);
         updateEmptyState();
+        
+        // Or reload from API with status filter
+        // String status = filter == 0 ? "PENDING" : filter == 1 ? "APPROVED" : filter == 2 ? "REJECTED" : null;
+        // if (myEvents != null && !myEvents.isEmpty()) {
+        //     loadEventRegistrations(myEvents.get(0).getId(), status);
+        // }
     }
 
     private void resetTab(TextView tab) {
-        tab.setBackgroundResource(R.drawable.bg_white);
-        tab.setTextColor(ContextCompat.getColor(requireContext(), R.color.cyan));
+        tab.setBackgroundResource(R.drawable.bg_filter_unselected);
+        tab.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_secondary));
     }
 
     private void updateCounts() {
@@ -210,33 +287,59 @@ public class AcceptApplicantFragment extends Fragment implements AplicationAdapt
     }
 
     private void updateEmptyState() {
-        if (adapter.getItemCount() == 0) {
-            binding.rvApplicants.setVisibility(View.GONE);
-            binding.emptyState.setVisibility(View.VISIBLE);
-        } else {
-            binding.rvApplicants.setVisibility(View.VISIBLE);
-            binding.emptyState.setVisibility(View.GONE);
+        if (binding != null) {
+            if (adapter.getItemCount() == 0) {
+                binding.rvApplicants.setVisibility(View.GONE);
+                binding.emptyState.setVisibility(View.VISIBLE);
+            } else {
+                binding.rvApplicants.setVisibility(View.VISIBLE);
+                binding.emptyState.setVisibility(View.GONE);
+            }
         }
     }
 
     @Override
     public void onAccept(Applicant applicant, int position) {
-        applicant.setStatus(1); // accepted
-        adapter.updateApplicantStatus(position, 1);
-        updateCounts();
-        Toast.makeText(requireContext(),
-                "Đã chấp nhận: " + applicant.getName(),
-                Toast.LENGTH_SHORT).show();
+        updateRegistrationStatus(applicant, position, "APPROVED");
     }
 
     @Override
     public void onReject(Applicant applicant, int position) {
-        applicant.setStatus(2); // rejected
-        adapter.updateApplicantStatus(position, 2);
-        updateCounts();
-        Toast.makeText(requireContext(),
-                "Đã từ chối: " + applicant.getName(),
-                Toast.LENGTH_SHORT).show();
+        updateRegistrationStatus(applicant, position, "REJECTED");
+    }
+    
+    private void updateRegistrationStatus(Applicant applicant, int position, String status) {
+        Integer registrationId = Integer.parseInt(applicant.getRegistrationId());
+        
+        ApiEndpoints apiService = ApiConfig.getClient().create(ApiEndpoints.class);
+        Call<RestResponse<EventRegistrationResponse>> call = apiService.updateRegistrationStatus(registrationId, status);
+        
+        call.enqueue(new Callback<RestResponse<EventRegistrationResponse>>() {
+            @Override
+            public void onResponse(Call<RestResponse<EventRegistrationResponse>> call,
+                                 Response<RestResponse<EventRegistrationResponse>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    int newStatus = "APPROVED".equals(status) ? 1 : 2;
+                    applicant.setStatus(newStatus);
+                    adapter.updateApplicantStatus(position, newStatus);
+                    updateCounts();
+                    
+                    String message = "APPROVED".equals(status) ? 
+                        "Đã chấp nhận: " + applicant.getName() :
+                        "Đã từ chối: " + applicant.getName();
+                    Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(requireContext(), 
+                        "Không thể cập nhật trạng thái", Toast.LENGTH_SHORT).show();
+                }
+            }
+            
+            @Override
+            public void onFailure(Call<RestResponse<EventRegistrationResponse>> call, Throwable t) {
+                Toast.makeText(requireContext(), 
+                    "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
