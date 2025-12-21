@@ -55,7 +55,7 @@ public class Reward {
     @Column(nullable = false)
     private Instant updatedAt;
 
-    @OneToMany(mappedBy = "reward")
+    @OneToMany(mappedBy = "reward", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<UserReward> rewardUserRewards = new HashSet<>();
 
     @PrePersist
