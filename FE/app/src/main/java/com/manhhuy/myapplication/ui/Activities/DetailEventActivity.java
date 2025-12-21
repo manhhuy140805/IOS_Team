@@ -1,6 +1,7 @@
 package com.manhhuy.myapplication.ui.Activities;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -8,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.bumptech.glide.Glide;
 import com.manhhuy.myapplication.R;
 import com.manhhuy.myapplication.databinding.ActivityDetailEventBinding;
+import com.manhhuy.myapplication.helper.ApiConfig;
 import com.manhhuy.myapplication.model.EventPost;
 
 import java.text.SimpleDateFormat;
@@ -39,6 +41,19 @@ public class DetailEventActivity extends AppCompatActivity {
         setupClickListeners();
         displayEventInfo();
         loadImages();
+        checkUserRoleAndShowRegisterButton();
+    }
+    
+    /**
+     * Kiểm tra role của user và chỉ hiện nút đăng ký nếu user là VOLUNTEER
+     */
+    private void checkUserRoleAndShowRegisterButton() {
+        // Chỉ hiện nút đăng ký nếu user đã login và là VOLUNTEER
+        if (ApiConfig.isVolunteer()) {
+            binding.btnRegisterEvent.setVisibility(View.VISIBLE);
+        } else {
+            binding.btnRegisterEvent.setVisibility(View.GONE);
+        }
     }
     
     private void setupClickListeners() {

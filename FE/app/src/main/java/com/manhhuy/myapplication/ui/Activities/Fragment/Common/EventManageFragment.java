@@ -113,8 +113,20 @@ public class EventManageFragment extends Fragment implements OnEventActionListen
             }
         });
         
-        // Add event button
+        // Add event button - chỉ hiện cho ORGANIZER
         binding.btnAddReward.setOnClickListener(v -> startActivity(new Intent(getContext(), AddEventActivity.class)));
+        checkUserRoleAndShowAddButton();
+    }
+    
+    /**
+     * Kiểm tra role của user và chỉ hiện nút thêm event nếu user là ORGANIZER
+     */
+    private void checkUserRoleAndShowAddButton() {
+        if (ApiConfig.isOrganizer()) {
+            binding.btnAddReward.setVisibility(View.VISIBLE);
+        } else {
+            binding.btnAddReward.setVisibility(View.GONE);
+        }
     }
     
     private void loadData() {

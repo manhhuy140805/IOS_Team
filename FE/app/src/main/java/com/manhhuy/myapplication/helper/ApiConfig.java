@@ -87,4 +87,26 @@ public class ApiConfig {
         String token = getToken();
         return token != null && !token.isEmpty();
     }
+    
+    
+    public static String getUserRole() {
+        String token = getToken();
+        if (token == null || token.isEmpty()) {
+            return null;
+        }
+        return JwtUtil.getRoleSimple(token);
+    }
+    
+    public static boolean isVolunteer() {
+        return "VOLUNTEER".equalsIgnoreCase(getUserRole());
+    }
+    
+
+    public static boolean isOrganizer() {
+        return "ORGANIZER".equalsIgnoreCase(getUserRole());
+    }
+    
+    public static boolean isAdmin() {
+        return "ADMIN".equalsIgnoreCase(getUserRole());
+    }
 }
