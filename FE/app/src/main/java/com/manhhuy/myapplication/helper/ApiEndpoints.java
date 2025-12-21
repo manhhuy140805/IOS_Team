@@ -133,7 +133,7 @@ public interface ApiEndpoints {
     Call<EventRegistrationResponse> registerForEvent(@Body EventRegistrationRequest request);
     
     @GET("event-registrations/event/{eventId}")
-    Call<PageResponse<EventRegistrationResponse>> getEventRegistrations(
+    Call<RestResponse<PageResponse<EventRegistrationResponse>>> getEventRegistrations(
             @Path("eventId") Integer eventId,
             @Query("page") int page,
             @Query("size") int size,
@@ -151,7 +151,7 @@ public interface ApiEndpoints {
     Call<Void> cancelRegistration(@Path("registrationId") Integer registrationId);
     
     @PUT("event-registrations/{registrationId}/status")
-    Call<EventRegistrationResponse> updateRegistrationStatus(
+    Call<RestResponse<EventRegistrationResponse>> updateRegistrationStatus(
             @Path("registrationId") Integer registrationId,
             @Query("status") String status
     );
