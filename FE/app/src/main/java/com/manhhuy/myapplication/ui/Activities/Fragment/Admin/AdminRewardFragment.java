@@ -17,6 +17,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.google.gson.Gson;
 import com.manhhuy.myapplication.R;
 import com.manhhuy.myapplication.adapter.admin.reward.OnRewardActionListener;
 import com.manhhuy.myapplication.adapter.admin.reward.RewardAdminAdapter;
@@ -181,7 +182,28 @@ public class AdminRewardFragment extends Fragment implements OnRewardActionListe
 
     @Override
     public void onEditClick(RewardItem reward, int position) {
-        showToast("Sửa: " + reward.getName());
+        apiEndpoints.getRewardById(reward.getId())
+                .enqueue(new Callback<RestResponse<RewardResponse>>() {
+                    @Override
+                    public void onResponse(Call<RestResponse<RewardResponse>> call,
+                                          Response<RestResponse<RewardResponse>> response) {
+                        if (response.isSuccessful() && response.body() != null 
+                            && response.body().getData() != null) {
+                            RewardResponse rewardData = response.body().getData();
+                            Intent intent = new Intent(requireContext(), AddRewardActivity.class);
+                            intent.putExtra(AddRewardActivity.EXTRA_REWARD_ID, rewardData.getId());
+                            intent.putExtra(AddRewardActivity.EXTRA_REWARD_DATA, new Gson().toJson(rewardData));
+                            addRewardLauncher.launch(intent);
+                        } else {
+                            showToast("Không thể tải dữ liệu");
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<RestResponse<RewardResponse>> call, Throwable t) {
+                        showToast("Lỗi kết nối");
+                    }
+                });
     }
 
     @Override

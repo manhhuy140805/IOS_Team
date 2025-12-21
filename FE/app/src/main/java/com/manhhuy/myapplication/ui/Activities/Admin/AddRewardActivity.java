@@ -41,12 +41,19 @@ import retrofit2.Response;
 
 public class AddRewardActivity extends AppCompatActivity {
 
+    public static final String EXTRA_REWARD_ID = "reward_id";
+    public static final String EXTRA_REWARD_DATA = "reward_data";
+    
     private ActivityAddRewardBinding binding;
     private ApiEndpoints apiEndpoints;
     
     private Uri selectedImageUri;
     private String uploadedImageUrl;
     private Calendar selectedDate;
+    
+    private boolean isEditMode = false;
+    private Integer rewardId;
+    private RewardResponse editingReward;
     
     private final String[] rewardTypes = {"VOUCHER", "GIFT", "EXPERIENCE"};
     
@@ -67,16 +74,93 @@ public class AddRewardActivity extends AppCompatActivity {
         
         apiEndpoints = ApiConfig.getClient().create(ApiEndpoints.class);
         
+        checkEditMode();
         setupViews();
         setupListeners();
     }
+    
+    private void checkEditMode() {
+        Intent intent = getIntent();
+        if (intent.hasExtra(EXTRA_REWARD_ID)) {
+            isEditMode = true;
+            rewardId = intent.getIntExtra(EXTRA_REWARD_ID, 0);
+            
+            if (rewardId <= 0) {
+                showToast("ID không hợp lệ");
+                finish();
+                return;
+            }
+            
+            String rewardJson = intent.getStringExtra(EXTRA_REWARD_DATA);
+            if (rewardJson != null) {
+                try {
+                    editingReward = new Gson().fromJson(rewardJson, RewardResponse.class);
+                } catch (Exception e) {
+                    showToast("Dữ liệu không hợp lệ");
+                    finish();
+                }
+            }
+        }
+    }
 
     private void setupViews() {
-        // Setup type spinner
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, 
                 android.R.layout.simple_spinner_item, rewardTypes);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         binding.spinnerRewardType.setAdapter(adapter);
+        
+        if (isEditMode && editingReward != null) {
+            binding.tvTitle.setText("Chỉnh sửa quà tặng");
+            binding.btnCreate.setText("Cập nhật");
+            prefillData();
+        }
+    }
+    
+    private void prefillData() {
+        binding.etRewardName.setText(editingReward.getName());
+        binding.etDescription.setText(editingReward.getDescription());
+        binding.etPointsRequired.setText(String.valueOf(editingReward.getPointsRequired()));
+        binding.etQuantity.setText(String.valueOf(editingReward.getQuantity()));
+        
+        // Set type spinner
+        for (int i = 0; i < rewardTypes.length; i++) {
+            if (rewardTypes[i].equals(editingReward.getType())) {
+                binding.spinnerRewardType.setSelection(i);
+                break;
+            }
+        }
+        
+        // Set status
+        if ("ACTIVE".equals(editingReward.getStatus())) {
+            binding.rbActive.setChecked(true);
+        } else {
+            binding.rbInactive.setChecked(true);
+        }
+        
+        // Set expiry date
+        if (editingReward.getExpiryDate() != null) {
+            try {
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+                selectedDate = Calendar.getInstance();
+                selectedDate.setTime(sdf.parse(editingReward.getExpiryDate()));
+                updateDateDisplay();
+            } catch (Exception e) {
+                // Ignore
+            }
+        }
+        
+        // Set image
+        uploadedImageUrl = editingReward.getImageUrl();
+        if (uploadedImageUrl != null && !uploadedImageUrl.isEmpty() && !isFinishing()) {
+            binding.ivRewardImage.setVisibility(View.VISIBLE);
+            binding.layoutImagePlaceholder.setVisibility(View.GONE);
+            Glide.with(this)
+                    .load(uploadedImageUrl)
+                    .centerCrop()
+                    .placeholder(R.drawable.ic_gift)
+                    .error(R.drawable.ic_gift)
+                    .into(binding.ivRewardImage);
+        }
     }
 
     private void setupListeners() {
@@ -94,6 +178,8 @@ public class AddRewardActivity extends AppCompatActivity {
     }
 
     private void displaySelectedImage() {
+        if (isFinishing()) return;
+        
         binding.ivRewardImage.setVisibility(View.VISIBLE);
         binding.layoutImagePlaceholder.setVisibility(View.GONE);
         
@@ -104,7 +190,7 @@ public class AddRewardActivity extends AppCompatActivity {
     }
 
     private void uploadImage() {
-        if (selectedImageUri == null) return;
+        if (selectedImageUri == null || binding == null) return;
         
         setUploadProgress(true);
 
@@ -121,6 +207,8 @@ public class AddRewardActivity extends AppCompatActivity {
             apiEndpoints.uploadImage(body).enqueue(new Callback<Map<String, Object>>() {
                 @Override
                 public void onResponse(Call<Map<String, Object>> call, Response<Map<String, Object>> response) {
+                    file.delete();
+                    if (binding == null) return;
                     setUploadProgress(false);
 
                     if (response.isSuccessful() && response.body() != null) {
@@ -139,6 +227,8 @@ public class AddRewardActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<Map<String, Object>> call, Throwable t) {
+                    file.delete();
+                    if (binding == null) return;
                     setUploadProgress(false);
                     showToast("Lỗi kết nối");
                 }
@@ -150,23 +240,28 @@ public class AddRewardActivity extends AppCompatActivity {
     }
     
     private void setUploadProgress(boolean show) {
+        if (binding == null) return;
         binding.progressUpload.setVisibility(show ? View.VISIBLE : View.GONE);
         binding.btnSelectImage.setEnabled(!show);
     }
 
     private File createFileFromUri(Uri uri) throws Exception {
-        InputStream inputStream = getContentResolver().openInputStream(uri);
         File file = new File(getCacheDir(), "upload_" + System.currentTimeMillis() + ".jpg");
-        FileOutputStream outputStream = new FileOutputStream(file);
         
-        byte[] buffer = new byte[1024];
-        int length;
-        while ((length = inputStream.read(buffer)) > 0) {
-            outputStream.write(buffer, 0, length);
+        try (InputStream inputStream = getContentResolver().openInputStream(uri);
+             FileOutputStream outputStream = new FileOutputStream(file)) {
+            
+            if (inputStream == null) {
+                throw new Exception("Cannot open input stream");
+            }
+            
+            byte[] buffer = new byte[4096];
+            int length;
+            while ((length = inputStream.read(buffer)) > 0) {
+                outputStream.write(buffer, 0, length);
+            }
         }
         
-        outputStream.close();
-        inputStream.close();
         return file;
     }
 
@@ -235,7 +330,12 @@ public class AddRewardActivity extends AppCompatActivity {
                 return;
             }
             
-            createReward(buildRequest(name, description, points, quantity));
+            RewardRequest request = buildRequest(name, description, points, quantity);
+            if (isEditMode) {
+                updateReward(request);
+            } else {
+                createReward(request);
+            }
         } catch (NumberFormatException e) {
             showToast("Vui lòng nhập số hợp lệ");
         }
@@ -266,6 +366,7 @@ public class AddRewardActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<RestResponse<RewardResponse>> call, 
                                   Response<RestResponse<RewardResponse>> response) {
+                if (isFinishing()) return;
                 setCreateButtonLoading(false);
 
                 if (response.isSuccessful() && response.body() != null 
@@ -281,6 +382,37 @@ public class AddRewardActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<RestResponse<RewardResponse>> call, Throwable t) {
+                if (isFinishing()) return;
+                setCreateButtonLoading(false);
+                showToast("Lỗi kết nối");
+            }
+        });
+    }
+    
+    private void updateReward(RewardRequest request) {
+        setCreateButtonLoading(true);
+
+        apiEndpoints.updateReward(rewardId, request).enqueue(new Callback<RestResponse<RewardResponse>>() {
+            @Override
+            public void onResponse(Call<RestResponse<RewardResponse>> call,
+                                  Response<RestResponse<RewardResponse>> response) {
+                if (isFinishing()) return;
+                setCreateButtonLoading(false);
+
+                if (response.isSuccessful() && response.body() != null
+                    && response.body().getStatusCode() == 200) {
+                    showToast("Cập nhật thành công!");
+                    setResult(RESULT_OK);
+                    finish();
+                } else {
+                    String message = response.body() != null ? response.body().getMessage() : "Lỗi";
+                    showToast("Cập nhật thất bại: " + message);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<RestResponse<RewardResponse>> call, Throwable t) {
+                if (isFinishing()) return;
                 setCreateButtonLoading(false);
                 showToast("Lỗi kết nối");
             }
@@ -288,8 +420,13 @@ public class AddRewardActivity extends AppCompatActivity {
     }
     
     private void setCreateButtonLoading(boolean loading) {
+        if (binding == null) return;
         binding.btnCreate.setEnabled(!loading);
-        binding.btnCreate.setText(loading ? "Đang tạo..." : "Tạo quà tặng");
+        if (isEditMode) {
+            binding.btnCreate.setText(loading ? "Đang cập nhật..." : "Cập nhật");
+        } else {
+            binding.btnCreate.setText(loading ? "Đang tạo..." : "Tạo quà tặng");
+        }
     }
 
     private void showToast(String message) {
