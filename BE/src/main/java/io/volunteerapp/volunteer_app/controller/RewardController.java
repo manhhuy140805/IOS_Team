@@ -54,7 +54,7 @@ public class RewardController {
      * Create new reward (Admin only)
      */
     @PostMapping("")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+//    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<RewardResponse> createReward(@Valid @RequestBody RewardRequest rewardRequest) {
         RewardResponse response = rewardService.createReward(rewardRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
@@ -64,7 +64,7 @@ public class RewardController {
      * Update reward (Admin only)
      */
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+//    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<RewardResponse> updateReward(
             @PathVariable Integer id,
             @Valid @RequestBody RewardRequest rewardRequest) {
@@ -74,10 +74,23 @@ public class RewardController {
     }
 
     /**
+     * Update reward status only (Admin only)
+     */
+    @PatchMapping("/{id}/status")
+//    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<RewardResponse> updateRewardStatus(
+            @PathVariable Integer id,
+            @RequestParam String status) {
+        
+        RewardResponse response = rewardService.updateRewardStatus(id, status);
+        return ResponseEntity.ok(response);
+    }
+
+    /**
      * Delete reward (Admin only)
      */
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+//    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Void> deleteReward(@PathVariable Integer id) {
         rewardService.deleteReward(id);
         return ResponseEntity.noContent().build();

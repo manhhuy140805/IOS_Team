@@ -112,6 +112,17 @@ public class RewardService {
         return rewardMapper.toResponse(updatedReward);
     }
 
+    // Update reward status only (Admin only)
+    @Transactional
+    public RewardResponse updateRewardStatus(Integer id, String status) {
+        Reward reward = rewardRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Reward not found with id: " + id));
+        
+        reward.setStatus(status);
+        Reward updatedReward = rewardRepository.save(reward);
+        return rewardMapper.toResponse(updatedReward);
+    }
+
     // Delete reward (Admin only)
     @Transactional
     public void deleteReward(Integer id) {

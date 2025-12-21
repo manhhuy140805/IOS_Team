@@ -23,6 +23,7 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
+import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
@@ -68,6 +69,24 @@ public interface ApiEndpoints {
             @Query("sortBy") String sortBy,
             @Query("sortDirection") String sortDirection
     );
+    
+    @GET("rewards/{id}")
+    Call<RestResponse<RewardResponse>> getRewardById(@Path("id") Integer id);
+    
+    @PUT("rewards/{id}")
+    Call<RestResponse<RewardResponse>> updateReward(
+            @Path("id") Integer id,
+            @Body Object rewardRequest
+    );
+    
+    @PATCH("rewards/{id}/status")
+    Call<RestResponse<RewardResponse>> updateRewardStatus(
+            @Path("id") Integer id,
+            @Query("status") String status
+    );
+    
+    @DELETE("rewards/{id}")
+    Call<Void> deleteReward(@Path("id") Integer id);
 
     @GET("events")
     Call<RestResponse<PageResponse<EventResponse>>> getAllEvents(

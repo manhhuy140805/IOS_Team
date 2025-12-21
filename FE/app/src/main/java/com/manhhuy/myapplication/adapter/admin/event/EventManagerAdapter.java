@@ -13,7 +13,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.manhhuy.myapplication.R;
 import com.manhhuy.myapplication.databinding.ItemEventManagerBinding;
-import com.manhhuy.myapplication.model.EventPost;
+import com.manhhuy.myapplication.helper.response.EventResponse;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -23,11 +23,11 @@ import java.util.Locale;
 public class EventManagerAdapter extends RecyclerView.Adapter<EventManagerAdapter.EventViewHolder> {
 
     private final Context context;
-    private final List<EventPost> eventList;
-    private final List<EventPost> eventListFull;
+    private final List<EventResponse> eventList;
+    private final List<EventResponse> eventListFull;
     private final OnEventActionListenerInterface listener;
 
-    public EventManagerAdapter(Context context, List<EventPost> eventList, OnEventActionListenerInterface listener) {
+    public EventManagerAdapter(Context context, List<EventResponse> eventList, OnEventActionListenerInterface listener) {
         this.context = context;
         this.eventList = eventList;
         this.eventListFull = new ArrayList<>(eventList);
@@ -44,7 +44,7 @@ public class EventManagerAdapter extends RecyclerView.Adapter<EventManagerAdapte
 
     @Override
     public void onBindViewHolder(@NonNull EventViewHolder holder, int position) {
-        EventPost event = eventList.get(position);
+        EventResponse event = eventList.get(position);
 
         // Load image with Glide
         if (event.getImageUrl() != null && !event.getImageUrl().isEmpty()) {
@@ -62,18 +62,17 @@ public class EventManagerAdapter extends RecyclerView.Adapter<EventManagerAdapte
 
         // Bind data
         holder.binding.tvEventTitle.setText(event.getTitle());
-        holder.binding.tvOrganization.setText(event.getOrganizationName());
+        holder.binding.tvOrganization.setText(event.getCreatorName());
         holder.binding.tvPoints.setText(event.getRewardPoints() + " điểm");
         holder.binding.tvLocation.setText("📍 " + event.getLocation());
 
         // Format date
-        if (event.getEventDate() != null) {
-            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-            holder.binding.tvDate.setText("📅 " + sdf.format(event.getEventDate()));
+        if (event.getEventStartTime() != null) {
+            holder.binding.tvDate.setText("📅 " + event.getEventStartTime());
         }
 
         // Set participants
-        holder.binding.tvParticipants.setText("👥 " + event.getCurrentParticipants() + "/" + event.getMaxParticipants() + " người");
+        holder.binding.tvParticipants.setText("👥 " + event.getCurrentParticipants() + "/" + event.getNumOfVolunteers() + " người");
 
         // Set status
         String status = event.getStatus();
@@ -87,10 +86,10 @@ public class EventManagerAdapter extends RecyclerView.Adapter<EventManagerAdapte
             holder.binding.tvStatus.setTextColor(context.getResources().getColor(R.color.button_blue));
         }
 
-        List<String> tags = event.getTags();
-        if (tags != null && !tags.isEmpty()) {
+        String category = event.getCategory();
+        if (category != null && !category.isEmpty()) {
             holder.binding.tvTag1.setVisibility(View.VISIBLE);
-            holder.binding.tvTag1.setText(tags.get(0));
+            holder.binding.tvTag1.setText(category);
         } else {
             holder.binding.tvTag1.setVisibility(View.GONE);
         }
@@ -109,7 +108,7 @@ public class EventManagerAdapter extends RecyclerView.Adapter<EventManagerAdapte
         return eventList.size();
     }
  
-    public void updateList(List<EventPost> newList) {
+    public void updateList(List<EventResponse> newList) {
         DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new DiffUtil.Callback() {
             @Override
             public int getOldListSize() {
@@ -123,13 +122,13 @@ public class EventManagerAdapter extends RecyclerView.Adapter<EventManagerAdapte
 
             @Override
             public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-                return eventList.get(oldItemPosition).getId() == newList.get(newItemPosition).getId();
+                return eventList.get(oldItemPosition).getId().equals(newList.get(newItemPosition).getId());
             }
 
             @Override
             public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
-                EventPost oldEvent = eventList.get(oldItemPosition);
-                EventPost newEvent = newList.get(newItemPosition);
+                EventResponse oldEvent = eventList.get(oldItemPosition);
+                EventResponse newEvent = newList.get(newItemPosition);
                 return oldEvent.getTitle().equals(newEvent.getTitle()) &&
                        oldEvent.getStatus().equals(newEvent.getStatus());
             }
@@ -145,7 +144,7 @@ public class EventManagerAdapter extends RecyclerView.Adapter<EventManagerAdapte
         if ("all".equals(status)) {
             eventList.addAll(eventListFull);
         } else {
-            for (EventPost event : eventListFull) {
+            for (EventResponse event : eventListFull) {
                 if (status.equals(event.getStatus())) {
                     eventList.add(event);
                 }
@@ -159,8 +158,8 @@ public class EventManagerAdapter extends RecyclerView.Adapter<EventManagerAdapte
         if ("all".equals(category)) {
             eventList.addAll(eventListFull);
         } else {
-            for (EventPost event : eventListFull) {
-                if (event.getTags() != null && event.getTags().contains(category)) {
+            for (EventResponse event : eventListFull) {
+                if (event.getCategory() != null && event.getCategory().equals(category)) {
                     eventList.add(event);
                 }
             }

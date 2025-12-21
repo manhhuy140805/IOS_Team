@@ -77,14 +77,22 @@ public class RewardAdminAdapter extends RecyclerView.Adapter<RewardAdminAdapter.
     }
 
     private void setStatusBadge(RewardViewHolder holder, RewardItem reward) {
+        String status = reward.getStatus() != null ? reward.getStatus() : "ACTIVE";
         int stock = Integer.parseInt(reward.getStock());
 
-        if (stock == 0) {
+        // Check status first
+        if ("INACTIVE".equals(status)) {
             holder.binding.tvStatus.setText("Tạm ngưng");
             holder.binding.tvStatus.setTextColor(context.getResources().getColor(R.color.status_rejected));
-            // Change button to "Activate" style
+            // Change button to "Activate" icon (play)
             holder.binding.btnPause.setImageResource(R.drawable.ic_check);
             holder.binding.btnPause.setColorFilter(context.getResources().getColor(R.color.app_green_primary));
+        } else if (stock == 0) {
+            holder.binding.tvStatus.setText("Hết hàng");
+            holder.binding.tvStatus.setTextColor(context.getResources().getColor(R.color.status_rejected));
+            // Keep pause button
+            holder.binding.btnPause.setImageResource(R.drawable.ic_pause);
+            holder.binding.btnPause.setColorFilter(context.getResources().getColor(R.color.text_secondary));
         } else if (stock <= 5) {
             holder.binding.tvStatus.setText("Sắp hết hàng");
             holder.binding.tvStatus.setTextColor(context.getResources().getColor(R.color.status_rejected));

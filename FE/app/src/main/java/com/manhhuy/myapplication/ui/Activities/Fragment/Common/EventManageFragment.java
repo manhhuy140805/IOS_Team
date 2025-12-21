@@ -26,7 +26,6 @@ import com.manhhuy.myapplication.helper.response.EventResponse;
 import com.manhhuy.myapplication.helper.response.EventTypeResponse;
 import com.manhhuy.myapplication.helper.response.PageResponse;
 import com.manhhuy.myapplication.helper.response.RestResponse;
-import com.manhhuy.myapplication.model.EventPost;
 import com.manhhuy.myapplication.ui.Activities.AddEventActivity;
 import com.manhhuy.myapplication.ui.Activities.DetailEventActivity;
 import com.manhhuy.myapplication.ui.Activities.SendNotificationActivity;
@@ -54,8 +53,8 @@ public class EventManageFragment extends Fragment implements OnEventActionListen
     private EventManagerAdapter adapter;
     
     // Data
-    private final List<EventPost> eventList = new ArrayList<>();
-    private final List<EventPost> allEventsList = new ArrayList<>();
+    private final List<EventResponse> eventList = new ArrayList<>();
+    private final List<EventResponse> allEventsList = new ArrayList<>();
     private final List<EventTypeResponse> eventTypes = new ArrayList<>();
     
     // API
@@ -139,14 +138,14 @@ public class EventManageFragment extends Fragment implements OnEventActionListen
     // ==================== Event Actions ====================
     
     @Override
-    public void onViewClick(EventPost event) {
+    public void onViewClick(EventResponse event) {
         Intent intent = new Intent(getContext(), DetailEventActivity.class);
-        intent.putExtra("eventPost", event);
+        intent.putExtra("eventData", event);
         startActivity(intent);
     }
 
     @Override
-    public void onEditClick(EventPost event) {
+    public void onEditClick(EventResponse event) {
         Intent intent = new Intent(getContext(), AddEventActivity.class);
         intent.putExtra("EVENT_ID", event.getId());
         intent.putExtra("IS_EDIT_MODE", true);
@@ -154,7 +153,7 @@ public class EventManageFragment extends Fragment implements OnEventActionListen
     }
 
     @Override
-    public void onDeleteClick(EventPost event) {
+    public void onDeleteClick(EventResponse event) {
         new androidx.appcompat.app.AlertDialog.Builder(requireContext())
             .setTitle("Xác nhận xóa")
             .setMessage("Bạn có chắc muốn xóa sự kiện \"" + event.getTitle() + "\"?\n\nLưu ý: Tất cả đăng ký liên quan sẽ bị xóa!")
@@ -184,7 +183,7 @@ public class EventManageFragment extends Fragment implements OnEventActionListen
     }
 
     @Override
-    public void onNotificationClick(EventPost event) {
+    public void onNotificationClick(EventResponse event) {
         Intent intent = new Intent(getContext(), SendNotificationActivity.class);
         intent.putExtra("EVENT_ID", event.getId());
         intent.putExtra("EVENT_TITLE", event.getTitle());
@@ -240,9 +239,7 @@ public class EventManageFragment extends Fragment implements OnEventActionListen
                     if (isResponseValid(response)) {
                         PageResponse<EventResponse> pageData = response.body().getData();
                         
-                        for (EventResponse er : pageData.getContent()) {
-                            allEventsList.add(mapToEventPost(er));
-                        }
+                        allEventsList.addAll(pageData.getContent());
                         
                         hasMorePages = !pageData.isLast();
                         applyFilters();
@@ -311,11 +308,11 @@ public class EventManageFragment extends Fragment implements OnEventActionListen
     // ==================== Filter & Statistics ====================
 
     private void applyFilters() {
-        List<EventPost> filteredList = new ArrayList<>();
+        List<EventResponse> filteredList = new ArrayList<>();
         
-        for (EventPost event : allEventsList) {
+        for (EventResponse event : allEventsList) {
             if (currentCategoryFilter.equals("all") || 
-                (event.getTags() != null && event.getTags().contains(currentCategoryFilter))) {
+                (event.getCategory() != null && event.getCategory().equals(currentCategoryFilter))) {
                 filteredList.add(event);
             }
         }
@@ -336,7 +333,7 @@ public class EventManageFragment extends Fragment implements OnEventActionListen
         int active = 0;
         int completed = 0;
 
-        for (EventPost event : allEventsList) {
+        for (EventResponse event : allEventsList) {
             String status = event.getStatus();
             if ("active".equals(status)) active++;
             else if ("completed".equals(status)) completed++;
@@ -347,52 +344,7 @@ public class EventManageFragment extends Fragment implements OnEventActionListen
         binding.tvCompletedEvents.setText(String.valueOf(completed));
     }
     
-    // ==================== Mapping & Helpers ====================
-    
-    private EventPost mapToEventPost(EventResponse response) {
-        EventPost event = new EventPost();
-        
-        event.setId(response.getId());
-        event.setTitle(response.getTitle());
-        event.setDescription(response.getDescription());
-        event.setImageUrl(response.getImageUrl());
-        event.setLocation(response.getLocation());
-        event.setRewardPoints(response.getRewardPoints() != null ? response.getRewardPoints() : 0);
-        event.setOrganizationName(response.getCreatorName() != null ? response.getCreatorName() : "Unknown");
-        event.setCurrentParticipants(response.getCurrentParticipants() != null ? response.getCurrentParticipants() : 0);
-        event.setMaxParticipants(response.getNumOfVolunteers() != null ? response.getNumOfVolunteers() : 0);
-        
-        // Status mapping
-        event.setStatus(mapStatus(response.getStatus()));
-        
-        // Tags
-        List<String> tags = new ArrayList<>();
-        if (response.getCategory() != null) tags.add(response.getCategory());
-        if (response.getEventTypeName() != null) tags.add(response.getEventTypeName());
-        event.setTags(tags);
-        
-        // Date
-        event.setEventDate(parseDate(response.getEventStartTime()));
-        
-        return event;
-    }
-    
-    private String mapStatus(String backendStatus) {
-        if ("APPROVED".equalsIgnoreCase(backendStatus)) return "active";
-        if ("COMPLETED".equalsIgnoreCase(backendStatus)) return "completed";
-        return "pending";
-    }
-    
-    private Date parseDate(String dateString) {
-        if (dateString == null) return new Date();
-        
-        try {
-            return new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(dateString);
-        } catch (Exception e) {
-            Log.e(TAG, "Error parsing date: " + dateString, e);
-            return new Date();
-        }
-    }
+    // ==================== Helpers ====================
     
     private <T> boolean isResponseValid(Response<RestResponse<T>> response) {
         return response.isSuccessful() && 

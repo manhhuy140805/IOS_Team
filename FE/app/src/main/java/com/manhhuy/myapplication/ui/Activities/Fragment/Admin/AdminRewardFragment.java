@@ -1,6 +1,7 @@
 package com.manhhuy.myapplication.ui.Activities.Fragment.Admin;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -16,20 +18,32 @@ import com.manhhuy.myapplication.R;
 import com.manhhuy.myapplication.adapter.admin.reward.OnRewardActionListener;
 import com.manhhuy.myapplication.adapter.admin.reward.RewardAdminAdapter;
 import com.manhhuy.myapplication.databinding.ActivityAdminRewardManagementBinding;
+import com.manhhuy.myapplication.helper.ApiConfig;
+import com.manhhuy.myapplication.helper.ApiEndpoints;
+import com.manhhuy.myapplication.helper.response.PageResponse;
+import com.manhhuy.myapplication.helper.response.RewardResponse;
+import com.manhhuy.myapplication.helper.response.RestResponse;
 import com.manhhuy.myapplication.model.RewardItem;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class AdminRewardFragment extends Fragment implements OnRewardActionListener {
 
+    private static final String TAG = "AdminRewardFragment";
     private ActivityAdminRewardManagementBinding binding;
     private RewardAdminAdapter adapter;
+    private ApiEndpoints apiEndpoints;
 
     private final List<RewardItem> rewardList = new ArrayList<>();
     private final List<RewardItem> filteredList = new ArrayList<>();
 
     private int selectedCategory = 0; // 0=all, 1=voucher, 2=gift, 3=experience, 4=low stock
+    private boolean isLoading = false;
 
     public AdminRewardFragment() {
         // Required empty public constructor
@@ -44,19 +58,16 @@ public class AdminRewardFragment extends Fragment implements OnRewardActionListe
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        apiEndpoints = ApiConfig.getClient().create(ApiEndpoints.class);
         setupViews();
         setupRecyclerView();
-        loadMockData();
+        loadRewardsFromAPI();
         setupListeners();
     }
 
     private void setupViews() {
-        binding.btnBack.setVisibility(View.GONE); // Hide back button in fragment
-
-        binding.fabAddReward.setOnClickListener(v -> {
-            Toast.makeText(getContext(), "Thêm quà mới", Toast.LENGTH_SHORT).show();
-            // TODO: Open add reward dialog/activity
-        });
+        binding.btnBack.setVisibility(View.GONE);
+        binding.fabAddReward.setOnClickListener(v -> showToast("Thêm quà mới - Coming soon"));
     }
 
     private void setupRecyclerView() {
@@ -65,89 +76,81 @@ public class AdminRewardFragment extends Fragment implements OnRewardActionListe
         binding.recyclerViewRewards.setAdapter(adapter);
     }
 
-    private void loadMockData() {
-        rewardList.clear();
+    private void loadRewardsFromAPI() {
+        if (isLoading) return;
+        isLoading = true;
+        showLoading(true);
 
-        // Mock data based on Figma design
-        rewardList.add(new RewardItem(
-                "Voucher The Coffee House 50K",
-                "The Coffee House",
-                "Voucher • Đồ uống",
-                "500",
-                "45",
-                "31/12/2025",
-                1, // voucher
-                "Đồ uống",
-                "Phổ biến",
-                0 // purple
-        ));
+        apiEndpoints.getAllRewards(null, 0, 100, "createdAt", "desc")
+                .enqueue(new Callback<RestResponse<PageResponse<RewardResponse>>>() {
+                    @Override
+                    public void onResponse(Call<RestResponse<PageResponse<RewardResponse>>> call,
+                                           Response<RestResponse<PageResponse<RewardResponse>>> response) {
+                        isLoading = false;
+                        showLoading(false);
 
-        rewardList.add(new RewardItem(
-                "Áo Volunteer Limited Edition",
-                "Volunteer Impact",
-                "Vật phẩm • Thời trang",
-                "2000",
-                "12",
-                "31/12/2025",
-                2, // gift
-                "Thời trang",
-                "Giới hạn",
-                1 // pink
-        ));
+                        if (response.isSuccessful() && response.body() != null) {
+                            RestResponse<PageResponse<RewardResponse>> restResponse = response.body();
+                            if (restResponse.getStatusCode() == 200 && restResponse.getData() != null) {
+                                rewardList.clear();
+                                for (RewardResponse reward : restResponse.getData().getContent()) {
+                                    rewardList.add(mapToRewardItem(reward));
+                                }
+                                filterRewards(selectedCategory);
+                            } else {
+                                showToast("Không thể tải danh sách phần thưởng: " + restResponse.getMessage());
+                            }
+                        } else {
+                            showToast("Lỗi tải dữ liệu: " + response.code());
+                        }
+                    }
 
-        rewardList.add(new RewardItem(
-                "Vé Workshop Kỹ Năng Mềm",
-                "Skill Academy",
-                "Trải nghiệm • Đào tạo",
-                "1500",
-                "3",
-                "15/12/2025",
-                3, // experience
-                "Đào tạo",
-                "Sắp hết",
-                2 // orange
-        ));
+                    @Override
+                    public void onFailure(Call<RestResponse<PageResponse<RewardResponse>>> call, Throwable t) {
+                        isLoading = false;
+                        showLoading(false);
+                        Log.e(TAG, "Failed to load rewards", t);
+                        showToast("Lỗi kết nối: " + t.getMessage());
+                    }
+                });
+    }
 
-        rewardList.add(new RewardItem(
-                "Sách Phát Triển Bản Thân",
-                "Nhà xuất bản Trẻ",
-                "Vật phẩm • Sách",
-                "800",
-                "28",
-                "31/12/2025",
-                2, // gift
-                "Sách",
-                "Tri thức",
-                3 // cyan
-        ));
+    private RewardItem mapToRewardItem(RewardResponse r) {
+        String type = r.getType() != null ? r.getType() : "";
+        int categoryType = type.toLowerCase().contains("voucher") ? 1 
+                         : type.toLowerCase().contains("gift") || type.contains("Vật phẩm") ? 2
+                         : type.toLowerCase().contains("experience") || type.contains("Trải nghiệm") ? 3 : 1;
 
-        rewardList.add(new RewardItem(
-                "Voucher Shopee 100K",
-                "Shopee",
-                "Voucher • Mua sắm",
-                "1000",
-                "0",
-                "31/01/2026",
-                1, // voucher
-                "Mua sắm",
-                "Hết hàng",
-                0 // purple
-        ));
+        int quantity = r.getQuantity() != null ? r.getQuantity() : 0;
+        String tag = quantity == 0 ? "Hết hàng" : quantity <= 5 ? "Sắp hết" : quantity >= 50 ? "Phổ biến" : "Còn hàng";
 
-        rewardList.add(new RewardItem(
-                "Balo Du Lịch Cao Cấp",
-                "Travel Gear",
-                "Vật phẩm • Phụ kiện",
-                "3500",
-                "20",
-                "31/12/2025",
-                2, // gift
-                "Phụ kiện",
-                "Cao cấp",
-                1 // pink
-        ));
+        RewardItem item = new RewardItem(
+                r.getName(),
+                r.getProviderName() != null ? r.getProviderName() : "Unknown",
+                r.getType() != null ? r.getType() : "Reward",
+                String.valueOf(r.getPointsRequired() != null ? r.getPointsRequired() : 0),
+                String.valueOf(quantity),
+                r.getExpiryDate() != null ? r.getExpiryDate() : "N/A",
+                categoryType,
+                r.getType(),
+                tag,
+                categoryType - 1
+        );
+        item.setId(r.getId());
+        item.setStatus(r.getStatus() != null ? r.getStatus() : "ACTIVE");
+        return item;
+    }
 
-        filterRewards(selectedCategory);
+    private void showLoading(boolean show) {
+        if (binding != null) {
+            binding.recyclerViewRewards.setVisibility(show ? View.GONE : View.VISIBLE);
+        }
+    }
+
+    private void showToast(String message) {
+        if (getContext() != null) {
+            Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void setupListeners() {
@@ -159,72 +162,106 @@ public class AdminRewardFragment extends Fragment implements OnRewardActionListe
     }
 
     private void selectCategory(int category, TextView selectedTab) {
-        // Reset tất cả tabs
-        resetTabStyle(binding.tabAll);
-        resetTabStyle(binding.tabVoucher);
-        resetTabStyle(binding.tabGift);
-        resetTabStyle(binding.tabExperience);
-        resetTabStyle(binding.tabLowStock);
-
-        // Set selected tab style
-        setSelectedTabStyle(selectedTab);
-
+        TextView[] tabs = {binding.tabAll, binding.tabVoucher, binding.tabGift, binding.tabExperience, binding.tabLowStock};
+        for (TextView tab : tabs) {
+            tab.setBackgroundResource(R.drawable.bg_category_tab_unselected_reward);
+            tab.setTextColor(getResources().getColor(R.color.text_secondary));
+        }
+        
+        selectedTab.setBackgroundResource(R.drawable.bg_category_tab_selected_reward);
+        selectedTab.setTextColor(getResources().getColor(R.color.app_green_primary));
+        
         selectedCategory = category;
         filterRewards(category);
     }
 
-    private void resetTabStyle(TextView tab) {
-        tab.setBackgroundResource(R.drawable.bg_category_tab_unselected_reward);
-        tab.setTextColor(getResources().getColor(R.color.text_secondary));
-    }
-
-    private void setSelectedTabStyle(TextView tab) {
-        tab.setBackgroundResource(R.drawable.bg_category_tab_selected_reward);
-        tab.setTextColor(getResources().getColor(R.color.app_green_primary));
-    }
-
     private void filterRewards(int category) {
         filteredList.clear();
-
+        
         if (category == 0) {
-            // All
             filteredList.addAll(rewardList);
         } else if (category == 4) {
-            // Low stock (<=5)
             for (RewardItem reward : rewardList) {
-                if (Integer.parseInt(reward.getStock()) <= 5) {
-                    filteredList.add(reward);
-                }
+                if (Integer.parseInt(reward.getStock()) <= 5) filteredList.add(reward);
             }
         } else {
-            // Filter by category type
             for (RewardItem reward : rewardList) {
-                if (reward.getCategoryType() == category) {
-                    filteredList.add(reward);
-                }
+                if (reward.getCategoryType() == category) filteredList.add(reward);
             }
         }
-
+        
         adapter.updateList(filteredList);
     }
 
     // Implement OnRewardActionListener interface
     @Override
     public void onEditClick(RewardItem reward, int position) {
-        Toast.makeText(getContext(), "Sửa: " + reward.getName(), Toast.LENGTH_SHORT).show();
-        // TODO: Open edit dialog
+        showToast("Sửa: " + reward.getName());
     }
 
     @Override
     public void onPauseClick(RewardItem reward, int position) {
-        Toast.makeText(getContext(), "Tạm ngưng: " + reward.getName(), Toast.LENGTH_SHORT).show();
-        // TODO: Toggle pause status
+        if (reward.getId() == null) {
+            showToast("Không tìm thấy ID phần thưởng");
+            return;
+        }
+
+        // Toggle status between ACTIVE and INACTIVE
+        String currentStatus = reward.getStatus() != null ? reward.getStatus() : "ACTIVE";
+        String newStatus = "ACTIVE".equals(currentStatus) ? "INACTIVE" : "ACTIVE";
+        
+        apiEndpoints.updateRewardStatus(reward.getId(), newStatus).enqueue(new Callback<RestResponse<RewardResponse>>() {
+            @Override
+            public void onResponse(Call<RestResponse<RewardResponse>> call, Response<RestResponse<RewardResponse>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    reward.setStatus(newStatus);
+                    adapter.notifyItemChanged(position);
+                    showToast("Đã chuyển sang " + ("ACTIVE".equals(newStatus) ? "đang hoạt động" : "tạm dừng"));
+                } else {
+                    showToast("Không thể cập nhật: " + response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<RestResponse<RewardResponse>> call, Throwable t) {
+                Log.e(TAG, "Failed to update reward status", t);
+                showToast("Lỗi kết nối");
+            }
+        });
     }
 
     @Override
     public void onDeleteClick(RewardItem reward, int position) {
-        Toast.makeText(getContext(), "Xóa: " + reward.getName(), Toast.LENGTH_SHORT).show();
-        // TODO: Show confirmation dialog and delete
+        if (reward.getId() == null) {
+            showToast("Không tìm thấy ID phần thưởng");
+            return;
+        }
+        
+        new AlertDialog.Builder(requireContext())
+                .setTitle("Xác nhận xóa")
+                .setMessage("Bạn có chắc muốn xóa phần thưởng \"" + reward.getName() + "\"?")
+                .setPositiveButton("Xóa", (dialog, which) -> {
+                    apiEndpoints.deleteReward(reward.getId()).enqueue(new Callback<Void>() {
+                        @Override
+                        public void onResponse(Call<Void> call, Response<Void> response) {
+                            if (response.isSuccessful()) {
+                                rewardList.remove(reward);
+                                filterRewards(selectedCategory);
+                                showToast("Đã xóa phần thưởng");
+                            } else {
+                                showToast("Không thể xóa: " + response.code());
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<Void> call, Throwable t) {
+                            Log.e(TAG, "Failed to delete reward", t);
+                            showToast("Lỗi kết nối");
+                        }
+                    });
+                })
+                .setNegativeButton("Hủy", null)
+                .show();
     }
     
     @Override
