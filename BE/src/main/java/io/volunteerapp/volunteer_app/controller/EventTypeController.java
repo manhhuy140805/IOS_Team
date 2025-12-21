@@ -43,7 +43,7 @@ public class EventTypeController {
      * Create new event type (Admin only)
      */
     @PostMapping("")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<EventTypeResponse> createEventType(@Valid @RequestBody EventTypeRequest eventTypeRequest) {
         EventTypeResponse response = eventTypeService.createEventType(eventTypeRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
@@ -53,7 +53,7 @@ public class EventTypeController {
      * Update event type (Admin only)
      */
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<EventTypeResponse> updateEventType(
             @PathVariable Integer id,
             @Valid @RequestBody EventTypeRequest eventTypeRequest) {
@@ -65,7 +65,7 @@ public class EventTypeController {
      * Delete event type (Admin only)
      */
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Void> deleteEventType(@PathVariable Integer id) {
         eventTypeService.deleteEventType(id);
         return ResponseEntity.noContent().build();

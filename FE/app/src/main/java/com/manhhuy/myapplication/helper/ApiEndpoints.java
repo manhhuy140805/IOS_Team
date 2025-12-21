@@ -86,7 +86,7 @@ public interface ApiEndpoints {
     );
     
     @GET("events/{id}")
-    Call<EventResponse> getEventById(@Path("id") Integer id);
+    Call<RestResponse<EventResponse>> getEventById(@Path("id") Integer id);
     
     @GET("events/type/{eventTypeId}")
     Call<RestResponse<PageResponse<EventResponse>>> getEventsByType(
@@ -105,7 +105,7 @@ public interface ApiEndpoints {
             @Query("sortDirection") String sortDirection
     );    
     @GET("events/my-events")
-    Call<PageResponse<EventResponse>> getMyEvents(
+    Call<RestResponse<PageResponse<EventResponse>>> getMyEvents(
             @Query("page") int page,
             @Query("size") int size,
             @Query("sortBy") String sortBy,
@@ -133,7 +133,7 @@ public interface ApiEndpoints {
     Call<EventRegistrationResponse> registerForEvent(@Body EventRegistrationRequest request);
     
     @GET("event-registrations/event/{eventId}")
-    Call<PageResponse<EventRegistrationResponse>> getEventRegistrations(
+    Call<RestResponse<PageResponse<EventRegistrationResponse>>> getEventRegistrations(
             @Path("eventId") Integer eventId,
             @Query("page") int page,
             @Query("size") int size,
@@ -141,7 +141,7 @@ public interface ApiEndpoints {
     );
     
     @GET("event-registrations/my-registrations")
-    Call<PageResponse<EventRegistrationResponse>> getMyRegistrations(
+    Call<RestResponse<PageResponse<EventRegistrationResponse>>> getMyRegistrations(
             @Query("page") int page,
             @Query("size") int size,
             @Query("status") String status
@@ -151,7 +151,7 @@ public interface ApiEndpoints {
     Call<Void> cancelRegistration(@Path("registrationId") Integer registrationId);
     
     @PUT("event-registrations/{registrationId}/status")
-    Call<EventRegistrationResponse> updateRegistrationStatus(
+    Call<RestResponse<EventRegistrationResponse>> updateRegistrationStatus(
             @Path("registrationId") Integer registrationId,
             @Query("status") String status
     );
@@ -184,4 +184,7 @@ public interface ApiEndpoints {
             @Path("userId") Integer userId,
             @Path("notificationId") Integer notificationId
     );
+    
+    @POST("notifications/send")
+    Call<RestResponse<java.util.Map<String, Object>>> sendNotification(@Body com.manhhuy.myapplication.helper.request.SendNotificationRequest request);
 }

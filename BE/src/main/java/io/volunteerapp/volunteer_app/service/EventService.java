@@ -242,6 +242,9 @@ public class EventService {
     private User getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
+        System.out.println("DEBUG: Getting user with email: " + email);
+        System.out.println("DEBUG: Authentication: " + authentication);
+        System.out.println("DEBUG: Principal: " + authentication.getPrincipal());
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
     }

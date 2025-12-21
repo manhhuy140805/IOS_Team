@@ -31,6 +31,7 @@ import com.manhhuy.myapplication.ui.Activities.AddEventActivity;
 import com.manhhuy.myapplication.ui.Activities.DetailEventActivity;
 import com.manhhuy.myapplication.ui.Activities.SendNotificationActivity;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -323,6 +324,11 @@ public class EventManageFragment extends Fragment implements OnEventActionListen
         eventList.clear();
         eventList.addAll(filteredList);
         updateStatistics();
+        
+        // Show empty state if no results
+        if (eventList.isEmpty() && !allEventsList.isEmpty()) {
+            Toast.makeText(getContext(), "Không tìm thấy sự kiện phù hợp", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void updateStatistics() {

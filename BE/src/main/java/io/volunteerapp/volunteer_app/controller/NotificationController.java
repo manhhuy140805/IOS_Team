@@ -95,5 +95,20 @@ public class NotificationController {
         response.put("message", "Notification deleted successfully");
         return ResponseEntity.ok(response);
     }
+
+    /**
+     * Gửi notification đến người dùng đã đăng ký sự kiện
+     * POST /api/v1/notifications/send
+     */
+    @PostMapping("/send")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_ORGANIZATION')")
+    public ResponseEntity<Map<String, Object>> sendNotificationToEventParticipants(
+            @RequestBody io.volunteerapp.volunteer_app.DTO.requeset.SendNotificationRequest request) {
+        int sentCount = notificationService.sendNotificationToEventParticipants(request);
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", "Notification sent successfully");
+        response.put("sentCount", sentCount);
+        return ResponseEntity.ok(response);
+    }
 }
 

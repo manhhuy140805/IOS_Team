@@ -56,7 +56,7 @@ public class ApiConfig {
     /**
      * Lấy token từ SharedPreferences
      */
-    private static String getToken() {
+    public static String getToken() {
         if (appContext == null) return null;
         SharedPreferences prefs = appContext.getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
         return prefs.getString("access_token", null);

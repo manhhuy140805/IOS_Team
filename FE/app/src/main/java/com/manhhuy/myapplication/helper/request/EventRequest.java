@@ -4,14 +4,14 @@ public class EventRequest {
     private String title;
     private String description;
     private String location;
-    private String startDate;
-    private String endDate;
-    private Integer maxParticipants;
+    private String imageUrl;
+    private String eventStartTime;
+    private String eventEndTime;
+    private Integer numOfVolunteers;
+    private Integer rewardPoints;
     private String status;
+    private String category;
     private Integer eventTypeId;
-    private Boolean hasCertificate;
-    private Boolean hasReward;
-    private Integer rewardId;
     
     public EventRequest() {}
     
@@ -39,28 +39,44 @@ public class EventRequest {
         this.location = location;
     }
     
-    public String getStartDate() {
-        return startDate;
+    public String getImageUrl() {
+        return imageUrl;
     }
     
-    public void setStartDate(String startDate) {
-        this.startDate = startDate;
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
     
-    public String getEndDate() {
-        return endDate;
+    public String getEventStartTime() {
+        return eventStartTime;
     }
     
-    public void setEndDate(String endDate) {
-        this.endDate = endDate;
+    public void setEventStartTime(String eventStartTime) {
+        this.eventStartTime = eventStartTime;
     }
     
-    public Integer getMaxParticipants() {
-        return maxParticipants;
+    public String getEventEndTime() {
+        return eventEndTime;
     }
     
-    public void setMaxParticipants(Integer maxParticipants) {
-        this.maxParticipants = maxParticipants;
+    public void setEventEndTime(String eventEndTime) {
+        this.eventEndTime = eventEndTime;
+    }
+    
+    public Integer getNumOfVolunteers() {
+        return numOfVolunteers;
+    }
+    
+    public void setNumOfVolunteers(Integer numOfVolunteers) {
+        this.numOfVolunteers = numOfVolunteers;
+    }
+    
+    public Integer getRewardPoints() {
+        return rewardPoints;
+    }
+    
+    public void setRewardPoints(Integer rewardPoints) {
+        this.rewardPoints = rewardPoints;
     }
     
     public String getStatus() {
@@ -71,35 +87,19 @@ public class EventRequest {
         this.status = status;
     }
     
+    public String getCategory() {
+        return category;
+    }
+    
+    public void setCategory(String category) {
+        this.category = category;
+    }
+    
     public Integer getEventTypeId() {
         return eventTypeId;
     }
     
     public void setEventTypeId(Integer eventTypeId) {
         this.eventTypeId = eventTypeId;
-    }
-    
-    public Boolean getHasCertificate() {
-        return hasCertificate;
-    }
-    
-    public void setHasCertificate(Boolean hasCertificate) {
-        this.hasCertificate = hasCertificate;
-    }
-    
-    public Boolean getHasReward() {
-        return hasReward;
-    }
-    
-    public void setHasReward(Boolean hasReward) {
-        this.hasReward = hasReward;
-    }
-    
-    public Integer getRewardId() {
-        return rewardId;
-    }
-    
-    public void setRewardId(Integer rewardId) {
-        this.rewardId = rewardId;
     }
 }
