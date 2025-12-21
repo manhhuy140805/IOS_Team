@@ -4,6 +4,7 @@ import com.manhhuy.myapplication.helper.request.EventRegistrationRequest;
 import com.manhhuy.myapplication.helper.request.EventRequest;
 import com.manhhuy.myapplication.helper.request.LoginRequest;
 import com.manhhuy.myapplication.helper.request.RegisterRequest;
+import com.manhhuy.myapplication.helper.request.RewardRequest;
 import com.manhhuy.myapplication.helper.request.UpdateUserRequest;
 import com.manhhuy.myapplication.helper.response.EventRegistrationResponse;
 import com.manhhuy.myapplication.helper.response.EventResponse;
@@ -18,7 +19,9 @@ import com.manhhuy.myapplication.helper.response.UserNotificationResponse;
 import com.manhhuy.myapplication.helper.response.UserResponse;
 
 import java.util.List;
+import java.util.Map;
 
+import okhttp3.MultipartBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
@@ -73,10 +76,13 @@ public interface ApiEndpoints {
     @GET("rewards/{id}")
     Call<RestResponse<RewardResponse>> getRewardById(@Path("id") Integer id);
     
+    @POST("rewards")
+    Call<RestResponse<RewardResponse>> createReward(@Body RewardRequest request);
+    
     @PUT("rewards/{id}")
     Call<RestResponse<RewardResponse>> updateReward(
             @Path("id") Integer id,
-            @Body Object rewardRequest
+            @Body RewardRequest rewardRequest
     );
     
     @PATCH("rewards/{id}/status")
@@ -87,6 +93,11 @@ public interface ApiEndpoints {
     
     @DELETE("rewards/{id}")
     Call<Void> deleteReward(@Path("id") Integer id);
+
+    // Image upload
+    @retrofit2.http.Multipart
+    @POST("images/upload")
+    Call<Map<String, Object>> uploadImage(@retrofit2.http.Part MultipartBody.Part file);
 
     @GET("events")
     Call<RestResponse<PageResponse<EventResponse>>> getAllEvents(

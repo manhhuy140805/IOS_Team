@@ -1,5 +1,6 @@
 package com.manhhuy.myapplication.ui.Activities.Fragment.Admin;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -8,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -24,6 +27,7 @@ import com.manhhuy.myapplication.helper.response.PageResponse;
 import com.manhhuy.myapplication.helper.response.RewardResponse;
 import com.manhhuy.myapplication.helper.response.RestResponse;
 import com.manhhuy.myapplication.model.RewardItem;
+import com.manhhuy.myapplication.ui.Activities.Admin.AddRewardActivity;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -43,6 +47,13 @@ public class AdminRewardFragment extends Fragment implements OnRewardActionListe
     private int selectedCategory = 0;
     private boolean isLoading = false;
 
+    private final ActivityResultLauncher<Intent> addRewardLauncher = 
+            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result.getResultCode() == android.app.Activity.RESULT_OK) {
+                    loadRewards(); // Reload list after adding
+                }
+            });
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
         binding = ActivityAdminRewardManagementBinding.inflate(inflater, container, false);
@@ -59,7 +70,10 @@ public class AdminRewardFragment extends Fragment implements OnRewardActionListe
 
     private void initViews() {
         binding.btnBack.setVisibility(View.GONE);
-        binding.fabAddReward.setOnClickListener(v -> showToast("Thêm quà mới - Coming soon"));
+        binding.fabAddReward.setOnClickListener(v -> {
+            Intent intent = new Intent(requireContext(), AddRewardActivity.class);
+            addRewardLauncher.launch(intent);
+        });
         
         adapter = new RewardAdminAdapter(requireContext(), displayedRewards, this);
         binding.recyclerViewRewards.setLayoutManager(new LinearLayoutManager(requireContext()));

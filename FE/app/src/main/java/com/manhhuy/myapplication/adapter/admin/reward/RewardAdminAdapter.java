@@ -2,6 +2,7 @@ package com.manhhuy.myapplication.adapter.admin.reward;
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -98,15 +99,20 @@ public class RewardAdminAdapter extends RecyclerView.Adapter<RewardAdminAdapter.
         }
 
         void loadImage(RewardItem reward) {
-            if (!TextUtils.isEmpty(reward.getImageUrl())) {
+            String imageUrl = reward.getImageUrl();
+            Log.d("RewardAdapter", "Loading image for: " + reward.getName() + ", URL: " + imageUrl);
+            
+            if (!TextUtils.isEmpty(imageUrl)) {
+                Log.d("RewardAdapter", "Loading from URL: " + imageUrl);
                 Glide.with(context)
-                        .load(reward.getImageUrl())
+                        .load(imageUrl)
                         .apply(new RequestOptions()
                                 .transform(new RoundedCorners(16))
                                 .placeholder(R.drawable.ic_voucher)
                                 .error(R.drawable.ic_voucher))
                         .into(binding.ivRewardImage);
             } else {
+                Log.d("RewardAdapter", "No image URL, using default icon");
                 int[] icons = {R.drawable.ic_coffee, R.drawable.ic_group, R.drawable.ic_certificate,
                               R.drawable.ic_book, R.drawable.ic_voucher, R.drawable.ic_backpack};
                 binding.ivRewardImage.setImageResource(icons[reward.getIconColorIndex() % icons.length]);
