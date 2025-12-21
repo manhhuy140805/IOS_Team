@@ -75,7 +75,9 @@
 
                 <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" android:paddingHorizontal="24dp">
 
-                    <TextView android:id="@+id/chipEnvironment" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginEnd="12dp" android:background="@drawable/bg_chip_selected_event" android:paddingHorizontal="20dp" android:paddingVertical="12dp" android:text="🌿 Môi trường" android:textColor="@color/app_green_primary" android:textSize="14sp" android:textStyle="bold" />
+                    <TextView android:id="@+id/chipAll" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginEnd="12dp" android:background="@drawable/bg_chip_selected_event" android:paddingHorizontal="20dp" android:paddingVertical="12dp" android:text="📋 Tất cả" android:textColor="@color/app_green_primary" android:textSize="14sp" android:textStyle="bold" />
+
+                    <TextView android:id="@+id/chipEnvironment" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginEnd="12dp" android:background="@drawable/bg_chip_unselected_event" android:paddingHorizontal="20dp" android:paddingVertical="12dp" android:text="🌿 Môi trường" android:textColor="@color/text_secondary" android:textSize="14sp" android:textStyle="bold" />
 
                     <TextView android:id="@+id/chipEducation" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginEnd="12dp" android:background="@drawable/bg_chip_unselected_event" android:paddingHorizontal="20dp" android:paddingVertical="12dp" android:text="📚 Giáo dục" android:textColor="@color/text_secondary" android:textSize="14sp" android:textStyle="bold" />
 
