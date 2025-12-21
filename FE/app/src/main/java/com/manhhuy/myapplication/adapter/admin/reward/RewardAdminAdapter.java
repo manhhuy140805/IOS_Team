@@ -108,6 +108,8 @@ public class RewardAdminAdapter extends RecyclerView.Adapter<RewardAdminAdapter.
                         .load(imageUrl)
                         .apply(new RequestOptions()
                                 .transform(new RoundedCorners(16))
+                                .skipMemoryCache(true)
+                                .diskCacheStrategy(com.bumptech.glide.load.engine.DiskCacheStrategy.NONE)
                                 .placeholder(R.drawable.ic_voucher)
                                 .error(R.drawable.ic_voucher))
                         .into(binding.ivRewardImage);
