@@ -1,6 +1,7 @@
 package com.manhhuy.myapplication.adapter.admin.reward;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -8,6 +9,9 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestOptions;
 import com.manhhuy.myapplication.R;
 import com.manhhuy.myapplication.databinding.ItemRewardAdminBinding;
 import com.manhhuy.myapplication.model.RewardItem;
@@ -36,26 +40,78 @@ public class RewardAdminAdapter extends RecyclerView.Adapter<RewardAdminAdapter.
     @Override
     public void onBindViewHolder(@NonNull RewardViewHolder holder, int position) {
         RewardItem reward = rewardList.get(position);
+        holder.bind(reward, position);
+    }
 
-        holder.binding.tvRewardName.setText(reward.getName());
-        holder.binding.tvRewardCategory.setText(getCategoryText(reward.getCategoryType()));
-        holder.binding.tvRewardPoints.setText("⭐ " + reward.getPoints() + " điểm");
-        holder.binding.tvStock.setText("Còn: " + reward.getStock());
+    class RewardViewHolder extends RecyclerView.ViewHolder {
+        final ItemRewardAdminBinding binding;
 
-        // Calculate redeemed count (mock data - should come from backend)
-        int redeemed = calculateRedeemed(reward);
-        holder.binding.tvRedeemed.setText("Đã đổi: " + redeemed);
+        RewardViewHolder(@NonNull ItemRewardAdminBinding binding) {
+            super(binding.getRoot());
+            this.binding = binding;
+        }
 
-        // Set status
-        setStatusBadge(holder, reward);
+        void bind(RewardItem reward, int position) {
+            binding.tvRewardName.setText(reward.getName());
+            binding.tvRewardCategory.setText(getCategoryText(reward.getCategoryType()));
+            binding.tvRewardPoints.setText("⭐ " + reward.getPoints() + " điểm");
+            binding.tvStock.setText("Còn: " + reward.getStock());
+            binding.tvRedeemed.setText("Đã đổi: " + (int)(Math.random() * 150));
 
-        // Set icon based on category
-        setRewardIcon(holder.binding.ivRewardImage, reward);
+            updateStatusUI(reward);
+            loadImage(reward);
 
-        // Button listeners
-        holder.binding.btnEdit.setOnClickListener(v -> listener.onEditClick(reward, position));
-        holder.binding.btnPause.setOnClickListener(v -> listener.onPauseClick(reward, position));
-        holder.binding.btnDelete.setOnClickListener(v -> listener.onDeleteClick(reward, position));
+            binding.btnEdit.setOnClickListener(v -> listener.onEditClick(reward, position));
+            binding.btnPause.setOnClickListener(v -> listener.onPauseClick(reward, position));
+            binding.btnDelete.setOnClickListener(v -> listener.onDeleteClick(reward, position));
+        }
+
+        void updateStatusUI(RewardItem reward) {
+            String status = reward.getStatus() != null ? reward.getStatus() : "ACTIVE";
+            int stock = Integer.parseInt(reward.getStock());
+            int redColor = context.getResources().getColor(R.color.status_rejected);
+            int greenColor = context.getResources().getColor(R.color.app_green_primary);
+            int grayColor = context.getResources().getColor(R.color.text_secondary);
+
+            if ("INACTIVE".equals(status)) {
+                binding.tvStatus.setText("Tạm ngưng");
+                binding.tvStatus.setTextColor(redColor);
+                binding.btnPause.setImageResource(R.drawable.ic_check);
+                binding.btnPause.setColorFilter(greenColor);
+            } else if (stock == 0) {
+                binding.tvStatus.setText("Hết hàng");
+                binding.tvStatus.setTextColor(redColor);
+                binding.btnPause.setImageResource(R.drawable.ic_pause);
+                binding.btnPause.setColorFilter(grayColor);
+            } else if (stock <= 5) {
+                binding.tvStatus.setText("Sắp hết");
+                binding.tvStatus.setTextColor(redColor);
+                binding.btnPause.setImageResource(R.drawable.ic_pause);
+                binding.btnPause.setColorFilter(grayColor);
+            } else {
+                binding.tvStatus.setText("Hoạt động");
+                binding.tvStatus.setTextColor(greenColor);
+                binding.btnPause.setImageResource(R.drawable.ic_pause);
+                binding.btnPause.setColorFilter(grayColor);
+            }
+            binding.tvStatus.setBackground(null);
+        }
+
+        void loadImage(RewardItem reward) {
+            if (!TextUtils.isEmpty(reward.getImageUrl())) {
+                Glide.with(context)
+                        .load(reward.getImageUrl())
+                        .apply(new RequestOptions()
+                                .transform(new RoundedCorners(16))
+                                .placeholder(R.drawable.ic_voucher)
+                                .error(R.drawable.ic_voucher))
+                        .into(binding.ivRewardImage);
+            } else {
+                int[] icons = {R.drawable.ic_coffee, R.drawable.ic_group, R.drawable.ic_certificate,
+                              R.drawable.ic_book, R.drawable.ic_voucher, R.drawable.ic_backpack};
+                binding.ivRewardImage.setImageResource(icons[reward.getIconColorIndex() % icons.length]);
+            }
+        }
     }
 
     @Override
@@ -65,83 +121,10 @@ public class RewardAdminAdapter extends RecyclerView.Adapter<RewardAdminAdapter.
 
     private String getCategoryText(int categoryType) {
         switch (categoryType) {
-            case 1:
-                return "Voucher • Đồ uống";
-            case 2:
-                return "Vật phẩm • Thời trang";
-            case 3:
-                return "Trải nghiệm • Đào tạo";
-            default:
-                return "Quà tặng";
-        }
-    }
-
-    private void setStatusBadge(RewardViewHolder holder, RewardItem reward) {
-        String status = reward.getStatus() != null ? reward.getStatus() : "ACTIVE";
-        int stock = Integer.parseInt(reward.getStock());
-
-        // Check status first
-        if ("INACTIVE".equals(status)) {
-            holder.binding.tvStatus.setText("Tạm ngưng");
-            holder.binding.tvStatus.setTextColor(context.getResources().getColor(R.color.status_rejected));
-            // Change button to "Activate" icon (play)
-            holder.binding.btnPause.setImageResource(R.drawable.ic_check);
-            holder.binding.btnPause.setColorFilter(context.getResources().getColor(R.color.app_green_primary));
-        } else if (stock == 0) {
-            holder.binding.tvStatus.setText("Hết hàng");
-            holder.binding.tvStatus.setTextColor(context.getResources().getColor(R.color.status_rejected));
-            // Keep pause button
-            holder.binding.btnPause.setImageResource(R.drawable.ic_pause);
-            holder.binding.btnPause.setColorFilter(context.getResources().getColor(R.color.text_secondary));
-        } else if (stock <= 5) {
-            holder.binding.tvStatus.setText("Sắp hết hàng");
-            holder.binding.tvStatus.setTextColor(context.getResources().getColor(R.color.status_rejected));
-            // Keep pause button
-            holder.binding.btnPause.setImageResource(R.drawable.ic_pause);
-            holder.binding.btnPause.setColorFilter(context.getResources().getColor(R.color.text_secondary));
-        } else {
-            holder.binding.tvStatus.setText("Đang hoạt động");
-            holder.binding.tvStatus.setTextColor(context.getResources().getColor(R.color.app_green_primary));
-            // Keep pause button
-            holder.binding.btnPause.setImageResource(R.drawable.ic_pause);
-            holder.binding.btnPause.setColorFilter(context.getResources().getColor(R.color.text_secondary));
-        }
-        
-        // Clear background that might have been set in previous version
-        holder.binding.tvStatus.setBackground(null);
-    }
-
-    private void setRewardIcon(ImageView imageView, RewardItem reward) {
-        // Set icon based on category type and icon color index
-        int[] iconResources = {
-                R.drawable.ic_coffee,
-                R.drawable.ic_group,
-                R.drawable.ic_certificate,
-                R.drawable.ic_book,
-                R.drawable.ic_voucher,
-                R.drawable.ic_backpack
-        };
-
-        int iconIndex = reward.getIconColorIndex() % iconResources.length;
-        imageView.setImageResource(iconResources[iconIndex]);
-    }
-
-    private int calculateRedeemed(RewardItem reward) {
-        // Mock calculation - in real app, this should come from backend
-        return (int) (Math.random() * 150);
-    }
-
-    public void updateList(List<RewardItem> newList) {
-//        this.rewardList = newList;
-        notifyDataSetChanged();
-    }
-
-    static class RewardViewHolder extends RecyclerView.ViewHolder {
-        ItemRewardAdminBinding binding;
-
-        public RewardViewHolder(@NonNull ItemRewardAdminBinding binding) {
-            super(binding.getRoot());
-            this.binding = binding;
+            case 1: return "Voucher • Đồ uống";
+            case 2: return "Vật phẩm • Thời trang";
+            case 3: return "Trải nghiệm • Đào tạo";
+            default: return "Quà tặng";
         }
     }
 }

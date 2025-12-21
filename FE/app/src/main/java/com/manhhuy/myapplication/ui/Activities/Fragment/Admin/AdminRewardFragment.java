@@ -38,16 +38,10 @@ public class AdminRewardFragment extends Fragment implements OnRewardActionListe
     private ActivityAdminRewardManagementBinding binding;
     private RewardAdminAdapter adapter;
     private ApiEndpoints apiEndpoints;
-
-    private final List<RewardItem> rewardList = new ArrayList<>();
-    private final List<RewardItem> filteredList = new ArrayList<>();
-
-    private int selectedCategory = 0; // 0=all, 1=voucher, 2=gift, 3=experience, 4=low stock
+    private final List<RewardItem> allRewards = new ArrayList<>();
+    private final List<RewardItem> displayedRewards = new ArrayList<>();
+    private int selectedCategory = 0;
     private boolean isLoading = false;
-
-    public AdminRewardFragment() {
-        // Required empty public constructor
-    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
@@ -59,101 +53,22 @@ public class AdminRewardFragment extends Fragment implements OnRewardActionListe
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         apiEndpoints = ApiConfig.getClient().create(ApiEndpoints.class);
-        setupViews();
-        setupRecyclerView();
-        loadRewardsFromAPI();
-        setupListeners();
+        initViews();
+        loadRewards();
     }
 
-    private void setupViews() {
+    private void initViews() {
         binding.btnBack.setVisibility(View.GONE);
         binding.fabAddReward.setOnClickListener(v -> showToast("Thêm quà mới - Coming soon"));
-    }
-
-    private void setupRecyclerView() {
-        adapter = new RewardAdminAdapter(getContext(), filteredList, this);
-        binding.recyclerViewRewards.setLayoutManager(new LinearLayoutManager(getContext()));
+        
+        adapter = new RewardAdminAdapter(requireContext(), displayedRewards, this);
+        binding.recyclerViewRewards.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.recyclerViewRewards.setAdapter(adapter);
+        
+        setupCategoryTabs();
     }
 
-    private void loadRewardsFromAPI() {
-        if (isLoading) return;
-        isLoading = true;
-        showLoading(true);
-
-        apiEndpoints.getAllRewards(null, 0, 100, "createdAt", "desc")
-                .enqueue(new Callback<RestResponse<PageResponse<RewardResponse>>>() {
-                    @Override
-                    public void onResponse(Call<RestResponse<PageResponse<RewardResponse>>> call,
-                                           Response<RestResponse<PageResponse<RewardResponse>>> response) {
-                        isLoading = false;
-                        showLoading(false);
-
-                        if (response.isSuccessful() && response.body() != null) {
-                            RestResponse<PageResponse<RewardResponse>> restResponse = response.body();
-                            if (restResponse.getStatusCode() == 200 && restResponse.getData() != null) {
-                                rewardList.clear();
-                                for (RewardResponse reward : restResponse.getData().getContent()) {
-                                    rewardList.add(mapToRewardItem(reward));
-                                }
-                                filterRewards(selectedCategory);
-                            } else {
-                                showToast("Không thể tải danh sách phần thưởng: " + restResponse.getMessage());
-                            }
-                        } else {
-                            showToast("Lỗi tải dữ liệu: " + response.code());
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<RestResponse<PageResponse<RewardResponse>>> call, Throwable t) {
-                        isLoading = false;
-                        showLoading(false);
-                        Log.e(TAG, "Failed to load rewards", t);
-                        showToast("Lỗi kết nối: " + t.getMessage());
-                    }
-                });
-    }
-
-    private RewardItem mapToRewardItem(RewardResponse r) {
-        String type = r.getType() != null ? r.getType() : "";
-        int categoryType = type.toLowerCase().contains("voucher") ? 1 
-                         : type.toLowerCase().contains("gift") || type.contains("Vật phẩm") ? 2
-                         : type.toLowerCase().contains("experience") || type.contains("Trải nghiệm") ? 3 : 1;
-
-        int quantity = r.getQuantity() != null ? r.getQuantity() : 0;
-        String tag = quantity == 0 ? "Hết hàng" : quantity <= 5 ? "Sắp hết" : quantity >= 50 ? "Phổ biến" : "Còn hàng";
-
-        RewardItem item = new RewardItem(
-                r.getName(),
-                r.getProviderName() != null ? r.getProviderName() : "Unknown",
-                r.getType() != null ? r.getType() : "Reward",
-                String.valueOf(r.getPointsRequired() != null ? r.getPointsRequired() : 0),
-                String.valueOf(quantity),
-                r.getExpiryDate() != null ? r.getExpiryDate() : "N/A",
-                categoryType,
-                r.getType(),
-                tag,
-                categoryType - 1
-        );
-        item.setId(r.getId());
-        item.setStatus(r.getStatus() != null ? r.getStatus() : "ACTIVE");
-        return item;
-    }
-
-    private void showLoading(boolean show) {
-        if (binding != null) {
-            binding.recyclerViewRewards.setVisibility(show ? View.GONE : View.VISIBLE);
-        }
-    }
-
-    private void showToast(String message) {
-        if (getContext() != null) {
-            Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    private void setupListeners() {
+    private void setupCategoryTabs() {
         binding.tabAll.setOnClickListener(v -> selectCategory(0, binding.tabAll));
         binding.tabVoucher.setOnClickListener(v -> selectCategory(1, binding.tabVoucher));
         binding.tabGift.setOnClickListener(v -> selectCategory(2, binding.tabGift));
@@ -161,39 +76,95 @@ public class AdminRewardFragment extends Fragment implements OnRewardActionListe
         binding.tabLowStock.setOnClickListener(v -> selectCategory(4, binding.tabLowStock));
     }
 
+    private void loadRewards() {
+        if (isLoading) return;
+        isLoading = true;
+        binding.recyclerViewRewards.setVisibility(View.GONE);
+
+        apiEndpoints.getAllRewards(null, 0, 100, "createdAt", "desc")
+                .enqueue(new Callback<RestResponse<PageResponse<RewardResponse>>>() {
+                    @Override
+                    public void onResponse(Call<RestResponse<PageResponse<RewardResponse>>> call,
+                                           Response<RestResponse<PageResponse<RewardResponse>>> response) {
+                        isLoading = false;
+                        binding.recyclerViewRewards.setVisibility(View.VISIBLE);
+
+                        if (response.isSuccessful() && response.body() != null 
+                            && response.body().getStatusCode() == 200 
+                            && response.body().getData() != null) {
+                            allRewards.clear();
+                            for (RewardResponse r : response.body().getData().getContent()) {
+                                allRewards.add(mapRewardItem(r));
+                            }
+                            applyFilter();
+                        } else {
+                            showToast("Không thể tải dữ liệu");
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<RestResponse<PageResponse<RewardResponse>>> call, Throwable t) {
+                        isLoading = false;
+                        binding.recyclerViewRewards.setVisibility(View.VISIBLE);
+                        Log.e(TAG, "Load rewards failed", t);
+                        showToast("Lỗi kết nối");
+                    }
+                });
+    }
+
+    private RewardItem mapRewardItem(RewardResponse r) {
+        String type = r.getType() != null ? r.getType().toLowerCase() : "";
+        int categoryType = type.contains("voucher") ? 1 
+                         : type.contains("gift") || type.contains("vật phẩm") ? 2
+                         : type.contains("experience") || type.contains("trải nghiệm") ? 3 : 1;
+
+        int qty = r.getQuantity() != null ? r.getQuantity() : 0;
+        String tag = qty == 0 ? "Hết hàng" : qty <= 5 ? "Sắp hết" : qty >= 50 ? "Phổ biến" : "Còn hàng";
+
+        RewardItem item = new RewardItem(
+                r.getName(),
+                r.getProviderName() != null ? r.getProviderName() : "Unknown",
+                r.getType() != null ? r.getType() : "Reward",
+                String.valueOf(r.getPointsRequired() != null ? r.getPointsRequired() : 0),
+                String.valueOf(qty),
+                r.getExpiryDate() != null ? r.getExpiryDate() : "N/A",
+                categoryType, r.getType(), tag, categoryType - 1
+        );
+        item.setId(r.getId());
+        item.setStatus(r.getStatus() != null ? r.getStatus() : "ACTIVE");
+        item.setImageUrl(r.getImageUrl());
+        return item;
+    }
+
     private void selectCategory(int category, TextView selectedTab) {
-        TextView[] tabs = {binding.tabAll, binding.tabVoucher, binding.tabGift, binding.tabExperience, binding.tabLowStock};
+        TextView[] tabs = {binding.tabAll, binding.tabVoucher, binding.tabGift, 
+                          binding.tabExperience, binding.tabLowStock};
         for (TextView tab : tabs) {
-            tab.setBackgroundResource(R.drawable.bg_category_tab_unselected_reward);
-            tab.setTextColor(getResources().getColor(R.color.text_secondary));
+            boolean isSelected = tab == selectedTab;
+            tab.setBackgroundResource(isSelected ? R.drawable.bg_category_tab_selected_reward 
+                                                 : R.drawable.bg_category_tab_unselected_reward);
+            tab.setTextColor(getResources().getColor(isSelected ? R.color.app_green_primary 
+                                                                : R.color.text_secondary));
         }
-        
-        selectedTab.setBackgroundResource(R.drawable.bg_category_tab_selected_reward);
-        selectedTab.setTextColor(getResources().getColor(R.color.app_green_primary));
-        
         selectedCategory = category;
-        filterRewards(category);
+        applyFilter();
     }
 
-    private void filterRewards(int category) {
-        filteredList.clear();
-        
-        if (category == 0) {
-            filteredList.addAll(rewardList);
-        } else if (category == 4) {
-            for (RewardItem reward : rewardList) {
-                if (Integer.parseInt(reward.getStock()) <= 5) filteredList.add(reward);
-            }
-        } else {
-            for (RewardItem reward : rewardList) {
-                if (reward.getCategoryType() == category) filteredList.add(reward);
-            }
+    private void applyFilter() {
+        displayedRewards.clear();
+        for (RewardItem reward : allRewards) {
+            boolean matches = selectedCategory == 0 // All
+                    || (selectedCategory == 4 && Integer.parseInt(reward.getStock()) <= 5) // Low stock
+                    || reward.getCategoryType() == selectedCategory; // By category
+            if (matches) displayedRewards.add(reward);
         }
-        
-        adapter.updateList(filteredList);
+        adapter.notifyDataSetChanged();
     }
 
-    // Implement OnRewardActionListener interface
+    private void showToast(String message) {
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
+    }
+
     @Override
     public void onEditClick(RewardItem reward, int position) {
         showToast("Sửa: " + reward.getName());
@@ -201,67 +172,60 @@ public class AdminRewardFragment extends Fragment implements OnRewardActionListe
 
     @Override
     public void onPauseClick(RewardItem reward, int position) {
-        if (reward.getId() == null) {
-            showToast("Không tìm thấy ID phần thưởng");
-            return;
-        }
+        if (reward.getId() == null) return;
 
-        // Toggle status between ACTIVE and INACTIVE
-        String currentStatus = reward.getStatus() != null ? reward.getStatus() : "ACTIVE";
-        String newStatus = "ACTIVE".equals(currentStatus) ? "INACTIVE" : "ACTIVE";
-        
-        apiEndpoints.updateRewardStatus(reward.getId(), newStatus).enqueue(new Callback<RestResponse<RewardResponse>>() {
-            @Override
-            public void onResponse(Call<RestResponse<RewardResponse>> call, Response<RestResponse<RewardResponse>> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    reward.setStatus(newStatus);
-                    adapter.notifyItemChanged(position);
-                    showToast("Đã chuyển sang " + ("ACTIVE".equals(newStatus) ? "đang hoạt động" : "tạm dừng"));
-                } else {
-                    showToast("Không thể cập nhật: " + response.code());
-                }
-            }
+        String newStatus = "ACTIVE".equals(reward.getStatus()) ? "INACTIVE" : "ACTIVE";
+        apiEndpoints.updateRewardStatus(reward.getId(), newStatus)
+                .enqueue(new Callback<RestResponse<RewardResponse>>() {
+                    @Override
+                    public void onResponse(Call<RestResponse<RewardResponse>> call, 
+                                          Response<RestResponse<RewardResponse>> response) {
+                        if (response.isSuccessful() && response.body() != null) {
+                            reward.setStatus(newStatus);
+                            adapter.notifyItemChanged(position);
+                            showToast("ACTIVE".equals(newStatus) ? "Đã kích hoạt" : "Đã tạm dừng");
+                        } else {
+                            showToast("Cập nhật thất bại");
+                        }
+                    }
 
-            @Override
-            public void onFailure(Call<RestResponse<RewardResponse>> call, Throwable t) {
-                Log.e(TAG, "Failed to update reward status", t);
-                showToast("Lỗi kết nối");
-            }
-        });
+                    @Override
+                    public void onFailure(Call<RestResponse<RewardResponse>> call, Throwable t) {
+                        showToast("Lỗi kết nối");
+                    }
+                });
     }
 
     @Override
     public void onDeleteClick(RewardItem reward, int position) {
-        if (reward.getId() == null) {
-            showToast("Không tìm thấy ID phần thưởng");
-            return;
-        }
+        if (reward.getId() == null) return;
         
         new AlertDialog.Builder(requireContext())
                 .setTitle("Xác nhận xóa")
-                .setMessage("Bạn có chắc muốn xóa phần thưởng \"" + reward.getName() + "\"?")
-                .setPositiveButton("Xóa", (dialog, which) -> {
-                    apiEndpoints.deleteReward(reward.getId()).enqueue(new Callback<Void>() {
-                        @Override
-                        public void onResponse(Call<Void> call, Response<Void> response) {
-                            if (response.isSuccessful()) {
-                                rewardList.remove(reward);
-                                filterRewards(selectedCategory);
-                                showToast("Đã xóa phần thưởng");
-                            } else {
-                                showToast("Không thể xóa: " + response.code());
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<Void> call, Throwable t) {
-                            Log.e(TAG, "Failed to delete reward", t);
-                            showToast("Lỗi kết nối");
-                        }
-                    });
-                })
+                .setMessage("Xóa \"" + reward.getName() + "\"?")
+                .setPositiveButton("Xóa", (d, w) -> deleteReward(reward))
                 .setNegativeButton("Hủy", null)
                 .show();
+    }
+
+    private void deleteReward(RewardItem reward) {
+        apiEndpoints.deleteReward(reward.getId()).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    allRewards.remove(reward);
+                    applyFilter();
+                    showToast("Đã xóa");
+                } else {
+                    showToast("Xóa thất bại");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                showToast("Lỗi kết nối");
+            }
+        });
     }
     
     @Override
