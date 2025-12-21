@@ -3,178 +3,102 @@ package com.manhhuy.myapplication.ui.Activities;
 import android.os.Bundle;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.bumptech.glide.Glide;
 import com.manhhuy.myapplication.R;
 import com.manhhuy.myapplication.databinding.ActivityDetailEventBinding;
-import com.manhhuy.myapplication.helper.response.EventResponse;
+import com.manhhuy.myapplication.model.EventPost;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Locale;
 
 public class DetailEventActivity extends AppCompatActivity {
 
     private ActivityDetailEventBinding binding;
-    private EventResponse eventData;
+    private EventPost event;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         binding = ActivityDetailEventBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        
-        ViewCompat.setOnApplyWindowInsetsListener(binding.main, (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
 
-        // Get event data from intent
-        if (getIntent().hasExtra("eventData")) {
-            eventData = getIntent().getParcelableExtra("eventData");
-        }
-
-        setupClickListeners();
+        event = (EventPost) getIntent().getSerializableExtra("eventPost");
         
-        if (eventData != null) {
-            displayEventData();
-        } else {
+        if (event == null) {
             Toast.makeText(this, "Không tìm thấy thông tin sự kiện", Toast.LENGTH_SHORT).show();
             finish();
+            return;
         }
+
+        setupUI();
+    }
+    
+    private void setupUI() {
+        setupClickListeners();
+        displayEventInfo();
+        loadImages();
     }
     
     private void setupClickListeners() {
         binding.btnBack.setOnClickListener(v -> finish());
-        
-        binding.btnFavorite.setOnClickListener(v -> {
-            Toast.makeText(this, "Đã thêm vào yêu thích", Toast.LENGTH_SHORT).show();
-        });
-        
-        binding.btnShare.setOnClickListener(v -> {
-            Toast.makeText(this, "Chia sẻ sự kiện", Toast.LENGTH_SHORT).show();
-        });
-        
-        binding.btnRegisterEvent.setOnClickListener(v -> {
-            if (eventData != null) {
-                Toast.makeText(this, "Đăng ký tham gia: " + eventData.getTitle(), Toast.LENGTH_SHORT).show();
-            }
-        });
+        binding.btnFavorite.setOnClickListener(v -> showToast("Đã thêm vào yêu thích"));
+        binding.btnShare.setOnClickListener(v -> showToast("Chia sẻ sự kiện"));
+        binding.btnRegisterEvent.setOnClickListener(v -> showToast("Đăng ký tham gia: " + event.getTitle()));
     }
     
-    private void displayEventData() {
-        // Set title
-        if (eventData.getTitle() != null) {
-            binding.tvEventTitle.setText(eventData.getTitle());
+    private void displayEventInfo() {
+        // Basic info
+        setText(binding.tvEventTitle, event.getTitle());
+        setText(binding.tvEventDescription, event.getDescription());
+        setText(binding.tvOrganizationName, event.getOrganizationName());
+        setText(binding.tvEventLocation, event.getLocation());
+        setText(binding.tvMapLocation, event.getLocation());
+        
+        // Date and time
+        if (event.getEventDate() != null) {
+            String date = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(event.getEventDate());
+            binding.tvEventDate.setText(date);
         }
+        binding.tvEventTime.setText("1 ngày");
         
-        // Set description
-        if (eventData.getDescription() != null) {
-            binding.tvEventDescription.setText(eventData.getDescription());
+        // Stats
+        binding.tvEventParticipants.setText(event.getCurrentParticipants() + "/" + event.getMaxParticipants());
+        binding.tvEventReward.setText(event.getRewardPoints() + " điểm");
+        
+        // Category
+        if (event.getTags() != null && !event.getTags().isEmpty()) {
+            binding.tvEventCategory.setText(event.getTags().get(0));
         }
-        
-        // Set organization name
-        if (eventData.getCreatorName() != null) {
-            binding.tvOrganizationName.setText(eventData.getCreatorName());
-        }
-        
-        // Set event date
-        if (eventData.getEventStartTime() != null) {
-            binding.tvEventDate.setText(formatDate(eventData.getEventStartTime()));
-        }
-        
-        // Set time range
-        if (eventData.getEventStartTime() != null && eventData.getEventEndTime() != null) {
-            binding.tvEventTime.setText(formatDateRange(eventData.getEventStartTime(), eventData.getEventEndTime()));
-        }
-        
-        // Set location
-        if (eventData.getLocation() != null) {
-            binding.tvEventLocation.setText(eventData.getLocation());
-        }
-        
-        // Set participants
-        int current = eventData.getCurrentParticipants() != null ? eventData.getCurrentParticipants() : 0;
-        int total = eventData.getNumOfVolunteers() != null ? eventData.getNumOfVolunteers() : 0;
-        binding.tvEventParticipants.setText(current + "/" + total);
-        
-        // Set reward points
-        if (eventData.getRewardPoints() != null) {
-            binding.tvEventReward.setText(eventData.getRewardPoints() + " điểm");
-        }
-        
-        // Set category/event type
-        if (eventData.getEventTypeName() != null) {
-            binding.tvEventCategory.setText(eventData.getEventTypeName());
-        }
-        
-        // Load event banner image
-        if (eventData.getImageUrl() != null && !eventData.getImageUrl().isEmpty()) {
+    }
+    
+    private void loadImages() {
+        // Event banner
+        String imageUrl = event.getImageUrl();
+        if (imageUrl != null && !imageUrl.isEmpty()) {
             Glide.with(this)
-                    .load(eventData.getImageUrl())
-                    .placeholder(R.drawable.banner_event_default)
-                    .error(R.drawable.banner_event_default)
-                    .centerCrop()
-                    .into(binding.ivEventBanner);
-        } else {
-            binding.ivEventBanner.setImageResource(R.drawable.banner_event_default);
-        }
-        
-        // Load map preview image
-        Glide.with(this)
-                .load("https://images.viblo.asia/01cb5447-ae32-46db-8224-6c7392202648.png")
+                .load(imageUrl)
                 .placeholder(R.drawable.banner_event_default)
                 .error(R.drawable.banner_event_default)
                 .centerCrop()
-                .into(binding.ivMapPreview);
+                .into(binding.ivEventBanner);
+        }
         
-        // Update map location text
-        if (eventData.getLocation() != null) {
-            binding.tvMapLocation.setText(eventData.getLocation());
-        }
+        // Map preview
+        Glide.with(this)
+            .load("https://images.viblo.asia/01cb5447-ae32-46db-8224-6c7392202648.png")
+            .placeholder(R.drawable.banner_event_default)
+            .centerCrop()
+            .into(binding.ivMapPreview);
     }
     
-    private String formatDate(String dateString) {
-        try {
-            SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-            SimpleDateFormat outputFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-            Date date = inputFormat.parse(dateString);
-            return outputFormat.format(date);
-        } catch (ParseException e) {
-            e.printStackTrace();
-            return dateString;
-        }
+    private void setText(android.widget.TextView textView, String text) {
+        if (text != null) textView.setText(text);
     }
     
-    private String formatDateRange(String startTime, String endTime) {
-        try {
-            SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-            Date startDate = inputFormat.parse(startTime);
-            Date endDate = inputFormat.parse(endTime);
-            
-            // Calculate difference in days
-            long diffInMillis = endDate.getTime() - startDate.getTime();
-            long diffInDays = diffInMillis / (1000 * 60 * 60 * 24);
-            
-            if (diffInDays == 0) {
-                return "1 ngày";
-            } else if (diffInDays == 1) {
-                return "2 ngày";
-            } else {
-                return (diffInDays + 1) + " ngày";
-            }
-        } catch (ParseException e) {
-            e.printStackTrace();
-            return "Cả ngày";
-        }
+    private void showToast(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
     
     @Override

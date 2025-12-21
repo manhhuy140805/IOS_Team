@@ -25,11 +25,7 @@ public class ApiConfig {
 
     public static Retrofit getClient() {
         if (retrofit == null) {
-            HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
-            loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-            
             OkHttpClient client = new OkHttpClient.Builder()
-                    .addInterceptor(loggingInterceptor)
                     .addInterceptor(chain -> {
                         Request original = chain.request();
                         Request.Builder requestBuilder = original.newBuilder();

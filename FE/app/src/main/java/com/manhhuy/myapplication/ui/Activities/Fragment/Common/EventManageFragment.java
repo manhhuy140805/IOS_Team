@@ -128,7 +128,7 @@ public class EventManageFragment extends Fragment implements OnEventActionListen
     @Override
     public void onViewClick(EventPost event) {
         Intent intent = new Intent(getContext(), DetailEventActivity.class);
-        intent.putExtra("EVENT_ID", event.getId());
+        intent.putExtra("eventPost", event);
         startActivity(intent);
     }
 
@@ -336,6 +336,7 @@ public class EventManageFragment extends Fragment implements OnEventActionListen
         
         event.setId(response.getId());
         event.setTitle(response.getTitle());
+        event.setDescription(response.getDescription());
         event.setImageUrl(response.getImageUrl());
         event.setLocation(response.getLocation());
         event.setRewardPoints(response.getRewardPoints() != null ? response.getRewardPoints() : 0);
