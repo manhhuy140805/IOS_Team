@@ -3,6 +3,7 @@ package com.manhhuy.myapplication.ui.Activities;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -12,17 +13,42 @@ import androidx.core.content.ContextCompat;
 
 import com.manhhuy.myapplication.R;
 import com.manhhuy.myapplication.databinding.ActivitySendNotificationBinding;
+import com.manhhuy.myapplication.helper.ApiConfig;
+import com.manhhuy.myapplication.helper.ApiEndpoints;
+import com.manhhuy.myapplication.helper.request.SendNotificationRequest;
+import com.manhhuy.myapplication.helper.response.RestResponse;
+
+import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class SendNotificationActivity extends AppCompatActivity {
 
+    private static final String TAG = "SendNotificationActivity";
     private ActivitySendNotificationBinding binding;
     private int selectedRecipientType = 0; // 0: All, 1: Confirmed, 2: Unconfirmed
+    private Integer eventId;
+    private boolean isLoading = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivitySendNotificationBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        // Get event ID from intent
+        eventId = getIntent().getIntExtra("EVENT_ID", -1);
+        String eventTitle = getIntent().getStringExtra("EVENT_TITLE");
+        
+        if (eventId == -1) {
+            Toast.makeText(this, "Lỗi: Không tìm thấy sự kiện", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
+        
+        Log.d(TAG, "Event ID: " + eventId + ", Title: " + eventTitle);
 
         setupListeners();
         setupTextWatchers();
@@ -179,6 +205,8 @@ public class SendNotificationActivity extends AppCompatActivity {
     }
 
     private void sendNotification() {
+        if (isLoading) return;
+        
         String title = binding.etNotificationTitle.getText().toString().trim();
         String content = binding.etNotificationContent.getText().toString().trim();
 
@@ -200,26 +228,89 @@ public class SendNotificationActivity extends AppCompatActivity {
             return;
         }
 
-        // Get recipient type
-        String recipientType = "";
+        // Map recipient type
+        String recipientType;
         switch (selectedRecipientType) {
-            case 0:
-                recipientType = "Tất cả người đăng ký (32 người)";
-                break;
             case 1:
-                recipientType = "Đã xác nhận tham gia (28 người)";
+                recipientType = "APPROVED";
                 break;
             case 2:
-                recipientType = "Chưa xác nhận (4 người)";
+                recipientType = "PENDING";
+                break;
+            default:
+                recipientType = "ALL";
                 break;
         }
-
-
-        Toast.makeText(this,
-                "Đã gửi thông báo đến: " + recipientType,
-                Toast.LENGTH_LONG).show();
-
-        // Optionally clear fields or close activity
-        finish();
+        
+        // Create request
+        SendNotificationRequest request = new SendNotificationRequest();
+        request.setEventId(eventId);
+        request.setTitle(title);
+        request.setContent(content);
+        request.setRecipientType(recipientType);
+        
+        // Call API
+        isLoading = true;
+        showLoading();
+        
+        ApiEndpoints apiService = ApiConfig.getClient().create(ApiEndpoints.class);
+        Call<RestResponse<Map<String, Object>>> call = apiService.sendNotification(request);
+        
+        call.enqueue(new Callback<RestResponse<Map<String, Object>>>() {
+            @Override
+            public void onResponse(Call<RestResponse<Map<String, Object>>> call, 
+                                 Response<RestResponse<Map<String, Object>>> response) {
+                isLoading = false;
+                hideLoading();
+                
+                if (response.isSuccessful() && response.body() != null) {
+                    RestResponse<Map<String, Object>> restResponse = response.body();
+                    Map<String, Object> data = restResponse.getData();
+                    
+                    int sentCount = data != null && data.get("sentCount") != null ? 
+                        ((Number) data.get("sentCount")).intValue() : 0;
+                    
+                    Toast.makeText(SendNotificationActivity.this,
+                        "Đã gửi thông báo đến " + sentCount + " người",
+                        Toast.LENGTH_LONG).show();
+                    
+                    Log.d(TAG, "Notification sent successfully to " + sentCount + " users");
+                    finish();
+                } else {
+                    try {
+                        String errorBody = response.errorBody() != null ? 
+                            response.errorBody().string() : "Unknown error";
+                        Log.e(TAG, "Error sending notification: " + errorBody);
+                        Toast.makeText(SendNotificationActivity.this, 
+                            "Không thể gửi thông báo: " + response.message(), 
+                            Toast.LENGTH_SHORT).show();
+                    } catch (Exception e) {
+                        Toast.makeText(SendNotificationActivity.this, 
+                            "Không thể gửi thông báo", 
+                            Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+            
+            @Override
+            public void onFailure(Call<RestResponse<Map<String, Object>>> call, Throwable t) {
+                isLoading = false;
+                hideLoading();
+                Log.e(TAG, "Network error: " + t.getMessage(), t);
+                Toast.makeText(SendNotificationActivity.this, 
+                    "Lỗi kết nối: " + t.getMessage(), 
+                    Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    
+    private void showLoading() {
+        binding.btnSendNotification.setEnabled(false);
+        binding.btnSendNotification.setText("Đang gửi...");
+    }
+    
+    private void hideLoading() {
+        binding.btnSendNotification.setEnabled(true);
+        binding.btnSendNotification.setText("Gửi thông báo");
     }
 }

@@ -1,11 +1,17 @@
 package io.volunteerapp.volunteer_app.service;
 
+import io.volunteerapp.volunteer_app.DTO.requeset.SendNotificationRequest;
 import io.volunteerapp.volunteer_app.DTO.response.NotificationResponse;
 import io.volunteerapp.volunteer_app.DTO.response.UserNotificationResponse;
+import io.volunteerapp.volunteer_app.model.Event;
+import io.volunteerapp.volunteer_app.model.EventRegistration;
 import io.volunteerapp.volunteer_app.model.Notification;
 import io.volunteerapp.volunteer_app.model.UserNotification;
+import io.volunteerapp.volunteer_app.repository.EventRegistrationRepository;
+import io.volunteerapp.volunteer_app.repository.EventRepository;
 import io.volunteerapp.volunteer_app.repository.NotificationRepository;
 import io.volunteerapp.volunteer_app.repository.UserNotificationRepository;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,11 +24,17 @@ public class NotificationService {
 
     private final NotificationRepository notificationRepository;
     private final UserNotificationRepository userNotificationRepository;
+    private final EventRepository eventRepository;
+    private final EventRegistrationRepository eventRegistrationRepository;
 
     public NotificationService(NotificationRepository notificationRepository,
-                              UserNotificationRepository userNotificationRepository) {
+                              UserNotificationRepository userNotificationRepository,
+                              EventRepository eventRepository,
+                              EventRegistrationRepository eventRegistrationRepository) {
         this.notificationRepository = notificationRepository;
         this.userNotificationRepository = userNotificationRepository;
+        this.eventRepository = eventRepository;
+        this.eventRegistrationRepository = eventRegistrationRepository;
     }
 
     // Lấy notification theo ID và tự động đánh dấu đã đọc
@@ -92,6 +104,58 @@ public class NotificationService {
                 .orElseThrow(() -> new RuntimeException("UserNotification not found"));
         
         userNotificationRepository.delete(userNotification);
+    }
+
+    // Gửi notification đến người dùng đã đăng ký sự kiện
+    @Transactional
+    public int sendNotificationToEventParticipants(SendNotificationRequest request) {
+        // Get event
+        Event event = eventRepository.findById(request.getEventId())
+                .orElseThrow(() -> new RuntimeException("Event not found with id: " + request.getEventId()));
+        
+        // Get registrations based on recipient type
+        List<EventRegistration> registrations;
+        String recipientType = request.getRecipientType() != null ? request.getRecipientType() : "ALL";
+        
+        if ("APPROVED".equals(recipientType)) {
+            registrations = eventRegistrationRepository.findByEventAndStatus(event, "APPROVED", 
+                Pageable.unpaged()).getContent();
+        } else if ("PENDING".equals(recipientType)) {
+            registrations = eventRegistrationRepository.findByEventAndStatus(event, "PENDING", 
+                Pageable.unpaged()).getContent();
+        } else {
+            // ALL
+            registrations = eventRegistrationRepository.findByEvent(event, 
+                Pageable.unpaged()).getContent();
+        }
+        
+        if (registrations.isEmpty()) {
+            return 0;
+        }
+        
+        // Create notification
+        Notification notification = new Notification();
+        notification.setTitle(request.getTitle());
+        notification.setContent(request.getContent());
+        notification.setType("ORGANIZATION");
+        notification.setCreatedAt(Instant.now());
+        
+        Notification savedNotification = notificationRepository.save(notification);
+        
+        // Create user notifications for each participant
+        int sentCount = 0;
+        for (EventRegistration registration : registrations) {
+            UserNotification userNotification = new UserNotification();
+            userNotification.setUser(registration.getUser());
+            userNotification.setNotification(savedNotification);
+            userNotification.setIsRead(false);
+            userNotification.setCreatedAt(Instant.now());
+            
+            userNotificationRepository.save(userNotification);
+            sentCount++;
+        }
+        
+        return sentCount;
     }
 
     // Helper methods để convert entity sang response
