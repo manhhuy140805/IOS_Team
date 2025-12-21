@@ -365,7 +365,7 @@ public class AdminFragment extends Fragment implements OnUserActionListener, OnO
                     } else {
                         user.setStatus("Bị khóa");
                     }
-                    userAdapter.notifyDataSetChanged();
+                    userAdapter.updateList(filteredUserList);
                     updateStatistics();
                     Toast.makeText(getContext(), "Đã " + action + " tài khoản", Toast.LENGTH_SHORT).show();
                 })
@@ -385,7 +385,7 @@ public class AdminFragment extends Fragment implements OnUserActionListener, OnO
                             if (response.isSuccessful()) {
                                 userList.remove(user);
                                 filteredUserList.remove(user);
-                                userAdapter.notifyDataSetChanged();
+                                userAdapter.updateList(filteredUserList);
                                 updateStatistics();
                                 Toast.makeText(getContext(), "Đã xóa tài khoản", Toast.LENGTH_SHORT).show();
                             } else if (response.code() == 400 && getContext() != null) {
@@ -425,7 +425,7 @@ public class AdminFragment extends Fragment implements OnUserActionListener, OnO
                     } else {
                         organization.setStatus("Bị khóa");
                     }
-                    organizationAdapter.notifyDataSetChanged();
+                    organizationAdapter.updateList(filteredOrgList);
                     updateStatistics();
                     Toast.makeText(getContext(), "Đã " + action + " tổ chức", Toast.LENGTH_SHORT).show();
                 })
@@ -441,7 +441,7 @@ public class AdminFragment extends Fragment implements OnUserActionListener, OnO
                 .setPositiveButton("Xóa", (dialog, which) -> {
                     organizationList.remove(organization);
                     filteredOrgList.remove(organization);
-                    organizationAdapter.notifyDataSetChanged();
+                    organizationAdapter.updateList(filteredOrgList);
                     updateStatistics();
                     Toast.makeText(getContext(), "Đã xóa tổ chức", Toast.LENGTH_SHORT).show();
                 })

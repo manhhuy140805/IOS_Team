@@ -1,46 +1,77 @@
-
 package com.manhhuy.myapplication.ui.Activities.Fragment.Common;
+
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.manhhuy.myapplication.R;
 import com.manhhuy.myapplication.adapter.admin.event.EventManagerAdapter;
 import com.manhhuy.myapplication.adapter.admin.event.OnEventActionListenerInterface;
-
 import com.manhhuy.myapplication.databinding.FragmentEventManagerBinding;
+import com.manhhuy.myapplication.helper.ApiConfig;
+import com.manhhuy.myapplication.helper.ApiEndpoints;
+import com.manhhuy.myapplication.helper.response.EventResponse;
+import com.manhhuy.myapplication.helper.response.EventTypeResponse;
+import com.manhhuy.myapplication.helper.response.PageResponse;
+import com.manhhuy.myapplication.helper.response.RestResponse;
 import com.manhhuy.myapplication.model.EventPost;
 import com.manhhuy.myapplication.ui.Activities.AddEventActivity;
 import com.manhhuy.myapplication.ui.Activities.DetailEventActivity;
+import com.manhhuy.myapplication.ui.Activities.SendNotificationActivity;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+/**
+ * Fragment quản lý sự kiện cho Admin
+ */
 public class EventManageFragment extends Fragment implements OnEventActionListenerInterface {
 
+    private static final String TAG = "EventManageFragment";
+    
+    // UI
     private FragmentEventManagerBinding binding;
     private EventManagerAdapter adapter;
-    private List<EventPost> eventList;
-
-    private String currentStatusFilter = "all";
+    
+    // Data
+    private final List<EventPost> eventList = new ArrayList<>();
+    private final List<EventPost> allEventsList = new ArrayList<>();
+    private final List<EventTypeResponse> eventTypes = new ArrayList<>();
+    
+    // API
+    private ApiEndpoints apiEndpoints;
+    
+    // Filter state
     private String currentCategoryFilter = "all";
-
-    public EventManageFragment() {
-        // Required empty public constructor
-    }
+    private TextView selectedCategoryChip;
+    
+    // Pagination
+    private int currentPage = 0;
+    private boolean isLoading = false;
+    private boolean hasMorePages = true;
+    private static final int PAGE_SIZE = 20;
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentEventManagerBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
@@ -48,69 +79,52 @@ public class EventManageFragment extends Fragment implements OnEventActionListen
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        setupRecyclerView();
-        loadSampleData();
-        setupListeners();
-        updateStatistics();
+        
+        apiEndpoints = ApiConfig.getClient().create(ApiEndpoints.class);
+        
+        setupUI();
+        loadData();
     }
-
-    private void setupRecyclerView() {
-        eventList = new ArrayList<>();
-        adapter = new EventManagerAdapter(getContext(), eventList, this);
-        binding.recyclerViewEvents.setLayoutManager(new LinearLayoutManager(getContext()));
-        binding.recyclerViewEvents.setAdapter(adapter);
-    }
-
-    private void setupListeners() {
+    
+    private void setupUI() {
         binding.btnBack.setVisibility(View.GONE);
-
-        // Add New Event Button
-        binding.btnAddReward.setOnClickListener(v -> {
-            Intent intent = new Intent(getContext(), AddEventActivity.class);
-            startActivity(intent);
+        
+        // RecyclerView
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        adapter = new EventManagerAdapter(getContext(), eventList, this);
+        binding.recyclerViewEvents.setLayoutManager(layoutManager);
+        binding.recyclerViewEvents.setAdapter(adapter);
+        
+        // Scroll listener for pagination
+        binding.recyclerViewEvents.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                
+                if (!isLoading && hasMorePages && dy > 0) {
+                    int visibleItemCount = layoutManager.getChildCount();
+                    int totalItemCount = layoutManager.getItemCount();
+                    int firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition();
+                    
+                    if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount - 5) {
+                        loadMoreEvents();
+                    }
+                }
+            }
         });
-
-        // Status Tabs
-        binding.tabAll.setOnClickListener(v -> {
-            currentStatusFilter = "all";
-            updateTabUI(binding.tabAll);
-            applyFilters();
-        });
-
-        binding.tabActivity.setOnClickListener(v -> {
-            currentStatusFilter = "active";
-            updateTabUI(binding.tabActivity);
-            applyFilters();
-        });
-
-        binding.tabComplete.setOnClickListener(v -> {
-            currentStatusFilter = "completed";
-            updateTabUI(binding.tabComplete);
-            applyFilters();
-        });
-
-        // Category Chips
-        binding.chipEnvironment.setOnClickListener(v -> {
-            currentCategoryFilter = "Môi trường";
-            updateChipUI(binding.chipEnvironment);
-            applyFilters();
-        });
-
-        binding.chipEducation.setOnClickListener(v -> {
-            currentCategoryFilter = "Giáo dục";
-            updateChipUI(binding.chipEducation);
-            applyFilters();
-        });
-
-        binding.chipHealth.setOnClickListener(v -> {
-            currentCategoryFilter = "Y tế";
-            updateChipUI(binding.chipHealth);
-            applyFilters();
-        });
+        
+        // Add event button
+        binding.btnAddReward.setOnClickListener(v -> startActivity(new Intent(getContext(), AddEventActivity.class)));
+    }
+    
+    private void loadData() {
+        loadEventTypes();
+        loadEvents();
     }
 
-    // --- Navigation & Actions ---
-
+    
+    // ==================== Event Actions ====================
+    
     @Override
     public void onViewClick(EventPost event) {
         Intent intent = new Intent(getContext(), DetailEventActivity.class);
@@ -120,7 +134,7 @@ public class EventManageFragment extends Fragment implements OnEventActionListen
 
     @Override
     public void onEditClick(EventPost event) {
-        Intent intent = new Intent(getContext(), AddEventActivity.class); // Reusing AddEvent for Edit
+        Intent intent = new Intent(getContext(), AddEventActivity.class);
         intent.putExtra("EVENT_ID", event.getId());
         intent.putExtra("IS_EDIT_MODE", true);
         startActivity(intent);
@@ -128,154 +142,253 @@ public class EventManageFragment extends Fragment implements OnEventActionListen
 
     @Override
     public void onDeleteClick(EventPost event) {
-        Toast.makeText(getContext(), "Đã xóa sự kiện: " + event.getTitle(), Toast.LENGTH_SHORT).show();
+        new androidx.appcompat.app.AlertDialog.Builder(requireContext())
+            .setTitle("Xác nhận xóa")
+            .setMessage("Bạn có chắc muốn xóa sự kiện \"" + event.getTitle() + "\"?\n\nLưu ý: Tất cả đăng ký liên quan sẽ bị xóa!")
+            .setPositiveButton("Xóa", (dialog, which) -> {
+                apiEndpoints.deleteEvent(event.getId()).enqueue(new Callback<Void>() {
+                    @Override
+                    public void onResponse(Call<Void> call, Response<Void> response) {
+                        if (response.isSuccessful()) {
+                            allEventsList.remove(event);
+                            applyFilters();
+                            updateStatistics();
+                            showToast("Đã xóa sự kiện và tất cả đăng ký liên quan");
+                        } else {
+                            showToast("Không thể xóa sự kiện");
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<Void> call, Throwable t) {
+                        Log.e(TAG, "Failed to delete event", t);
+                        showToast("Lỗi kết nối");
+                    }
+                });
+            })
+            .setNegativeButton("Hủy", null)
+            .show();
     }
 
     @Override
     public void onNotificationClick(EventPost event) {
-        Intent intent = new Intent(getContext(), com.manhhuy.myapplication.ui.Activities.SendNotificationActivity.class);
+        Intent intent = new Intent(getContext(), SendNotificationActivity.class);
         intent.putExtra("EVENT_ID", event.getId());
         intent.putExtra("EVENT_TITLE", event.getTitle());
         startActivity(intent);
     }
+    
+    // ==================== Load Data from API ====================
+    
+    private void loadEventTypes() {
+        apiEndpoints.getEventTypes().enqueue(new Callback<RestResponse<List<EventTypeResponse>>>() {
+            @Override
+            public void onResponse(Call<RestResponse<List<EventTypeResponse>>> call, Response<RestResponse<List<EventTypeResponse>>> response) {
+                if (isResponseValid(response)) {
+                    eventTypes.clear();
+                    eventTypes.addAll(response.body().getData());
+                    createCategoryChips();
+                    Log.d(TAG, "Loaded " + eventTypes.size() + " event types");
+                }
+            }
 
-    // --- UI Helpers ---
-
-    private void updateTabUI(android.widget.TextView selectedTab) {
-        resetTabStyle(binding.tabAll);
-        resetTabStyle(binding.tabActivity);
-        resetTabStyle(binding.tabComplete);
-
-        selectedTab.setBackgroundResource(R.drawable.bg_category_tab_selected_reward);
-        selectedTab.setTextColor(getResources().getColor(R.color.app_green_primary));
+            @Override
+            public void onFailure(Call<RestResponse<List<EventTypeResponse>>> call, Throwable t) {
+                Log.e(TAG, "Failed to load event types", t);
+            }
+        });
     }
-
-    private void resetTabStyle(android.widget.TextView tab) {
-        tab.setBackgroundResource(R.drawable.bg_category_tab_unselected_reward);
-        tab.setTextColor(getResources().getColor(R.color.text_secondary));
+    
+    private void loadEvents() {
+        currentPage = 0;
+        hasMorePages = true;
+        allEventsList.clear();
+        loadEventsPage(currentPage);
     }
-
-    private void updateChipUI(android.widget.TextView selectedChip) {
-        resetChipStyle(binding.chipEnvironment);
-        resetChipStyle(binding.chipEducation);
-        resetChipStyle(binding.chipHealth);
-
-        selectedChip.setBackgroundResource(R.drawable.bg_chip_selected_event);
-        selectedChip.setTextColor(getResources().getColor(R.color.app_green_primary));
+    
+    private void loadMoreEvents() {
+        if (!isLoading && hasMorePages) {
+            currentPage++;
+            loadEventsPage(currentPage);
+        }
     }
+    
+    private void loadEventsPage(int page) {
+        isLoading = true;
+        showLoading(page == 0);
+        
+        apiEndpoints.getAllEvents(page, PAGE_SIZE, "createdAt", "DESC", null, null, null, null, null, null, null, null)
+            .enqueue(new Callback<RestResponse<PageResponse<EventResponse>>>() {
+                @Override
+                public void onResponse(Call<RestResponse<PageResponse<EventResponse>>> call, Response<RestResponse<PageResponse<EventResponse>>> response) {
+                    isLoading = false;
+                    showLoading(false);
+                    
+                    if (isResponseValid(response)) {
+                        PageResponse<EventResponse> pageData = response.body().getData();
+                        
+                        for (EventResponse er : pageData.getContent()) {
+                            allEventsList.add(mapToEventPost(er));
+                        }
+                        
+                        hasMorePages = !pageData.isLast();
+                        applyFilters();
+                        updateStatistics();
+                        Log.d(TAG, "Loaded page " + page + ", total: " + allEventsList.size() + "/" + pageData.getTotalElements());
+                    } else {
+                        showToast("Đã xảy ra lỗi khi tải sự kiện");
+                    }
+                }
 
-    private void resetChipStyle(android.widget.TextView chip) {
-        chip.setBackgroundResource(R.drawable.bg_chip_unselected_event);
-        chip.setTextColor(getResources().getColor(R.color.text_primary));
+                @Override
+                public void onFailure(Call<RestResponse<PageResponse<EventResponse>>> call, Throwable t) {
+                    isLoading = false;
+                    showLoading(false);
+                    Log.e(TAG, "Failed to load events", t);
+                    showToast("Lỗi kết nối");
+                }
+            });
     }
-
-    // --- Data & Logic ---
+    
+    // ==================== Category Chips ====================
+    
+    private void createCategoryChips() {
+        if (getContext() == null) return;
+        
+        binding.categoryChipsLayout.removeAllViews();
+        LayoutInflater inflater = LayoutInflater.from(getContext());
+        
+        // "Tất cả" chip
+        addChip(inflater, "Tất cả", "all", true);
+        
+        // Event type chips
+        for (EventTypeResponse type : eventTypes) {
+            addChip(inflater, type.getName(), type.getName(), false);
+        }
+    }
+    
+    private void addChip(LayoutInflater inflater, String text, String filterValue, boolean selected) {
+        TextView chip = (TextView) inflater.inflate(R.layout.item_category_chip, binding.categoryChipsLayout, false);
+        
+        chip.setText(text);
+        updateChipStyle(chip, selected);
+        
+        chip.setOnClickListener(v -> {
+            if (selectedCategoryChip != null) {
+                updateChipStyle(selectedCategoryChip, false);
+            }
+            updateChipStyle(chip, true);
+            selectedCategoryChip = chip;
+            currentCategoryFilter = filterValue;
+            applyFilters();
+        });
+        
+        binding.categoryChipsLayout.addView(chip);
+        
+        if (selected) {
+            selectedCategoryChip = chip;
+        }
+    }
+    
+    private void updateChipStyle(TextView chip, boolean selected) {
+        chip.setTextColor(getResources().getColor(selected ? R.color.app_green_primary : R.color.text_secondary));
+        chip.setBackgroundResource(selected ? R.drawable.bg_chip_selected_event : R.drawable.bg_chip_unselected_event);
+    }
+    
+    // ==================== Filter & Statistics ====================
 
     private void applyFilters() {
-        eventList.clear();
-        for (EventPost event : getAllEvents()) {
-            boolean matchesStatus = currentStatusFilter.equals("all") ||
-                    event.getStatus().equals(currentStatusFilter);
-            boolean matchesCategory = currentCategoryFilter.equals("all") ||
-                    (event.getTags() != null && event.getTags().contains(currentCategoryFilter));
-
-            if (matchesStatus && matchesCategory) {
-                eventList.add(event);
+        List<EventPost> filteredList = new ArrayList<>();
+        
+        for (EventPost event : allEventsList) {
+            if (currentCategoryFilter.equals("all") || 
+                (event.getTags() != null && event.getTags().contains(currentCategoryFilter))) {
+                filteredList.add(event);
             }
         }
-        adapter.notifyDataSetChanged();
+        
+        adapter.updateList(filteredList);
+        eventList.clear();
+        eventList.addAll(filteredList);
         updateStatistics();
     }
 
     private void updateStatistics() {
-        List<EventPost> allEvents = getAllEvents();
-        int total = allEvents.size();
+        int total = allEventsList.size();
         int active = 0;
         int completed = 0;
 
-        for (EventPost event : allEvents) {
-            if ("active".equals(event.getStatus())) {
-                active++;
-            } else if ("completed".equals(event.getStatus())) {
-                completed++;
-            }
+        for (EventPost event : allEventsList) {
+            String status = event.getStatus();
+            if ("active".equals(status)) active++;
+            else if ("completed".equals(status)) completed++;
         }
 
         binding.tvTotalEvents.setText(String.valueOf(total));
         binding.tvActiveEvents.setText(String.valueOf(active));
         binding.tvCompletedEvents.setText(String.valueOf(completed));
     }
-
-    private void loadSampleData() {
-        eventList.clear();
-        eventList.addAll(getAllEvents());
-        adapter.notifyDataSetChanged();
+    
+    // ==================== Mapping & Helpers ====================
+    
+    private EventPost mapToEventPost(EventResponse response) {
+        EventPost event = new EventPost();
+        
+        event.setId(response.getId());
+        event.setTitle(response.getTitle());
+        event.setImageUrl(response.getImageUrl());
+        event.setLocation(response.getLocation());
+        event.setRewardPoints(response.getRewardPoints() != null ? response.getRewardPoints() : 0);
+        event.setOrganizationName(response.getCreatorName() != null ? response.getCreatorName() : "Unknown");
+        event.setCurrentParticipants(response.getCurrentParticipants() != null ? response.getCurrentParticipants() : 0);
+        event.setMaxParticipants(response.getNumOfVolunteers() != null ? response.getNumOfVolunteers() : 0);
+        
+        // Status mapping
+        event.setStatus(mapStatus(response.getStatus()));
+        
+        // Tags
+        List<String> tags = new ArrayList<>();
+        if (response.getCategory() != null) tags.add(response.getCategory());
+        if (response.getEventTypeName() != null) tags.add(response.getEventTypeName());
+        event.setTags(tags);
+        
+        // Date
+        event.setEventDate(parseDate(response.getEventStartTime()));
+        
+        return event;
     }
-
-    private List<EventPost> getAllEvents() {
-        List<EventPost> allEvents = new ArrayList<>();
-
-        EventPost event1 = new EventPost();
-        event1.setId(1);
-        event1.setTitle("Beach Cleanup");
-        event1.setOrganizationName("Green Vietnam");
-        event1.setLocation("Vũng Tàu");
-        event1.setRewardPoints(50);
-        event1.setStatus("active");
-        event1.setTags(Arrays.asList("Môi trường", "Ngoài trời"));
-        event1.setCurrentParticipants(15);
-        event1.setMaxParticipants(20);
-        Calendar cal1 = Calendar.getInstance();
-        cal1.set(2025, 9, 28);
-        event1.setEventDate(cal1.getTime());
-        allEvents.add(event1);
-
-        EventPost event2 = new EventPost();
-        event2.setId(2);
-        event2.setTitle("Tree Planting Day");
-        event2.setOrganizationName("Eco Warriors");
-        event2.setLocation("Hà Nội");
-        event2.setRewardPoints(75);
-        event2.setStatus("active");
-        event2.setTags(Arrays.asList("Môi trường", "Cộng đồng"));
-        event2.setCurrentParticipants(8);
-        event2.setMaxParticipants(15);
-        Calendar cal2 = Calendar.getInstance();
-        cal2.set(2025, 10, 5);
-        event2.setEventDate(cal2.getTime());
-        allEvents.add(event2);
-
-        EventPost event3 = new EventPost();
-        event3.setId(3);
-        event3.setTitle("Education Workshop");
-        event3.setOrganizationName("Learn Together");
-        event3.setLocation("TP.HCM");
-        event3.setRewardPoints(40);
-        event3.setStatus("completed");
-        event3.setTags(Arrays.asList("Giáo dục", "Trong nhà"));
-        event3.setCurrentParticipants(25);
-        event3.setMaxParticipants(25);
-        Calendar cal3 = Calendar.getInstance();
-        cal3.set(2025, 9, 15);
-        event3.setEventDate(cal3.getTime());
-        allEvents.add(event3);
-
-        EventPost event4 = new EventPost();
-        event4.setId(4);
-        event4.setTitle("Health Checkup Camp");
-        event4.setOrganizationName("Care Foundation");
-        event4.setLocation("Đà Nẵng");
-        event4.setRewardPoints(60);
-        event4.setStatus("active");
-        event4.setTags(Arrays.asList("Y tế", "Cộng đồng"));
-        event4.setCurrentParticipants(12);
-        event4.setMaxParticipants(30);
-        Calendar cal4 = Calendar.getInstance();
-        cal4.set(2025, 10, 12);
-        event4.setEventDate(cal4.getTime());
-        allEvents.add(event4);
-
-        return allEvents;
+    
+    private String mapStatus(String backendStatus) {
+        if ("APPROVED".equalsIgnoreCase(backendStatus)) return "active";
+        if ("COMPLETED".equalsIgnoreCase(backendStatus)) return "completed";
+        return "pending";
+    }
+    
+    private Date parseDate(String dateString) {
+        if (dateString == null) return new Date();
+        
+        try {
+            return new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(dateString);
+        } catch (Exception e) {
+            Log.e(TAG, "Error parsing date: " + dateString, e);
+            return new Date();
+        }
+    }
+    
+    private <T> boolean isResponseValid(Response<RestResponse<T>> response) {
+        return response.isSuccessful() && 
+               response.body() != null && 
+               response.body().getData() != null;
+    }
+    
+    private void showToast(String message) {
+        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+    }
+    
+    private void showLoading(boolean show) {
+        if (binding != null) {
+            binding.recyclerViewEvents.setVisibility(show ? View.GONE : View.VISIBLE);
+        }
     }
 
     @Override

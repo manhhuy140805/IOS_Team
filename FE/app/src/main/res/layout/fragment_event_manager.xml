@@ -57,33 +57,30 @@
                 </com.google.android.material.card.MaterialCardView>
             </LinearLayout>
 
-            <!-- Status Tabs -->
-            <HorizontalScrollView android:id="@+id/statusTabsContainer" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="24dp" android:scrollbars="none" app:layout_constraintTop_toBottomOf="@id/statsSection">
-
-                <LinearLayout android:id="@+id/layoutCategoryTabs" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" android:paddingHorizontal="20dp">
-
-                    <TextView android:id="@+id/tabAll" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginEnd="8dp" android:background="@drawable/bg_category_tab_selected_reward" android:paddingHorizontal="20dp" android:paddingVertical="8dp" android:text="Tất cả" android:textColor="@color/app_green_primary" android:textSize="14sp" />
-
-                    <TextView android:id="@+id/tabActivity" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginEnd="8dp" android:background="@drawable/bg_category_tab_unselected_reward" android:paddingHorizontal="20dp" android:paddingVertical="8dp" android:text="Hoạt động" android:textColor="@color/text_secondary" android:textSize="14sp" />
-
-                    <TextView android:id="@+id/tabComplete" android:layout_width="wrap_content" android:layout_height="wrap_content" android:background="@drawable/bg_category_tab_unselected_reward" android:paddingHorizontal="20dp" android:paddingVertical="8dp" android:text="Hoàn thành" android:textColor="@color/text_secondary" android:textSize="14sp" />
-                </LinearLayout>
-            </HorizontalScrollView>
-
-            <!-- Category Filter Chips -->
-            <HorizontalScrollView android:id="@+id/categoryChipsContainer" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:scrollbars="none" app:layout_constraintTop_toBottomOf="@id/statusTabsContainer">
-
-                <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" android:paddingHorizontal="24dp">
-
-                    <TextView android:id="@+id/chipEnvironment" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginEnd="12dp" android:background="@drawable/bg_chip_selected_event" android:paddingHorizontal="20dp" android:paddingVertical="12dp" android:text="🌿 Môi trường" android:textColor="@color/app_green_primary" android:textSize="14sp" android:textStyle="bold" />
-
-                    <TextView android:id="@+id/chipEducation" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginEnd="12dp" android:background="@drawable/bg_chip_unselected_event" android:paddingHorizontal="20dp" android:paddingVertical="12dp" android:text="📚 Giáo dục" android:textColor="@color/text_secondary" android:textSize="14sp" android:textStyle="bold" />
-
-                    <TextView android:id="@+id/chipHealth" android:layout_width="wrap_content" android:layout_height="wrap_content" android:background="@drawable/bg_chip_unselected_event" android:paddingHorizontal="20dp" android:paddingVertical="12dp" android:text="🏥 Y tế" android:textColor="@color/text_secondary" android:textSize="14sp" android:textStyle="bold" />
-                </LinearLayout>
-            </HorizontalScrollView>
+            <!-- Category Filter Chips (Dynamic) -->
 
             <!-- Events List -->
+            <HorizontalScrollView
+                android:id="@+id/categoryChipsContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:paddingVertical="8dp"
+                android:scrollbars="none"
+                app:layout_constraintTop_toBottomOf="@id/statsSection"
+                tools:layout_editor_absoluteX="0dp">
+
+                <LinearLayout
+                    android:id="@+id/categoryChipsLayout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="24dp"
+                    android:paddingVertical="4dp">
+                    <!-- Chips will be added dynamically from API -->
+                </LinearLayout>
+            </HorizontalScrollView>
+
             <androidx.recyclerview.widget.RecyclerView android:id="@+id/recyclerViewEvents" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:clipToPadding="false" android:nestedScrollingEnabled="false" android:paddingBottom="24dp" app:layout_constraintTop_toBottomOf="@id/categoryChipsContainer" tools:listitem="@layout/item_event_manager" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

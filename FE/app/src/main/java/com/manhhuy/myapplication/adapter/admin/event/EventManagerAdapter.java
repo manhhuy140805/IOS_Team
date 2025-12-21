@@ -6,8 +6,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.manhhuy.myapplication.R;
 import com.manhhuy.myapplication.databinding.ItemEventManagerBinding;
 import com.manhhuy.myapplication.model.EventPost;
@@ -43,6 +46,20 @@ public class EventManagerAdapter extends RecyclerView.Adapter<EventManagerAdapte
     public void onBindViewHolder(@NonNull EventViewHolder holder, int position) {
         EventPost event = eventList.get(position);
 
+        // Load image with Glide
+        if (event.getImageUrl() != null && !event.getImageUrl().isEmpty()) {
+            Glide.with(context)
+                    .load(event.getImageUrl())
+                    .placeholder(R.drawable.logokhoa)
+                    .error(R.drawable.logokhoa)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .thumbnail(0.1f)  // Load thumbnail trước
+                    .centerCrop()
+                    .into(holder.binding.ivEventImage);
+        } else {
+            holder.binding.ivEventImage.setImageResource(R.drawable.logokhoa);
+        }
+
         // Bind data
         holder.binding.tvEventTitle.setText(event.getTitle());
         holder.binding.tvOrganization.setText(event.getOrganizationName());
@@ -70,7 +87,6 @@ public class EventManagerAdapter extends RecyclerView.Adapter<EventManagerAdapte
             holder.binding.tvStatus.setTextColor(context.getResources().getColor(R.color.button_blue));
         }
 
-        // Set tags (Only showing first tag as per new design)
         List<String> tags = event.getTags();
         if (tags != null && !tags.isEmpty()) {
             holder.binding.tvTag1.setVisibility(View.VISIBLE);
@@ -80,18 +96,48 @@ public class EventManagerAdapter extends RecyclerView.Adapter<EventManagerAdapte
         }
 
         // Button listeners
-        holder.binding.btnNotification.setOnClickListener(v -> listener.onNotificationClick(event));
+        holder.binding.btnNotification.setVisibility(View.GONE); // Ẩn nút thông báo
         holder.binding.btnView.setOnClickListener(v -> listener.onViewClick(event));
         holder.binding.btnEdit.setOnClickListener(v -> listener.onEditClick(event));
         holder.binding.btnDelete.setOnClickListener(v -> listener.onDeleteClick(event));
         
-        // Also make the whole card clickable for details
         holder.itemView.setOnClickListener(v -> listener.onViewClick(event));
     }
 
     @Override
     public int getItemCount() {
         return eventList.size();
+    }
+ 
+    public void updateList(List<EventPost> newList) {
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new DiffUtil.Callback() {
+            @Override
+            public int getOldListSize() {
+                return eventList.size();
+            }
+
+            @Override
+            public int getNewListSize() {
+                return newList.size();
+            }
+
+            @Override
+            public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
+                return eventList.get(oldItemPosition).getId() == newList.get(newItemPosition).getId();
+            }
+
+            @Override
+            public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
+                EventPost oldEvent = eventList.get(oldItemPosition);
+                EventPost newEvent = newList.get(newItemPosition);
+                return oldEvent.getTitle().equals(newEvent.getTitle()) &&
+                       oldEvent.getStatus().equals(newEvent.getStatus());
+            }
+        });
+        
+        eventList.clear();
+        eventList.addAll(newList);
+        diffResult.dispatchUpdatesTo(this);
     }
 
     public void filterByStatus(String status) {
