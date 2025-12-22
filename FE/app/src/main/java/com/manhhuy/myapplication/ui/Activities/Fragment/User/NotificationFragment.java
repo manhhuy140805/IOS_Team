@@ -147,7 +147,7 @@ public class NotificationFragment extends Fragment {
             button.setBackgroundColor(android.graphics.Color.TRANSPARENT);
             button.setStrokeColorResource(R.color.gray_300);
             button.setStrokeWidth(2);
-            button.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_secondary));
+            button.setTextColor(ContextCompat.getColor(requireContext(), R.color.white));
         }
     }
 

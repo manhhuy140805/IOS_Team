@@ -269,8 +269,8 @@ public class RedeemFragment extends Fragment implements RewardAdapter.OnRewardRe
      */
     private void showSuccessDialog(RewardItem item) {
         new AlertDialog.Builder(requireContext())
-                .setTitle("Đổi thưởng thành công!")
-                .setMessage("Bạn đã đổi thành công \"" + item.getName() + "\".\n\nSố điểm còn lại: "
+                .setTitle("Yêu cầu đổi thưởng đã gửi")
+                .setMessage("Yêu cầu đổi \"" + item.getName() + "\" đã được gửi đến quản trị hệ thống để phê duyệt.\n\nSố điểm còn lại: "
                         + String.format("%,d", currentUserPoints) + " điểm")
                 .setPositiveButton("OK", null)
                 .setIcon(R.drawable.ic_gift)

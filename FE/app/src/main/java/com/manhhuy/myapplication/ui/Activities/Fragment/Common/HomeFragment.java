@@ -70,13 +70,19 @@ public class HomeFragment extends Fragment {
         apiEndpoints = ApiConfig.getClient().create(ApiEndpoints.class);
 
         // Load user info first
-        loadUserInfo();
+        // Moved to onResume to update points when returning
         
         setupCategoriesRecyclerView();
         loadEventTypes();
         setupFeaturedRecyclerView();
         loadFeaturedEvents();
         setupClickListeners();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        loadUserInfo();
     }
 
     /**
@@ -99,18 +105,10 @@ public class HomeFragment extends Fragment {
             return;
         }
         
-        // Get userId from token
-        Integer userId = JwtUtil.getUserId(token);
-        if (userId == null) {
-            Log.e(TAG, "Cannot get userId from token");
-            setDefaultUserInfo();
-            return;
-        }
+        Log.d(TAG, "Loading current user info");
         
-        Log.d(TAG, "Loading user info for userId: " + userId);
-        
-        // Call API to get user info by ID (workaround for backend ClassCastException issue)
-        Call<RestResponse<UserResponse>> call = apiEndpoints.getUserById(userId);
+        // Call API to get current user info
+        Call<RestResponse<UserResponse>> call = apiEndpoints.getCurrentUser();
         
         call.enqueue(new Callback<RestResponse<UserResponse>>() {
             @Override
@@ -121,7 +119,7 @@ public class HomeFragment extends Fragment {
                 if (response.isSuccessful() && response.body() != null) {
                     RestResponse<UserResponse> restResponse = response.body();
                     
-                    if (restResponse.getStatusCode() == 200 && restResponse.getData() != null) {
+                    if (restResponse.getData() != null) {
                         UserResponse user = restResponse.getData();
                         updateUserInfo(user);
                         Log.d(TAG, "User info loaded successfully: " + user.getFullName());
