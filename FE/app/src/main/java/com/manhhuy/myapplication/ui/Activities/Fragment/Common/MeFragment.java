@@ -22,6 +22,7 @@ import com.manhhuy.myapplication.helper.response.RestResponse;
 import com.manhhuy.myapplication.helper.response.UserResponse;
 import com.manhhuy.myapplication.ui.Activities.Fragment.User.MyEventsActivity;
 import com.manhhuy.myapplication.ui.Activities.MainActivity;
+import com.manhhuy.myapplication.ui.Activities.MyRewardActivity;
 import com.manhhuy.myapplication.ui.Activities.UserActivity;
 
 import java.text.SimpleDateFormat;
@@ -59,7 +60,7 @@ public class MeFragment extends Fragment {
 
         // Initialize API client
         apiEndpoints = ApiConfig.getClient().create(ApiEndpoints.class);
-        
+
         loadUserData();
         setupClickListeners();
     }
@@ -67,20 +68,20 @@ public class MeFragment extends Fragment {
     private void loadUserData() {
         // Get token from SharedPreferences
         String token = ApiConfig.getToken();
-        
+
         if (token == null || token.isEmpty()) {
             Log.w(TAG, "No token found, user not logged in");
             setDefaultUserInfo();
             return;
         }
-        
+
         // Check if token is expired
         if (JwtUtil.isExpired(token)) {
             Log.w(TAG, "Token expired");
             setDefaultUserInfo();
             return;
         }
-        
+
         // Get userId from token
         Integer userId = JwtUtil.getUserId(token);
         if (userId == null) {
@@ -88,21 +89,22 @@ public class MeFragment extends Fragment {
             setDefaultUserInfo();
             return;
         }
-        
+
         Log.d(TAG, "Loading user info for userId: " + userId);
-        
+
         // Call API to get user info
         Call<RestResponse<UserResponse>> call = apiEndpoints.getUserById(userId);
-        
+
         call.enqueue(new Callback<RestResponse<UserResponse>>() {
             @Override
-            public void onResponse(Call<RestResponse<UserResponse>> call, 
-                                 Response<RestResponse<UserResponse>> response) {
-                if (binding == null) return; // Fragment destroyed
-                
+            public void onResponse(Call<RestResponse<UserResponse>> call,
+                    Response<RestResponse<UserResponse>> response) {
+                if (binding == null)
+                    return; // Fragment destroyed
+
                 if (response.isSuccessful() && response.body() != null) {
                     RestResponse<UserResponse> restResponse = response.body();
-                    
+
                     if (restResponse.getStatusCode() == 200 && restResponse.getData() != null) {
                         UserResponse user = restResponse.getData();
                         updateUserInfo(user);
@@ -116,49 +118,52 @@ public class MeFragment extends Fragment {
                     setDefaultUserInfo();
                 }
             }
-            
+
             @Override
             public void onFailure(Call<RestResponse<UserResponse>> call, Throwable t) {
-                if (binding == null) return; // Fragment destroyed
+                if (binding == null)
+                    return; // Fragment destroyed
                 Log.e(TAG, "Failed to load user info: " + t.getMessage(), t);
                 setDefaultUserInfo();
             }
         });
     }
-    
+
     /**
      * Update UI with user information from API
      */
     private void updateUserInfo(UserResponse user) {
-        if (binding == null) return;
-        
+        if (binding == null)
+            return;
+
         // Set user information
         binding.tvFullName.setText(user.getFullName() != null ? user.getFullName() : "Người dùng");
         binding.tvEmail.setText(user.getEmail() != null ? user.getEmail() : "");
         binding.tvPhone.setText(user.getPhone() != null ? user.getPhone() : "");
-        
+
         // Set role badge text based on role
         String roleText = getRoleText(user.getRole());
         binding.tvRole.setText(roleText);
-        
+
         // Set member since (format createdAt if available, otherwise use default)
         // Note: Backend doesn't return createdAt yet, so we'll use a default
         binding.tvMemberSince.setText("Thành viên từ: 2024");
-        
+
         // Set statistics
         // Note: Backend doesn't return event count yet, so we'll use 0 for now
         binding.tvEventsCount.setText("0");
-        
+
         // Set points
         Integer points = user.getTotalPoints();
         binding.tvPointsCount.setText(String.format(Locale.getDefault(), "%,d", points != null ? points : 0));
     }
-    
+
     /**
      * Set default user info when not logged in or error
      */
     private void setDefaultUserInfo() {
-        if (binding == null) return;
+        if (binding == null)
+            return;
         binding.tvFullName.setText("Người dùng");
         binding.tvEmail.setText("");
         binding.tvPhone.setText("");
@@ -205,16 +210,9 @@ public class MeFragment extends Fragment {
             }
         });
 
-        binding.cardMyRewards.setOnClickListener(v -> {
-            try {
-                if (getActivity() instanceof UserActivity) {
-                    ((UserActivity) getActivity()).switchToRedeemTab();
-                } else {
-                    Toast.makeText(getContext(), "Phần thưởng của tôi", Toast.LENGTH_SHORT).show();
-                }
-            } catch (Exception e) {
-                Toast.makeText(getContext(), "Phần thưởng của tôi", Toast.LENGTH_SHORT).show();
-            }
+        binding.layoutMyRewards.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), MyRewardActivity.class);
+            startActivity(intent);
         });
 
         binding.cardEditProfile.setOnClickListener(v -> {
@@ -227,7 +225,8 @@ public class MeFragment extends Fragment {
     }
 
     private void showLogoutConfirmationDialog() {
-        if (getActivity() == null) return;
+        if (getActivity() == null)
+            return;
 
         new AlertDialog.Builder(requireActivity())
                 .setTitle("Đăng xuất")
@@ -246,7 +245,7 @@ public class MeFragment extends Fragment {
             // Clear token from SharedPreferences
             ApiConfig.clearToken();
             Log.d(TAG, "Token cleared, logging out");
-            
+
             // Redirect to login screen
             Intent intent = new Intent(requireActivity(), MainActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

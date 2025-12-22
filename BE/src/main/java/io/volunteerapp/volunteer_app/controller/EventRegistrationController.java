@@ -21,7 +21,6 @@ public class EventRegistrationController {
     }
 
     @PostMapping("/register")
-    @PreAuthorize("hasAnyRole('ROLE_VOLUNTEER', 'ROLE_ADMIN')")
     public ResponseEntity<EventRegistrationResponse> registerForEvent(
             @Valid @RequestBody EventRegistrationRequest request) {
         EventRegistrationResponse response = registrationService.registerForEvent(request);

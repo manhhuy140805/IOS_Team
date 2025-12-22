@@ -14,5 +14,6 @@ public interface UserRewardMapper {
     @Mapping(source = "reward.name", target = "rewardName")
     @Mapping(source = "reward.description", target = "rewardDescription")
     @Mapping(source = "reward.pointsRequired", target = "pointsRequired")
+    @Mapping(source = "reward.imageUrl", target = "rewardImageUrl")
     UserRewardResponse toResponse(UserReward userReward);
 }
