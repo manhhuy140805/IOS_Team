@@ -7,6 +7,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import com.manhhuy.myapplication.ui.Activities.Fragment.Admin.AdminApprovePostsFragment;
 import com.manhhuy.myapplication.ui.Activities.Fragment.Admin.AdminFragment;
+import com.manhhuy.myapplication.ui.Activities.Fragment.Admin.AdminRedeemRequestFragment;
 import com.manhhuy.myapplication.ui.Activities.Fragment.Common.EventManageFragment;
 import com.manhhuy.myapplication.ui.Activities.Fragment.Admin.AdminRewardFragment;
 
@@ -30,8 +31,10 @@ public class AdminAdapter extends FragmentStateAdapter {
             case 2:
                 return new AdminRewardFragment();
             case 3:
-                return new AdminApprovePostsFragment();
+                return new AdminRedeemRequestFragment();
             case 4:
+                return new AdminApprovePostsFragment();
+            case 5:
                 return new MeFragment();
             default:
                 return new AdminFragment();
@@ -40,7 +43,7 @@ public class AdminAdapter extends FragmentStateAdapter {
 
     @Override
     public int getItemCount() {
-        // Admin has 5 tabs, Customer has 4 tabs
-        return 5;
+        // Admin has 6 tabs
+        return 6;
     }
 }

@@ -21,6 +21,7 @@ import com.manhhuy.myapplication.helper.response.RewardResponse;
 import com.manhhuy.myapplication.helper.response.RewardTypeResponse;
 import com.manhhuy.myapplication.helper.response.UserNotificationResponse;
 import com.manhhuy.myapplication.helper.response.UserResponse;
+import com.manhhuy.myapplication.helper.response.UserRewardResponse;
 
 import java.util.List;
 import java.util.Map;
@@ -240,6 +241,22 @@ public interface ApiEndpoints {
         Call<RestResponse<PageResponse<MyRewardResponse>>> getMyRewards(
                         @Query("page") int page,
                         @Query("size") int size);
+
+        /**
+         * Lấy danh sách yêu cầu đổi thưởng đang chờ duyệt (Admin)
+         */
+        @GET("user-rewards/pending")
+        Call<RestResponse<PageResponse<UserRewardResponse>>> getPendingRewards(
+                        @Query("page") int page,
+                        @Query("size") int size);
+
+        /**
+         * Cập nhật trạng thái yêu cầu đổi thưởng (Admin)
+         */
+        @PUT("user-rewards/{id}/status")
+        Call<RestResponse<UserRewardResponse>> updateUserRewardStatus(
+                        @Path("id") Integer id,
+                        @Query("status") String status);
 
         // ========== Image Upload APIs ==========
 

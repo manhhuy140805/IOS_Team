@@ -48,14 +48,15 @@ public class AdminActivity extends AppCompatActivity {
 
         AdminAdapter homeAdapter = new AdminAdapter(this);
         binding.viewPager.setAdapter(homeAdapter);
-        binding.viewPager.setOffscreenPageLimit(4); // Cache tất cả 5 tabs
+        binding.viewPager.setOffscreenPageLimit(5); // Cache tất cả 6 tabs
         binding.viewPager.setPageTransformer(new ZoomOutPageTransformer());
 
-        tabTitles = new String[] { "Người dùng", "Sự kiện", "Đổi thưởng", "Duyệt bài", "Cá nhân" };
+        tabTitles = new String[] { "Người dùng", "Sự kiện", "Đổi thưởng", "Duyệt đổi quà", "Duyệt bài", "Cá nhân" };
         tabIcons = new int[] {
                 R.drawable.ic_group,
                 R.drawable.ic_event,
                 R.drawable.ic_rewards,
+                R.drawable.ic_gift,
                 R.drawable.ic_check,
                 R.drawable.ic_profile
         };

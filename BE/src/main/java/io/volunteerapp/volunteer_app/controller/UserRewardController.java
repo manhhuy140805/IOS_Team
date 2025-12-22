@@ -44,6 +44,19 @@ public class UserRewardController {
     }
 
     /**
+     * Get pending rewards (Admin only)
+     */
+    @GetMapping("/pending")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<PageResponse<UserRewardResponse>> getPendingRewards(
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "size", defaultValue = "10") int size) {
+
+        PageResponse<UserRewardResponse> response = userRewardService.getPendingRewards(page, size);
+        return ResponseEntity.ok(response);
+    }
+
+    /**
      * Get user rewards by user ID (Admin only)
      */
     @GetMapping("/user/{userId}")

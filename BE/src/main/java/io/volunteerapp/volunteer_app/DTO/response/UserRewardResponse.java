@@ -25,4 +25,6 @@ public class UserRewardResponse {
     private String rewardDescription;
     private Integer pointsRequired;
     private String rewardImageUrl;
+    
+    private java.time.Instant createdAt;
 }
