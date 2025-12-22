@@ -25,11 +25,7 @@ public class ApiConfig {
 
     public static Retrofit getClient() {
         if (retrofit == null) {
-            HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
-            loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-            
             OkHttpClient client = new OkHttpClient.Builder()
-                    .addInterceptor(loggingInterceptor)
                     .addInterceptor(chain -> {
                         Request original = chain.request();
                         Request.Builder requestBuilder = original.newBuilder();
@@ -41,8 +37,7 @@ public class ApiConfig {
                         }
                         
                         requestBuilder.method(original.method(), original.body());
-                        return chain.proceed(requestBuilder.build());
-                    })
+                        return chain.proceed(requestBuilder.build());})
                     .connectTimeout(30, TimeUnit.SECONDS)
                     .readTimeout(30, TimeUnit.SECONDS)
                     .writeTimeout(30, TimeUnit.SECONDS)
@@ -90,5 +85,38 @@ public class ApiConfig {
     public static boolean isLoggedIn() {
         String token = getToken();
         return token != null && !token.isEmpty();
+    }
+    
+    
+    public static String getUserRole() {
+        String token = getToken();
+        if (token == null || token.isEmpty()) {
+            return null;
+        }
+        return JwtUtil.getRoleSimple(token);
+    }
+    
+    public static boolean isVolunteer() {
+        return "VOLUNTEER".equalsIgnoreCase(getUserRole());
+    }
+    
+
+    public static boolean isOrganizer() {
+        return "ORGANIZER".equalsIgnoreCase(getUserRole());
+    }
+    
+    public static boolean isAdmin() {
+        return "ADMIN".equalsIgnoreCase(getUserRole());
+    }
+    
+    /**
+     * Lấy userId từ token
+     */
+    public static Integer getUserId() {
+        String token = getToken();
+        if (token == null || token.isEmpty()) {
+            return null;
+        }
+        return JwtUtil.getUserId(token);
     }
 }

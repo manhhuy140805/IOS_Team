@@ -1,13 +1,13 @@
 package com.manhhuy.myapplication.adapter.admin.event;
 
-import com.manhhuy.myapplication.model.EventPost;
+import com.manhhuy.myapplication.helper.response.EventResponse;
 
 public interface OnEventActionListenerInterface {
-    void onViewClick(EventPost event);
+    void onViewClick(EventResponse event);
 
-    void onEditClick(EventPost event);
+    void onEditClick(EventResponse event);
 
-    void onDeleteClick(EventPost event);
+    void onDeleteClick(EventResponse event);
     
-    void onNotificationClick(EventPost event);
+    void onNotificationClick(EventResponse event);
 }

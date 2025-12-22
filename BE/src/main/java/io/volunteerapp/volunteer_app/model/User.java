@@ -33,7 +33,7 @@ public class User {
     private String avatarUrl;
 
     @Column(nullable = false)
-    private String role = "VOLUNTEER";
+    private String role;
 
     @Column(nullable = false)
     private String status = "ACTIVE";

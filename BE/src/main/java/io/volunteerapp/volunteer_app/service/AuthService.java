@@ -34,6 +34,7 @@ public class AuthService {
 
     public ResponseEntity<RestResponse<UserResponse>> register(RegisterRequest request) {
 
+
         Optional<User> existingUser = userRepository.findByEmail(request.getEmail());
         if (existingUser.isPresent()) {
             RestResponse<UserResponse> response = new RestResponse<>();
@@ -48,11 +49,27 @@ public class AuthService {
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setFullName(request.getFullName());
         user.setPhone(request.getPhone());
-        user.setRole("VOLUNTEER"); // Mặc định là VOLUNTEER
+        user.setAddress(request.getAddress());
+        
+        // Set role từ request, nếu không có thì mặc định là VOLUNTEER
+        String roleToSet = (request.getRole() != null && !request.getRole().trim().isEmpty()) 
+            ? request.getRole().trim().toUpperCase() 
+            : "VOLUNTEER";
+        
+        // Validate role
+        if (!roleToSet.equals("VOLUNTEER") && !roleToSet.equals("ORGANIZATION") && !roleToSet.equals("ADMIN")) {
+            roleToSet = "VOLUNTEER";
+        }
+        
+        user.setRole(roleToSet);
+        
+        System.out.println("Role set to user: " + roleToSet);
+        
         user.setStatus("ACTIVE");
         user.setUpdatedAt(Instant.now());
 
         User savedUser = userRepository.save(user);
+        
 
         UserResponse userResponse = convertToUserResponse(savedUser);
 

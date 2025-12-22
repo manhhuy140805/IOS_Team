@@ -1,6 +1,10 @@
 package com.manhhuy.myapplication.model;
 
 public class RewardItem {
+
+    private Integer id; // Add ID field
+
+    private Integer rewardId; // ID từ API, dùng cho claim reward
     private String name;
     private String organization;
     private String description;
@@ -12,6 +16,7 @@ public class RewardItem {
     private String tag2;
     private int iconColorIndex; // 0=purple, 1=pink, 2=orange, 3=cyan
     private String imageUrl; // URL hình ảnh từ API
+    private String status; // ACTIVE or INACTIVE
 
     public RewardItem(String name, String organization, String description, String points,
             String stock, String expiry, int categoryType, String tag1, String tag2, int iconColorIndex) {
@@ -28,7 +33,7 @@ public class RewardItem {
     }
 
     public RewardItem(String name, String organization, String description, String points,
-            String stock, String expiry, int categoryType, String tag1, String tag2, 
+            String stock, String expiry, int categoryType, String tag1, String tag2,
             int iconColorIndex, String imageUrl) {
         this.name = name;
         this.organization = organization;
@@ -41,6 +46,33 @@ public class RewardItem {
         this.tag2 = tag2;
         this.iconColorIndex = iconColorIndex;
         this.imageUrl = imageUrl;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    // Constructor với rewardId từ API
+    public RewardItem(Integer rewardId, String name, String organization, String description, String points,
+            String stock, String expiry, int categoryType, String tag1, String tag2,
+            int iconColorIndex, String imageUrl) {
+        this.rewardId = rewardId;
+        this.name = name;
+        this.organization = organization;
+        this.description = description;
+        this.points = points;
+        this.stock = stock;
+        this.expiry = expiry;
+        this.categoryType = categoryType;
+        this.tag1 = tag1;
+        this.tag2 = tag2;
+        this.iconColorIndex = iconColorIndex;
+        this.imageUrl = imageUrl;
+
     }
 
     public String getName() {
@@ -129,5 +161,21 @@ public class RewardItem {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public Integer getRewardId() {
+        return rewardId;
+    }
+
+    public void setRewardId(Integer rewardId) {
+        this.rewardId = rewardId;
     }
 }

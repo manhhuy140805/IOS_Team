@@ -61,7 +61,7 @@ public class Event {
     @JoinColumn(name = "event_type_id", nullable = false)
     private EventType eventType;
 
-    @OneToMany(mappedBy = "event")
+    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<EventRegistration> eventEventRegistrations = new HashSet<>();
 
     @PrePersist

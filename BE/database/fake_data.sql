@@ -1,16 +1,4 @@
--- ================================================
--- FAKE DATA FOR VOLUNTEER APP
--- ================================================
--- Created: 2025-12-20
--- Description: Sample data for testing
--- ================================================
--- 
--- IMPORTANT: 
--- If tables already have data, you may need to:
--- 1. Delete existing data first, OR
--- 2. Make sure the IDs in foreign keys match existing data
---
--- Xóa tất cả dữ liệu và reset sequences
+
 TRUNCATE TABLE users_notifications, notifications, user_reward, event_registration, reward, event, reward_type, event_type, users CASCADE;
 
 -- Reset sequences
@@ -26,7 +14,7 @@ ALTER SEQUENCE users_notifications_id_seq RESTART WITH 1;
 -- ================================================
 
 -- Password hash for "123456" using BCrypt
--- $2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy
+-- $2a$12$3uuLN3zTa1IuBDRLLw6vce.CmHLJnd0FCWJjbx2hjfaZBmD7AMSlK
 
 -- ================================================
 -- TABLE: users

@@ -158,6 +158,29 @@ public class NotificationService {
         return sentCount;
     }
 
+    @Transactional
+    public void sendSystemNotification(Integer userId, String title, String content) {
+        // Create Notification
+        Notification notification = new Notification();
+        notification.setTitle(title);
+        notification.setContent(content);
+        notification.setSenderRole("SYSTEM");
+        notification.setType("PERSONAL");
+        notification.setCreatedAt(Instant.now());
+        
+        Notification savedNotification = notificationRepository.save(notification);
+        
+        // Create UserNotification
+        UserNotification userNotification = new UserNotification();
+        userNotification.setUser(new io.volunteerapp.volunteer_app.model.User());
+        userNotification.getUser().setId(userId); // Set ID directly to avoid fetching if possible, or fetch if needed
+        userNotification.setNotification(savedNotification);
+        userNotification.setIsRead(false);
+        userNotification.setCreatedAt(Instant.now());
+        
+        userNotificationRepository.save(userNotification);
+    }
+
     // Helper methods để convert entity sang response
     private NotificationResponse toNotificationResponse(Notification notification) {
         return new NotificationResponse(

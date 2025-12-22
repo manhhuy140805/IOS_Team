@@ -1,16 +1,12 @@
 package com.manhhuy.myapplication.ui.Activities;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.bumptech.glide.Glide;
 import com.manhhuy.myapplication.R;
@@ -27,7 +23,6 @@ import retrofit2.Response;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Locale;
 
 public class DetailEventActivity extends AppCompatActivity {
@@ -41,28 +36,34 @@ public class DetailEventActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         binding = ActivityDetailEventBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        
-        ViewCompat.setOnApplyWindowInsetsListener(binding.main, (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
 
-        // Get event data from intent
-        if (getIntent().hasExtra("eventData")) {
-            eventData = getIntent().getParcelableExtra("eventData");
-        }
-
-        setupClickListeners();
+        // Get EventResponse from Intent
+        eventData = (EventResponse) getIntent().getSerializableExtra("eventData");
         
-        if (eventData != null) {
-            displayEventData();
-        } else {
+        if (eventData == null) {
             Toast.makeText(this, "Không tìm thấy thông tin sự kiện", Toast.LENGTH_SHORT).show();
             finish();
+            return;
+        }
+
+        setupUI();
+    }
+    
+    private void setupUI() {
+        setupClickListeners();
+        displayEventInfo();
+        loadImages();
+        checkUserRoleAndShowRegisterButton();
+    }
+    
+
+    private void checkUserRoleAndShowRegisterButton() {
+        if (ApiConfig.isVolunteer()) {
+            binding.btnRegisterEvent.setVisibility(View.VISIBLE);
+        } else {
+            binding.btnRegisterEvent.setVisibility(View.GONE);
         }
     }
     
@@ -84,111 +85,61 @@ public class DetailEventActivity extends AppCompatActivity {
         });
     }
     
-    private void displayEventData() {
-        // Set title
-        if (eventData.getTitle() != null) {
-            binding.tvEventTitle.setText(eventData.getTitle());
-        }
+    private void displayEventInfo() {
+        // Basic info
+        setText(binding.tvEventTitle, eventData.getTitle());
+        setText(binding.tvEventDescription, eventData.getDescription());
+        setText(binding.tvOrganizationName, eventData.getCreatorName());
+        setText(binding.tvEventLocation, eventData.getLocation());
+        setText(binding.tvMapLocation, eventData.getLocation());
         
-        // Set description
-        if (eventData.getDescription() != null) {
-            binding.tvEventDescription.setText(eventData.getDescription());
-        }
-        
-        // Set organization name
-        if (eventData.getCreatorName() != null) {
-            binding.tvOrganizationName.setText(eventData.getCreatorName());
-        }
-        
-        // Set event date
+        // Date and time
         if (eventData.getEventStartTime() != null) {
-            binding.tvEventDate.setText(formatDate(eventData.getEventStartTime()));
+            binding.tvEventDate.setText(eventData.getEventStartTime());
         }
+        binding.tvEventTime.setText("1 ngày");
         
-        // Set time range
-        if (eventData.getEventStartTime() != null && eventData.getEventEndTime() != null) {
-            binding.tvEventTime.setText(formatDateRange(eventData.getEventStartTime(), eventData.getEventEndTime()));
+        // Stats
+        binding.tvEventParticipants.setText(eventData.getCurrentParticipants() + "/" + eventData.getNumOfVolunteers());
+        binding.tvEventReward.setText(eventData.getRewardPoints() + " điểm");
+        
+        // Category
+        if (eventData.getCategory() != null && !eventData.getCategory().isEmpty()) {
+            binding.tvEventCategory.setText(eventData.getCategory());
         }
-        
-        // Set location
-        if (eventData.getLocation() != null) {
-            binding.tvEventLocation.setText(eventData.getLocation());
-        }
-        
-        // Set participants
-        int current = eventData.getCurrentParticipants() != null ? eventData.getCurrentParticipants() : 0;
-        int total = eventData.getNumOfVolunteers() != null ? eventData.getNumOfVolunteers() : 0;
-        binding.tvEventParticipants.setText(current + "/" + total);
-        
-        // Set reward points
-        if (eventData.getRewardPoints() != null) {
-            binding.tvEventReward.setText(eventData.getRewardPoints() + " điểm");
-        }
-        
-        // Set category/event type
-        if (eventData.getEventTypeName() != null) {
-            binding.tvEventCategory.setText(eventData.getEventTypeName());
-        }
-        
-        // Load event banner image
-        if (eventData.getImageUrl() != null && !eventData.getImageUrl().isEmpty()) {
+    }
+    
+    private void loadImages() {
+        // Event banner
+        String imageUrl = eventData.getImageUrl();
+        if (imageUrl != null && !imageUrl.isEmpty()) {
             Glide.with(this)
-                    .load(eventData.getImageUrl())
-                    .placeholder(R.drawable.banner_event_default)
-                    .error(R.drawable.banner_event_default)
-                    .centerCrop()
-                    .into(binding.ivEventBanner);
+                .load(imageUrl)
+                .placeholder(R.drawable.banner_event_default)
+                .error(R.drawable.banner_event_default)
+                .override(800, 400) // Limit size to prevent OOM
+                .centerCrop()
+                .into(binding.ivEventBanner);
         } else {
             binding.ivEventBanner.setImageResource(R.drawable.banner_event_default);
         }
         
-        // Load map preview image
+        // Map preview
         Glide.with(this)
-                .load("https://images.viblo.asia/01cb5447-ae32-46db-8224-6c7392202648.png")
-                .placeholder(R.drawable.banner_event_default)
-                .error(R.drawable.banner_event_default)
-                .centerCrop()
-                .into(binding.ivMapPreview);
-        
-        // Update map location text
-        if (eventData.getLocation() != null) {
-            binding.tvMapLocation.setText(eventData.getLocation());
-        }
+            .load("https://images.viblo.asia/01cb5447-ae32-46db-8224-6c7392202648.png")
+            .placeholder(R.drawable.banner_event_default)
+            .error(R.drawable.banner_event_default)
+            .override(600, 400)
+            .centerCrop()
+            .into(binding.ivMapPreview);
     }
     
-    private String formatDate(String dateString) {
-        try {
-            SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-            SimpleDateFormat outputFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-            Date date = inputFormat.parse(dateString);
-            return outputFormat.format(date);
-        } catch (ParseException e) {
-            e.printStackTrace();
-            return dateString;
-        }
+    private void setText(android.widget.TextView textView, String text) {
+        if (text != null) textView.setText(text);
     }
     
-    private String formatDateRange(String startTime, String endTime) {
-        try {
-            SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-            Date startDate = inputFormat.parse(startTime);
-            Date endDate = inputFormat.parse(endTime);
-            
-            // Calculate difference in days
-            long diffInMillis = endDate.getTime() - startDate.getTime();
-            long diffInDays = diffInMillis / (1000 * 60 * 60 * 24);
-            
-            if (diffInDays == 0) {
-                return "1 ngày";
-            } else if (diffInDays == 1) {
-                return "2 ngày";
-            } else {
-                return (diffInDays + 1) + " ngày";
-            }
-        } catch (ParseException e) {
-            e.printStackTrace();
-            return "Cả ngày";
-        }
+    private void showToast(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
     
     /**
@@ -241,8 +192,6 @@ public class DetailEventActivity extends AppCompatActivity {
                 
                 if (response.isSuccessful() && response.body() != null) {
                     EventRegistrationResponse registration = response.body();
-                    Log.d(TAG, "Registration successful: " + registration.getId());
-                    
                     showSuccessDialog();
                 } else {
                     String errorMsg = "Không thể đăng ký sự kiện";
@@ -254,7 +203,6 @@ public class DetailEventActivity extends AppCompatActivity {
                         errorMsg = "Bạn không có quyền đăng ký sự kiện này";
                     }
                     
-                    Log.e(TAG, "Registration failed: " + response.code() + " - " + response.message());
                     Toast.makeText(DetailEventActivity.this, errorMsg, Toast.LENGTH_LONG).show();
                 }
             }
@@ -264,17 +212,13 @@ public class DetailEventActivity extends AppCompatActivity {
                 isRegistering = false;
                 dismissProgressDialog();
                 
-                Log.e(TAG, "Network error: " + t.getMessage(), t);
-                Toast.makeText(DetailEventActivity.this, 
+                Toast.makeText(DetailEventActivity.this,
                         "Lỗi kết nối: " + t.getMessage(), 
                         Toast.LENGTH_LONG).show();
             }
         });
     }
-    
-    /**
-     * Show success dialog after successful registration
-     */
+
     private void showSuccessDialog() {
         new AlertDialog.Builder(this)
                 .setTitle("Đăng ký thành công!")
@@ -282,7 +226,6 @@ public class DetailEventActivity extends AppCompatActivity {
                         "Vui lòng chờ ban tổ chức xác nhận.")
                 .setPositiveButton("OK", (dialog, which) -> {
                     dialog.dismiss();
-                    // Optionally: finish() to go back
                 })
                 .setCancelable(false)
                 .show();
@@ -313,6 +256,23 @@ public class DetailEventActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         dismissProgressDialog();
+        
+        if (!isFinishing()) {
+            Glide.with(getApplicationContext()).pauseRequests();
+        }
+        
         binding = null;
+    }
+    
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Glide.with(this).pauseRequests();
+    }
+    
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Glide.with(this).resumeRequests();
     }
 }

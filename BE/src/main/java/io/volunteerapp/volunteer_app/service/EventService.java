@@ -221,6 +221,17 @@ public class EventService {
         eventRepository.delete(event);
     }
 
+    // Update event status (Admin only)
+    @Transactional
+    public EventResponse updateEventStatus(Integer id, String status) {
+        Event event = eventRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Event not found with id: " + id));
+        
+        event.setStatus(status);
+        Event updatedEvent = eventRepository.save(event);
+        return convertToResponse(updatedEvent);
+    }
+
     // Helper method to convert Event to EventResponse
     private EventResponse convertToResponse(Event event) {
         EventResponse response = eventMapper.toResponse(event);

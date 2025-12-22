@@ -28,15 +28,18 @@ public class UserRewardService {
         private final UserRepository userRepository;
         private final RewardRepository rewardRepository;
         private final UserRewardMapper userRewardMapper;
+        private final NotificationService notificationService;
 
         public UserRewardService(UserRewardRepository userRewardRepository,
                         UserRepository userRepository,
                         RewardRepository rewardRepository,
-                        UserRewardMapper userRewardMapper) {
+                        UserRewardMapper userRewardMapper,
+                        NotificationService notificationService) {
                 this.userRewardRepository = userRewardRepository;
                 this.userRepository = userRepository;
                 this.rewardRepository = rewardRepository;
                 this.userRewardMapper = userRewardMapper;
+                this.notificationService = notificationService;
         }
 
         // Claim a reward (Authenticated users)
@@ -124,14 +127,62 @@ public class UserRewardService {
                                 userRewardPage.getTotalPages());
         }
 
+        // Get pending rewards (Admin only)
+        public PageResponse<UserRewardResponse> getPendingRewards(int page, int size) {
+                Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
+                Page<UserReward> userRewardPage = userRewardRepository.findByStatus("PENDING", pageable);
+
+                List<UserRewardResponse> responses = userRewardPage.getContent().stream()
+                                .map(userRewardMapper::toResponse)
+                                .toList();
+
+                return new PageResponse<>(
+                                responses,
+                                userRewardPage.getNumber(),
+                                userRewardPage.getTotalElements(),
+                                userRewardPage.getTotalPages());
+        }
+
         // Update reward status (Admin only)
         @Transactional
         public UserRewardResponse updateRewardStatus(Integer id, String status) {
                 UserReward userReward = userRewardRepository.findById(id)
                                 .orElseThrow(() -> new RuntimeException("User reward not found with id: " + id));
 
+                String oldStatus = userReward.getStatus();
                 userReward.setStatus(status);
                 UserReward updatedUserReward = userRewardRepository.save(userReward);
+                
+                // Handle notifications and refunds
+                User user = userReward.getUser();
+                String rewardName = userReward.getReward().getName();
+                
+                if ("ACCEPTED".equalsIgnoreCase(status) && !"ACCEPTED".equalsIgnoreCase(oldStatus)) {
+                    // Send approval notification
+                    notificationService.sendSystemNotification(
+                        user.getId(),
+                        "Đổi thưởng thành công",
+                        "Yêu cầu đổi quà \"" + rewardName + "\" của bạn đã được duyệt. Vui lòng kiểm tra hướng dẫn nhận quà."
+                    );
+                } else if ("REJECTED".equalsIgnoreCase(status) && !"REJECTED".equalsIgnoreCase(oldStatus)) {
+                    // Refund points
+                    int pointsToRefund = userReward.getPointsSpent();
+                    user.setTotalPoints(user.getTotalPoints() + pointsToRefund);
+                    userRepository.save(user);
+                    
+                    // Send rejection notification
+                    notificationService.sendSystemNotification(
+                        user.getId(),
+                        "Yêu cầu đổi thưởng bị từ chối",
+                        "Yêu cầu đổi quà \"" + rewardName + "\" của bạn đã bị từ chối. " + pointsToRefund + " điểm đã được hoàn lại vào tài khoản của bạn."
+                    );
+                    
+                    // Return reward quantity
+                    Reward reward = userReward.getReward();
+                    reward.setQuantity(reward.getQuantity() + 1);
+                    rewardRepository.save(reward);
+                }
+                
                 return userRewardMapper.toResponse(updatedUserReward);
         }
 

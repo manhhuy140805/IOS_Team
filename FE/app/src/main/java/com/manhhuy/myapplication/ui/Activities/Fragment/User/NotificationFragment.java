@@ -18,7 +18,9 @@ import com.google.android.material.button.MaterialButton;
 import com.manhhuy.myapplication.R;
 import com.manhhuy.myapplication.adapter.NotificationAdapter;
 import com.manhhuy.myapplication.databinding.FragmentNotificationBinding;
+import com.manhhuy.myapplication.helper.ApiConfig;
 import com.manhhuy.myapplication.helper.ApiService;
+import com.manhhuy.myapplication.helper.JwtUtil;
 import com.manhhuy.myapplication.helper.response.NotificationResponse;
 import com.manhhuy.myapplication.helper.response.RestResponse;
 import com.manhhuy.myapplication.helper.response.UserNotificationResponse;
@@ -47,8 +49,7 @@ public class NotificationFragment extends Fragment {
     private List<NotificationItem> filteredNotifications = new ArrayList<>();
     private String currentFilter = "ALL"; // ALL, UNREAD, READ
     
-    // TODO: Sau này lấy từ SharedPreferences hoặc session
-    private static final int CURRENT_USER_ID = 1;
+    private int currentUserId = -1;
 
     public NotificationFragment() {
         // Required empty public constructor
@@ -65,10 +66,32 @@ public class NotificationFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         
+        // Initialize ApiConfig
+        ApiConfig.init(requireContext());
+        
+        // Get current user ID
+        currentUserId = getUserId();
+        if (currentUserId == -1) {
+            Toast.makeText(getContext(), "Vui lòng đăng nhập lại", Toast.LENGTH_SHORT).show();
+            // Optional: Navigate to login
+            return;
+        }
+        
         setupRecyclerView();
         setupFilterButtons();
         setupClickListeners();
         loadNotifications(); // Gọi API thay vì mock data
+    }
+
+    private int getUserId() {
+        String token = ApiConfig.getToken();
+        if (token != null) {
+            Integer userId = JwtUtil.getUserId(token);
+            if (userId != null) {
+                return userId;
+            }
+        }
+        return -1;
     }
 
     private void setupRecyclerView() {
@@ -124,7 +147,7 @@ public class NotificationFragment extends Fragment {
             button.setBackgroundColor(android.graphics.Color.TRANSPARENT);
             button.setStrokeColorResource(R.color.gray_300);
             button.setStrokeWidth(2);
-            button.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_secondary));
+            button.setTextColor(ContextCompat.getColor(requireContext(), R.color.white));
         }
     }
 
@@ -134,20 +157,22 @@ public class NotificationFragment extends Fragment {
 
     // Load notifications từ API
     private void loadNotifications() {
+        if (currentUserId == -1) return;
+
         showLoading();
         
         Call<RestResponse<List<UserNotificationResponse>>> call;
         
         switch (currentFilter) {
             case "UNREAD":
-                call = ApiService.api().getUnreadNotifications(CURRENT_USER_ID);
+                call = ApiService.api().getUnreadNotifications(currentUserId);
                 break;
             case "READ":
-                call = ApiService.api().getReadNotifications(CURRENT_USER_ID);
+                call = ApiService.api().getReadNotifications(currentUserId);
                 break;
             case "ALL":
             default:
-                call = ApiService.api().getUserNotifications(CURRENT_USER_ID);
+                call = ApiService.api().getUserNotifications(currentUserId);
                 break;
         }
         
@@ -264,8 +289,10 @@ public class NotificationFragment extends Fragment {
 
 
     private void markAllAsRead() {
+        if (currentUserId == -1) return;
+
         // Call API để đánh dấu tất cả đã đọc
-        ApiService.api().markAllAsRead(CURRENT_USER_ID)
+        ApiService.api().markAllAsRead(currentUserId)
             .enqueue(new Callback<RestResponse<Void>>() {
                 @Override
                 public void onResponse(Call<RestResponse<Void>> call, Response<RestResponse<Void>> response) {

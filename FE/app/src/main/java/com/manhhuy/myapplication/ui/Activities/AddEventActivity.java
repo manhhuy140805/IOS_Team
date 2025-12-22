@@ -1,17 +1,23 @@
 package com.manhhuy.myapplication.ui.Activities;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.bumptech.glide.Glide;
 import com.manhhuy.myapplication.R;
 import com.manhhuy.myapplication.databinding.ActivityAddEventBinding;
 import com.manhhuy.myapplication.helper.ApiConfig;
@@ -21,19 +27,29 @@ import com.manhhuy.myapplication.helper.response.EventResponse;
 import com.manhhuy.myapplication.helper.response.EventTypeResponse;
 import com.manhhuy.myapplication.helper.response.RestResponse;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class AddEventActivity extends AppCompatActivity {
 
-    private static final String TAG = "AddEventActivity";
     private ActivityAddEventBinding binding;
+    
+    private Uri selectedImageUri;
+    private String uploadedImageUrl;
+    private ImageView ivEventImage;
     
     private String selectedCategory = "";
     private Integer selectedEventTypeId = null;
@@ -45,6 +61,15 @@ public class AddEventActivity extends AppCompatActivity {
     private boolean isEditMode = false;
     private Integer eventId = null;
     private EventResponse currentEvent = null;
+    
+    private final ActivityResultLauncher<Intent> imagePickerLauncher = 
+            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                    selectedImageUri = result.getData().getData();
+                    displaySelectedImage();
+                    uploadImageToCloudinary();
+                }
+            });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,25 +106,22 @@ public class AddEventActivity extends AppCompatActivity {
     
     private void loadEventTypes() {
         ApiEndpoints apiService = ApiConfig.getClient().create(ApiEndpoints.class);
-        Call<RestResponse<List<EventTypeResponse>>> call = apiService.getEventTypes();
         
-        call.enqueue(new Callback<RestResponse<List<EventTypeResponse>>>() {
+        apiService.getEventTypes().enqueue(new Callback<RestResponse<List<EventTypeResponse>>>() {
             @Override
             public void onResponse(Call<RestResponse<List<EventTypeResponse>>> call,
                                  Response<RestResponse<List<EventTypeResponse>>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     List<EventTypeResponse> eventTypes = response.body().getData();
                     if (eventTypes != null && !eventTypes.isEmpty()) {
-                        // Auto-select first event type
                         selectedEventTypeId = eventTypes.get(0).getId();
-                        Log.d(TAG, "Loaded " + eventTypes.size() + " event types");
                     }
                 }
             }
             
             @Override
             public void onFailure(Call<RestResponse<List<EventTypeResponse>>> call, Throwable t) {
-                Log.e(TAG, "Failed to load event types: " + t.getMessage());
+                // Ignore
             }
         });
     }
@@ -112,7 +134,11 @@ public class AddEventActivity extends AppCompatActivity {
         setupCategoryListeners();
         setupDatePickers();
         
-        binding.uploadImageContainer.setOnClickListener(v -> uploadImage());
+        // Find ImageView inside uploadImageContainer
+        ivEventImage = new ImageView(this);
+        ivEventImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        
+        binding.uploadImageContainer.setOnClickListener(v -> openImagePicker());
         binding.mapContainer.setOnClickListener(v -> selectMapLocation());
     }
     
@@ -154,78 +180,67 @@ public class AddEventActivity extends AppCompatActivity {
     }
     
     private void setupCategoryListeners() {
-
         binding.btnCategoryCommunity.setOnClickListener(v -> selectCategory("community"));
-        
-
         binding.btnCategoryEnvironment.setOnClickListener(v -> selectCategory("environment"));
-
         binding.btnCategoryEducation.setOnClickListener(v -> selectCategory("education"));
-        
-
         binding.btnCategoryHealth.setOnClickListener(v -> selectCategory("health"));
-        
-
         binding.btnCategoryAnimal.setOnClickListener(v -> selectCategory("animal"));
-
         binding.btnCategoryOther.setOnClickListener(v -> selectCategory("other"));
     }
     
     private void selectCategory(String category) {
         selectedCategory = category;
+        resetAllCategoryButtons();
+        highlightCategoryButton(category);
+    }
+    
+    private void resetAllCategoryButtons() {
+        int defaultBg = R.drawable.bg_custom_edit_text;
+        int defaultColor = R.color.text_primary;
         
-        // Reset all category buttons
-        binding.btnCategoryCommunity.setBackgroundResource(R.drawable.bg_custom_edit_text);
-        binding.btnCategoryEnvironment.setBackgroundResource(R.drawable.bg_custom_edit_text);
-        binding.btnCategoryEducation.setBackgroundResource(R.drawable.bg_custom_edit_text);
-        binding.btnCategoryHealth.setBackgroundResource(R.drawable.bg_custom_edit_text);
-        binding.btnCategoryAnimal.setBackgroundResource(R.drawable.bg_custom_edit_text);
-        binding.btnCategoryOther.setBackgroundResource(R.drawable.bg_custom_edit_text);
+        binding.btnCategoryCommunity.setBackgroundResource(defaultBg);
+        binding.btnCategoryEnvironment.setBackgroundResource(defaultBg);
+        binding.btnCategoryEducation.setBackgroundResource(defaultBg);
+        binding.btnCategoryHealth.setBackgroundResource(defaultBg);
+        binding.btnCategoryAnimal.setBackgroundResource(defaultBg);
+        binding.btnCategoryOther.setBackgroundResource(defaultBg);
         
-        binding.btnCategoryCommunity.setCompoundDrawableTintList(
-            getColorStateList(R.color.text_primary));
-        binding.btnCategoryEnvironment.setCompoundDrawableTintList(
-            getColorStateList(R.color.text_primary));
-        binding.btnCategoryEducation.setCompoundDrawableTintList(
-            getColorStateList(R.color.text_primary));
-        binding.btnCategoryHealth.setCompoundDrawableTintList(
-            getColorStateList(R.color.text_primary));
-        binding.btnCategoryAnimal.setCompoundDrawableTintList(
-            getColorStateList(R.color.text_primary));
-        binding.btnCategoryOther.setCompoundDrawableTintList(
-            getColorStateList(R.color.text_primary));
+        binding.btnCategoryCommunity.setCompoundDrawableTintList(getColorStateList(defaultColor));
+        binding.btnCategoryEnvironment.setCompoundDrawableTintList(getColorStateList(defaultColor));
+        binding.btnCategoryEducation.setCompoundDrawableTintList(getColorStateList(defaultColor));
+        binding.btnCategoryHealth.setCompoundDrawableTintList(getColorStateList(defaultColor));
+        binding.btnCategoryAnimal.setCompoundDrawableTintList(getColorStateList(defaultColor));
+        binding.btnCategoryOther.setCompoundDrawableTintList(getColorStateList(defaultColor));
+    }
+    
+    private void highlightCategoryButton(String category) {
+        int selectedBg = R.drawable.bg_category_tab_selected_reward;
+        int selectedColor = R.color.app_green_primary;
         
-        // Set selected category style
         switch (category) {
             case "community":
-                binding.btnCategoryCommunity.setBackgroundResource(R.drawable.bg_category_tab_selected_reward);
-                binding.btnCategoryCommunity.setCompoundDrawableTintList(
-                    getColorStateList(R.color.app_green_primary));
+                binding.btnCategoryCommunity.setBackgroundResource(selectedBg);
+                binding.btnCategoryCommunity.setCompoundDrawableTintList(getColorStateList(selectedColor));
                 break;
             case "environment":
-                binding.btnCategoryEnvironment.setBackgroundResource(R.drawable.bg_category_tab_selected_reward);
-                binding.btnCategoryEnvironment.setCompoundDrawableTintList(
-                    getColorStateList(R.color.app_green_primary));
+                binding.btnCategoryEnvironment.setBackgroundResource(selectedBg);
+                binding.btnCategoryEnvironment.setCompoundDrawableTintList(getColorStateList(selectedColor));
                 break;
             case "education":
-                binding.btnCategoryEducation.setBackgroundResource(R.drawable.bg_category_tab_selected_reward);
-                binding.btnCategoryEducation.setCompoundDrawableTintList(
-                    getColorStateList(R.color.app_green_primary));
+                binding.btnCategoryEducation.setBackgroundResource(selectedBg);
+                binding.btnCategoryEducation.setCompoundDrawableTintList(getColorStateList(selectedColor));
                 break;
             case "health":
-                binding.btnCategoryHealth.setBackgroundResource(R.drawable.bg_category_tab_selected_reward);
-                binding.btnCategoryHealth.setCompoundDrawableTintList(
-                    getColorStateList(R.color.app_green_primary));
+                binding.btnCategoryHealth.setBackgroundResource(selectedBg);
+                binding.btnCategoryHealth.setCompoundDrawableTintList(getColorStateList(selectedColor));
                 break;
             case "animal":
-                binding.btnCategoryAnimal.setBackgroundResource(R.drawable.bg_category_tab_selected_reward);
-                binding.btnCategoryAnimal.setCompoundDrawableTintList(
-                    getColorStateList(R.color.app_green_primary));
+                binding.btnCategoryAnimal.setBackgroundResource(selectedBg);
+                binding.btnCategoryAnimal.setCompoundDrawableTintList(getColorStateList(selectedColor));
                 break;
             case "other":
-                binding.btnCategoryOther.setBackgroundResource(R.drawable.bg_category_tab_selected_reward);
-                binding.btnCategoryOther.setCompoundDrawableTintList(
-                    getColorStateList(R.color.app_green_primary));
+                binding.btnCategoryOther.setBackgroundResource(selectedBg);
+                binding.btnCategoryOther.setCompoundDrawableTintList(getColorStateList(selectedColor));
                 break;
         }
     }
@@ -233,107 +248,25 @@ public class AddEventActivity extends AppCompatActivity {
     private void createEvent() {
         if (isLoading) return;
         
-        // Validate inputs - map to actual layout fields
         String title = binding.etEventTitle.getText().toString().trim();
         String description = binding.etDescription.getText().toString().trim();
-        String location = binding.etAddress.getText().toString().trim(); // Use etAddress for location
+        String location = binding.etAddress.getText().toString().trim();
         String volunteersStr = binding.etNumberNeeded.getText().toString().trim();
-        String rewardPointsStr = ""; // No reward field in current layout
         
-        if (title.isEmpty()) {
-            showError("Vui lòng nhập tên sự kiện");
+        if (!validateInputs(title, description, location, volunteersStr)) {
             return;
         }
         
-        if (description.isEmpty()) {
-            showError("Vui lòng nhập mô tả");
-            return;
-        }
+        int numVolunteers = Integer.parseInt(volunteersStr);
+        EventRequest request = buildEventRequest(title, description, location, numVolunteers);
         
-        if (location.isEmpty()) {
-            showError("Vui lòng nhập địa điểm");
-            return;
-        }
-        
-        if (selectedStartDate.isEmpty()) {
-            showError("Vui lòng chọn ngày bắt đầu");
-            return;
-        }
-        
-        if (selectedEndDate.isEmpty()) {
-            showError("Vui lòng chọn ngày kết thúc");
-            return;
-        }
-        
-        if (volunteersStr.isEmpty()) {
-            showError("Vui lòng nhập số lượng tình nguyện viên");
-            return;
-        }
-        
-        if (selectedEventTypeId == null) {
-            showError("Vui lòng chọn loại sự kiện");
-            return;
-        }
-        
-        int numVolunteers;
-        try {
-            numVolunteers = Integer.parseInt(volunteersStr);
-            if (numVolunteers <= 0) {
-                showError("Số lượng tình nguyện viên phải lớn hơn 0");
-                return;
-            }
-        } catch (NumberFormatException e) {
-            showError("Số lượng tình nguyện viên không hợp lệ");
-            return;
-        }
-        
-        Integer rewardPoints = null;
-        if (!rewardPointsStr.isEmpty()) {
-            try {
-                rewardPoints = Integer.parseInt(rewardPointsStr);
-            } catch (NumberFormatException e) {
-                showError("Điểm thưởng không hợp lệ");
-                return;
-            }
-        }
-        
-        // Add city and district to location if available
-        String city = binding.etCity.getText().toString().trim();
-        String district = binding.etDistrict.getText().toString().trim();
-        if (!city.isEmpty()) {
-            location = location + ", " + city;
-        }
-        if (!district.isEmpty()) {
-            location = location + ", " + district;
-        }
-        
-        // Create event request
-        EventRequest request = new EventRequest();
-        request.setTitle(title);
-        request.setDescription(description);
-        request.setLocation(location);
-        request.setEventStartTime(selectedStartDate);
-        request.setEventEndTime(selectedEndDate);
-        request.setNumOfVolunteers(numVolunteers);
-        request.setRewardPoints(rewardPoints);
-        request.setEventTypeId(selectedEventTypeId);
-        request.setCategory(selectedCategory);
-        request.setStatus("PENDING"); // Default status
-        
-        // Call API
         isLoading = true;
         showLoading();
         
         ApiEndpoints apiService = ApiConfig.getClient().create(ApiEndpoints.class);
-        Call<EventResponse> call;
-        
-        if (isEditMode && eventId != null) {
-            // Update existing event
-            call = apiService.updateEvent(eventId, request);
-        } else {
-            // Create new event
-            call = apiService.createEvent(request);
-        }
+        Call<EventResponse> call = isEditMode && eventId != null 
+                ? apiService.updateEvent(eventId, request)
+                : apiService.createEvent(request);
         
         call.enqueue(new Callback<EventResponse>() {
             @Override
@@ -343,16 +276,9 @@ public class AddEventActivity extends AppCompatActivity {
                 
                 if (response.isSuccessful() && response.body() != null) {
                     showSuccess(isEditMode ? "Cập nhật sự kiện thành công!" : "Tạo sự kiện thành công!");
-                    finish(); // Close activity and return to previous screen
+                    finish();
                 } else {
-                    try {
-                        String errorBody = response.errorBody() != null ? 
-                            response.errorBody().string() : "Unknown error";
-                        Log.e(TAG, "Error: " + errorBody);
-                        showError("Không thể " + (isEditMode ? "cập nhật" : "tạo") + " sự kiện: " + response.message());
-                    } catch (Exception e) {
-                        showError("Không thể " + (isEditMode ? "cập nhật" : "tạo") + " sự kiện");
-                    }
+                    showError("Không thể " + (isEditMode ? "cập nhật" : "tạo") + " sự kiện");
                 }
             }
             
@@ -360,10 +286,79 @@ public class AddEventActivity extends AppCompatActivity {
             public void onFailure(Call<EventResponse> call, Throwable t) {
                 isLoading = false;
                 hideLoading();
-                Log.e(TAG, "Network error: " + t.getMessage(), t);
-                showError("Lỗi kết nối: " + t.getMessage());
+                showError("Lỗi kết nối");
             }
         });
+    }
+    
+    private boolean validateInputs(String title, String description, String location, String volunteersStr) {
+        if (title.isEmpty()) {
+            showError("Vui lòng nhập tên sự kiện");
+            return false;
+        }
+        if (description.isEmpty()) {
+            showError("Vui lòng nhập mô tả");
+            return false;
+        }
+        if (location.isEmpty()) {
+            showError("Vui lòng nhập địa điểm");
+            return false;
+        }
+        if (selectedStartDate.isEmpty()) {
+            showError("Vui lòng chọn ngày bắt đầu");
+            return false;
+        }
+        if (selectedEndDate.isEmpty()) {
+            showError("Vui lòng chọn ngày kết thúc");
+            return false;
+        }
+        if (volunteersStr.isEmpty()) {
+            showError("Vui lòng nhập số lượng tình nguyện viên");
+            return false;
+        }
+        if (selectedEventTypeId == null) {
+            showError("Vui lòng chọn loại sự kiện");
+            return false;
+        }
+        
+        try {
+            int volunteers = Integer.parseInt(volunteersStr);
+            if (volunteers <= 0) {
+                showError("Số lượng tình nguyện viên phải lớn hơn 0");
+                return false;
+            }
+        } catch (NumberFormatException e) {
+            showError("Số lượng tình nguyện viên không hợp lệ");
+            return false;
+        }
+        
+        return true;
+    }
+    
+    private String buildLocation(String location) {
+        String city = binding.etCity.getText().toString().trim();
+        String district = binding.etDistrict.getText().toString().trim();
+        
+        if (!city.isEmpty()) location += ", " + city;
+        if (!district.isEmpty()) location += ", " + district;
+        
+        return location;
+    }
+    
+    private EventRequest buildEventRequest(String title, String description, String location, int numVolunteers) {
+        EventRequest request = new EventRequest();
+        request.setTitle(title);
+        request.setDescription(description);
+        request.setLocation(buildLocation(location));
+        request.setEventStartTime(selectedStartDate);
+        request.setEventEndTime(selectedEndDate);
+        request.setNumOfVolunteers(numVolunteers);
+        request.setRewardPoints(null);
+        request.setEventTypeId(selectedEventTypeId);
+        request.setCategory(selectedCategory);
+        request.setStatus("PENDING");
+        request.setImageUrl(uploadedImageUrl);
+        return request;
     }
     
     private void showLoading() {
@@ -377,104 +372,77 @@ public class AddEventActivity extends AppCompatActivity {
     }
     
     private void loadEventDetails() {
-        Log.d(TAG, "Loading event details for ID: " + eventId);
-        
         ApiEndpoints apiService = ApiConfig.getClient().create(ApiEndpoints.class);
-        Call<RestResponse<EventResponse>> call = apiService.getEventById(eventId);
         
-        call.enqueue(new Callback<RestResponse<EventResponse>>() {
+        apiService.getEventById(eventId).enqueue(new Callback<RestResponse<EventResponse>>() {
             @Override
             public void onResponse(Call<RestResponse<EventResponse>> call, 
                                  Response<RestResponse<EventResponse>> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    RestResponse<EventResponse> restResponse = response.body();
-                    currentEvent = restResponse.getData();
-                    
-                    if (currentEvent != null) {
-                        Log.d(TAG, "Event loaded: " + currentEvent.getTitle());
-                        populateEventData(currentEvent);
-                    } else {
-                        Log.e(TAG, "Event data is null in RestResponse");
-                        Toast.makeText(AddEventActivity.this, 
-                            "Không có dữ liệu sự kiện", Toast.LENGTH_SHORT).show();
-                        finish();
-                    }
+                if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
+                    currentEvent = response.body().getData();
+                    populateEventData(currentEvent);
                 } else {
-                    Log.e(TAG, "Failed to load event: " + response.code());
-                    Toast.makeText(AddEventActivity.this, 
-                        "Không thể tải thông tin sự kiện", Toast.LENGTH_SHORT).show();
+                    showError("Không thể tải thông tin sự kiện");
                     finish();
                 }
             }
             
             @Override
             public void onFailure(Call<RestResponse<EventResponse>> call, Throwable t) {
-                Log.e(TAG, "Network error: " + t.getMessage(), t);
-                Toast.makeText(AddEventActivity.this, 
-                    "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                showError("Lỗi kết nối");
                 finish();
             }
         });
     }
     
     private void populateEventData(EventResponse event) {
-        Log.d(TAG, "Populating event data: " + event.getTitle());
-        
-        // Fill form with event data
         binding.etEventTitle.setText(event.getTitle());
         binding.etDescription.setText(event.getDescription());
         
-        // Parse location - might contain city and district
-        String location = event.getLocation();
-        if (location != null) {
-            String[] parts = location.split(",");
-            if (parts.length > 0) {
-                binding.etAddress.setText(parts[0].trim());
-            }
-            if (parts.length > 1) {
-                binding.etCity.setText(parts[1].trim());
-            }
-            if (parts.length > 2) {
-                binding.etDistrict.setText(parts[2].trim());
-            }
+        // Parse location
+        if (event.getLocation() != null) {
+            String[] parts = event.getLocation().split(",");
+            if (parts.length > 0) binding.etAddress.setText(parts[0].trim());
+            if (parts.length > 1) binding.etCity.setText(parts[1].trim());
+            if (parts.length > 2) binding.etDistrict.setText(parts[2].trim());
         }
         
-        // Set number of volunteers
         if (event.getNumOfVolunteers() != null) {
             binding.etNumberNeeded.setText(String.valueOf(event.getNumOfVolunteers()));
         }
         
-        // Set dates
         if (event.getEventStartTime() != null) {
             selectedStartDate = event.getEventStartTime();
             binding.etEventDate.setText(selectedStartDate);
-            Log.d(TAG, "Start date: " + selectedStartDate);
         }
         
         if (event.getEventEndTime() != null) {
             selectedEndDate = event.getEventEndTime();
             binding.etRegistrationDeadline.setText(selectedEndDate);
-            Log.d(TAG, "End date: " + selectedEndDate);
         }
         
-        // Set event type
         if (event.getEventTypeId() != null) {
             selectedEventTypeId = event.getEventTypeId();
-            Log.d(TAG, "Event type ID: " + selectedEventTypeId);
         }
         
-        // Set category if available
         if (event.getCategory() != null && !event.getCategory().isEmpty()) {
             selectedCategory = event.getCategory();
-            Log.d(TAG, "Category: " + selectedCategory);
-            // Try to select the category button
             selectCategoryByName(selectedCategory);
         }
         
-        // Update button text
-        binding.btnCreateEvent.setText("Cập nhật sự kiện");
-        
-        Log.d(TAG, "Event data populated successfully");
+        // Load existing image
+        uploadedImageUrl = event.getImageUrl();
+        if (uploadedImageUrl != null && !uploadedImageUrl.isEmpty() && !isFinishing()) {
+            binding.uploadImageContainer.removeAllViews();
+            binding.uploadImageContainer.addView(ivEventImage);
+            
+            Glide.with(this)
+                    .load(uploadedImageUrl)
+                    .centerCrop()
+                    .placeholder(R.drawable.ic_download)
+                    .error(R.drawable.ic_download)
+                    .into(ivEventImage);
+        }
     }
     
     private void selectCategoryByName(String categoryName) {
@@ -506,9 +474,95 @@ public class AddEventActivity extends AppCompatActivity {
         }
     }
     
-    private void uploadImage() {
-        // TODO: Implement image upload
-        Toast.makeText(this, "Chức năng upload ảnh đang phát triển", Toast.LENGTH_SHORT).show();
+    private void openImagePicker() {
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        intent.setType("image/*");
+        imagePickerLauncher.launch(intent);
+    }
+    
+    private void displaySelectedImage() {
+        if (isFinishing() || binding == null) return;
+        
+        // Clear previous views and add image
+        binding.uploadImageContainer.removeAllViews();
+        binding.uploadImageContainer.addView(ivEventImage);
+        
+        Glide.with(this)
+                .load(selectedImageUri)
+                .centerCrop()
+                .into(ivEventImage);
+    }
+    
+    private void uploadImageToCloudinary() {
+        if (selectedImageUri == null || binding == null) return;
+        
+        showLoading();
+
+        try {
+            String mimeType = getContentResolver().getType(selectedImageUri);
+            if (mimeType == null || !mimeType.startsWith("image/")) {
+                mimeType = "image/jpeg";
+            }
+            
+            File file = createFileFromUri(selectedImageUri);
+            RequestBody requestFile = RequestBody.create(MediaType.parse(mimeType), file);
+            MultipartBody.Part body = MultipartBody.Part.createFormData("file", file.getName(), requestFile);
+
+            ApiEndpoints apiService = ApiConfig.getClient().create(ApiEndpoints.class);
+            apiService.uploadImage(body).enqueue(new Callback<Map<String, Object>>() {
+                @Override
+                public void onResponse(Call<Map<String, Object>> call, Response<Map<String, Object>> response) {
+                    file.delete();
+                    hideLoading();
+                    
+                    if (binding == null || isFinishing()) return;
+
+                    if (response.isSuccessful() && response.body() != null) {
+                        Object dataObj = response.body().get("data");
+                        if (dataObj instanceof Map) {
+                            Map<String, Object> data = (Map<String, Object>) dataObj;
+                            uploadedImageUrl = (String) data.get("imageUrl");
+                            showSuccess("Ảnh đã được tải lên!");
+                        } else {
+                            showError("Upload thất bại");
+                        }
+                    } else {
+                        showError("Upload thất bại");
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Map<String, Object>> call, Throwable t) {
+                    file.delete();
+                    hideLoading();
+                    if (binding == null || isFinishing()) return;
+                    showError("Lỗi kết nối");
+                }
+            });
+        } catch (Exception e) {
+            hideLoading();
+            showError("Lỗi đọc file");
+        }
+    }
+    
+    private File createFileFromUri(Uri uri) throws Exception {
+        File file = new File(getCacheDir(), "upload_" + System.currentTimeMillis() + ".jpg");
+        
+        try (InputStream inputStream = getContentResolver().openInputStream(uri);
+             FileOutputStream outputStream = new FileOutputStream(file)) {
+            
+            if (inputStream == null) {
+                throw new Exception("Cannot open input stream");
+            }
+            
+            byte[] buffer = new byte[4096];
+            int length;
+            while ((length = inputStream.read(buffer)) > 0) {
+                outputStream.write(buffer, 0, length);
+            }
+        }
+        
+        return file;
     }
     
     private void selectMapLocation() {

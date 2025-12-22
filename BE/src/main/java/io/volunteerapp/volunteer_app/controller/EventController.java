@@ -75,7 +75,7 @@ public class EventController {
     }
 
     @GetMapping("/my-events")
-    @PreAuthorize("hasAnyRole('ROLE_VOLUNTEER', 'ROLE_ADMIN', 'ROLE_ORGANIZATION')")
+    // @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<PageResponse<EventResponse>> getMyEvents(
             @RequestParam(name = "page", defaultValue = "0") int page,
             @RequestParam(name = "size", defaultValue = "10") int size,
@@ -87,7 +87,7 @@ public class EventController {
     }
 
     @GetMapping("/user/{userId}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    // @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<PageResponse<EventResponse>> getEventsByUserId(
             @PathVariable Integer userId,
             @RequestParam(name = "page", defaultValue = "0") int page,
@@ -98,14 +98,14 @@ public class EventController {
     }
 
     @PostMapping("")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_ORGANIZATION')")
+    // @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<EventResponse> createEvent(@Valid @RequestBody EventRequest eventRequest) {
         EventResponse response = eventService.createEvent(eventRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_ORGANIZATION')")
+    // @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<EventResponse> updateEvent(
             @PathVariable Integer id,
             @Valid @RequestBody EventRequest eventRequest) {
@@ -115,9 +115,18 @@ public class EventController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_ORGANIZATION')")
+    // @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deleteEvent(@PathVariable Integer id) {
         eventService.deleteEvent(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/{id}/status")
+    // @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<EventResponse> updateEventStatus(
+            @PathVariable Integer id,
+            @RequestParam("status") String status) {
+        EventResponse response = eventService.updateEventStatus(id, status);
+        return ResponseEntity.ok(response);
     }
 }

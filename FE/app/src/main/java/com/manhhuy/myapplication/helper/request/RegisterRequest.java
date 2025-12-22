@@ -4,15 +4,19 @@ public class RegisterRequest {
     private String email;
     private String password;
     private String fullName;
-    private String phoneNumber;
+    private String phone;
+    private String role;
+    private String address;
     
     public RegisterRequest() {}
     
-    public RegisterRequest(String email, String password, String fullName, String phoneNumber) {
+    public RegisterRequest(String email, String password, String fullName, String phone, String role, String address) {
         this.email = email;
         this.password = password;
         this.fullName = fullName;
-        this.phoneNumber = phoneNumber;
+        this.phone = phone;
+        this.role = role;
+        this.address = address;
     }
     
     public String getEmail() {
@@ -39,11 +43,27 @@ public class RegisterRequest {
         this.fullName = fullName;
     }
     
-    public String getPhoneNumber() {
-        return phoneNumber;
+    public String getPhone() {
+        return phone;
     }
     
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+    
+    public String getRole() {
+        return role;
+    }
+    
+    public void setRole(String role) {
+        this.role = role;
+    }
+    
+    public String getAddress() {
+        return address;
+    }
+    
+    public void setAddress(String address) {
+        this.address = address;
     }
 }
