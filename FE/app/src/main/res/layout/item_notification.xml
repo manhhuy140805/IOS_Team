@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cardNotification"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="12dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?android:attr/selectableItemBackground"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="2dp"
+    app:strokeColor="#E0E0E0"
+    app:strokeWidth="1dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+
+
+        <!-- Icon Container -->
+        <FrameLayout
+            android:id="@+id/iconContainer"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:backgroundTint="#E8F5E9"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/ivNotificationIcon"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_notification"
+                app:tint="@color/app_green_primary" />
+        </FrameLayout>
+
+        <!-- Content Container -->
+        <LinearLayout
+            android:id="@+id/contentContainer"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/iconContainer"
+            app:layout_constraintTop_toTopOf="@id/iconContainer">
+
+            <!-- Sender Role Badge (if applicable) -->
+            <TextView
+                android:id="@+id/tvSenderBadge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:paddingVertical="2dp"
+                android:text="ADMIN"
+                android:paddingHorizontal="5dp"
+                android:textAllCaps="true"
+                android:textColor="@color/white"
+                android:textSize="9sp"
+                android:textStyle="bold"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
+            <!-- Title -->
+            <TextView
+                android:id="@+id/tvNotificationTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:text="Thông báo về sự kiện tình nguyện mới"
+                android:textColor="@color/app_green_primary"
+                android:paddingLeft="5dp"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                tools:text="Thông báo về sự kiện tình nguyện mới" />
+
+            <!-- Content Preview -->
+            <TextView
+                android:id="@+id/tvNotificationContent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:ellipsize="end"
+                android:paddingLeft="5dp"
+                android:maxLines="3"
+                android:text="Có một sự kiện tình nguyện mới phù hợp với bạn. Hãy đăng ký ngay để không bỏ lỡ cơ hội ý nghĩa này..."
+                android:textColor="@color/text_secondary"
+                android:textSize="13sp"
+                tools:text="Có một sự kiện tình nguyện mới phù hợp với bạn. Hãy đăng ký ngay để không bỏ lỡ cơ hội ý nghĩa này..." />
+
+            <!-- Time & Type Info -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:paddingLeft="5dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:src="@drawable/ic_clock"
+                    app:tint="@color/gray_500" />
+
+                <TextView
+                    android:id="@+id/tvNotificationTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:text="2 giờ trước"
+                    android:textColor="@color/gray_500"
+                    android:textSize="11sp" />
+
+
+
+                <TextView
+                    android:id="@+id/tvNotificationType"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:text="Cá nhân"
+                    android:textColor="@color/gray_500"
+                    android:textSize="11sp" />
+            </LinearLayout>
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>

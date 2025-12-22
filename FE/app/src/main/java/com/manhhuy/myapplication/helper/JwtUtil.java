@@ -58,10 +58,21 @@ public class JwtUtil {
         try {
             // Backend lưu userId trong claim "userId"
             if (payload.has("userId")) {
-                return payload.getInt("userId");
+                // Handle both Long and Integer types
+                Object userIdObj = payload.get("userId");
+                if (userIdObj instanceof Integer) {
+                    return (Integer) userIdObj;
+                } else if (userIdObj instanceof Long) {
+                    return ((Long) userIdObj).intValue();
+                } else {
+                    // Try to parse as int
+                    return Integer.parseInt(userIdObj.toString());
+                }
             }
         } catch (JSONException e) {
             Log.e(TAG, "Error getting userId from token", e);
+        } catch (NumberFormatException e) {
+            Log.e(TAG, "Error parsing userId as integer", e);
         }
         return null;
     }

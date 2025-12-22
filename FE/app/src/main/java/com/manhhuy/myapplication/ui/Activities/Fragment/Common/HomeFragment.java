@@ -20,10 +20,12 @@ import com.manhhuy.myapplication.adapter.SearchResultAdapter;
 import com.manhhuy.myapplication.databinding.FragmentHomeBinding;
 import com.manhhuy.myapplication.helper.ApiConfig;
 import com.manhhuy.myapplication.helper.ApiEndpoints;
+import com.manhhuy.myapplication.helper.JwtUtil;
 import com.manhhuy.myapplication.helper.response.EventResponse;
 import com.manhhuy.myapplication.helper.response.EventTypeResponse;
 import com.manhhuy.myapplication.helper.response.PageResponse;
 import com.manhhuy.myapplication.helper.response.RestResponse;
+import com.manhhuy.myapplication.helper.response.UserResponse;
 import com.manhhuy.myapplication.model.SearchResult;
 import com.manhhuy.myapplication.ui.Activities.DetailEventActivity;
 import com.manhhuy.myapplication.ui.Activities.AdminActivity;
@@ -67,11 +69,122 @@ public class HomeFragment extends Fragment {
         // Initialize API client
         apiEndpoints = ApiConfig.getClient().create(ApiEndpoints.class);
 
+        // Load user info first
+        loadUserInfo();
+        
         setupCategoriesRecyclerView();
         loadEventTypes();
         setupFeaturedRecyclerView();
         loadFeaturedEvents();
         setupClickListeners();
+    }
+
+    /**
+     * Load user information from API using JWT token
+     */
+    private void loadUserInfo() {
+        // Get token from SharedPreferences
+        String token = ApiConfig.getToken();
+        
+        if (token == null || token.isEmpty()) {
+            Log.w(TAG, "No token found, user not logged in");
+            setDefaultUserInfo();
+            return;
+        }
+        
+        // Check if token is expired
+        if (JwtUtil.isExpired(token)) {
+            Log.w(TAG, "Token expired");
+            setDefaultUserInfo();
+            return;
+        }
+        
+        // Get userId from token
+        Integer userId = JwtUtil.getUserId(token);
+        if (userId == null) {
+            Log.e(TAG, "Cannot get userId from token");
+            setDefaultUserInfo();
+            return;
+        }
+        
+        Log.d(TAG, "Loading user info for userId: " + userId);
+        
+        // Call API to get user info by ID (workaround for backend ClassCastException issue)
+        Call<RestResponse<UserResponse>> call = apiEndpoints.getUserById(userId);
+        
+        call.enqueue(new Callback<RestResponse<UserResponse>>() {
+            @Override
+            public void onResponse(Call<RestResponse<UserResponse>> call, 
+                                 Response<RestResponse<UserResponse>> response) {
+                if (binding == null) return; // Fragment destroyed
+                
+                if (response.isSuccessful() && response.body() != null) {
+                    RestResponse<UserResponse> restResponse = response.body();
+                    
+                    if (restResponse.getStatusCode() == 200 && restResponse.getData() != null) {
+                        UserResponse user = restResponse.getData();
+                        updateUserInfo(user);
+                        Log.d(TAG, "User info loaded successfully: " + user.getFullName());
+                    } else {
+                        Log.e(TAG, "API error: " + restResponse.getMessage());
+                        setDefaultUserInfo();
+                    }
+                } else {
+                    Log.e(TAG, "Response not successful: " + response.code());
+                    setDefaultUserInfo();
+                }
+            }
+            
+            @Override
+            public void onFailure(Call<RestResponse<UserResponse>> call, Throwable t) {
+                if (binding == null) return; // Fragment destroyed
+                Log.e(TAG, "Failed to load user info: " + t.getMessage(), t);
+                setDefaultUserInfo();
+            }
+        });
+    }
+    
+    /**
+     * Update UI with user information
+     */
+    private void updateUserInfo(UserResponse user) {
+        if (binding == null) return;
+        
+        // Update greeting with user's name
+        String firstName = getFirstName(user.getFullName());
+        binding.tvGreeting.setText("Xin chào, " + firstName + "! 👋");
+        
+        // Update points
+        Integer points = user.getTotalPoints();
+        if (points != null) {
+            binding.impactPoints.setText(String.format("%,d", points));
+        } else {
+            binding.impactPoints.setText("0");
+        }
+    }
+    
+    /**
+     * Set default user info when not logged in or error
+     */
+    private void setDefaultUserInfo() {
+        if (binding == null) return;
+        binding.tvGreeting.setText("Xin chào! 👋");
+        binding.impactPoints.setText("0");
+    }
+    
+    /**
+     * Extract first name from full name
+     */
+    private String getFirstName(String fullName) {
+        if (fullName == null || fullName.trim().isEmpty()) {
+            return "Bạn";
+        }
+        
+        String[] parts = fullName.trim().split("\\s+");
+        if (parts.length > 0) {
+            return parts[parts.length - 1]; // Vietnamese names: last word is first name
+        }
+        return fullName;
     }
 
     private void setupCategoriesRecyclerView() {
@@ -127,9 +240,9 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void onFailure(Call<RestResponse<List<EventTypeResponse>>> call, Throwable t) {
-                Toast.makeText(getContext(), 
-                        "Lỗi kết nối: " + t.getMessage(), 
-                        Toast.LENGTH_SHORT).show();
+                if (getContext() != null) {
+                    Toast.makeText(getContext(), "Lỗi kết nối", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
@@ -150,13 +263,15 @@ public class HomeFragment extends Fragment {
         // Load first page of events, sorted by createdAt desc, only ACTIVE events
         Call<RestResponse<PageResponse<EventResponse>>> call = apiEndpoints.getAllEvents(
                 0, 10, "createdAt", "desc", 
-                null, null, "ACTIVE", null, null, null, null, null
+                null, null, null, null, null, null, null, null
         );
         
         call.enqueue(new Callback<RestResponse<PageResponse<EventResponse>>>() {
             @Override
             public void onResponse(Call<RestResponse<PageResponse<EventResponse>>> call, 
                                  Response<RestResponse<PageResponse<EventResponse>>> response) {
+                if (binding == null) return; // Fragment destroyed
+                
                 if (response.isSuccessful() && response.body() != null) {
                     RestResponse<PageResponse<EventResponse>> restResponse = response.body();
                     
@@ -184,6 +299,7 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void onFailure(Call<RestResponse<PageResponse<EventResponse>>> call, Throwable t) {
+                if (binding == null) return; // Fragment destroyed
                 showEmptyState("Lỗi kết nối");
             }
         });
@@ -198,6 +314,8 @@ public class HomeFragment extends Fragment {
             @Override
             public void onResponse(Call<RestResponse<PageResponse<EventResponse>>> call, 
                                  Response<RestResponse<PageResponse<EventResponse>>> response) {
+                if (binding == null) return; // Fragment destroyed
+                
                 if (response.isSuccessful() && response.body() != null) {
                     RestResponse<PageResponse<EventResponse>> restResponse = response.body();
                     
@@ -226,12 +344,14 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void onFailure(Call<RestResponse<PageResponse<EventResponse>>> call, Throwable t) {
+                if (binding == null) return; // Fragment destroyed
                 showEmptyState("Lỗi kết nối");
             }
         });
     }
     
     private void showEmptyState(String message) {
+        if (binding == null) return; // Fragment destroyed
         binding.eventsRecyclerView.setVisibility(View.GONE);
         binding.emptyStateLayout.setVisibility(View.VISIBLE);
         binding.emptyStateText.setText(message);

@@ -21,7 +21,7 @@ public class EventRegistrationController {
     }
 
     @PostMapping("/register")
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_VOLUNTEER', 'ROLE_ADMIN')")
     public ResponseEntity<EventRegistrationResponse> registerForEvent(
             @Valid @RequestBody EventRegistrationRequest request) {
         EventRegistrationResponse response = registrationService.registerForEvent(request);
@@ -29,7 +29,7 @@ public class EventRegistrationController {
     }
 
     @GetMapping("/event/{eventId}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_ORGANIZATION')")
     public ResponseEntity<PageResponse<EventRegistrationResponse>> getEventRegistrations(
             @PathVariable Integer eventId,
             @RequestParam(name = "page", defaultValue = "0") int page,
@@ -42,7 +42,7 @@ public class EventRegistrationController {
     }
 
     @GetMapping("/my-registrations")
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_VOLUNTEER', 'ROLE_ADMIN')")
     public ResponseEntity<PageResponse<EventRegistrationResponse>> getMyRegistrations(
             @RequestParam(name = "page", defaultValue = "0") int page,
             @RequestParam(name = "size", defaultValue = "10") int size,
@@ -54,14 +54,14 @@ public class EventRegistrationController {
     }
 
     @DeleteMapping("/{registrationId}")
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_VOLUNTEER', 'ROLE_ADMIN')")
     public ResponseEntity<Void> cancelRegistration(@PathVariable Integer registrationId) {
         registrationService.cancelRegistration(registrationId);
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/{registrationId}/status")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_ORGANIZATION')")
     public ResponseEntity<EventRegistrationResponse> updateRegistrationStatus(
             @PathVariable Integer registrationId,
             @RequestParam String status) {
@@ -72,7 +72,7 @@ public class EventRegistrationController {
     }
 
     @PutMapping("/{registrationId}/check-in")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_ORGANIZATION')")
     public ResponseEntity<EventRegistrationResponse> checkInUser(@PathVariable Integer registrationId) {
         EventRegistrationResponse response = registrationService.checkInUser(registrationId);
         return ResponseEntity.ok(response);

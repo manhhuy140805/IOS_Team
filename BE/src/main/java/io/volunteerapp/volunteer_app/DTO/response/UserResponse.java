@@ -1,5 +1,6 @@
 package io.volunteerapp.volunteer_app.DTO.response;
 
+import java.time.Instant;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,4 +21,10 @@ public class UserResponse {
     private String status;
     private Integer totalPoints;
     private String address;
+    
+    // New fields for Admin UI
+    private Instant createdAt;      // For joinDate/foundedDate
+    private Instant updatedAt;      // For lastActive
+    private Boolean violation;      // For violation warning
+    private Integer activityCount;  // For user: số events đã tham gia, for org: số events đã tạo
 }

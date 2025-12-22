@@ -9,6 +9,7 @@ import com.manhhuy.myapplication.ui.Activities.Fragment.Common.HomeFragment;
 import com.manhhuy.myapplication.ui.Activities.Fragment.Common.MeFragment;
 import com.manhhuy.myapplication.ui.Activities.Fragment.Common.SearchFragment;
 import com.manhhuy.myapplication.ui.Activities.Fragment.User.CertificateFragment;
+import com.manhhuy.myapplication.ui.Activities.Fragment.User.NotificationFragment;
 import com.manhhuy.myapplication.ui.Activities.Fragment.User.RedeemFragment;
 
 public class UserAdapter extends FragmentStateAdapter {
@@ -28,7 +29,7 @@ public class UserAdapter extends FragmentStateAdapter {
             case 2:
                 return new RedeemFragment(); // Đổi thưởng
             case 3:
-                return new CertificateFragment(); // Chứng nhận
+                return new NotificationFragment(); // Thông báo
             case 4:
                 return new MeFragment(); // Cá nhân
             default:

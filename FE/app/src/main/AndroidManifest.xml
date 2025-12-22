@@ -4,60 +4,36 @@
     <!-- Internet permission for loading images -->
     <uses-permission android:name="android.permission.INTERNET" />
 
-    <application
-        android:allowBackup="true"
-        android:dataExtractionRules="@xml/data_extraction_rules"
-        android:fullBackupContent="@xml/backup_rules"
-        android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
-        android:supportsRtl="true"
-        android:theme="@style/Theme.MyApplication"
-        android:networkSecurityConfig="@xml/network_security_config"
-        tools:targetApi="31">
-        <activity
-            android:name=".ui.Activities.OrganizationActivity"
-            android:exported="true">
+    <application android:allowBackup="true" android:dataExtractionRules="@xml/data_extraction_rules" android:fullBackupContent="@xml/backup_rules" android:icon="@mipmap/ic_launcher" android:label="@string/app_name" android:roundIcon="@mipmap/ic_launcher_round" android:supportsRtl="true" android:theme="@style/Theme.MyApplication" android:networkSecurityConfig="@xml/network_security_config" tools:targetApi="31">
+        <activity android:name=".ui.Activities.OrganizationActivity" android:exported="true">
         </activity>
-        <activity
-            android:name=".ui.Activities.ForgotPasswordActivity"
-            android:exported="false">
+        <activity android:name=".ui.Activities.ForgotPasswordActivity" android:exported="false">
         </activity>
-        <activity
-            android:name=".ui.Activities.UserActivity"
-            android:exported="true">
+        <activity android:name=".ui.Activities.UserActivity" android:exported="true">
+        </activity>
+        <activity android:name=".ui.Activities.SendNotificationActivity" android:exported="true">
 
         </activity>
-        <activity
-            android:name=".ui.Activities.SendNotificationActivity"
-            android:exported="true">
-
+        <activity android:name=".ui.Activities.DetailEventActivity" android:exported="true">
         </activity>
-        <activity
-            android:name=".ui.Activities.DetailEventActivity"
-            android:exported="true">
+        <activity android:name=".ui.Activities.NotificationDetailActivity" android:exported="false">
         </activity>
-        <activity
-            android:name=".ui.Activities.RegisterActivity"
-            android:exported="true">
+        <activity android:name=".ui.Activities.RegisterActivity" android:exported="true">
         </activity>
-        <activity
-            android:name=".ui.Activities.AdminActivity"
-            android:exported="true">
+        <activity android:name=".ui.Activities.AdminActivity" android:exported="true">
         </activity>
-        <activity
-            android:name=".ui.Activities.MainActivity"
-            android:exported="true">
+        <activity android:name=".ui.Activities.MainActivity" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
+            <<<<<<< HEAD =======
         </activity>
-        <activity
-            android:name=".ui.Activities.AddEventActivity"
-            android:exported="true">
-        </activity>
-    </application>
+<activity android:name=".ui.Activities.Fragment.User.MyEventsActivity" android:exported="false">
+>>>>>>> master
+            </activity>
+            <activity android:name=".ui.Activities.AddEventActivity" android:exported="true">
+            </activity>
+        </application>
 
-</manifest>
+    </manifest>

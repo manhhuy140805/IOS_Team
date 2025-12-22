@@ -9,10 +9,12 @@ import com.manhhuy.myapplication.helper.response.EventRegistrationResponse;
 import com.manhhuy.myapplication.helper.response.EventResponse;
 import com.manhhuy.myapplication.helper.response.EventTypeResponse;
 import com.manhhuy.myapplication.helper.response.LoginResponse;
+import com.manhhuy.myapplication.helper.response.NotificationResponse;
 import com.manhhuy.myapplication.helper.response.PageResponse;
 import com.manhhuy.myapplication.helper.response.RestResponse;
 import com.manhhuy.myapplication.helper.response.RewardResponse;
 import com.manhhuy.myapplication.helper.response.RewardTypeResponse;
+import com.manhhuy.myapplication.helper.response.UserNotificationResponse;
 import com.manhhuy.myapplication.helper.response.UserResponse;
 
 import java.util.List;
@@ -84,7 +86,7 @@ public interface ApiEndpoints {
     );
     
     @GET("events/{id}")
-    Call<EventResponse> getEventById(@Path("id") Integer id);
+    Call<RestResponse<EventResponse>> getEventById(@Path("id") Integer id);
     
     @GET("events/type/{eventTypeId}")
     Call<RestResponse<PageResponse<EventResponse>>> getEventsByType(
@@ -103,7 +105,7 @@ public interface ApiEndpoints {
             @Query("sortDirection") String sortDirection
     );    
     @GET("events/my-events")
-    Call<PageResponse<EventResponse>> getMyEvents(
+    Call<RestResponse<PageResponse<EventResponse>>> getMyEvents(
             @Query("page") int page,
             @Query("size") int size,
             @Query("sortBy") String sortBy,
@@ -131,7 +133,7 @@ public interface ApiEndpoints {
     Call<EventRegistrationResponse> registerForEvent(@Body EventRegistrationRequest request);
     
     @GET("event-registrations/event/{eventId}")
-    Call<PageResponse<EventRegistrationResponse>> getEventRegistrations(
+    Call<RestResponse<PageResponse<EventRegistrationResponse>>> getEventRegistrations(
             @Path("eventId") Integer eventId,
             @Query("page") int page,
             @Query("size") int size,
@@ -139,7 +141,7 @@ public interface ApiEndpoints {
     );
     
     @GET("event-registrations/my-registrations")
-    Call<PageResponse<EventRegistrationResponse>> getMyRegistrations(
+    Call<RestResponse<PageResponse<EventRegistrationResponse>>> getMyRegistrations(
             @Query("page") int page,
             @Query("size") int size,
             @Query("status") String status
@@ -149,11 +151,40 @@ public interface ApiEndpoints {
     Call<Void> cancelRegistration(@Path("registrationId") Integer registrationId);
     
     @PUT("event-registrations/{registrationId}/status")
-    Call<EventRegistrationResponse> updateRegistrationStatus(
+    Call<RestResponse<EventRegistrationResponse>> updateRegistrationStatus(
             @Path("registrationId") Integer registrationId,
             @Query("status") String status
     );
     
     @PUT("event-registrations/{registrationId}/check-in")
     Call<EventRegistrationResponse> checkInUser(@Path("registrationId") Integer registrationId);
+
+    // ========== Notification APIs ==========
+    
+    @GET("notifications/{id}")
+    Call<RestResponse<NotificationResponse>> getNotificationById(
+            @Path("id") Integer id,
+            @Query("userId") Integer userId
+    );
+    
+    @GET("notifications/user/{userId}")
+    Call<RestResponse<List<UserNotificationResponse>>> getUserNotifications(@Path("userId") Integer userId);
+    
+    @GET("notifications/user/{userId}/unread")
+    Call<RestResponse<List<UserNotificationResponse>>> getUnreadNotifications(@Path("userId") Integer userId);
+    
+    @GET("notifications/user/{userId}/read")
+    Call<RestResponse<List<UserNotificationResponse>>> getReadNotifications(@Path("userId") Integer userId);
+    
+    @PUT("notifications/user/{userId}/read-all")
+    Call<RestResponse<Void>> markAllAsRead(@Path("userId") Integer userId);
+    
+    @DELETE("notifications/user/{userId}/notification/{notificationId}")
+    Call<RestResponse<Void>> deleteUserNotification(
+            @Path("userId") Integer userId,
+            @Path("notificationId") Integer notificationId
+    );
+    
+    @POST("notifications/send")
+    Call<RestResponse<java.util.Map<String, Object>>> sendNotification(@Body com.manhhuy.myapplication.helper.request.SendNotificationRequest request);
 }

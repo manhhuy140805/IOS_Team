@@ -15,25 +15,28 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.manhhuy.myapplication.databinding.FragmentMeBinding;
+import com.manhhuy.myapplication.helper.ApiConfig;
+import com.manhhuy.myapplication.helper.ApiEndpoints;
+import com.manhhuy.myapplication.helper.JwtUtil;
+import com.manhhuy.myapplication.helper.response.RestResponse;
+import com.manhhuy.myapplication.helper.response.UserResponse;
+import com.manhhuy.myapplication.ui.Activities.Fragment.User.MyEventsActivity;
 import com.manhhuy.myapplication.ui.Activities.MainActivity;
 import com.manhhuy.myapplication.ui.Activities.UserActivity;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Locale;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MeFragment extends Fragment {
 
     private static final String TAG = "MeFragment";
     private FragmentMeBinding binding;
-
-    // Fake user data matching the User entity
-    private String fullName = "Hiếu Võ Lập Trình";
-    private String email = "vndhieuak@gmail.com";
-    private String phone = "+84 987 654 321";
-    private String role = "VOLUNTEER"; // VOLUNTEER, ORGANIZER, ADMIN
-    private String status = "ACTIVE"; // ACTIVE, LOCKED, PENDING
-    private int eventsParticipated = 12;
-    private int pointsEarned = 1250;
-    private String memberSince = "15/03/2024";
+    private ApiEndpoints apiEndpoints;
 
     public MeFragment() {
         // Required empty public constructor
@@ -54,26 +57,115 @@ public class MeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        // Initialize API client
+        apiEndpoints = ApiConfig.getClient().create(ApiEndpoints.class);
+        
         loadUserData();
         setupClickListeners();
     }
 
     private void loadUserData() {
+        // Get token from SharedPreferences
+        String token = ApiConfig.getToken();
+        
+        if (token == null || token.isEmpty()) {
+            Log.w(TAG, "No token found, user not logged in");
+            setDefaultUserInfo();
+            return;
+        }
+        
+        // Check if token is expired
+        if (JwtUtil.isExpired(token)) {
+            Log.w(TAG, "Token expired");
+            setDefaultUserInfo();
+            return;
+        }
+        
+        // Get userId from token
+        Integer userId = JwtUtil.getUserId(token);
+        if (userId == null) {
+            Log.e(TAG, "Cannot get userId from token");
+            setDefaultUserInfo();
+            return;
+        }
+        
+        Log.d(TAG, "Loading user info for userId: " + userId);
+        
+        // Call API to get user info
+        Call<RestResponse<UserResponse>> call = apiEndpoints.getUserById(userId);
+        
+        call.enqueue(new Callback<RestResponse<UserResponse>>() {
+            @Override
+            public void onResponse(Call<RestResponse<UserResponse>> call, 
+                                 Response<RestResponse<UserResponse>> response) {
+                if (binding == null) return; // Fragment destroyed
+                
+                if (response.isSuccessful() && response.body() != null) {
+                    RestResponse<UserResponse> restResponse = response.body();
+                    
+                    if (restResponse.getStatusCode() == 200 && restResponse.getData() != null) {
+                        UserResponse user = restResponse.getData();
+                        updateUserInfo(user);
+                        Log.d(TAG, "User info loaded successfully: " + user.getFullName());
+                    } else {
+                        Log.e(TAG, "API error: " + restResponse.getMessage());
+                        setDefaultUserInfo();
+                    }
+                } else {
+                    Log.e(TAG, "Response not successful: " + response.code());
+                    setDefaultUserInfo();
+                }
+            }
+            
+            @Override
+            public void onFailure(Call<RestResponse<UserResponse>> call, Throwable t) {
+                if (binding == null) return; // Fragment destroyed
+                Log.e(TAG, "Failed to load user info: " + t.getMessage(), t);
+                setDefaultUserInfo();
+            }
+        });
+    }
+    
+    /**
+     * Update UI with user information from API
+     */
+    private void updateUserInfo(UserResponse user) {
+        if (binding == null) return;
+        
         // Set user information
-        binding.tvFullName.setText(fullName);
-        binding.tvEmail.setText(email);
-        binding.tvPhone.setText(phone);
-
+        binding.tvFullName.setText(user.getFullName() != null ? user.getFullName() : "Người dùng");
+        binding.tvEmail.setText(user.getEmail() != null ? user.getEmail() : "");
+        binding.tvPhone.setText(user.getPhone() != null ? user.getPhone() : "");
+        
         // Set role badge text based on role
-        String roleText = getRoleText(role);
+        String roleText = getRoleText(user.getRole());
         binding.tvRole.setText(roleText);
-
-        // Set member since
-        binding.tvMemberSince.setText("Thành viên từ: " + memberSince);
-
+        
+        // Set member since (format createdAt if available, otherwise use default)
+        // Note: Backend doesn't return createdAt yet, so we'll use a default
+        binding.tvMemberSince.setText("Thành viên từ: 2024");
+        
         // Set statistics
-        binding.tvEventsCount.setText(String.valueOf(eventsParticipated));
-        binding.tvPointsCount.setText(String.format(Locale.getDefault(), "%,d", pointsEarned));
+        // Note: Backend doesn't return event count yet, so we'll use 0 for now
+        binding.tvEventsCount.setText("0");
+        
+        // Set points
+        Integer points = user.getTotalPoints();
+        binding.tvPointsCount.setText(String.format(Locale.getDefault(), "%,d", points != null ? points : 0));
+    }
+    
+    /**
+     * Set default user info when not logged in or error
+     */
+    private void setDefaultUserInfo() {
+        if (binding == null) return;
+        binding.tvFullName.setText("Người dùng");
+        binding.tvEmail.setText("");
+        binding.tvPhone.setText("");
+        binding.tvRole.setText("Thành viên");
+        binding.tvMemberSince.setText("Thành viên từ: 2024");
+        binding.tvEventsCount.setText("0");
+        binding.tvPointsCount.setText("0");
     }
 
     private String getRoleText(String role) {
@@ -96,15 +188,16 @@ public class MeFragment extends Fragment {
         });
 
         binding.cardMyEvents.setOnClickListener(v -> {
-            Toast.makeText(getContext(), "Sự kiện của tôi", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(getActivity(), MyEventsActivity.class);
+            startActivity(intent);
         });
 
         binding.layoutMyCertificates.setOnClickListener(v -> {
             try {
                 if (getActivity() instanceof UserActivity) {
-                    ((UserActivity) getActivity()).switchToCertificateTab();
+                    ((UserActivity) getActivity()).switchToNofiticationTab();
                 } else {
-                    Toast.makeText(getContext(), "Xem chứng nhận", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Xem thông báo", Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
                 Log.e(TAG, "Error switching to certificate tab", e);
@@ -150,6 +243,11 @@ public class MeFragment extends Fragment {
 
     private void handleLogout() {
         if (getActivity() != null) {
+            // Clear token from SharedPreferences
+            ApiConfig.clearToken();
+            Log.d(TAG, "Token cleared, logging out");
+            
+            // Redirect to login screen
             Intent intent = new Intent(requireActivity(), MainActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
