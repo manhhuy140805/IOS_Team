@@ -24,4 +24,5 @@ public class UserRewardResponse {
     private String rewardName;
     private String rewardDescription;
     private Integer pointsRequired;
+    private String rewardImageUrl;
 }

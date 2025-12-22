@@ -189,4 +189,13 @@ public interface ApiEndpoints {
          */
         @POST("user-rewards/claim")
         Call<ClaimRewardResponse> claimReward(@Body ClaimRewardRequest request);
+
+        /**
+         * Lấy danh sách phần thưởng đã đổi của user hiện tại
+         * Backend trả về RestResponse wrapper
+         */
+        @GET("user-rewards/my-rewards")
+        Call<RestResponse<PageResponse<com.manhhuy.myapplication.helper.response.MyRewardResponse>>> getMyRewards(
+                        @Query("page") int page,
+                        @Query("size") int size);
 }
