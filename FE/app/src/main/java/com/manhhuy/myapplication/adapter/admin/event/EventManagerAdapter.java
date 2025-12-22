@@ -13,6 +13,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.manhhuy.myapplication.R;
 import com.manhhuy.myapplication.databinding.ItemEventManagerBinding;
+import com.manhhuy.myapplication.helper.ApiConfig;
 import com.manhhuy.myapplication.helper.response.EventResponse;
 
 import java.text.SimpleDateFormat;
@@ -95,10 +96,24 @@ public class EventManagerAdapter extends RecyclerView.Adapter<EventManagerAdapte
         }
 
         // Button listeners
-        holder.binding.btnNotification.setVisibility(View.GONE); // Ẩn nút thông báo
+        holder.binding.btnNotification.setVisibility(View.GONE);
         holder.binding.btnView.setOnClickListener(v -> listener.onViewClick(event));
-        holder.binding.btnEdit.setOnClickListener(v -> listener.onEditClick(event));
-        holder.binding.btnDelete.setOnClickListener(v -> listener.onDeleteClick(event));
+        
+        // Admin: chỉ có nút Delete (không có Edit)
+        // Organizer: có cả Edit và Delete (chỉ với events của mình)
+        if (ApiConfig.isAdmin()) {
+            holder.binding.btnEdit.setVisibility(View.GONE);
+            holder.binding.btnDelete.setVisibility(View.VISIBLE);
+            holder.binding.btnDelete.setOnClickListener(v -> listener.onDeleteClick(event));
+        } else if (ApiConfig.isOrganizer() && isMyEvent(event)) {
+            holder.binding.btnEdit.setVisibility(View.VISIBLE);
+            holder.binding.btnDelete.setVisibility(View.VISIBLE);
+            holder.binding.btnEdit.setOnClickListener(v -> listener.onEditClick(event));
+            holder.binding.btnDelete.setOnClickListener(v -> listener.onDeleteClick(event));
+        } else {
+            holder.binding.btnEdit.setVisibility(View.GONE);
+            holder.binding.btnDelete.setVisibility(View.GONE);
+        }
         
         holder.itemView.setOnClickListener(v -> listener.onViewClick(event));
     }
@@ -106,6 +121,14 @@ public class EventManagerAdapter extends RecyclerView.Adapter<EventManagerAdapte
     @Override
     public int getItemCount() {
         return eventList.size();
+    }
+    
+    /**
+     * Kiểm tra xem event có phải do user hiện tại tạo không
+     */
+    private boolean isMyEvent(EventResponse event) {
+        Integer currentUserId = ApiConfig.getUserId();
+        return currentUserId != null && currentUserId.equals(event.getCreatorId());
     }
  
     public void updateList(List<EventResponse> newList) {

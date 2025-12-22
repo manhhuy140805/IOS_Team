@@ -2,7 +2,6 @@ package com.manhhuy.myapplication.ui.Activities.Fragment.Common;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,11 +41,9 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * Fragment quản lý sự kiện cho Admin
+ * Quản lý events: Admin (xem/xóa all), Organizer (thêm/sửa/xóa own)
  */
 public class EventManageFragment extends Fragment implements OnEventActionListenerInterface {
-
-    private static final String TAG = "EventManageFragment";
     
     // UI
     private FragmentEventManagerBinding binding;
@@ -113,14 +110,11 @@ public class EventManageFragment extends Fragment implements OnEventActionListen
             }
         });
         
-        // Add event button - chỉ hiện cho ORGANIZER
+        // Chỉ Organizer có nút Add
         binding.btnAddReward.setOnClickListener(v -> startActivity(new Intent(getContext(), AddEventActivity.class)));
         checkUserRoleAndShowAddButton();
     }
     
-    /**
-     * Kiểm tra role của user và chỉ hiện nút thêm event nếu user là ORGANIZER
-     */
     private void checkUserRoleAndShowAddButton() {
         if (ApiConfig.isOrganizer()) {
             binding.btnAddReward.setVisibility(View.VISIBLE);
@@ -135,7 +129,7 @@ public class EventManageFragment extends Fragment implements OnEventActionListen
     }
 
     
-    // ==================== Event Actions ====================
+    // ========== Event Actions ==========
     
     @Override
     public void onViewClick(EventResponse event) {
@@ -173,7 +167,6 @@ public class EventManageFragment extends Fragment implements OnEventActionListen
 
                     @Override
                     public void onFailure(Call<Void> call, Throwable t) {
-                        Log.e(TAG, "Failed to delete event", t);
                         showToast("Lỗi kết nối");
                     }
                 });
@@ -190,7 +183,7 @@ public class EventManageFragment extends Fragment implements OnEventActionListen
         startActivity(intent);
     }
     
-    // ==================== Load Data from API ====================
+    // ========== Load Data ==========
     
     private void loadEventTypes() {
         apiEndpoints.getEventTypes().enqueue(new Callback<RestResponse<List<EventTypeResponse>>>() {
@@ -200,13 +193,11 @@ public class EventManageFragment extends Fragment implements OnEventActionListen
                     eventTypes.clear();
                     eventTypes.addAll(response.body().getData());
                     createCategoryChips();
-                    Log.d(TAG, "Loaded " + eventTypes.size() + " event types");
                 }
             }
 
             @Override
             public void onFailure(Call<RestResponse<List<EventTypeResponse>>> call, Throwable t) {
-                Log.e(TAG, "Failed to load event types", t);
             }
         });
     }
@@ -229,38 +220,48 @@ public class EventManageFragment extends Fragment implements OnEventActionListen
         isLoading = true;
         showLoading(page == 0);
         
-        apiEndpoints.getAllEvents(page, PAGE_SIZE, "createdAt", "DESC", null, null, null, null, null, null, null, null)
-            .enqueue(new Callback<RestResponse<PageResponse<EventResponse>>>() {
-                @Override
-                public void onResponse(Call<RestResponse<PageResponse<EventResponse>>> call, Response<RestResponse<PageResponse<EventResponse>>> response) {
-                    isLoading = false;
-                    showLoading(false);
+        Call<RestResponse<PageResponse<EventResponse>>> call;
+        
+        if (ApiConfig.isAdmin()) {
+            call = apiEndpoints.getAllEvents(page, PAGE_SIZE, "createdAt", "DESC", null, null, null, null, null, null, null, null);
+        } else if (ApiConfig.isOrganizer()) {
+            call = apiEndpoints.getMyEvents(page, PAGE_SIZE, "createdAt", "DESC");
+        } else {
+            isLoading = false;
+            showLoading(false);
+            showToast("Bạn không có quyền truy cập");
+            return;
+        }
+        
+        call.enqueue(new Callback<RestResponse<PageResponse<EventResponse>>>() {
+            @Override
+            public void onResponse(Call<RestResponse<PageResponse<EventResponse>>> call, Response<RestResponse<PageResponse<EventResponse>>> response) {
+                isLoading = false;
+                showLoading(false);
+                
+                if (isResponseValid(response)) {
+                    PageResponse<EventResponse> pageData = response.body().getData();
                     
-                    if (isResponseValid(response)) {
-                        PageResponse<EventResponse> pageData = response.body().getData();
-                        
-                        allEventsList.addAll(pageData.getContent());
-                        
-                        hasMorePages = !pageData.isLast();
-                        applyFilters();
-                        updateStatistics();
-                        Log.d(TAG, "Loaded page " + page + ", total: " + allEventsList.size() + "/" + pageData.getTotalElements());
-                    } else {
-                        showToast("Đã xảy ra lỗi khi tải sự kiện");
-                    }
+                    allEventsList.addAll(pageData.getContent());
+                    
+                    hasMorePages = !pageData.isLast();
+                    applyFilters();
+                    updateStatistics();
+                } else {
+                    showToast("Đã xảy ra lỗi khi tải sự kiện");
                 }
+            }
 
-                @Override
-                public void onFailure(Call<RestResponse<PageResponse<EventResponse>>> call, Throwable t) {
-                    isLoading = false;
-                    showLoading(false);
-                    Log.e(TAG, "Failed to load events", t);
-                    showToast("Lỗi kết nối");
-                }
-            });
+            @Override
+            public void onFailure(Call<RestResponse<PageResponse<EventResponse>>> call, Throwable t) {
+                isLoading = false;
+                showLoading(false);
+                showToast("Lỗi kết nối");
+            }
+        });
     }
     
-    // ==================== Category Chips ====================
+    // ========== Category Chips ==========
     
     private void createCategoryChips() {
         if (getContext() == null) return;
@@ -268,7 +269,6 @@ public class EventManageFragment extends Fragment implements OnEventActionListen
         binding.categoryChipsLayout.removeAllViews();
         LayoutInflater inflater = LayoutInflater.from(getContext());
         
-        // "Tất cả" chip
         addChip(inflater, "Tất cả", "all", true);
         
         // Event type chips
@@ -305,7 +305,7 @@ public class EventManageFragment extends Fragment implements OnEventActionListen
         chip.setBackgroundResource(selected ? R.drawable.bg_chip_selected_event : R.drawable.bg_chip_unselected_event);
     }
     
-    // ==================== Filter & Statistics ====================
+    // ========== Filter & Statistics ==========
 
     private void applyFilters() {
         List<EventResponse> filteredList = new ArrayList<>();
@@ -322,7 +322,6 @@ public class EventManageFragment extends Fragment implements OnEventActionListen
         eventList.addAll(filteredList);
         updateStatistics();
         
-        // Show empty state if no results
         if (eventList.isEmpty() && !allEventsList.isEmpty()) {
             Toast.makeText(getContext(), "Không tìm thấy sự kiện phù hợp", Toast.LENGTH_SHORT).show();
         }
@@ -344,7 +343,7 @@ public class EventManageFragment extends Fragment implements OnEventActionListen
         binding.tvCompletedEvents.setText(String.valueOf(completed));
     }
     
-    // ==================== Helpers ====================
+    // ========== Helpers ==========
     
     private <T> boolean isResponseValid(Response<RestResponse<T>> response) {
         return response.isSuccessful() && 

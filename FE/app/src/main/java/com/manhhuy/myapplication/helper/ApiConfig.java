@@ -109,4 +109,15 @@ public class ApiConfig {
     public static boolean isAdmin() {
         return "ADMIN".equalsIgnoreCase(getUserRole());
     }
+    
+    /**
+     * Lấy userId từ token
+     */
+    public static Integer getUserId() {
+        String token = getToken();
+        if (token == null || token.isEmpty()) {
+            return null;
+        }
+        return JwtUtil.getUserId(token);
+    }
 }
