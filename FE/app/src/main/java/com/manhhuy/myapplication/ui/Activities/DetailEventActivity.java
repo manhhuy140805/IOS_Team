@@ -16,6 +16,7 @@ import com.manhhuy.myapplication.helper.ApiEndpoints;
 import com.manhhuy.myapplication.helper.request.EventRegistrationRequest;
 import com.manhhuy.myapplication.helper.response.EventRegistrationResponse;
 import com.manhhuy.myapplication.helper.response.EventResponse;
+import com.manhhuy.myapplication.helper.response.RestResponse;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -32,6 +33,11 @@ public class DetailEventActivity extends AppCompatActivity {
     private EventResponse eventData;
     private ProgressDialog progressDialog;
     private boolean isRegistering = false;
+    
+    // Registration info when coming from MyEventsActivity
+    private Integer registrationId;
+    private boolean isRegistered = false;
+    private String registrationStatus;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,13 +48,68 @@ public class DetailEventActivity extends AppCompatActivity {
         // Get EventResponse from Intent
         eventData = (EventResponse) getIntent().getSerializableExtra("eventData");
         
+        // Get registration info if coming from MyEventsActivity
+        registrationId = getIntent().getIntExtra("registrationId", -1);
+        isRegistered = getIntent().getBooleanExtra("isRegistered", false);
+        registrationStatus = getIntent().getStringExtra("registrationStatus");
+        
+        if (registrationId == -1) {
+            registrationId = null;
+        }
+        
+        // If eventData is null, try to load by eventId
         if (eventData == null) {
-            Toast.makeText(this, "Không tìm thấy thông tin sự kiện", Toast.LENGTH_SHORT).show();
-            finish();
+            int eventId = getIntent().getIntExtra("eventId", -1);
+            if (eventId != -1) {
+                loadEventById(eventId);
+            } else {
+                Toast.makeText(this, "Không tìm thấy thông tin sự kiện", Toast.LENGTH_SHORT).show();
+                finish();
+            }
             return;
         }
 
         setupUI();
+    }
+    
+    private void loadEventById(int eventId) {
+        showProgressDialog("Đang tải thông tin sự kiện...");
+        
+        ApiEndpoints apiService = ApiConfig.getClient().create(ApiEndpoints.class);
+        Call<RestResponse<EventResponse>> call = apiService.getEventById(eventId);
+        
+        call.enqueue(new Callback<RestResponse<EventResponse>>() {
+            @Override
+            public void onResponse(Call<RestResponse<EventResponse>> call, 
+                                 Response<RestResponse<EventResponse>> response) {
+                dismissProgressDialog();
+                
+                if (response.isSuccessful() && response.body() != null) {
+                    RestResponse<EventResponse> restResponse = response.body();
+                    eventData = restResponse.getData();
+                    
+                    if (eventData != null) {
+                        setupUI();
+                    } else {
+                        Toast.makeText(DetailEventActivity.this, 
+                            "Không có dữ liệu sự kiện", Toast.LENGTH_SHORT).show();
+                        finish();
+                    }
+                } else {
+                    Toast.makeText(DetailEventActivity.this, 
+                        "Không thể tải thông tin sự kiện", Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+            }
+            
+            @Override
+            public void onFailure(Call<RestResponse<EventResponse>> call, Throwable t) {
+                dismissProgressDialog();
+                Toast.makeText(DetailEventActivity.this, 
+                    "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        });
     }
     
     private void setupUI() {
@@ -60,8 +121,15 @@ public class DetailEventActivity extends AppCompatActivity {
     
 
     private void checkUserRoleAndShowRegisterButton() {
-        if (ApiConfig.isVolunteer()) {
+        if (isRegistered && registrationId != null) {
+            // User already registered - show cancel button
             binding.btnRegisterEvent.setVisibility(View.VISIBLE);
+            binding.btnRegisterEvent.setText("Hủy đăng ký");
+            binding.btnRegisterEvent.setBackgroundColor(getResources().getColor(R.color.status_rejected));
+        } else if (ApiConfig.isVolunteer()) {
+            // User not registered - show register button
+            binding.btnRegisterEvent.setVisibility(View.VISIBLE);
+            binding.btnRegisterEvent.setText("Đăng ký tham gia");
         } else {
             binding.btnRegisterEvent.setVisibility(View.GONE);
         }
@@ -80,7 +148,13 @@ public class DetailEventActivity extends AppCompatActivity {
         
         binding.btnRegisterEvent.setOnClickListener(v -> {
             if (eventData != null) {
-                showRegistrationConfirmDialog();
+                if (isRegistered && registrationId != null) {
+                    // Show cancel confirmation
+                    showCancelRegistrationDialog();
+                } else {
+                    // Show register confirmation
+                    showRegistrationConfirmDialog();
+                }
             }
         });
     }
@@ -229,6 +303,74 @@ public class DetailEventActivity extends AppCompatActivity {
                 })
                 .setCancelable(false)
                 .show();
+    }
+    
+    /**
+     * Show confirmation dialog before canceling registration
+     */
+    private void showCancelRegistrationDialog() {
+        new AlertDialog.Builder(this)
+                .setTitle("Hủy đăng ký")
+                .setMessage("Bạn có chắc chắn muốn hủy đăng ký tham gia sự kiện \"" + eventData.getTitle() + "\"?")
+                .setPositiveButton("Hủy đăng ký", (dialog, which) -> {
+                    cancelRegistration();
+                })
+                .setNegativeButton("Không", (dialog, which) -> {
+                    dialog.dismiss();
+                })
+                .show();
+    }
+    
+    /**
+     * Cancel registration via API
+     */
+    private void cancelRegistration() {
+        if (isRegistering || registrationId == null) return;
+        
+        isRegistering = true;
+        showProgressDialog("Đang hủy đăng ký...");
+        
+        ApiEndpoints apiService = ApiConfig.getClient().create(ApiEndpoints.class);
+        Call<Void> call = apiService.cancelRegistration(registrationId);
+        
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                isRegistering = false;
+                dismissProgressDialog();
+                
+                if (response.isSuccessful()) {
+                    new AlertDialog.Builder(DetailEventActivity.this)
+                            .setTitle("Thành công")
+                            .setMessage("Đã hủy đăng ký tham gia sự kiện thành công")
+                            .setPositiveButton("OK", (dialog, which) -> {
+                                dialog.dismiss();
+                                // Set result to notify MyEventsActivity to reload
+                                setResult(RESULT_OK);
+                                finish(); // Return to previous screen
+                            })
+                            .setCancelable(false)
+                            .show();
+                } else {
+                    String errorMsg = "Không thể hủy đăng ký";
+                    if (response.code() == 404) {
+                        errorMsg = "Không tìm thấy đăng ký";
+                    } else if (response.code() == 403) {
+                        errorMsg = "Bạn không có quyền hủy đăng ký này";
+                    }
+                    Toast.makeText(DetailEventActivity.this, errorMsg, Toast.LENGTH_LONG).show();
+                }
+            }
+            
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                isRegistering = false;
+                dismissProgressDialog();
+                Toast.makeText(DetailEventActivity.this,
+                        "Lỗi kết nối: " + t.getMessage(), 
+                        Toast.LENGTH_LONG).show();
+            }
+        });
     }
     
     /**

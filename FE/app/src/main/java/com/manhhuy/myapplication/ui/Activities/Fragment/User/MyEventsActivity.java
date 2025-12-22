@@ -57,11 +57,14 @@ public class MyEventsActivity extends AppCompatActivity {
 
         // Set click listener for registration items
         adapter.setListener(registration -> {
-            // Open event detail using eventId
+            // Open event detail using eventId and pass registrationId for cancel option
             if (registration.getEventId() != null) {
                 Intent intent = new Intent(MyEventsActivity.this, DetailEventActivity.class);
                 intent.putExtra("eventId", registration.getEventId());
-                startActivity(intent);
+                intent.putExtra("registrationId", registration.getId());
+                intent.putExtra("isRegistered", true);
+                intent.putExtra("registrationStatus", registration.getStatus());
+                startActivityForResult(intent, 100); // Use startActivityForResult to get callback
             }
         });
     }
@@ -199,6 +202,18 @@ public class MyEventsActivity extends AppCompatActivity {
         // Reload data when returning to this activity
         if (registrationList.isEmpty()) {
             currentPage = 0;
+            loadMyRegistrations();
+        }
+    }
+    
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        
+        // Reload data if returning from DetailEventActivity with success result
+        if (requestCode == 100 && resultCode == RESULT_OK) {
+            currentPage = 0;
+            registrationList.clear();
             loadMyRegistrations();
         }
     }
