@@ -26,27 +26,27 @@ ALTER SEQUENCE users_notifications_id_seq RESTART WITH 1;
 -- ================================================
 
 -- Password hash for "123456" using BCrypt
--- $2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy
+-- $2a$12$3uuLN3zTa1IuBDRLLw6vce.CmHLJnd0FCWJjbx2hjfaZBmD7AMSlK
 
 -- ================================================
 -- TABLE: users
 -- ================================================
 INSERT INTO users (email, password, full_name, phone, avatar_url, role, status, total_points, address, date_of_birth, gender, violation, created_at, updated_at) VALUES
 -- Admin account
-('admin@volunteer.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'Nguyễn Văn Admin', '0901234567', 'https://i.pravatar.cc/150?img=1', 'ADMIN', 'ACTIVE', 0, '123 Đường ABC, Quận 1, TP.HCM', '1990-01-15', 'MALE', false, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('admin@volunteer.com', '$2a$12$3uuLN3zTa1IuBDRLLw6vce.CmHLJnd0FCWJjbx2hjfaZBmD7AMSlK', 'Nguyễn Văn Admin', '0901234567', 'https://i.pravatar.cc/150?img=1', 'ADMIN', 'ACTIVE', 0, '123 Đường ABC, Quận 1, TP.HCM', '1990-01-15', 'MALE', false, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
 
 -- Organization account
-('org@volunteer.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'Tổ chức Tình nguyện Xanh', '0901234568', 'https://i.pravatar.cc/150?img=2', 'ORGANIZATION', 'ACTIVE', 0, '456 Đường XYZ, Quận 2, TP.HCM', '1985-05-20', 'OTHER', false, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('org@volunteer.com', '$2a$12$3uuLN3zTa1IuBDRLLw6vce.CmHLJnd0FCWJjbx2hjfaZBmD7AMSlK', 'Tổ chức Tình nguyện Xanh', '0901234568', 'https://i.pravatar.cc/150?img=2', 'ORGANIZATION', 'ACTIVE', 0, '456 Đường XYZ, Quận 2, TP.HCM', '1985-05-20', 'OTHER', false, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
 
 -- Volunteer accounts
-('volunteer1@volunteer.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'Trần Thị Hoa', '0901234569', 'https://i.pravatar.cc/150?img=3', 'VOLUNTEER', 'ACTIVE', 150, '789 Đường DEF, Quận 3, TP.HCM', '1995-03-10', 'FEMALE', false, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-('volunteer2@volunteer.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'Lê Văn Nam', '0901234570', 'https://i.pravatar.cc/150?img=4', 'VOLUNTEER', 'ACTIVE', 200, '321 Đường GHI, Quận 4, TP.HCM', '1992-07-25', 'MALE', false, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-('volunteer3@volunteer.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'Phạm Thị Lan', '0901234571', 'https://i.pravatar.cc/150?img=5', 'VOLUNTEER', 'ACTIVE', 300, '654 Đường JKL, Quận 5, TP.HCM', '1998-11-30', 'FEMALE', false, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-('volunteer4@volunteer.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'Hoàng Văn Đức', '0901234572', 'https://i.pravatar.cc/150?img=6', 'VOLUNTEER', 'ACTIVE', 100, '987 Đường MNO, Quận 6, TP.HCM', '1993-09-12', 'MALE', false, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-('volunteer5@volunteer.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'Võ Thị Mai', '0901234573', 'https://i.pravatar.cc/150?img=7', 'VOLUNTEER', 'ACTIVE', 250, '147 Đường PQR, Quận 7, TP.HCM', '1996-02-18', 'FEMALE', false, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-('volunteer6@volunteer.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'Đỗ Văn Tuấn', '0901234574', 'https://i.pravatar.cc/150?img=8', 'VOLUNTEER', 'ACTIVE', 180, '258 Đường STU, Quận 8, TP.HCM', '1994-06-22', 'MALE', false, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-('volunteer7@volunteer.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'Bùi Thị Hương', '0901234575', 'https://i.pravatar.cc/150?img=9', 'VOLUNTEER', 'ACTIVE', 220, '369 Đường VWX, Quận 9, TP.HCM', '1997-04-05', 'FEMALE', false, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-('volunteer8@volunteer.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'Ngô Văn Hùng', '0901234576', 'https://i.pravatar.cc/150?img=10', 'VOLUNTEER', 'ACTIVE', 170, '741 Đường YZ, Quận 10, TP.HCM', '1991-08-14', 'MALE', false, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+('volunteer1@volunteer.com', '$2a$12$3uuLN3zTa1IuBDRLLw6vce.CmHLJnd0FCWJjbx2hjfaZBmD7AMSlK', 'Trần Thị Hoa', '0901234569', 'https://i.pravatar.cc/150?img=3', 'VOLUNTEER', 'ACTIVE', 150, '789 Đường DEF, Quận 3, TP.HCM', '1995-03-10', 'FEMALE', false, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('volunteer2@volunteer.com', '$2a$12$3uuLN3zTa1IuBDRLLw6vce.CmHLJnd0FCWJjbx2hjfaZBmD7AMSlK', 'Lê Văn Nam', '0901234570', 'https://i.pravatar.cc/150?img=4', 'VOLUNTEER', 'ACTIVE', 200, '321 Đường GHI, Quận 4, TP.HCM', '1992-07-25', 'MALE', false, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('volunteer3@volunteer.com', '$2a$12$3uuLN3zTa1IuBDRLLw6vce.CmHLJnd0FCWJjbx2hjfaZBmD7AMSlK', 'Phạm Thị Lan', '0901234571', 'https://i.pravatar.cc/150?img=5', 'VOLUNTEER', 'ACTIVE', 300, '654 Đường JKL, Quận 5, TP.HCM', '1998-11-30', 'FEMALE', false, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('volunteer4@volunteer.com', '$2a$12$3uuLN3zTa1IuBDRLLw6vce.CmHLJnd0FCWJjbx2hjfaZBmD7AMSlK', 'Hoàng Văn Đức', '0901234572', 'https://i.pravatar.cc/150?img=6', 'VOLUNTEER', 'ACTIVE', 100, '987 Đường MNO, Quận 6, TP.HCM', '1993-09-12', 'MALE', false, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('volunteer5@volunteer.com', '$2a$12$3uuLN3zTa1IuBDRLLw6vce.CmHLJnd0FCWJjbx2hjfaZBmD7AMSlK', 'Võ Thị Mai', '0901234573', 'https://i.pravatar.cc/150?img=7', 'VOLUNTEER', 'ACTIVE', 250, '147 Đường PQR, Quận 7, TP.HCM', '1996-02-18', 'FEMALE', false, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('volunteer6@volunteer.com', '$2a$12$3uuLN3zTa1IuBDRLLw6vce.CmHLJnd0FCWJjbx2hjfaZBmD7AMSlK', 'Đỗ Văn Tuấn', '0901234574', 'https://i.pravatar.cc/150?img=8', 'VOLUNTEER', 'ACTIVE', 180, '258 Đường STU, Quận 8, TP.HCM', '1994-06-22', 'MALE', false, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('volunteer7@volunteer.com', '$2a$12$3uuLN3zTa1IuBDRLLw6vce.CmHLJnd0FCWJjbx2hjfaZBmD7AMSlK', 'Bùi Thị Hương', '0901234575', 'https://i.pravatar.cc/150?img=9', 'VOLUNTEER', 'ACTIVE', 220, '369 Đường VWX, Quận 9, TP.HCM', '1997-04-05', 'FEMALE', false, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('volunteer8@volunteer.com', '$2a$12$3uuLN3zTa1IuBDRLLw6vce.CmHLJnd0FCWJjbx2hjfaZBmD7AMSlK', 'Ngô Văn Hùng', '0901234576', 'https://i.pravatar.cc/150?img=10', 'VOLUNTEER', 'ACTIVE', 170, '741 Đường YZ, Quận 10, TP.HCM', '1991-08-14', 'MALE', false, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
 -- Reset sequence after inserting users (to ensure IDs are 1, 2, 3...)
 SELECT setval('users_id_seq', (SELECT MAX(id) FROM users));
