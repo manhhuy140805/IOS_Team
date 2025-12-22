@@ -1,16 +1,4 @@
--- ================================================
--- FAKE DATA FOR VOLUNTEER APP
--- ================================================
--- Created: 2025-12-20
--- Description: Sample data for testing
--- ================================================
--- 
--- IMPORTANT: 
--- If tables already have data, you may need to:
--- 1. Delete existing data first, OR
--- 2. Make sure the IDs in foreign keys match existing data
---
--- Xóa tất cả dữ liệu và reset sequences
+
 TRUNCATE TABLE users_notifications, notifications, user_reward, event_registration, reward, event, reward_type, event_type, users CASCADE;
 
 -- Reset sequences

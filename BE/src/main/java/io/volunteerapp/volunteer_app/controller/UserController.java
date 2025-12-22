@@ -26,8 +26,16 @@ public class UserController {
     public ResponseEntity<RestResponse<UserResponse>> getCurrentUser(
             @AuthenticationPrincipal Jwt jwt) {
 
-        // Lấy userId từ token
-        Integer userId = jwt.getClaim("userId");
+        // Lấy userId từ token - JWT lưu số dưới dạng Long
+        Object userIdClaim = jwt.getClaim("userId");
+        Integer userId;
+        if (userIdClaim instanceof Long) {
+            userId = ((Long) userIdClaim).intValue();
+        } else if (userIdClaim instanceof Integer) {
+            userId = (Integer) userIdClaim;
+        } else {
+            userId = Integer.parseInt(userIdClaim.toString());
+        }
 
         // Gọi service để lấy thông tin
         return userService.getUserById(userId);
@@ -36,7 +44,7 @@ public class UserController {
     @GetMapping("")
     // @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<RestResponse<List<UserResponse>>> getAllUsers(
-            /* @AuthenticationPrincipal Jwt jwt */) {
+    /* @AuthenticationPrincipal Jwt jwt */) {
 
         // Log để debug (optional)
         // System.out.println("Admin " + jwt.getSubject() + " đang xem danh sách user");
@@ -68,7 +76,7 @@ public class UserController {
     // @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<RestResponse<Void>> deleteUser(
             @PathVariable Integer id
-            /* , @AuthenticationPrincipal Jwt jwt */) {
+    /* , @AuthenticationPrincipal Jwt jwt */) {
 
         return userService.deleteUser(id);
     }

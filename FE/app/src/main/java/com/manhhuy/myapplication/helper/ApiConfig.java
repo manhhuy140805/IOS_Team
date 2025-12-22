@@ -41,8 +41,7 @@ public class ApiConfig {
                         }
                         
                         requestBuilder.method(original.method(), original.body());
-                        return chain.proceed(requestBuilder.build());
-                    })
+                        return chain.proceed(requestBuilder.build());})
                     .connectTimeout(30, TimeUnit.SECONDS)
                     .readTimeout(30, TimeUnit.SECONDS)
                     .writeTimeout(30, TimeUnit.SECONDS)

@@ -12,6 +12,7 @@ import lombok.Setter;
 public class UserRewardResponse {
     private Integer id;
     private String status;
+    private Integer pointsSpent;
 
     // User info
     private Integer userId;

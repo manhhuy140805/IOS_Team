@@ -27,12 +27,22 @@ public class RewardAdapter extends RecyclerView.Adapter<RewardAdapter.RewardView
     private List<RewardItem> rewardList;
     private List<RewardItem> rewardListFull;
     private int userPoints;
+    private OnRewardRedeemListener redeemListener;
+
+    // Interface callback khi user nhấn đổi thưởng
+    public interface OnRewardRedeemListener {
+        void onRedeemClick(RewardItem item);
+    }
 
     public RewardAdapter(Context context, List<RewardItem> rewardList, int userPoints) {
         this.context = context;
         this.rewardList = rewardList;
         this.rewardListFull = new ArrayList<>(rewardList);
         this.userPoints = userPoints;
+    }
+
+    public void setOnRewardRedeemListener(OnRewardRedeemListener listener) {
+        this.redeemListener = listener;
     }
 
     @NonNull
@@ -100,10 +110,14 @@ public class RewardAdapter extends RecyclerView.Adapter<RewardAdapter.RewardView
         // Click listener
         holder.binding.btnRedeem.setOnClickListener(v -> {
             if (canRedeem) {
-                Toast.makeText(context,
-                        "Đổi thưởng: " + item.getName() + " (-" + item.getPoints() + " điểm)",
-                        Toast.LENGTH_LONG).show();
-                // TODO: Implement actual redeem logic
+                // Gọi callback nếu có listener
+                if (redeemListener != null) {
+                    redeemListener.onRedeemClick(item);
+                } else {
+                    Toast.makeText(context,
+                            "Đổi thưởng: " + item.getName() + " (-" + item.getPoints() + " điểm)",
+                            Toast.LENGTH_LONG).show();
+                }
             }
         });
 
@@ -137,14 +151,15 @@ public class RewardAdapter extends RecyclerView.Adapter<RewardAdapter.RewardView
     // Convert RewardResponse to RewardItem
     private List<RewardItem> convertToRewardItems(List<RewardResponse> rewards) {
         List<RewardItem> items = new ArrayList<>();
-        
+
         for (RewardResponse reward : rewards) {
             int categoryType = getCategoryTypeFromRewardType(reward.getType());
             int iconColorIndex = categoryType % 4;
-            String expiry = reward.getExpiryDate() != null ? 
-                    formatExpiryDate(reward.getExpiryDate()) : "";
-            
+            String expiry = reward.getExpiryDate() != null ? formatExpiryDate(reward.getExpiryDate()) : "";
+
+            // Sử dụng constructor với rewardId
             RewardItem item = new RewardItem(
+                    reward.getId(), // rewardId từ API
                     reward.getName(),
                     reward.getProviderName() != null ? reward.getProviderName() : "VolunConnect",
                     reward.getDescription(),
@@ -155,34 +170,35 @@ public class RewardAdapter extends RecyclerView.Adapter<RewardAdapter.RewardView
                     reward.getType(),
                     reward.getStatus().equals("AVAILABLE") ? "Còn hàng" : "",
                     iconColorIndex,
-                    reward.getImageUrl()
-            );
-            
+                    reward.getImageUrl());
+
             items.add(item);
         }
-        
+
         return items;
     }
 
     private int getCategoryTypeFromRewardType(String type) {
-        if (type == null) return 0;
-        
+        if (type == null)
+            return 0;
+
         String lowerType = type.toLowerCase();
         if (lowerType.contains("voucher") || lowerType.contains("giảm giá")) {
             return 1;
-        } else if (lowerType.contains("quà") || lowerType.contains("gift") || 
-                   lowerType.contains("mua sắm")) {
+        } else if (lowerType.contains("quà") || lowerType.contains("gift") ||
+                lowerType.contains("mua sắm")) {
             return 2;
-        } else if (lowerType.contains("cơ hội") || lowerType.contains("học") || 
-                   lowerType.contains("giáo dục") || lowerType.contains("kỹ năng")) {
+        } else if (lowerType.contains("cơ hội") || lowerType.contains("học") ||
+                lowerType.contains("giáo dục") || lowerType.contains("kỹ năng")) {
             return 3;
         }
         return 0;
     }
 
     private String formatExpiryDate(String date) {
-        if (date == null || date.isEmpty()) return "";
-        
+        if (date == null || date.isEmpty())
+            return "";
+
         try {
             String[] parts = date.split("-");
             if (parts.length == 3) {

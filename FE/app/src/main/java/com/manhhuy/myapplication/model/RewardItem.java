@@ -1,6 +1,7 @@
 package com.manhhuy.myapplication.model;
 
 public class RewardItem {
+    private Integer rewardId; // ID từ API, dùng cho claim reward
     private String name;
     private String organization;
     private String description;
@@ -28,8 +29,26 @@ public class RewardItem {
     }
 
     public RewardItem(String name, String organization, String description, String points,
-            String stock, String expiry, int categoryType, String tag1, String tag2, 
+            String stock, String expiry, int categoryType, String tag1, String tag2,
             int iconColorIndex, String imageUrl) {
+        this.name = name;
+        this.organization = organization;
+        this.description = description;
+        this.points = points;
+        this.stock = stock;
+        this.expiry = expiry;
+        this.categoryType = categoryType;
+        this.tag1 = tag1;
+        this.tag2 = tag2;
+        this.iconColorIndex = iconColorIndex;
+        this.imageUrl = imageUrl;
+    }
+
+    // Constructor với rewardId từ API
+    public RewardItem(Integer rewardId, String name, String organization, String description, String points,
+            String stock, String expiry, int categoryType, String tag1, String tag2,
+            int iconColorIndex, String imageUrl) {
+        this.rewardId = rewardId;
         this.name = name;
         this.organization = organization;
         this.description = description;
@@ -129,5 +148,13 @@ public class RewardItem {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public Integer getRewardId() {
+        return rewardId;
+    }
+
+    public void setRewardId(Integer rewardId) {
+        this.rewardId = rewardId;
     }
 }
