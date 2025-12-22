@@ -1,5 +1,6 @@
 package com.manhhuy.myapplication.ui.Activities.Fragment.Admin;
 
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -12,26 +13,43 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.manhhuy.myapplication.R;
 import com.manhhuy.myapplication.adapter.admin.post.EventPostAdapter;
 import com.manhhuy.myapplication.adapter.admin.post.OnItemClickListenerInterface;
 import com.manhhuy.myapplication.databinding.FragmentAdminApprovePostsBinding;
-import com.manhhuy.myapplication.model.EventPost;
+import com.manhhuy.myapplication.helper.ApiConfig;
+import com.manhhuy.myapplication.helper.ApiEndpoints;
+import com.manhhuy.myapplication.helper.response.EventResponse;
+import com.manhhuy.myapplication.helper.response.PageResponse;
+import com.manhhuy.myapplication.helper.response.RestResponse;
+import com.manhhuy.myapplication.ui.Activities.DetailEventActivity;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+/**
+ * Admin approve events: Quản lý duyệt bài đăng sự kiện
+ */
 public class AdminApprovePostsFragment extends Fragment implements OnItemClickListenerInterface {
 
     private FragmentAdminApprovePostsBinding binding;
     private EventPostAdapter adapter;
-    private List<EventPost> allPosts;
-    private List<EventPost> filteredPosts;
-
-    private String currentFilter = "all";
+    private final List<EventResponse> eventList = new ArrayList<>();
+    
+    private ApiEndpoints apiEndpoints;
+    private String currentFilter = "PENDING";
+    
+    // Pagination
+    private int currentPage = 0;
+    private boolean isLoading = false;
+    private boolean hasMorePages = true;
+    private static final int PAGE_SIZE = 20;
 
     public AdminApprovePostsFragment() {
 
@@ -47,145 +65,118 @@ public class AdminApprovePostsFragment extends Fragment implements OnItemClickLi
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        
+        apiEndpoints = ApiConfig.getClient().create(ApiEndpoints.class);
+        
         setupRecyclerView();
-        loadSampleData();
         setupListeners();
+        loadEvents();
     }
 
     private void setupRecyclerView() {
-        binding.recyclerViewPosts.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new EventPostAdapter(new ArrayList<>(), this);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        adapter = new EventPostAdapter(getContext(), eventList, this);
+        binding.recyclerViewPosts.setLayoutManager(layoutManager);
         binding.recyclerViewPosts.setAdapter(adapter);
+        
+        // Pagination scroll listener
+        binding.recyclerViewPosts.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                
+                if (!isLoading && hasMorePages && dy > 0) {
+                    int visibleItemCount = layoutManager.getChildCount();
+                    int totalItemCount = layoutManager.getItemCount();
+                    int firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition();
+                    
+                    if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount - 5) {
+                        loadMoreEvents();
+                    }
+                }
+            }
+        });
     }
 
     private void setupListeners() {
-        // Hide back button in fragment
         binding.btnBack.setVisibility(View.GONE);
+        binding.btnMenu.setVisibility(View.GONE);
+        binding.btnLoadMore.setVisibility(View.GONE);
 
-        binding.btnMenu.setOnClickListener(v -> Toast.makeText(getContext(), "Menu", Toast.LENGTH_SHORT).show());
+        // Ẩn tab "Tất cả" và "Đã duyệt"
+        binding.tabAll.setVisibility(View.GONE);
+        binding.tabApproved.setVisibility(View.GONE);
 
-        binding.btnLoadMore
-                .setOnClickListener(v -> Toast.makeText(getContext(), "Đang tải thêm...", Toast.LENGTH_SHORT).show());
-
-        // Tab listeners
-        binding.tabAll.setOnClickListener(v -> filterPosts("all"));
-        binding.tabPending.setOnClickListener(v -> filterPosts("pending"));
-        binding.tabApproved.setOnClickListener(v -> filterPosts("approved"));
-        binding.tabRejected.setOnClickListener(v -> filterPosts("rejected"));
+        binding.tabPending.setOnClickListener(v -> filterEvents("PENDING"));
+        binding.tabRejected.setOnClickListener(v -> filterEvents("REJECTED"));
     }
 
-    private void loadSampleData() {
-        allPosts = new ArrayList<>();
-
-        // Sample pending post 1
-        EventPost post1 = new EventPost();
-        post1.setId(1);
-        post1.setTitle("Tree Planting Drive");
-        post1.setOrganizationName("Forest Guardians VN");
-        post1.setOrganizationInitials("FG");
-        post1.setOrganizationColor("#C3F0CA");
-        post1.setTags(Arrays.asList("Environment", "Outdoor"));
-        post1.setEventDate(new Date());
-        post1.setLocation("Hanoi");
-        post1.setRewardPoints(100);
-        post1.setPostedBy("Nguyễn Minh Tâm");
-        post1.setPostedTime("2 giờ trước");
-        post1.setStatus("pending");
-        allPosts.add(post1);
-
-        // Sample approved post
-        EventPost post2 = new EventPost();
-        post2.setId(2);
-        post2.setTitle("Teach English to Kids");
-        post2.setOrganizationName("Education For All");
-        post2.setOrganizationInitials("EA");
-        post2.setOrganizationColor("#FEE140");
-        post2.setTags(Arrays.asList("Education", "Teaching"));
-        post2.setEventDate(new Date());
-        post2.setLocation("HCM City");
-        post2.setRewardPoints(150);
-        post2.setPostedBy("Lê Văn An");
-        post2.setPostedTime("1 ngày trước");
-        post2.setStatus("approved");
-        post2.setReviewedBy("Admin Hòa");
-        post2.setReviewedTime("1 ngày trước");
-        allPosts.add(post2);
-
-        // Sample pending post 2
-        EventPost post3 = new EventPost();
-        post3.setId(3);
-        post3.setTitle("Animal Shelter Helper");
-        post3.setOrganizationName("Paws & Claws");
-        post3.setOrganizationInitials("PC");
-        post3.setOrganizationColor("#FAB1A0");
-        post3.setTags(Arrays.asList("Animals", "Care"));
-        post3.setEventDate(new Date());
-        post3.setLocation("Hai Phong");
-        post3.setRewardPoints(120);
-        post3.setPostedBy("Trần Thu Hà");
-        post3.setPostedTime("5 giờ trước");
-        post3.setStatus("pending");
-        allPosts.add(post3);
-
-        // Sample rejected post
-        EventPost post4 = new EventPost();
-        post4.setId(4);
-        post4.setTitle("Community Garden");
-        post4.setOrganizationName("Green Community");
-        post4.setOrganizationInitials("CG");
-        post4.setOrganizationColor("#DFE6E9");
-        post4.setTags(Arrays.asList("Garden", "Community"));
-        post4.setEventDate(new Date());
-        post4.setLocation("Da Nang");
-        post4.setRewardPoints(80);
-        post4.setPostedBy("Phạm Minh Quân");
-        post4.setPostedTime("3 ngày trước");
-        post4.setStatus("rejected");
-        post4.setReviewedBy("Admin Linh");
-        post4.setReviewedTime("3 ngày trước");
-        post4.setRejectionReason("Thông tin không đầy đủ, thiếu địa chỉ cụ thể và thời gian");
-        allPosts.add(post4);
-
-        filterPosts("all");
+    private void loadEvents() {
+        currentPage = 0;
+        hasMorePages = true;
+        eventList.clear();
+        loadEventsPage(currentPage);
     }
-
-    private void filterPosts(String filter) {
-        currentFilter = filter;
-
-        // Update tab UI
-        updateTabUI();
-
-        // Filter posts based on status
-        filteredPosts = new ArrayList<>();
-        for (EventPost post : allPosts) {
-            if (filter.equals("all") || post.getStatus().equals(filter)) {
-                filteredPosts.add(post);
-            }
+    
+    private void loadMoreEvents() {
+        if (!isLoading && hasMorePages) {
+            currentPage++;
+            loadEventsPage(currentPage);
         }
+    }
+    
+    private void loadEventsPage(int page) {
+        isLoading = true;
+        
+        // Chỉ load events với status PENDING hoặc REJECTED
+        apiEndpoints.getAllEvents(page, PAGE_SIZE, "createdAt", "DESC",
+            null, null, currentFilter, null, null, null, null, null)
+            .enqueue(new Callback<RestResponse<PageResponse<EventResponse>>>() {
+                @Override
+                public void onResponse(Call<RestResponse<PageResponse<EventResponse>>> call,
+                                     Response<RestResponse<PageResponse<EventResponse>>> response) {
+                    isLoading = false;
+                    
+                    if (isResponseValid(response)) {
+                        PageResponse<EventResponse> pageData = response.body().getData();
+                        
+                        if (page == 0) {
+                            eventList.clear();
+                        }
+                        eventList.addAll(pageData.getContent());
+                        
+                        hasMorePages = !pageData.isLast();
+                        adapter.notifyDataSetChanged();
+                    } else {
+                        showToast("Đã xảy ra lỗi khi tải sự kiện");
+                    }
+                }
 
-        // Update adapter with filtered data
-        adapter.updateData(filteredPosts);
+                @Override
+                public void onFailure(Call<RestResponse<PageResponse<EventResponse>>> call, Throwable t) {
+                    isLoading = false;
+                    showToast("Lỗi kết nối");
+                }
+            });
+    }
+
+    private void filterEvents(String filter) {
+        currentFilter = filter;
+        updateTabUI();
+        loadEvents(); // Reload từ API với status mới
     }
 
     private void updateTabUI() {
         // Style mặc định: tab không được chọn
-        styleTabUnselected(binding.tabAll);
         styleTabUnselected(binding.tabPending);
-        styleTabUnselected(binding.tabApproved);
         styleTabUnselected(binding.tabRejected);
 
         // Gắn style cho tab đang được chọn
         switch (currentFilter) {
-            case "all":
-                styleTabSelected(binding.tabAll);
-                break;
-            case "pending":
+            case "PENDING":
                 styleTabSelected(binding.tabPending);
                 break;
-            case "approved":
-                styleTabSelected(binding.tabApproved);
-                break;
-            case "rejected":
+            case "REJECTED":
                 styleTabSelected(binding.tabRejected);
                 break;
         }
@@ -206,38 +197,87 @@ public class AdminApprovePostsFragment extends Fragment implements OnItemClickLi
     }
 
     @Override
-    public void onApproveClick(EventPost post, int position) {
-        post.setStatus("approved");
-        post.setReviewedBy("Admin Hòa");
-        post.setReviewedTime("Vừa xong");
-        adapter.notifyItemChanged(position);
-        Toast.makeText(getContext(), "Đã duyệt: " + post.getTitle(), Toast.LENGTH_SHORT).show();
+    public void onViewClick(EventResponse event) {
+        Intent intent = new Intent(getContext(), DetailEventActivity.class);
+        intent.putExtra("eventData", event);
+        startActivity(intent);
     }
 
     @Override
-    public void onRejectClick(EventPost post, int position) {
-        post.setStatus("rejected");
-        post.setReviewedBy("Admin Hòa");
-        post.setReviewedTime("Vừa xong");
-        post.setRejectionReason("Thông tin không đầy đủ");
-        adapter.notifyItemChanged(position);
-        Toast.makeText(getContext(), "Đã từ chối: " + post.getTitle(), Toast.LENGTH_SHORT).show();
+    public void onApproveClick(EventResponse event) {
+        new androidx.appcompat.app.AlertDialog.Builder(requireContext())
+            .setTitle("Duyệt sự kiện")
+            .setMessage("Bạn có chắc muốn duyệt sự kiện \"" + event.getTitle() + "\"?")
+            .setPositiveButton("Duyệt", (dialog, which) -> {
+                apiEndpoints.updateEventStatus(event.getId(), "ACTIVE")
+                    .enqueue(new Callback<RestResponse<EventResponse>>() {
+                        @Override
+                        public void onResponse(Call<RestResponse<EventResponse>> call,
+                                             Response<RestResponse<EventResponse>> response) {
+                            if (response.isSuccessful() && response.body() != null) {
+                                // Xóa event khỏi danh sách vì đã duyệt (không còn PENDING)
+                                eventList.remove(event);
+                                adapter.notifyDataSetChanged();
+                                showToast("Đã duyệt sự kiện");
+                            } else {
+                                showToast("Không thể duyệt sự kiện");
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<RestResponse<EventResponse>> call, Throwable t) {
+                            showToast("Lỗi kết nối");
+                        }
+                    });
+            })
+            .setNegativeButton("Hủy", null)
+            .show();
     }
 
     @Override
-    public void onStatisticsClick(EventPost post, int position) {
-        Toast.makeText(getContext(), "Xem thống kê: " + post.getTitle(), Toast.LENGTH_SHORT).show();
-    }
+    public void onRejectClick(EventResponse event) {
+        new androidx.appcompat.app.AlertDialog.Builder(requireContext())
+            .setTitle("Từ chối sự kiện")
+            .setMessage("Bạn có chắc muốn từ chối sự kiện \"" + event.getTitle() + "\"?")
+            .setPositiveButton("Từ chối", (dialog, which) -> {
+                apiEndpoints.updateEventStatus(event.getId(), "REJECTED")
+                    .enqueue(new Callback<RestResponse<EventResponse>>() {
+                        @Override
+                        public void onResponse(Call<RestResponse<EventResponse>> call,
+                                             Response<RestResponse<EventResponse>> response) {
+                            if (response.isSuccessful() && response.body() != null) {
+                                if ("PENDING".equals(currentFilter)) {
+                                    // Nếu đang ở tab Chờ duyệt, xóa khỏi list
+                                    eventList.remove(event);
+                                } else {
+                                    // Nếu đang ở tab Đã từ chối, update status
+                                    event.setStatus("REJECTED");
+                                }
+                                adapter.notifyDataSetChanged();
+                                showToast("Đã từ chối sự kiện");
+                            } else {
+                                showToast("Không thể từ chối sự kiện");
+                            }
+                        }
 
-    @Override
-    public void onEditClick(EventPost post, int position) {
-        Toast.makeText(getContext(), "Chỉnh sửa: " + post.getTitle(), Toast.LENGTH_SHORT).show();
+                        @Override
+                        public void onFailure(Call<RestResponse<EventResponse>> call, Throwable t) {
+                            showToast("Lỗi kết nối");
+                        }
+                    });
+            })
+            .setNegativeButton("Hủy", null)
+            .show();
     }
-
-    @Override
-    public void onReviewClick(EventPost post, int position) {
-        Toast.makeText(getContext(), "Xem lại bài đăng: " + post.getTitle(), Toast.LENGTH_SHORT).show();
-        // TODO: Implement review dialog or navigate to detail screen
+    
+    private <T> boolean isResponseValid(Response<RestResponse<T>> response) {
+        return response.isSuccessful() &&
+               response.body() != null &&
+               response.body().getData() != null;
+    }
+    
+    private void showToast(String message) {
+        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
     }
 
     @Override

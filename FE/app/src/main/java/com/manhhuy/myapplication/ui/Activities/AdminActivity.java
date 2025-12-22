@@ -48,6 +48,7 @@ public class AdminActivity extends AppCompatActivity {
 
         AdminAdapter homeAdapter = new AdminAdapter(this);
         binding.viewPager.setAdapter(homeAdapter);
+        binding.viewPager.setOffscreenPageLimit(4); // Cache tất cả 5 tabs
         binding.viewPager.setPageTransformer(new ZoomOutPageTransformer());
 
         tabTitles = new String[] { "Người dùng", "Sự kiện", "Đổi thưởng", "Duyệt bài", "Cá nhân" };

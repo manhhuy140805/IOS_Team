@@ -120,4 +120,13 @@ public class EventController {
         eventService.deleteEvent(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PutMapping("/{id}/status")
+    // @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<EventResponse> updateEventStatus(
+            @PathVariable Integer id,
+            @RequestParam("status") String status) {
+        EventResponse response = eventService.updateEventStatus(id, status);
+        return ResponseEntity.ok(response);
+    }
 }

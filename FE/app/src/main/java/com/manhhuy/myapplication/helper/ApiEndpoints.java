@@ -158,6 +158,10 @@ public interface ApiEndpoints {
     @DELETE("events/{id}")
     Call<Void> deleteEvent(@Path("id") Integer id);
 
+    @PUT("events/{id}/status")
+    Call<RestResponse<EventResponse>> updateEventStatus(@Path("id") Integer id, @Query("status") String status);
+
+
     
     @POST("event-registrations/register")
     Call<EventRegistrationResponse> registerForEvent(@Body EventRegistrationRequest request);

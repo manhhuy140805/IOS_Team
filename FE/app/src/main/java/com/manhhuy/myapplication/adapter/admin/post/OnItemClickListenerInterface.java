@@ -1,11 +1,9 @@
 package com.manhhuy.myapplication.adapter.admin.post;
 
-import com.manhhuy.myapplication.model.EventPost;
+import com.manhhuy.myapplication.helper.response.EventResponse;
 
 public interface OnItemClickListenerInterface {
-    void onApproveClick(EventPost post, int position);
-    void onRejectClick(EventPost post, int position);
-    void onStatisticsClick(EventPost post, int position);
-    void onEditClick(EventPost post, int position);
-    void onReviewClick(EventPost post, int position);
+    void onViewClick(EventResponse event);
+    void onApproveClick(EventResponse event);
+    void onRejectClick(EventResponse event);
 }

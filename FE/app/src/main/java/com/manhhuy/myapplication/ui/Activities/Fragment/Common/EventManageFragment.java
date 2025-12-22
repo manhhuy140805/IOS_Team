@@ -223,8 +223,10 @@ public class EventManageFragment extends Fragment implements OnEventActionListen
         Call<RestResponse<PageResponse<EventResponse>>> call;
         
         if (ApiConfig.isAdmin()) {
-            call = apiEndpoints.getAllEvents(page, PAGE_SIZE, "createdAt", "DESC", null, null, null, null, null, null, null, null);
+            // Admin: Chỉ load events ACTIVE
+            call = apiEndpoints.getAllEvents(page, PAGE_SIZE, "createdAt", "DESC", null, null, "ACTIVE", null, null, null, null, null);
         } else if (ApiConfig.isOrganizer()) {
+            // Organizer: Load own events (sẽ filter local)
             call = apiEndpoints.getMyEvents(page, PAGE_SIZE, "createdAt", "DESC");
         } else {
             isLoading = false;
@@ -242,7 +244,13 @@ public class EventManageFragment extends Fragment implements OnEventActionListen
                 if (isResponseValid(response)) {
                     PageResponse<EventResponse> pageData = response.body().getData();
                     
-                    allEventsList.addAll(pageData.getContent());
+                    // Chỉ thêm events có status ACTIVE
+                    for (EventResponse event : pageData.getContent()) {
+                        String status = event.getStatus();
+                        if ("ACTIVE".equalsIgnoreCase(status)) {
+                            allEventsList.add(event);
+                        }
+                    }
                     
                     hasMorePages = !pageData.isLast();
                     applyFilters();

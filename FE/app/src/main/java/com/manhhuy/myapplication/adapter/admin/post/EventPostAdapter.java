@@ -1,6 +1,6 @@
 package com.manhhuy.myapplication.adapter.admin.post;
 
-import android.graphics.Color;
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,9 +8,10 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.manhhuy.myapplication.R;
 import com.manhhuy.myapplication.databinding.ItemEventPostBinding;
-import com.manhhuy.myapplication.model.EventPost;
+import com.manhhuy.myapplication.helper.response.EventResponse;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -18,13 +19,17 @@ import java.util.Locale;
 
 public class EventPostAdapter extends RecyclerView.Adapter<EventPostAdapter.ViewHolder> {
 
-    private List<EventPost> eventPosts;
-    private OnItemClickListenerInterface listener;
+    private final Context context;
+    private final List<EventResponse> events;
+    private final OnItemClickListenerInterface listener;
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
 
-    public EventPostAdapter(List<EventPost> eventPosts, OnItemClickListenerInterface listener) {
-        this.eventPosts = eventPosts;
+    public EventPostAdapter(Context context, List<EventResponse> events, OnItemClickListenerInterface listener) {
+        this.context = context;
+        this.events = events;
         this.listener = listener;
     }
+    
     static class ViewHolder extends RecyclerView.ViewHolder {
         ItemEventPostBinding binding;
 
@@ -43,118 +48,71 @@ public class EventPostAdapter extends RecyclerView.Adapter<EventPostAdapter.View
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        EventPost post = eventPosts.get(position);
+        EventResponse event = events.get(position);
         
-        // Set title
-        holder.binding.tvTitle.setText(post.getTitle());
+        holder.binding.tvTitle.setText(event.getTitle());
+        holder.binding.tvLocation.setText("📍 " + (event.getLocation() != null ? event.getLocation() : ""));
+        holder.binding.tvDate.setText("📅 " + (event.getEventStartTime() != null ? event.getEventStartTime() : "N/A"));
         
-        // Set organization
-        holder.binding.tvOrgInitials.setText(post.getOrganizationInitials());
-        holder.binding.tvOrgName.setText(post.getOrganizationName());
-        
-        // Set organization color
-        if (post.getOrganizationColor() != null) {
-            holder.binding.tvOrgInitials.setBackgroundColor(Color.parseColor(post.getOrganizationColor()));
+        if (event.getRewardPoints() != null && event.getRewardPoints() > 0) {
+            holder.binding.tvReward.setText(event.getRewardPoints() + "đ");
+        } else {
+            holder.binding.tvReward.setText("0đ");
         }
         
-        // Set date
-        if (post.getEventDate() != null) {
-            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-            holder.binding.tvDate.setText(sdf.format(post.getEventDate()));
+        // Image
+        if (event.getImageUrl() != null && !event.getImageUrl().isEmpty()) {
+            Glide.with(context)
+                .load(event.getImageUrl())
+                .placeholder(R.drawable.logokhoa)
+                .error(R.drawable.logokhoa)
+                .centerCrop()
+                .into(holder.binding.imgEvent);
+        } else {
+            holder.binding.imgEvent.setImageResource(R.drawable.logokhoa);
         }
         
-        // Set location
-        holder.binding.tvLocation.setText(post.getLocation());
+        // Org info - hide nếu không có
+        holder.binding.tvOrgInitials.setVisibility(View.GONE);
+        holder.binding.tvOrgName.setVisibility(View.GONE);
         
-        // Set reward
-        holder.binding.tvReward.setText(post.getRewardPoints() + "đ");
+        // Posted info - hide vì không có data
+        holder.binding.tvPostedInfo.setVisibility(View.GONE);
         
-        // Set posted info
-        String postedInfo = "Đăng bởi: " + post.getPostedBy() + " • " + post.getPostedTime();
-        holder.binding.tvPostedInfo.setText(postedInfo);
-        
-        // Set status and buttons based on post status
-        String status = post.getStatus();
-        if ("pending".equals(status)) {
+        String status = event.getStatus() != null ? event.getStatus().toUpperCase() : "PENDING";
+        if ("PENDING".equals(status)) {
             holder.binding.tvStatus.setText("⏳ Chờ duyệt");
             holder.binding.tvStatus.setBackgroundResource(R.drawable.bg_status_pending_light);
-            holder.binding.tvStatus.setTextColor(Color.parseColor("#EF6C00"));
             holder.binding.layoutActionButtons.setVisibility(View.VISIBLE);
             holder.binding.layoutApprovedButtons.setVisibility(View.GONE);
             holder.binding.layoutRejectionReason.setVisibility(View.GONE);
-            holder.binding.btnReview.setVisibility(View.GONE);
-            
-        } else if ("approved".equals(status)) {
+        } else if ("ACTIVE".equals(status) || "APPROVED".equals(status)) {
             holder.binding.tvStatus.setText("✓ Đã duyệt");
             holder.binding.tvStatus.setBackgroundResource(R.drawable.bg_status_approved_light);
-            holder.binding.tvStatus.setTextColor(Color.parseColor("#2E7D32"));
             holder.binding.layoutActionButtons.setVisibility(View.GONE);
             holder.binding.layoutApprovedButtons.setVisibility(View.VISIBLE);
             holder.binding.layoutRejectionReason.setVisibility(View.GONE);
-            holder.binding.btnReview.setVisibility(View.GONE);
-            
-            // Update posted info for approved posts
-            String reviewedInfo = "Duyệt bởi: " + post.getReviewedBy() + " • " + post.getReviewedTime();
-            holder.binding.tvPostedInfo.setText(reviewedInfo);
-            
-        } else if ("rejected".equals(status)) {
+        } else if ("REJECTED".equals(status)) {
             holder.binding.tvStatus.setText("✕ Từ chối");
             holder.binding.tvStatus.setBackgroundResource(R.drawable.bg_status_rejected_light);
-            holder.binding.tvStatus.setTextColor(Color.parseColor("#C62828"));
             holder.binding.layoutActionButtons.setVisibility(View.GONE);
             holder.binding.layoutApprovedButtons.setVisibility(View.GONE);
             holder.binding.layoutRejectionReason.setVisibility(View.VISIBLE);
-            holder.binding.btnReview.setVisibility(View.VISIBLE);
-            
-            // Set rejection reason
-            holder.binding.tvRejectionReason.setText(post.getRejectionReason());
-            
-            // Update posted info for rejected posts
-            String rejectedInfo = "Từ chối bởi: " + post.getReviewedBy() + " • " + post.getReviewedTime();
-            holder.binding.tvPostedInfo.setText(rejectedInfo);
+            holder.binding.tvRejectionReason.setText("Admin đã từ chối sự kiện này");
+        } else {
+            holder.binding.tvStatus.setText(status);
+            holder.binding.layoutActionButtons.setVisibility(View.GONE);
+            holder.binding.layoutApprovedButtons.setVisibility(View.GONE);
+            holder.binding.layoutRejectionReason.setVisibility(View.GONE);
         }
         
-        // gọi ngược lên fragment
-        holder.binding.btnApprove.setOnClickListener(v -> {
-            if (listener != null) {
-                listener.onApproveClick(post, position);
-            }
-        });
-        
-        holder.binding.btnReject.setOnClickListener(v -> {
-            if (listener != null) {
-                listener.onRejectClick(post, position);
-            }
-        });
-        
-        holder.binding.btnStatistics.setOnClickListener(v -> {
-            if (listener != null) {
-                listener.onStatisticsClick(post, position);
-            }
-        });
-        
-        holder.binding.btnEdit.setOnClickListener(v -> {
-            if (listener != null) {
-                listener.onEditClick(post, position);
-            }
-        });
-        
-        holder.binding.btnReview.setOnClickListener(v -> {
-            if (listener != null) {
-                listener.onReviewClick(post, position);
-            }
-        });
+        holder.binding.getRoot().setOnClickListener(v -> listener.onViewClick(event));
+        holder.binding.btnApprove.setOnClickListener(v -> listener.onApproveClick(event));
+        holder.binding.btnReject.setOnClickListener(v -> listener.onRejectClick(event));
     }
 
     @Override
     public int getItemCount() {
-        return eventPosts.size();
+        return events.size();
     }
-
-    public void updateData(List<EventPost> newPosts) {
-        this.eventPosts = newPosts;
-        notifyDataSetChanged();
-    }
-
-
 }
