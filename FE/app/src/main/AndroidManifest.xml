@@ -21,9 +21,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.Activities.MainActivity" android:exported="true">
-
-        </activity>
         <activity android:name=".ui.Activities.Fragment.User.MyEventsActivity" android:exported="false"></activity>
         <activity android:name=".ui.Activities.AddEventActivity" android:exported="true"></activity>
     </application>

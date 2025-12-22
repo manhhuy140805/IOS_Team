@@ -255,31 +255,6 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Năm thành lập*"
-                    android:textStyle="bold"
-                    android:textColor="@color/text_primary"
-                    android:textSize="14sp"
-                    android:layout_marginBottom="4dp"/>
-
-                <EditText
-                    android:id="@+id/edit_text_org_founded_date"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/bg_custom_edit_text"
-                    android:hint="2020"
-                    android:inputType="number"
-                    android:drawableStart="@drawable/ic_calendar"
-                    android:drawablePadding="12dp"
-                    android:singleLine="true"
-                    android:paddingStart="16dp"
-                    android:paddingEnd="16dp"
-                    android:paddingTop="14dp"
-                    android:paddingBottom="14dp"
-                    android:layout_marginBottom="15dp"/>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
                     android:text="Mật khẩu*"
                     android:textStyle="bold"
                     android:textColor="@color/text_primary"

@@ -2,6 +2,7 @@ package com.manhhuy.myapplication.ui.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -13,10 +14,21 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.manhhuy.myapplication.R;
 import com.manhhuy.myapplication.databinding.ActivityRegisterBinding;
+import com.manhhuy.myapplication.helper.ApiConfig;
+import com.manhhuy.myapplication.helper.ApiEndpoints;
+import com.manhhuy.myapplication.helper.request.RegisterRequest;
+import com.manhhuy.myapplication.helper.response.RestResponse;
+import com.manhhuy.myapplication.helper.response.UserResponse;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class RegisterActivity extends AppCompatActivity {
 
+    private static final String TAG = "RegisterActivity";
     private ActivityRegisterBinding binding;
+    private ApiEndpoints apiEndpoints;
     private boolean isOrganization = false; 
 
     @Override
@@ -32,6 +44,9 @@ public class RegisterActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        // Initialize API client
+        apiEndpoints = ApiConfig.getClient().create(ApiEndpoints.class);
 
         setupListeners();
     }
@@ -116,14 +131,67 @@ public class RegisterActivity extends AppCompatActivity {
             binding.editTextLocation.requestFocus();
             return;
         }
-        Toast.makeText(this, "Đăng ký tài khoản tình nguyện viên thành công!", Toast.LENGTH_LONG).show();
-        finish();
+
+        // Disable button to prevent double-click
+        binding.btnCreateAccount.setEnabled(false);
+
+        // Create register request
+        RegisterRequest request = new RegisterRequest();
+        request.setEmail(email);
+        request.setPassword(password);
+        request.setFullName(fullname);
+        request.setPhone(phone);
+        request.setRole("VOLUNTEER");
+        request.setAddress(location);
+
+        Log.d(TAG, "Registering volunteer account: " + email);
+
+        // Call API
+        Call<RestResponse<UserResponse>> call = apiEndpoints.register(request);
+        call.enqueue(new Callback<RestResponse<UserResponse>>() {
+            @Override
+            public void onResponse(Call<RestResponse<UserResponse>> call,
+                    Response<RestResponse<UserResponse>> response) {
+                binding.btnCreateAccount.setEnabled(true);
+
+                if (response.isSuccessful() && response.body() != null) {
+                    RestResponse<UserResponse> restResponse = response.body();
+
+                    if (restResponse.getStatusCode() == 201 || restResponse.getStatusCode() == 200) {
+                        Toast.makeText(RegisterActivity.this,
+                                "Đăng ký tài khoản tình nguyện viên thành công!",
+                                Toast.LENGTH_LONG).show();
+                        Log.d(TAG, "Registration successful");
+                        finish();
+                    } else {
+                        String errorMessage = restResponse.getMessage() != null
+                                ? restResponse.getMessage()
+                                : "Đăng ký thất bại";
+                        Toast.makeText(RegisterActivity.this, errorMessage, Toast.LENGTH_LONG).show();
+                        Log.e(TAG, "Registration failed: " + errorMessage);
+                    }
+                } else {
+                    Toast.makeText(RegisterActivity.this,
+                            "Đăng ký thất bại. Vui lòng thử lại!",
+                            Toast.LENGTH_SHORT).show();
+                    Log.e(TAG, "Response not successful: " + response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<RestResponse<UserResponse>> call, Throwable t) {
+                binding.btnCreateAccount.setEnabled(true);
+                Toast.makeText(RegisterActivity.this,
+                        "Lỗi kết nối: " + t.getMessage(),
+                        Toast.LENGTH_SHORT).show();
+                Log.e(TAG, "Registration API call failed", t);
+            }
+        });
     }
 
     private void createOrganizationAccount() {
         String orgName = binding.editTextOrgName.getText().toString().trim();
         String orgEmail = binding.editTextOrgEmail.getText().toString().trim();
-        String foundedDate = binding.editTextOrgFoundedDate.getText().toString().trim();
         String password = binding.editTextOrgPassword.getText().toString().trim();
         String location = binding.editTextOrgLocation.getText().toString().trim();
         String phone = binding.editTextOrgPhone.getText().toString().trim();
@@ -141,24 +209,7 @@ public class RegisterActivity extends AppCompatActivity {
             return;
         }
 
-        if (foundedDate.isEmpty()) {
-            Toast.makeText(this, "Vui lòng nhập năm thành lập", Toast.LENGTH_SHORT).show();
-            binding.editTextOrgFoundedDate.requestFocus();
-            return;
-        }
 
-        try {
-            int year = Integer.parseInt(foundedDate);
-            if (year < 1900 || year > 2025) {
-                Toast.makeText(this, "Năm thành lập không hợp lệ", Toast.LENGTH_SHORT).show();
-                binding.editTextOrgFoundedDate.requestFocus();
-                return;
-            }
-        } catch (NumberFormatException e) {
-            Toast.makeText(this, "Năm thành lập phải là số", Toast.LENGTH_SHORT).show();
-            binding.editTextOrgFoundedDate.requestFocus();
-            return;
-        }
 
         if (password.isEmpty() || password.length() < 6) {
             Toast.makeText(this, "Mật khẩu phải có ít nhất 6 ký tự", Toast.LENGTH_SHORT).show();
@@ -178,7 +229,60 @@ public class RegisterActivity extends AppCompatActivity {
             return;
         }
 
-        Toast.makeText(this, "Đăng ký tổ chức thành công!", Toast.LENGTH_LONG).show();
-        finish();
+        // Disable button to prevent double-click
+        binding.btnCreateAccount.setEnabled(false);
+
+        // Create register request for organization
+        RegisterRequest request = new RegisterRequest();
+        request.setEmail(orgEmail);
+        request.setPassword(password);
+        request.setFullName(orgName);
+        request.setPhone(phone);
+        request.setRole("ORGANIZATION");
+        request.setAddress(location);
+
+        Log.d(TAG, "Registering organization account: " + orgEmail);
+
+        // Call API
+        Call<RestResponse<UserResponse>> call = apiEndpoints.register(request);
+        call.enqueue(new Callback<RestResponse<UserResponse>>() {
+            @Override
+            public void onResponse(Call<RestResponse<UserResponse>> call,
+                    Response<RestResponse<UserResponse>> response) {
+                binding.btnCreateAccount.setEnabled(true);
+
+                if (response.isSuccessful() && response.body() != null) {
+                    RestResponse<UserResponse> restResponse = response.body();
+
+                    if (restResponse.getStatusCode() == 201 || restResponse.getStatusCode() == 200) {
+                        Toast.makeText(RegisterActivity.this,
+                                "Đăng ký tổ chức thành công!",
+                                Toast.LENGTH_LONG).show();
+                        Log.d(TAG, "Organization registration successful");
+                        finish();
+                    } else {
+                        String errorMessage = restResponse.getMessage() != null
+                                ? restResponse.getMessage()
+                                : "Đăng ký thất bại";
+                        Toast.makeText(RegisterActivity.this, errorMessage, Toast.LENGTH_LONG).show();
+                        Log.e(TAG, "Organization registration failed: " + errorMessage);
+                    }
+                } else {
+                    Toast.makeText(RegisterActivity.this,
+                            "Đăng ký thất bại. Vui lòng thử lại!",
+                            Toast.LENGTH_SHORT).show();
+                    Log.e(TAG, "Response not successful: " + response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<RestResponse<UserResponse>> call, Throwable t) {
+                binding.btnCreateAccount.setEnabled(true);
+                Toast.makeText(RegisterActivity.this,
+                        "Lỗi kết nối: " + t.getMessage(),
+                        Toast.LENGTH_SHORT).show();
+                Log.e(TAG, "Organization registration API call failed", t);
+            }
+        });
     }
 }
