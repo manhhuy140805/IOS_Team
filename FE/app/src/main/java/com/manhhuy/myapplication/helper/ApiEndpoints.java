@@ -1,5 +1,6 @@
 package com.manhhuy.myapplication.helper;
 
+import com.manhhuy.myapplication.helper.request.ChangePasswordRequest;
 import com.manhhuy.myapplication.helper.request.ClaimRewardRequest;
 import com.manhhuy.myapplication.helper.request.EventRegistrationRequest;
 import com.manhhuy.myapplication.helper.request.EventRequest;
@@ -62,6 +63,12 @@ public interface ApiEndpoints {
 
         @PUT("users/{id}")
         Call<RestResponse<UserResponse>> updateUser(@Path("id") Integer id, @Body UpdateUserRequest request);
+        
+        @PUT("users/me")
+        Call<RestResponse<UserResponse>> updateCurrentUser(@Body UpdateUserRequest request);
+        
+        @PUT("users/me/change-password")
+        Call<RestResponse<Void>> changePassword(@Body ChangePasswordRequest request);
 
         @DELETE("users/{id}")
         Call<RestResponse<Void>> deleteUser(@Path("id") Integer id);

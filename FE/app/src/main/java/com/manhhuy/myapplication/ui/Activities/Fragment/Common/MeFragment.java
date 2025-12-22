@@ -21,6 +21,8 @@ import com.manhhuy.myapplication.helper.JwtUtil;
 import com.manhhuy.myapplication.helper.response.RestResponse;
 import com.manhhuy.myapplication.helper.response.UserResponse;
 import com.manhhuy.myapplication.ui.Activities.Fragment.User.MyEventsActivity;
+import com.manhhuy.myapplication.ui.Activities.ChangePasswordActivity;
+import com.manhhuy.myapplication.ui.Activities.EditProfileActivity;
 import com.manhhuy.myapplication.ui.Activities.MainActivity;
 import com.manhhuy.myapplication.ui.Activities.MyRewardActivity;
 import com.manhhuy.myapplication.ui.Activities.UserActivity;
@@ -150,8 +152,9 @@ public class MeFragment extends Fragment {
         binding.tvMemberSince.setText("Thành viên từ: 2024");
 
         // Set statistics
-        // Note: Backend doesn't return event count yet, so we'll use 0 for now
-        binding.tvEventsCount.setText("0");
+        Integer activityCount = user.getActivityCount();
+        binding.tvEventsCount.setText(String.format(Locale.getDefault(), "%d", 
+            activityCount != null ? activityCount : 0));
 
         // Set points
         Integer points = user.getTotalPoints();
@@ -215,8 +218,15 @@ public class MeFragment extends Fragment {
             startActivity(intent);
         });
 
-        binding.cardEditProfile.setOnClickListener(v -> {
-            Toast.makeText(getContext(), "Chỉnh sửa hồ sơ", Toast.LENGTH_SHORT).show();
+        binding.layoutEditProfile.setOnClickListener(v -> {
+            Log.d("MeFragment", "Edit profile clicked");
+            Intent intent = new Intent(getActivity(), EditProfileActivity.class);
+            startActivityForResult(intent, 200); // Request code 200 for profile edit
+        });
+        
+        binding.layoutChangePassword.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), ChangePasswordActivity.class);
+            startActivity(intent);
         });
 
         binding.cardLogout.setOnClickListener(v -> {
@@ -251,6 +261,16 @@ public class MeFragment extends Fragment {
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
             requireActivity().finish();
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        
+        // Reload user info after editing profile
+        if (requestCode == 200 && resultCode == getActivity().RESULT_OK) {
+            loadUserData();
         }
     }
 

@@ -23,6 +23,9 @@ public class UserService {
 
     @Autowired
     private UserMapper userMapper;
+    
+    @Autowired
+    private org.springframework.security.crypto.password.PasswordEncoder passwordEncoder;
 
     public ResponseEntity<RestResponse<UserResponse>> getUserById(Integer userId) {
 
@@ -159,5 +162,49 @@ public class UserService {
                 user.getViolation(),
                 activityCount
         );
+    }
+    
+    public ResponseEntity<RestResponse<Void>> changePassword(Integer userId, 
+            io.volunteerapp.volunteer_app.DTO.requeset.ChangePasswordRequest request) {
+        
+        // 1. Validate passwords match
+        if (!request.getNewPassword().equals(request.getConfirmPassword())) {
+            RestResponse<Void> response = new RestResponse<>();
+            response.setStatus(400);
+            response.setError("Bad Request");
+            response.setMessage("Mật khẩu mới và xác nhận mật khẩu không khớp");
+            return ResponseEntity.badRequest().body(response);
+        }
+        
+        // 2. Find user
+        Optional<User> userOptional = userRepository.findById(userId);
+        if (userOptional.isEmpty()) {
+            RestResponse<Void> response = new RestResponse<>();
+            response.setStatus(404);
+            response.setError("Not Found");
+            response.setMessage("Không tìm thấy người dùng");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        }
+        
+        User user = userOptional.get();
+        
+        // 3. Verify current password
+        if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
+            RestResponse<Void> response = new RestResponse<>();
+            response.setStatus(400);
+            response.setError("Bad Request");
+            response.setMessage("Mật khẩu hiện tại không đúng");
+            return ResponseEntity.badRequest().body(response);
+        }
+        
+        // 4. Update password
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        userRepository.save(user);
+        
+        // 5. Return success
+        RestResponse<Void> response = new RestResponse<>();
+        response.setStatus(200);
+        response.setMessage("Đổi mật khẩu thành công");
+        return ResponseEntity.ok(response);
     }
 }

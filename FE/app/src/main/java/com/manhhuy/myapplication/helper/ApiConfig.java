@@ -102,7 +102,7 @@ public class ApiConfig {
     
 
     public static boolean isOrganizer() {
-        return "ORGANIZER".equalsIgnoreCase(getUserRole());
+        return "ORGANIZATION".equalsIgnoreCase(getUserRole());
     }
     
     public static boolean isAdmin() {

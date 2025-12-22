@@ -1,5 +1,6 @@
 package io.volunteerapp.volunteer_app.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -7,6 +8,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
+import io.volunteerapp.volunteer_app.DTO.requeset.ChangePasswordRequest;
 import io.volunteerapp.volunteer_app.DTO.requeset.UpdateUserRequest;
 import io.volunteerapp.volunteer_app.DTO.response.UserResponse;
 import io.volunteerapp.volunteer_app.Util.RestResponse;
@@ -70,6 +72,50 @@ public class UserController {
             @AuthenticationPrincipal Jwt jwt) {
 
         return userService.updateUser(id, request);
+    }
+    
+    @PutMapping("/me")
+    @PreAuthorize("hasAnyRole('ROLE_VOLUNTEER', 'ROLE_ADMIN', 'ROLE_ORGANIZATION')")
+    public ResponseEntity<RestResponse<UserResponse>> updateCurrentUser(
+            @RequestBody UpdateUserRequest request,
+            @AuthenticationPrincipal Jwt jwt) {
+
+        // Get userId from token - handle both Long and Integer
+        Object userIdClaim = jwt.getClaim("userId");
+        Integer userId;
+        if (userIdClaim instanceof Long) {
+            userId = ((Long) userIdClaim).intValue();
+        } else if (userIdClaim instanceof Integer) {
+            userId = (Integer) userIdClaim;
+        } else {
+            throw new RuntimeException("Invalid userId claim type");
+        }
+        
+        // Only allow updating own profile (not role/status)
+        request.setRole(null);
+        request.setStatus(null);
+
+        return userService.updateUser(userId, request);
+    }
+    
+    @PutMapping("/me/change-password")
+    @PreAuthorize("hasAnyRole('ROLE_VOLUNTEER', 'ROLE_ADMIN', 'ROLE_ORGANIZATION')")
+    public ResponseEntity<RestResponse<Void>> changePassword(
+            @Valid @RequestBody ChangePasswordRequest request,
+            @AuthenticationPrincipal Jwt jwt) {
+
+        // Get userId from token
+        Object userIdClaim = jwt.getClaim("userId");
+        Integer userId;
+        if (userIdClaim instanceof Long) {
+            userId = ((Long) userIdClaim).intValue();
+        } else if (userIdClaim instanceof Integer) {
+            userId = (Integer) userIdClaim;
+        } else {
+            throw new RuntimeException("Invalid userId claim type");
+        }
+
+        return userService.changePassword(userId, request);
     }
 
     @DeleteMapping("/{id}")
