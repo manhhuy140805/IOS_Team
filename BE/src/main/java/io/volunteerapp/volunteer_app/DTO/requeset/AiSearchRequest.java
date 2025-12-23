@@ -1,6 +1,5 @@
 package io.volunteerapp.volunteer_app.DTO.requeset;
 
-import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,6 +11,12 @@ import lombok.Setter;
 @AllArgsConstructor
 public class AiSearchRequest {
 
-    @NotBlank(message = "Query is required")
+    // Sở thích, thói quen của người dùng
+    private String interests;
+
+    // Địa điểm mong muốn
+    private String location;
+
+    // Query tìm kiếm tự do (optional)
     private String query;
 }

@@ -148,9 +148,12 @@ public class EventController {
     }
 
     @PostMapping("/ai-search")
-    public ResponseEntity<PageResponse<EventResponse>> searchEventsByAI(
-            @Valid @RequestBody io.volunteerapp.volunteer_app.DTO.requeset.AiSearchRequest request) {
-        PageResponse<EventResponse> response = eventService.searchEventsByAI(request.getQuery());
+    public ResponseEntity<io.volunteerapp.volunteer_app.DTO.response.AiSearchResponse> searchEventsByAI(
+            @RequestBody io.volunteerapp.volunteer_app.DTO.requeset.AiSearchRequest request) {
+        io.volunteerapp.volunteer_app.DTO.response.AiSearchResponse response = eventService.searchEventsByAI(
+                request.getInterests(),
+                request.getLocation(),
+                request.getQuery());
         return ResponseEntity.ok(response);
     }
 }

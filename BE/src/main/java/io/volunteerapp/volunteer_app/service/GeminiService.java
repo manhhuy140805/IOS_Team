@@ -1,7 +1,6 @@
 package io.volunteerapp.volunteer_app.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.volunteerapp.volunteer_app.model.Event;
@@ -34,12 +33,26 @@ public class GeminiService {
         this.objectMapper = new ObjectMapper();
     }
 
-    /**
-     * Analyze events and return matching event IDs based on user query
-     */
-    public List<Integer> analyzeEventsForSearch(List<Event> events, String userQuery) {
+    // Result class để chứa cả event IDs và explanation
+    public static class AiAnalysisResult {
+        public List<Integer> eventIds;
+        public String explanation;
+
+        public AiAnalysisResult() {
+            this.eventIds = new ArrayList<>();
+            this.explanation = "";
+        }
+
+        public AiAnalysisResult(List<Integer> eventIds, String explanation) {
+            this.eventIds = eventIds;
+            this.explanation = explanation;
+        }
+    }
+
+    public AiAnalysisResult analyzeEventsForSearch(List<Event> events, String interests, String location,
+            String query) {
         if (events == null || events.isEmpty()) {
-            return new ArrayList<>();
+            return new AiAnalysisResult(new ArrayList<>(), "Hiện tại chưa có sự kiện nào trong hệ thống.");
         }
 
         // Build events data string for prompt
@@ -74,43 +87,67 @@ public class GeminiService {
         eventsData.append("]");
 
         // Build prompt
-        String prompt = buildPrompt(eventsData.toString(), userQuery);
+        String prompt = buildPrompt(eventsData.toString(), interests, location, query);
 
         // Call Gemini API
         String response = callGeminiApi(prompt);
 
-        // Parse response to get event IDs
-        return parseEventIds(response);
+        // Parse response to get event IDs and explanation
+        return parseAiResponse(response);
     }
 
-    private String buildPrompt(String eventsData, String userQuery) {
-        return """
-                Bạn là một AI assistant giúp tìm kiếm sự kiện tình nguyện.
+    private String buildPrompt(String eventsData, String interests, String location, String query) {
+        StringBuilder userInput = new StringBuilder();
 
-                Dưới đây là danh sách các sự kiện hiện có trong hệ thống:
+        if (interests != null && !interests.trim().isEmpty()) {
+            userInput.append("Sở thích/Thói quen: ").append(interests).append("\n");
+        }
+        if (location != null && !location.trim().isEmpty()) {
+            userInput.append("Địa điểm mong muốn: ").append(location).append("\n");
+        }
+        if (query != null && !query.trim().isEmpty()) {
+            userInput.append("Yêu cầu thêm: ").append(query).append("\n");
+        }
+
+        if (userInput.length() == 0) {
+            userInput.append("Gợi ý các hoạt động tình nguyện phù hợp nhất");
+        }
+
+        return """
+                Bạn là một trợ lý AI thân thiện, chuyên gợi ý các hoạt động tình nguyện từ thiện.
+                Phong cách của bạn: ấm áp, động viên, truyền cảm hứng về tinh thần thiện nguyện.
+
+                Dưới đây là danh sách các sự kiện tình nguyện hiện có:
                 %s
 
-                Yêu cầu của người dùng: "%s"
+                Thông tin từ người dùng:
+                %s
 
-                Hãy phân tích yêu cầu và chọn các sự kiện phù hợp nhất dựa trên:
-                - Tiêu đề (title)
-                - Mô tả (description)
-                - Địa điểm (location)
-                - Danh mục (category)
-                - Thời gian (eventStartTime, eventEndTime)
-                - Điểm thưởng (rewardPoints)
+                NHIỆM VỤ:
+                1. Phân tích sở thích, địa điểm và yêu cầu của người dùng
+                2. Chọn các sự kiện PHÙ HỢP NHẤT (ưu tiên trả về sự kiện, gần đúng là được)
+                3. Viết một đoạn giải thích ngắn gọn, ấm áp, truyền cảm hứng về lý do gợi ý
 
-                Trả về ONLY một JSON array chứa các ID của sự kiện phù hợp, ví dụ: [1, 5, 12]
-                Nếu không có sự kiện nào phù hợp, trả về: []
-                Chỉ trả về JSON array, không có text giải thích nào khác.
-                """.formatted(eventsData, userQuery);
+                QUAN TRỌNG: Trả về ĐÚNG ĐỊNH DẠNG JSON sau:
+                {
+                    "eventIds": [1, 2, 3],
+                    "explanation": "Đoạn giải thích của bạn ở đây..."
+                }
+
+                Trong explanation, hãy:
+                - Nói về lý do các sự kiện phù hợp với sở thích người dùng
+                - Khích lệ tinh thần tình nguyện
+                - Giữ ngắn gọn (2-3 câu)
+                - Phong cách thân thiện, truyền cảm hứng
+
+                Nếu không tìm thấy sự kiện phù hợp, vẫn trả về JSON với eventIds rỗng và explanation động viên.
+                CHỈ TRẢ VỀ JSON, KHÔNG CÓ TEXT KHÁC.
+                """.formatted(eventsData, userInput.toString());
     }
 
     private String callGeminiApi(String prompt) {
         try {
-            // Build request body
             Map<String, Object> requestBody = new HashMap<>();
-
             Map<String, Object> content = new HashMap<>();
             Map<String, String> part = new HashMap<>();
             part.put("text", prompt);
@@ -127,7 +164,6 @@ public class GeminiService {
                     .bodyToMono(String.class)
                     .block();
 
-            // Parse response to extract text
             if (response != null) {
                 JsonNode rootNode = objectMapper.readTree(response);
                 JsonNode candidatesNode = rootNode.path("candidates");
@@ -139,16 +175,16 @@ public class GeminiService {
                     }
                 }
             }
-            return "[]";
+            return "{}";
         } catch (Exception e) {
             System.err.println("Error calling Gemini API: " + e.getMessage());
             e.printStackTrace();
-            return "[]";
+            return "{}";
         }
     }
 
-    private List<Integer> parseEventIds(String response) {
-        List<Integer> eventIds = new ArrayList<>();
+    private AiAnalysisResult parseAiResponse(String response) {
+        AiAnalysisResult result = new AiAnalysisResult();
         try {
             // Clean up response - remove markdown code blocks if present
             String cleanResponse = response.trim();
@@ -163,14 +199,31 @@ public class GeminiService {
             }
             cleanResponse = cleanResponse.trim();
 
-            // Parse JSON array
-            eventIds = objectMapper.readValue(cleanResponse, new TypeReference<List<Integer>>() {
-            });
+            // Parse JSON
+            JsonNode rootNode = objectMapper.readTree(cleanResponse);
+
+            // Get event IDs
+            JsonNode eventIdsNode = rootNode.path("eventIds");
+            if (eventIdsNode.isArray()) {
+                for (JsonNode idNode : eventIdsNode) {
+                    result.eventIds.add(idNode.asInt());
+                }
+            }
+
+            // Get explanation
+            JsonNode explanationNode = rootNode.path("explanation");
+            if (!explanationNode.isMissingNode()) {
+                result.explanation = explanationNode.asText();
+            } else {
+                result.explanation = "Chúng tôi đã tìm thấy một số hoạt động tình nguyện phù hợp với bạn! 💚";
+            }
+
         } catch (JsonProcessingException e) {
             System.err.println("Error parsing Gemini response: " + e.getMessage());
             System.err.println("Response was: " + response);
+            result.explanation = "Chúng tôi gặp khó khăn khi phân tích. Hãy thử lại nhé! 💪";
         }
-        return eventIds;
+        return result;
     }
 
     private String escapeJson(String text) {

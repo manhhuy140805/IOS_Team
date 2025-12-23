@@ -263,43 +263,55 @@ public class EventService {
                 return convertToResponse(updatedEvent);
         }
 
-        // Search events using AI (Gemini)
-        public PageResponse<EventResponse> searchEventsByAI(String userQuery) {
+        // Search events using AI (Gemini) with interests, location, query
+        public io.volunteerapp.volunteer_app.DTO.response.AiSearchResponse searchEventsByAI(
+                        String interests, String location, String query) {
                 // 1. Get all events from database
                 List<Event> allEvents = eventRepository.findAll();
 
                 if (allEvents.isEmpty()) {
-                        return new PageResponse<>(
+                        PageResponse<EventResponse> emptyPage = new PageResponse<>(
                                         new ArrayList<>(),
                                         0,
                                         0L,
                                         0);
+                        return new io.volunteerapp.volunteer_app.DTO.response.AiSearchResponse(
+                                        "Hiện tại chưa có sự kiện nào trong hệ thống. Hãy quay lại sau nhé! 💚",
+                                        emptyPage);
                 }
 
                 // 2. Use Gemini to analyze events and find matches
-                List<Integer> matchingEventIds = geminiService.analyzeEventsForSearch(allEvents, userQuery);
+                GeminiService.AiAnalysisResult aiResult = geminiService.analyzeEventsForSearch(
+                                allEvents, interests, location, query);
 
-                if (matchingEventIds.isEmpty()) {
-                        return new PageResponse<>(
+                if (aiResult.eventIds.isEmpty()) {
+                        PageResponse<EventResponse> emptyPage = new PageResponse<>(
                                         new ArrayList<>(),
                                         0,
                                         0L,
                                         0);
+                        return new io.volunteerapp.volunteer_app.DTO.response.AiSearchResponse(
+                                        aiResult.explanation,
+                                        emptyPage);
                 }
 
                 // 3. Fetch matching events from database
-                List<Event> matchingEvents = eventRepository.findAllById(matchingEventIds);
+                List<Event> matchingEvents = eventRepository.findAllById(aiResult.eventIds);
 
                 // 4. Convert to response
                 List<EventResponse> responses = matchingEvents.stream()
                                 .map(this::convertToResponse)
                                 .toList();
 
-                return new PageResponse<>(
+                PageResponse<EventResponse> pageResponse = new PageResponse<>(
                                 responses,
                                 0,
                                 (long) responses.size(),
                                 1);
+
+                return new io.volunteerapp.volunteer_app.DTO.response.AiSearchResponse(
+                                aiResult.explanation,
+                                pageResponse);
         }
 
         // Helper method to convert Event to EventResponse

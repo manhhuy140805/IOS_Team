@@ -65,6 +65,14 @@ public class MeFragment extends Fragment {
 
         loadUserData();
         setupClickListeners();
+        hideVolunteerOnlySections();
+    }
+
+    private void hideVolunteerOnlySections() {
+        if (ApiConfig.isAdmin() || ApiConfig.isOrganizer()) {
+            binding.cardMyCertificates.setVisibility(View.GONE);
+            binding.cardMyRewards.setVisibility(View.GONE);
+        }
     }
 
     private void loadUserData() {
@@ -153,8 +161,8 @@ public class MeFragment extends Fragment {
 
         // Set statistics
         Integer activityCount = user.getActivityCount();
-        binding.tvEventsCount.setText(String.format(Locale.getDefault(), "%d", 
-            activityCount != null ? activityCount : 0));
+        binding.tvEventsCount.setText(String.format(Locale.getDefault(), "%d",
+                activityCount != null ? activityCount : 0));
 
         // Set points
         Integer points = user.getTotalPoints();
@@ -223,7 +231,7 @@ public class MeFragment extends Fragment {
             Intent intent = new Intent(getActivity(), EditProfileActivity.class);
             startActivityForResult(intent, 200); // Request code 200 for profile edit
         });
-        
+
         binding.layoutChangePassword.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), ChangePasswordActivity.class);
             startActivity(intent);
@@ -267,7 +275,7 @@ public class MeFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        
+
         // Reload user info after editing profile
         if (requestCode == 200 && resultCode == getActivity().RESULT_OK) {
             loadUserData();
