@@ -80,6 +80,7 @@ public class NotificationFragment extends Fragment {
         setupRecyclerView();
         setupFilterButtons();
         setupClickListeners();
+        setupSwipeRefresh();
         loadNotifications(); // Gọi API thay vì mock data
     }
 
@@ -153,6 +154,20 @@ public class NotificationFragment extends Fragment {
 
     private void setupClickListeners() {
         binding.btnMarkAllRead.setOnClickListener(v -> markAllAsRead());
+    }
+
+    private void setupSwipeRefresh() {
+        // Setup SwipeRefreshLayout
+        binding.swipeRefreshLayout.setColorSchemeResources(
+            R.color.app_green_primary,
+            R.color.cyan,
+            R.color.md_theme_light_primary
+        );
+        
+        binding.swipeRefreshLayout.setOnRefreshListener(() -> {
+            // Reload notifications when user swipes down
+            loadNotifications();
+        });
     }
 
     // Load notifications từ API
@@ -259,6 +274,7 @@ public class NotificationFragment extends Fragment {
     private void hideLoading() {
         if (binding != null) {
             binding.progressBar.setVisibility(View.GONE);
+            binding.swipeRefreshLayout.setRefreshing(false);
         }
     }
 
