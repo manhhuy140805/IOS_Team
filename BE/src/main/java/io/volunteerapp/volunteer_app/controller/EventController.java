@@ -24,6 +24,7 @@ public class EventController {
 
     // quản lý sự kiện của organization - lấy events mà user hiện tại đã tạo
     @GetMapping("/organization/me")
+    // @PreAuthorize("hasRole('ROLE_ORGANIZATION')")
     public ResponseEntity<PageResponse<EventResponse>> getEventsByOrganization(
             @org.springframework.security.core.annotation.AuthenticationPrincipal org.springframework.security.oauth2.jwt.Jwt jwt,
             @RequestParam(name = "page", defaultValue = "0") int page,
