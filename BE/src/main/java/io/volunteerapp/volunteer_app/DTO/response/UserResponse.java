@@ -1,6 +1,7 @@
 package io.volunteerapp.volunteer_app.DTO.response;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,4 +28,6 @@ public class UserResponse {
     private Instant updatedAt;      // For lastActive
     private Boolean violation;      // For violation warning
     private Integer activityCount;  // For user: số events đã tham gia, for org: số events đã tạo
+    private LocalDate dateOfBirth;  // Date of birth
+    private String gender;          // MALE, FEMALE, OTHER
 }
