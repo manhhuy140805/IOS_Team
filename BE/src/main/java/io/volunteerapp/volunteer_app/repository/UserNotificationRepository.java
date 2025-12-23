@@ -23,7 +23,8 @@ public interface UserNotificationRepository extends JpaRepository<UserNotificati
     List<UserNotification> findByUserIdAndIsReadTrueOrderByCreatedAtDesc(Integer userId);
 
     // Tìm UserNotification theo userId và notificationId
-    Optional<UserNotification> findByUserIdAndNotificationId(Integer userId, Integer notificationId);
+    @Query("SELECT un FROM UserNotification un WHERE un.user.id = :userId AND un.notification.id = :notificationId")
+    Optional<UserNotification> findByUserIdAndNotificationId(@Param("userId") Integer userId, @Param("notificationId") Integer notificationId);
 
     // Đánh dấu tất cả thông báo của user là đã đọc
     @Modifying

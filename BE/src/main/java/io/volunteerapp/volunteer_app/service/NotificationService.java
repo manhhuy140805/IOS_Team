@@ -29,36 +29,68 @@ public class NotificationService {
     private final EventRepository eventRepository;
     private final EventRegistrationRepository eventRegistrationRepository;
     private final CloudinaryService cloudinaryService;
+    private final io.volunteerapp.volunteer_app.repository.UserRepository userRepository;
 
     public NotificationService(NotificationRepository notificationRepository,
                               UserNotificationRepository userNotificationRepository,
                               EventRepository eventRepository,
                               EventRegistrationRepository eventRegistrationRepository,
-                              CloudinaryService cloudinaryService) {
+                              CloudinaryService cloudinaryService,
+                              io.volunteerapp.volunteer_app.repository.UserRepository userRepository) {
         this.notificationRepository = notificationRepository;
         this.userNotificationRepository = userNotificationRepository;
         this.eventRepository = eventRepository;
         this.eventRegistrationRepository = eventRegistrationRepository;
         this.cloudinaryService = cloudinaryService;
+        this.userRepository = userRepository;
     }
 
     // Lấy notification theo ID và tự động đánh dấu đã đọc
     @Transactional
     public NotificationResponse getNotificationById(Integer id, Integer userId) {
+        System.out.println("🔍 getNotificationById called - notificationId: " + id + ", userId: " + userId);
+        
         Notification notification = notificationRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Notification not found with id: " + id));
         
         // Tự động đánh dấu đã đọc nếu chưa đọc
         if (userId != null) {
+            System.out.println("👤 Looking for UserNotification with userId=" + userId + " and notificationId=" + id);
+            
             UserNotification userNotification = userNotificationRepository
                     .findByUserIdAndNotificationId(userId, id)
                     .orElse(null);
             
-            if (userNotification != null && !userNotification.getIsRead()) {
-                userNotification.setIsRead(true);
-                userNotification.setReadAt(Instant.now());
-                userNotificationRepository.save(userNotification);
+            if (userNotification != null) {
+                System.out.println("✅ Found UserNotification - ID: " + userNotification.getId() + ", isRead: " + userNotification.getIsRead());
+                
+                if (!userNotification.getIsRead()) {
+                    System.out.println("📝 Marking as read...");
+                    userNotification.setIsRead(true);
+                    userNotification.setReadAt(Instant.now());
+                    userNotificationRepository.save(userNotification);
+                    System.out.println("✅ Successfully marked as read");
+                } else {
+                    System.out.println("ℹ️ Already marked as read");
+                }
+            } else {
+                System.out.println("❌ UserNotification not found! Creating new UserNotification...");
+                // Tự động tạo UserNotification mới và đánh dấu là đã đọc
+                io.volunteerapp.volunteer_app.model.User user = userRepository.findById(userId)
+                        .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
+                
+                UserNotification newUserNotification = new UserNotification();
+                newUserNotification.setUser(user);
+                newUserNotification.setNotification(notification);
+                newUserNotification.setIsRead(true);
+                newUserNotification.setReadAt(Instant.now());
+                newUserNotification.setCreatedAt(Instant.now());
+                
+                userNotificationRepository.save(newUserNotification);
+                System.out.println("✅ Created new UserNotification and marked as read");
             }
+        } else {
+            System.out.println("⚠️ userId is null, skipping mark as read");
         }
         
         return toNotificationResponse(notification);
@@ -111,22 +143,42 @@ public class NotificationService {
         userNotificationRepository.delete(userNotification);
     }
 
-    // Gửi notification đến người dùng đã đăng ký sự kiện
-    @Transactional
-    public int sendNotificationToEventParticipants(SendNotificationRequest request, MultipartFile file) {
-        // Upload attachment if exists
-        String attachmentUrl = null;
-        if (file != null && !file.isEmpty()) {
-            try {
-                attachmentUrl = cloudinaryService.uploadAttachment(file);
-            } catch (IOException e) {
-                throw new RuntimeException("Failed to upload attachment", e);
-            }
+    // Upload attachment và trả về URL
+    public String uploadAttachment(MultipartFile file) throws IOException {
+        if (file == null || file.isEmpty()) {
+            throw new IllegalArgumentException("File không được để trống");
         }
+        
+        System.out.println("🔄 Đang upload file lên Cloudinary...");
+        String url = cloudinaryService.uploadAttachment(file);
+        
+        if (url == null || url.trim().isEmpty()) {
+            throw new RuntimeException("Không lấy được URL từ Cloudinary");
+        }
+        
+        System.out.println("✅ Upload thành công! URL: " + url);
+        return url;
+    }
 
+    // Gửi notification đến người dùng đã đăng ký sự kiện
+    public int sendNotificationToEventParticipants(SendNotificationRequest request) {
+        // URL đã được upload trước và truyền vào qua request.getAttachmentUrl()
+        System.out.println("📝 Bắt đầu lưu notification vào database...");
+        String attachmentUrl = request.getAttachmentUrl();
+        
+        if (attachmentUrl != null && !attachmentUrl.trim().isEmpty()) {
+            System.out.println("📎 Attachment URL: " + attachmentUrl);
+        }
+        
+        return saveNotificationToDatabase(request, attachmentUrl);
+    }
+
+    // Method riêng với @Transactional để lưu vào DB sau khi đã có URL
+    @Transactional
+    private int saveNotificationToDatabase(SendNotificationRequest request, String attachmentUrl) {
         // Get event
         Event event = eventRepository.findById(request.getEventId())
-                .orElseThrow(() -> new RuntimeException("Event not found with id: " + request.getEventId()));
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy sự kiện với id: " + request.getEventId()));
         
         // Get registrations based on recipient type
         List<EventRegistration> registrations;
@@ -143,6 +195,7 @@ public class NotificationService {
             notification.setCreatedAt(Instant.now());
             
             Notification savedNotification = notificationRepository.save(notification);
+            System.out.println("✅ Notification đã lưu - ID: " + savedNotification.getId() + ", Attached: " + savedNotification.getAttached());
 
             UserNotification userNotification = new UserNotification();
             userNotification.setUser(event.getCreator());
@@ -167,6 +220,7 @@ public class NotificationService {
         }
         
         if (registrations.isEmpty()) {
+            System.out.println("⚠️ Không có người đăng ký nào");
             return 0;
         }
         
@@ -175,13 +229,17 @@ public class NotificationService {
         notification.setTitle(request.getTitle());
         notification.setContent(request.getContent());
         notification.setAttached(attachmentUrl);
+        notification.setSenderRole("ORGANIZATION");
         notification.setType("ORGANIZATION");
         notification.setCreatedAt(Instant.now());
         
         Notification savedNotification = notificationRepository.save(notification);
+        System.out.println("✅ Notification đã lưu - ID: " + savedNotification.getId() + ", Attached: " + savedNotification.getAttached());
         
         // Create user notifications for each participant
         int sentCount = 0;
+        Integer eventRewardPoints = event.getRewardPoints();
+        
         for (EventRegistration registration : registrations) {
             UserNotification userNotification = new UserNotification();
             userNotification.setUser(registration.getUser());
@@ -190,9 +248,19 @@ public class NotificationService {
             userNotification.setCreatedAt(Instant.now());
             
             userNotificationRepository.save(userNotification);
+            
+            // Cộng reward points cho user nếu event có reward points
+            if (eventRewardPoints != null && eventRewardPoints > 0) {
+                io.volunteerapp.volunteer_app.model.User user = registration.getUser();
+                user.setTotalPoints(user.getTotalPoints() + eventRewardPoints);
+                userRepository.save(user);
+                System.out.println("✅ Đã cộng " + eventRewardPoints + " điểm cho user: " + user.getFullName());
+            }
+            
             sentCount++;
         }
         
+        System.out.println("✅ Đã gửi notification cho " + sentCount + " người dùng");
         return sentCount;
     }
 

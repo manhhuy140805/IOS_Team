@@ -2,6 +2,7 @@ package io.volunteerapp.volunteer_app.controller;
 
 import io.volunteerapp.volunteer_app.DTO.response.NotificationResponse;
 import io.volunteerapp.volunteer_app.DTO.response.UserNotificationResponse;
+import io.volunteerapp.volunteer_app.Util.RestResponse;
 import io.volunteerapp.volunteer_app.service.NotificationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -28,11 +29,11 @@ public class NotificationController {
      */
     @GetMapping("/{id}")
     // @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<NotificationResponse> getNotificationById(
+    public ResponseEntity<RestResponse<NotificationResponse>> getNotificationById(
             @PathVariable Integer id,
             @RequestParam(required = false) Integer userId) {
         NotificationResponse response = notificationService.getNotificationById(id, userId);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(new RestResponse<>(200, "Success", response, null));
     }
 
     /**
@@ -41,9 +42,9 @@ public class NotificationController {
      */
     @GetMapping("/user/{userId}")
     // @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<List<UserNotificationResponse>> getUserNotifications(@PathVariable Integer userId) {
+    public ResponseEntity<RestResponse<List<UserNotificationResponse>>> getUserNotifications(@PathVariable Integer userId) {
         List<UserNotificationResponse> notifications = notificationService.getUserNotifications(userId);
-        return ResponseEntity.ok(notifications);
+        return ResponseEntity.ok(new RestResponse<>(200, "Success", notifications, null));
     }
 
     /**
@@ -52,9 +53,9 @@ public class NotificationController {
      */
     @GetMapping("/user/{userId}/unread")
     // @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<List<UserNotificationResponse>> getUnreadNotifications(@PathVariable Integer userId) {
+    public ResponseEntity<RestResponse<List<UserNotificationResponse>>> getUnreadNotifications(@PathVariable Integer userId) {
         List<UserNotificationResponse> notifications = notificationService.getUnreadNotifications(userId);
-        return ResponseEntity.ok(notifications);
+        return ResponseEntity.ok(new RestResponse<>(200, "Success", notifications, null));
     }
 
     /**
@@ -63,9 +64,9 @@ public class NotificationController {
      */
     @GetMapping("/user/{userId}/read")
     // @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<List<UserNotificationResponse>> getReadNotifications(@PathVariable Integer userId) {
+    public ResponseEntity<RestResponse<List<UserNotificationResponse>>> getReadNotifications(@PathVariable Integer userId) {
         List<UserNotificationResponse> notifications = notificationService.getReadNotifications(userId);
-        return ResponseEntity.ok(notifications);
+        return ResponseEntity.ok(new RestResponse<>(200, "Success", notifications, null));
     }
 
 
@@ -75,11 +76,9 @@ public class NotificationController {
      */
     @PutMapping("/user/{userId}/read-all")
     // @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<Map<String, String>> markAllAsRead(@PathVariable Integer userId) {
+    public ResponseEntity<RestResponse<Void>> markAllAsRead(@PathVariable Integer userId) {
         notificationService.markAllAsRead(userId);
-        Map<String, String> response = new HashMap<>();
-        response.put("message", "All notifications marked as read");
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(new RestResponse<>(200, "All notifications marked as read", null, null));
     }
 
     /**
@@ -88,51 +87,59 @@ public class NotificationController {
      */
     @DeleteMapping("/user/{userId}/notification/{notificationId}")
     // @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<Map<String, String>> deleteUserNotification(
+    public ResponseEntity<RestResponse<Void>> deleteUserNotification(
             @PathVariable Integer userId,
             @PathVariable Integer notificationId) {
         notificationService.deleteUserNotification(userId, notificationId);
-        Map<String, String> response = new HashMap<>();
-        response.put("message", "Notification deleted successfully");
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(new RestResponse<>(200, "Notification deleted successfully", null, null));
     }
 
     /**
-     * Gửi notification đến người dùng đã đăng ký sự kiện (Multipart - có file)
-     * POST /api/v1/notifications/send
+     * Upload attachment và trả về URL
+     * POST /api/v1/notifications/upload-attachment
      */
-    @PostMapping(value = "/send", consumes = {"multipart/form-data"})
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_ORGANIZATION')")
-    public ResponseEntity<Map<String, Object>> sendNotificationToEventParticipantsMultipart(
-            @RequestParam("eventId") Integer eventId,
-            @RequestParam("title") String title,
-            @RequestParam("content") String content,
-            @RequestParam("recipientType") String recipientType,
-            @RequestParam(value = "file", required = false) MultipartFile file) {
-        
-        io.volunteerapp.volunteer_app.DTO.requeset.SendNotificationRequest request = 
-            new io.volunteerapp.volunteer_app.DTO.requeset.SendNotificationRequest();
-        request.setEventId(eventId);
-        request.setTitle(title);
-        request.setContent(content);
-        request.setRecipientType(recipientType);
-        
-        int sentCount = notificationService.sendNotificationToEventParticipants(request, file);
-        Map<String, Object> response = new HashMap<>();
-        response.put("message", "Notification sent successfully");
-        response.put("sentCount", sentCount);
-        return ResponseEntity.ok(response);
+    @PostMapping(value = "/upload-attachment", consumes = {"multipart/form-data"})
+    // @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_ORGANIZATION')")
+    public ResponseEntity<RestResponse<Map<String, String>>> uploadAttachment(
+            @RequestParam("file") MultipartFile file) {
+        try {
+            System.out.println("🔍 Upload request received");
+            System.out.println("📁 File name: " + (file != null ? file.getOriginalFilename() : "null"));
+            System.out.println("📊 File size: " + (file != null ? file.getSize() : 0) + " bytes");
+            
+            String url = notificationService.uploadAttachment(file);
+            Map<String, String> data = new HashMap<>();
+            data.put("url", url);
+            data.put("message", "File uploaded successfully");
+            
+            RestResponse<Map<String, String>> response = new RestResponse<>();
+            response.setStatus(200);
+            response.setMessage("File uploaded successfully");
+            response.setData(data);
+            
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            System.err.println("❌ Upload error: " + e.getMessage());
+            e.printStackTrace();
+            
+            RestResponse<Map<String, String>> response = new RestResponse<>();
+            response.setStatus(400);
+            response.setMessage("Upload failed");
+            response.setError(e.getMessage());
+            
+            return ResponseEntity.badRequest().body(response);
+        }
     }
 
     /**
-     * Gửi notification đến người dùng đã đăng ký sự kiện (JSON - không file)
+     * Gửi notification đến người dùng đã đăng ký sự kiện
      * POST /api/v1/notifications/send
      */
     @PostMapping(value = "/send", consumes = {"application/json"})
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_ORGANIZATION')")
-    public ResponseEntity<Map<String, Object>> sendNotificationToEventParticipantsJson(
+    public ResponseEntity<Map<String, Object>> sendNotificationToEventParticipants(
             @RequestBody io.volunteerapp.volunteer_app.DTO.requeset.SendNotificationRequest request) {
-        int sentCount = notificationService.sendNotificationToEventParticipants(request, null);
+        int sentCount = notificationService.sendNotificationToEventParticipants(request);
         Map<String, Object> response = new HashMap<>();
         response.put("message", "Notification sent successfully");
         response.put("sentCount", sentCount);
