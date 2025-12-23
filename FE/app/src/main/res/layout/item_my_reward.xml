@@ -1,36 +1,106 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="12dp" app:cardCornerRadius="12dp" app:cardElevation="4dp" app:strokeColor="@color/gray_300" app:strokeWidth="1dp">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="12dp"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="4dp"
+    app:strokeColor="@color/gray_300"
+    app:strokeWidth="1dp">
 
-    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:padding="16dp">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp">
 
         <!-- Icon -->
-        <FrameLayout android:layout_width="50dp" android:layout_height="50dp" android:background="@drawable/bg_icon_orange">
+        <FrameLayout
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@drawable/bg_icon_orange">
 
-            <ImageView android:id="@+id/ivRewardIcon" android:layout_width="28dp" android:layout_height="28dp" android:layout_gravity="center" android:src="@drawable/ic_gift" app:tint="@color/white" />
+            <ImageView
+                android:id="@+id/ivRewardIcon"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_gift"
+                app:tint="@color/white" />
         </FrameLayout>
 
         <!-- Info -->
-        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginStart="12dp" android:layout_weight="1" android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
 
             <!-- Reward Name -->
-            <TextView android:id="@+id/tvRewardName" android:layout_width="wrap_content" android:layout_height="wrap_content" android:ellipsize="end" android:maxLines="2" android:textColor="@color/text_primary" android:textSize="14sp" android:textStyle="bold" tools:text="Voucher giảm giá 100k" />
+            <TextView
+                android:id="@+id/tvRewardName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:textColor="@color/text_primary"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                tools:text="Voucher giảm giá 100k" />
 
             <!-- Points Spent -->
-            <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:gravity="center_vertical" android:orientation="horizontal">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
-                <ImageView android:layout_width="14dp" android:layout_height="14dp" android:src="@drawable/ic_coin" app:tint="@color/orange" />
+                <ImageView
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:src="@drawable/ic_coin"
+                    app:tint="@color/orange" />
 
-                <TextView android:id="@+id/tvPointsSpent" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="4dp" android:textColor="@color/orange" android:textSize="12sp" android:textStyle="bold" tools:text="-500 điểm" />
+                <TextView
+                    android:id="@+id/tvPointsSpent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:textColor="@color/orange"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    tools:text="-500 điểm" />
             </LinearLayout>
 
             <!-- Date -->
-            <TextView android:id="@+id/tvDate" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:textColor="@color/text_secondary" android:textSize="11sp" tools:text="22/12/2025 15:30" />
+            <TextView
+                android:id="@+id/tvDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:textColor="@color/text_secondary"
+                android:textSize="11sp"
+                tools:text="22/12/2025 15:30" />
         </LinearLayout>
 
         <!-- Status Badge -->
-        <TextView android:id="@+id/tvStatus" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center_vertical" android:background="@drawable/bg_button_base" android:paddingHorizontal="10dp" android:paddingVertical="4dp" android:textSize="10sp" android:textStyle="bold" tools:backgroundTint="@color/status_pending" tools:text="Đang xử lý" tools:textColor="@color/white" />
+        <TextView
+            android:id="@+id/tvStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/bg_button_base"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="4dp"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            tools:backgroundTint="@color/status_pending"
+            tools:text="Đang xử lý"
+            tools:textColor="@color/white" />
 
     </LinearLayout>
 

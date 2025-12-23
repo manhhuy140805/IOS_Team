@@ -139,7 +139,7 @@ public class AddEventActivity extends AppCompatActivity {
         ivEventImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
         
         binding.uploadImageContainer.setOnClickListener(v -> openImagePicker());
-        binding.mapContainer.setOnClickListener(v -> selectMapLocation());
+
     }
     
     private void setupDatePickers() {

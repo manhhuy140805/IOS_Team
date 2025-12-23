@@ -55,9 +55,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="4dp"
+                android:paddingHorizontal="5dp"
                 android:paddingVertical="2dp"
                 android:text="ADMIN"
-                android:paddingHorizontal="5dp"
                 android:textAllCaps="true"
                 android:textColor="@color/white"
                 android:textSize="9sp"
@@ -72,9 +72,9 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="2"
+                android:paddingLeft="5dp"
                 android:text="Thông báo về sự kiện tình nguyện mới"
                 android:textColor="@color/app_green_primary"
-                android:paddingLeft="5dp"
                 android:textSize="15sp"
                 android:textStyle="bold"
                 tools:text="Thông báo về sự kiện tình nguyện mới" />
@@ -86,8 +86,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:ellipsize="end"
-                android:paddingLeft="5dp"
                 android:maxLines="3"
+                android:paddingLeft="5dp"
                 android:text="Có một sự kiện tình nguyện mới phù hợp với bạn. Hãy đăng ký ngay để không bỏ lỡ cơ hội ý nghĩa này..."
                 android:textColor="@color/text_secondary"
                 android:textSize="13sp"
@@ -98,9 +98,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:paddingLeft="5dp"
                 android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:paddingLeft="5dp">
 
                 <ImageView
                     android:layout_width="14dp"
@@ -116,7 +116,6 @@
                     android:text="2 giờ trước"
                     android:textColor="@color/gray_500"
                     android:textSize="11sp" />
-
 
 
                 <TextView

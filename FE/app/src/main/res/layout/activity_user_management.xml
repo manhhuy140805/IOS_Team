@@ -11,41 +11,41 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:background="@drawable/bg_header_green_rounded"
-        android:paddingBottom="24dp"
         android:elevation="8dp"
-        android:outlineProvider="background">
+        android:orientation="vertical"
+        android:outlineProvider="background"
+        android:paddingBottom="24dp">
 
         <!-- Title Row -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center_vertical"
             android:orientation="horizontal"
             android:paddingHorizontal="20dp"
             android:paddingTop="40dp"
-            android:paddingBottom="16dp"
-            android:gravity="center_vertical">
+            android:paddingBottom="16dp">
 
             <ImageView
                 android:id="@+id/btnBack"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
-                android:padding="4dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/ic_back"
                 android:contentDescription="Back"
-                app:tint="@color/white"/>
+                android:padding="4dp"
+                android:src="@drawable/ic_back"
+                app:tint="@color/white" />
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
                 android:layout_weight="1"
                 android:text="Quản Lý Hệ Thống"
-                android:textSize="22sp"
-                android:textStyle="bold"
                 android:textColor="@color/white"
-                android:layout_marginStart="12dp"/>
+                android:textSize="22sp"
+                android:textStyle="bold" />
 
         </LinearLayout>
 
@@ -53,11 +53,11 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:layout_marginHorizontal="20dp"
             android:layout_marginBottom="16dp"
             android:background="@drawable/bg_search_bar"
             android:backgroundTint="#33FFFFFF"
+            android:orientation="horizontal"
             android:padding="4dp">
 
             <LinearLayout
@@ -65,26 +65,26 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:orientation="horizontal"
+                android:background="@drawable/bg_button_gray_solid"
                 android:gravity="center"
-                android:paddingVertical="8dp"
-                android:background="@drawable/bg_button_gray_solid">
+                android:orientation="horizontal"
+                android:paddingVertical="8dp">
 
                 <ImageView
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    android:src="@drawable/ic_user"
-                    android:contentDescription="Users"
                     android:layout_marginEnd="8dp"
-                    app:tint="@color/app_green_primary"/>
+                    android:contentDescription="Users"
+                    android:src="@drawable/ic_user"
+                    app:tint="@color/app_green_primary" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Người dùng"
+                    android:textColor="@color/app_green_primary"
                     android:textSize="14sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/app_green_primary"/>
+                    android:textStyle="bold" />
             </LinearLayout>
 
             <LinearLayout
@@ -92,26 +92,26 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:orientation="horizontal"
+                android:background="@android:color/transparent"
                 android:gravity="center"
-                android:paddingVertical="8dp"
-                android:background="@android:color/transparent">
+                android:orientation="horizontal"
+                android:paddingVertical="8dp">
 
                 <ImageView
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    android:src="@drawable/ic_organization"
-                    android:contentDescription="Organizations"
                     android:layout_marginEnd="8dp"
-                    app:tint="#CCFFFFFF"/>
+                    android:contentDescription="Organizations"
+                    android:src="@drawable/ic_organization"
+                    app:tint="#CCFFFFFF" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Tổ chức"
+                    android:textColor="#CCFFFFFF"
                     android:textSize="14sp"
-                    android:textStyle="bold"
-                    android:textColor="#CCFFFFFF"/>
+                    android:textStyle="bold" />
             </LinearLayout>
 
         </LinearLayout>
@@ -129,35 +129,35 @@
             <androidx.cardview.widget.CardView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:layout_marginEnd="6dp"
+                android:layout_weight="1"
+                app:cardBackgroundColor="@color/white"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="0dp"
-                app:cardBackgroundColor="@color/white">
+                app:cardElevation="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:gravity="center"
                     android:orientation="vertical"
-                    android:padding="12dp"
-                    android:gravity="center">
+                    android:padding="12dp">
 
                     <TextView
                         android:id="@+id/tvTotalUsers"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="1,234"
+                        android:textColor="@color/app_green_primary"
                         android:textSize="18sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/app_green_primary"/>
+                        android:textStyle="bold" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Tổng số"
-                        android:textSize="11sp"
                         android:layout_marginTop="2dp"
-                        android:textColor="@color/text_secondary"/>
+                        android:text="Tổng số"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="11sp" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
@@ -165,35 +165,35 @@
             <androidx.cardview.widget.CardView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:layout_marginHorizontal="3dp"
+                android:layout_weight="1"
+                app:cardBackgroundColor="@color/white"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="0dp"
-                app:cardBackgroundColor="@color/white">
+                app:cardElevation="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:gravity="center"
                     android:orientation="vertical"
-                    android:padding="12dp"
-                    android:gravity="center">
+                    android:padding="12dp">
 
                     <TextView
                         android:id="@+id/tvActiveUsers"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="1,180"
+                        android:textColor="@color/app_green_primary"
                         android:textSize="18sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/app_green_primary"/>
+                        android:textStyle="bold" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Hoạt động"
-                        android:textSize="11sp"
                         android:layout_marginTop="2dp"
-                        android:textColor="@color/text_secondary"/>
+                        android:text="Hoạt động"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="11sp" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
@@ -201,35 +201,35 @@
             <androidx.cardview.widget.CardView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:layout_marginStart="6dp"
+                android:layout_weight="1"
+                app:cardBackgroundColor="@color/white"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="0dp"
-                app:cardBackgroundColor="@color/white">
+                app:cardElevation="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:gravity="center"
                     android:orientation="vertical"
-                    android:padding="12dp"
-                    android:gravity="center">
+                    android:padding="12dp">
 
                     <TextView
                         android:id="@+id/tvLockedUsers"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="54"
+                        android:textColor="#E53935"
                         android:textSize="18sp"
-                        android:textStyle="bold"
-                        android:textColor="#E53935"/>
+                        android:textStyle="bold" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Bị khóa"
-                        android:textSize="11sp"
                         android:layout_marginTop="2dp"
-                        android:textColor="@color/text_secondary"/>
+                        android:text="Bị khóa"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="11sp" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
         </LinearLayout>
@@ -241,111 +241,111 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:paddingHorizontal="20dp"
-            android:weightSum="3"
-            android:visibility="gone">
+            android:visibility="gone"
+            android:weightSum="3">
 
             <androidx.cardview.widget.CardView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:layout_marginEnd="6dp"
+                android:layout_weight="1"
+                app:cardBackgroundColor="@color/white"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="0dp"
-                app:cardBackgroundColor="@color/white">
+                app:cardElevation="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:gravity="center"
                     android:orientation="vertical"
-                    android:padding="12dp"
-                    android:gravity="center">
+                    android:padding="12dp">
 
                     <TextView
                         android:id="@+id/tvTotalOrgs"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="87"
+                        android:textColor="@color/app_green_primary"
                         android:textSize="18sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/app_green_primary"/>
+                        android:textStyle="bold" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Tổng số"
-                        android:textSize="11sp"
                         android:layout_marginTop="2dp"
-                        android:textColor="@color/text_secondary"/>
+                        android:text="Tổng số"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="11sp" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:layout_marginHorizontal="3dp"
+                android:layout_weight="1"
+                app:cardBackgroundColor="@color/white"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="0dp"
-                app:cardBackgroundColor="@color/white">
+                app:cardElevation="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:gravity="center"
                     android:orientation="vertical"
-                    android:padding="12dp"
-                    android:gravity="center">
+                    android:padding="12dp">
 
                     <TextView
                         android:id="@+id/tvActiveOrgs"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="79"
+                        android:textColor="@color/app_green_primary"
                         android:textSize="18sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/app_green_primary"/>
+                        android:textStyle="bold" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Hoạt động"
-                        android:textSize="11sp"
                         android:layout_marginTop="2dp"
-                        android:textColor="@color/text_secondary"/>
+                        android:text="Hoạt động"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="11sp" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:layout_marginStart="6dp"
+                android:layout_weight="1"
+                app:cardBackgroundColor="@color/white"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="0dp"
-                app:cardBackgroundColor="@color/white">
+                app:cardElevation="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:gravity="center"
                     android:orientation="vertical"
-                    android:padding="12dp"
-                    android:gravity="center">
+                    android:padding="12dp">
 
                     <TextView
                         android:id="@+id/tvLockedOrgs"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="8"
+                        android:textColor="#E53935"
                         android:textSize="18sp"
-                        android:textStyle="bold"
-                        android:textColor="#E53935"/>
+                        android:textStyle="bold" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Bị khóa"
-                        android:textSize="11sp"
                         android:layout_marginTop="2dp"
-                        android:textColor="@color/text_secondary"/>
+                        android:text="Bị khóa"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="11sp" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
         </LinearLayout>
@@ -374,20 +374,20 @@
                     android:id="@+id/cvUserSearch"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingHorizontal="16dp"
                     android:layout_marginBottom="16dp"
+                    android:paddingHorizontal="16dp"
                     android:visibility="gone">
 
                     <EditText
                         android:id="@+id/etSearch"
                         android:layout_width="match_parent"
                         android:layout_height="48dp"
-                        android:hint="🔍 Tìm kiếm user..."
-                        android:textSize="14sp"
-                        android:textColorHint="@color/text_secondary"
-                        android:paddingHorizontal="16dp"
                         android:background="@drawable/bg_search_bar"
-                        android:drawablePadding="8dp"/>
+                        android:drawablePadding="8dp"
+                        android:hint="🔍 Tìm kiếm user..."
+                        android:paddingHorizontal="16dp"
+                        android:textColorHint="@color/text_secondary"
+                        android:textSize="14sp" />
                 </LinearLayout>
 
                 <HorizontalScrollView
@@ -395,8 +395,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
-                    android:scrollbars="none"
-                    android:paddingHorizontal="16dp">
+                    android:paddingHorizontal="16dp"
+                    android:scrollbars="none">
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -407,48 +407,48 @@
                             android:id="@+id/btnFilterAll"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Tất cả"
-                            android:textSize="14sp"
+                            android:layout_marginEnd="8dp"
+                            android:background="@drawable/bg_filter_selected"
                             android:paddingHorizontal="20dp"
                             android:paddingVertical="8dp"
-                            android:background="@drawable/bg_filter_selected"
+                            android:text="Tất cả"
                             android:textColor="@color/white"
-                            android:layout_marginEnd="8dp"/>
+                            android:textSize="14sp" />
 
                         <TextView
                             android:id="@+id/btnFilterActive"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Hoạt động"
-                            android:textSize="14sp"
+                            android:layout_marginEnd="8dp"
+                            android:background="@drawable/bg_category_tab_unselected_reward"
                             android:paddingHorizontal="20dp"
                             android:paddingVertical="8dp"
-                            android:background="@drawable/bg_category_tab_unselected_reward"
+                            android:text="Hoạt động"
                             android:textColor="@color/text_secondary"
-                            android:layout_marginEnd="8dp"/>
+                            android:textSize="14sp" />
 
                         <TextView
                             android:id="@+id/btnFilterLocked"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Bị khóa"
-                            android:textSize="14sp"
+                            android:layout_marginEnd="8dp"
+                            android:background="@drawable/bg_category_tab_unselected_reward"
                             android:paddingHorizontal="20dp"
                             android:paddingVertical="8dp"
-                            android:background="@drawable/bg_category_tab_unselected_reward"
+                            android:text="Bị khóa"
                             android:textColor="@color/text_secondary"
-                            android:layout_marginEnd="8dp"/>
+                            android:textSize="14sp" />
 
                         <TextView
                             android:id="@+id/btnFilterPending"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Mới đăng ký"
-                            android:textSize="14sp"
+                            android:background="@drawable/bg_category_tab_unselected_reward"
                             android:paddingHorizontal="20dp"
                             android:paddingVertical="8dp"
-                            android:background="@drawable/bg_category_tab_unselected_reward"
-                            android:textColor="@color/text_secondary"/>
+                            android:text="Mới đăng ký"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="14sp" />
                     </LinearLayout>
                 </HorizontalScrollView>
             </LinearLayout>
@@ -465,20 +465,20 @@
                     android:id="@+id/cvOrgSearch"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingHorizontal="16dp"
                     android:layout_marginBottom="16dp"
+                    android:paddingHorizontal="16dp"
                     android:visibility="gone">
 
                     <EditText
                         android:id="@+id/etOrgSearch"
                         android:layout_width="match_parent"
                         android:layout_height="48dp"
-                        android:hint="🔍 Tìm kiếm tổ chức..."
-                        android:textSize="14sp"
-                        android:textColorHint="@color/text_secondary"
-                        android:paddingHorizontal="16dp"
                         android:background="@drawable/bg_search_bar"
-                        android:drawablePadding="8dp"/>
+                        android:drawablePadding="8dp"
+                        android:hint="🔍 Tìm kiếm tổ chức..."
+                        android:paddingHorizontal="16dp"
+                        android:textColorHint="@color/text_secondary"
+                        android:textSize="14sp" />
                 </LinearLayout>
 
                 <HorizontalScrollView
@@ -486,8 +486,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
-                    android:scrollbars="none"
-                    android:paddingHorizontal="16dp">
+                    android:paddingHorizontal="16dp"
+                    android:scrollbars="none">
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -498,49 +498,49 @@
                             android:id="@+id/btnOrgFilterAll"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Tất cả"
-                            android:textSize="14sp"
-                            android:paddingHorizontal="20dp"
-                            android:paddingVertical="8dp"
+                            android:layout_marginEnd="8dp"
                             android:background="@drawable/bg_button_gray_solid"
                             android:backgroundTint="@color/app_green_primary"
+                            android:paddingHorizontal="20dp"
+                            android:paddingVertical="8dp"
+                            android:text="Tất cả"
                             android:textColor="@color/white"
-                            android:layout_marginEnd="8dp"/>
+                            android:textSize="14sp" />
 
                         <TextView
                             android:id="@+id/btnOrgFilterActive"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Hoạt động"
-                            android:textSize="14sp"
+                            android:layout_marginEnd="8dp"
+                            android:background="@drawable/bg_category_tab_unselected_reward"
                             android:paddingHorizontal="20dp"
                             android:paddingVertical="8dp"
-                            android:background="@drawable/bg_category_tab_unselected_reward"
+                            android:text="Hoạt động"
                             android:textColor="@color/text_secondary"
-                            android:layout_marginEnd="8dp"/>
+                            android:textSize="14sp" />
 
                         <TextView
                             android:id="@+id/btnOrgFilterLocked"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Bị khóa"
-                            android:textSize="14sp"
+                            android:layout_marginEnd="8dp"
+                            android:background="@drawable/bg_category_tab_unselected_reward"
                             android:paddingHorizontal="20dp"
                             android:paddingVertical="8dp"
-                            android:background="@drawable/bg_category_tab_unselected_reward"
+                            android:text="Bị khóa"
                             android:textColor="@color/text_secondary"
-                            android:layout_marginEnd="8dp"/>
+                            android:textSize="14sp" />
 
                         <TextView
                             android:id="@+id/btnOrgFilterPending"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Chờ xác thực"
-                            android:textSize="14sp"
+                            android:background="@drawable/bg_category_tab_unselected_reward"
                             android:paddingHorizontal="20dp"
                             android:paddingVertical="8dp"
-                            android:background="@drawable/bg_category_tab_unselected_reward"
-                            android:textColor="@color/text_secondary"/>
+                            android:text="Chờ xác thực"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="14sp" />
                     </LinearLayout>
                 </HorizontalScrollView>
             </LinearLayout>
@@ -552,7 +552,7 @@
                 android:layout_height="wrap_content"
                 android:clipToPadding="false"
                 android:paddingBottom="24dp"
-                tools:listitem="@layout/item_user"/>
+                tools:listitem="@layout/item_user" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvOrgList"
@@ -561,7 +561,7 @@
                 android:clipToPadding="false"
                 android:paddingBottom="24dp"
                 android:visibility="gone"
-                tools:listitem="@layout/item_organization"/>
+                tools:listitem="@layout/item_organization" />
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

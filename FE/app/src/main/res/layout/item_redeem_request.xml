@@ -17,101 +17,101 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical">
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
             <ImageView
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/ic_user"
-                app:tint="@color/app_green_primary"
                 android:background="@drawable/bg_circle_gray"
-                android:padding="8dp"/>
+                android:padding="8dp"
+                android:src="@drawable/ic_user"
+                app:tint="@color/app_green_primary" />
 
             <LinearLayout
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginStart="12dp">
+                android:layout_marginStart="12dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/tvUserName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="User Name"
-                    android:textStyle="bold"
+                    android:textColor="@color/text_primary"
                     android:textSize="16sp"
-                    android:textColor="@color/text_primary"/>
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/tvDate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="20/12/2025"
-                    android:textSize="12sp"
-                    android:textColor="@color/text_secondary"/>
+                    android:textColor="@color/text_secondary"
+                    android:textSize="12sp" />
             </LinearLayout>
-            
+
             <TextView
                 android:id="@+id/tvPoints"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="-500 điểm"
                 android:textColor="@color/red"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
         </LinearLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/gray_200"
-            android:layout_marginVertical="12dp"/>
+            android:layout_marginVertical="12dp"
+            android:background="@color/gray_200" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Yêu cầu đổi quà:"
-            android:textSize="12sp"
-            android:textColor="@color/text_secondary"/>
+            android:textColor="@color/text_secondary"
+            android:textSize="12sp" />
 
         <TextView
             android:id="@+id/tvRewardName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
             android:text="Voucher GotIt 50k"
-            android:textSize="16sp"
-            android:textStyle="bold"
             android:textColor="@color/text_primary"
-            android:layout_marginTop="4dp"/>
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="16dp">
+            android:layout_marginTop="16dp"
+            android:orientation="horizontal">
 
             <Button
                 android:id="@+id/btnReject"
+                style="@style/Widget.Material3.Button.OutlinedButton"
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_weight="1"
+                android:backgroundTint="@color/white"
                 android:text="Từ chối"
                 android:textColor="@color/red"
-                android:backgroundTint="@color/white"
-                style="@style/Widget.Material3.Button.OutlinedButton"
-                app:strokeColor="@color/red"
-                android:layout_marginEnd="8dp"/>
+                app:strokeColor="@color/red" />
 
             <Button
                 android:id="@+id/btnApprove"
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:text="Duyệt"
-                android:textColor="@color/white"
+                android:layout_marginStart="8dp"
+                android:layout_weight="1"
                 android:backgroundTint="@color/app_green_primary"
-                android:layout_marginStart="8dp"/>
+                android:text="Duyệt"
+                android:textColor="@color/white" />
         </LinearLayout>
 
     </LinearLayout>

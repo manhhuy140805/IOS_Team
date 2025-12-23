@@ -1,15 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools" android:id="@+id/main" android:layout_width="match_parent" android:layout_height="match_parent" android:background="@color/md_theme_light_background" tools:context=".ui.Activities.DetailEventActivity">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/md_theme_light_background"
+    tools:context=".ui.Activities.DetailEventActivity">
 
     <!-- Scrollable Content -->
-    <androidx.core.widget.NestedScrollView android:layout_width="match_parent" android:layout_height="0dp" android:fillViewport="true" app:layout_constraintBottom_toTopOf="@id/btnRegister" app:layout_constraintTop_toTopOf="parent">
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        app:layout_constraintBottom_toTopOf="@id/btnRegister"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout android:layout_width="match_parent" android:layout_height="wrap_content">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
             <!-- Header Background (Scrolls with content) -->
-            <View android:id="@+id/headerBackground" android:layout_width="match_parent" android:layout_height="240dp" android:background="@drawable/bg_header_green_rounded" app:layout_constraintTop_toTopOf="parent" />
+            <View
+                android:id="@+id/headerBackground"
+                android:layout_width="match_parent"
+                android:layout_height="240dp"
+                android:background="@drawable/bg_header_green_rounded"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <!-- Title in Header (Scrolls with content) -->
             <TextView
@@ -24,7 +41,6 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
-
 
 
             <!-- Main Content Container -->
@@ -515,8 +531,8 @@
                             android:id="@+id/ivMapPreview"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:scaleType="centerCrop"
                             android:contentDescription="Map preview"
+                            android:scaleType="centerCrop"
                             android:src="@drawable/banner_event_default" />
 
                         <!-- Location marker -->
@@ -566,16 +582,70 @@
     </androidx.core.widget.NestedScrollView>
 
     <!-- Fixed Floating Buttons -->
-    <ImageButton android:id="@+id/btnBack" android:layout_width="40dp" android:layout_height="40dp" android:layout_marginStart="16dp" android:layout_marginTop="40dp" android:background="@drawable/bg_button_gray_solid" android:contentDescription="Back" android:padding="8dp" android:src="@drawable/ic_back" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent" />
+    <ImageButton
+        android:id="@+id/btnBack"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/bg_button_gray_solid"
+        android:contentDescription="Back"
+        android:padding="8dp"
+        android:src="@drawable/ic_back"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageButton android:id="@+id/btnFavorite" android:layout_width="40dp" android:layout_height="40dp" android:layout_marginTop="40dp" android:layout_marginEnd="16dp" android:background="@drawable/bg_button_gray_solid" android:contentDescription="Favorite" android:padding="8dp" android:src="@drawable/ic_favorite_border" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintTop_toTopOf="parent" />
+    <ImageButton
+        android:id="@+id/btnFavorite"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/bg_button_gray_solid"
+        android:contentDescription="Favorite"
+        android:padding="8dp"
+        android:src="@drawable/ic_favorite_border"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <!-- Bottom Action Bar -->
-    <LinearLayout android:id="@+id/btnRegister" android:layout_width="0dp" android:layout_height="wrap_content" android:background="@color/white" android:elevation="20dp" android:gravity="center_vertical" android:orientation="horizontal" android:padding="16dp" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent">
+    <LinearLayout
+        android:id="@+id/btnRegister"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:elevation="20dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
-        <ImageButton android:id="@+id/btnShare" android:layout_width="56dp" android:layout_height="56dp" android:layout_marginEnd="16dp" android:background="@drawable/bg_button_gray_solid" android:backgroundTint="#F5F5F5" android:contentDescription="Share" android:padding="14dp" android:src="@drawable/ic_share" app:tint="@color/text_primary" />
+        <ImageButton
+            android:id="@+id/btnShare"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/bg_button_gray_solid"
+            android:backgroundTint="#F5F5F5"
+            android:contentDescription="Share"
+            android:padding="14dp"
+            android:src="@drawable/ic_share"
+            app:tint="@color/text_primary" />
 
-        <androidx.appcompat.widget.AppCompatButton android:id="@+id/btnRegisterEvent" android:layout_width="0dp" android:layout_height="56dp" android:layout_weight="1" android:background="@drawable/bg_button_base" android:backgroundTint="@color/button_blue" android:text="Đăng ký tham gia" android:textAllCaps="false" android:textColor="@color/white" android:textSize="16sp" android:textStyle="bold" />
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnRegisterEvent"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_button_base"
+            android:backgroundTint="@color/button_blue"
+            android:text="Đăng ký tham gia"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:textStyle="bold" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

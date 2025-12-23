@@ -7,7 +7,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import com.manhhuy.myapplication.ui.Activities.Fragment.Common.MeFragment;
 import com.manhhuy.myapplication.ui.Activities.Fragment.Organization.AcceptApplicantFragment;
-import com.manhhuy.myapplication.ui.Activities.Fragment.Common.EventManageFragment;
+import com.manhhuy.myapplication.ui.Activities.Fragment.Organization.OrganizationEventFragment;
 
 public class OrganizationAdapter extends FragmentStateAdapter {
 
@@ -20,13 +20,13 @@ public class OrganizationAdapter extends FragmentStateAdapter {
     public Fragment createFragment(int position) {
         switch (position) {
             case 0:
-                return new EventManageFragment(); // Sự kiện
+                return new OrganizationEventFragment(); // Sự kiện của Organization
             case 1:
                 return new AcceptApplicantFragment(); // Thông báo / Duyệt đơn
             case 2:
                 return new MeFragment(); // Cá nhân
             default:
-                return new EventManageFragment();
+                return new OrganizationEventFragment();
         }
     }
 
@@ -35,4 +35,3 @@ public class OrganizationAdapter extends FragmentStateAdapter {
         return 3; // Organization has 3 tabs
     }
 }
-

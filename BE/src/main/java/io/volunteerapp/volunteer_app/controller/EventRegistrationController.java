@@ -46,7 +46,6 @@ public class EventRegistrationController {
             @RequestParam(name = "page", defaultValue = "0") int page,
             @RequestParam(name = "size", defaultValue = "10") int size,
             @RequestParam(name = "status", required = false) String status) {
-
         PageResponse<EventRegistrationResponse> response = registrationService.getMyRegistrations(
                 page, size, status);
         return ResponseEntity.ok(response);

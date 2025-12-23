@@ -11,53 +11,53 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:background="@drawable/bg_header_green_rounded"
-        android:paddingBottom="24dp"
         android:elevation="8dp"
-        android:outlineProvider="background">
+        android:orientation="vertical"
+        android:outlineProvider="background"
+        android:paddingBottom="24dp">
 
         <!-- Title Row -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center_vertical"
             android:orientation="horizontal"
             android:paddingHorizontal="20dp"
             android:paddingTop="40dp"
-            android:paddingBottom="20dp"
-            android:gravity="center_vertical">
+            android:paddingBottom="20dp">
 
             <ImageView
                 android:id="@+id/btnBack"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
-                android:padding="4dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/ic_back"
                 android:contentDescription="Back"
-                app:tint="@color/white"/>
+                android:padding="4dp"
+                android:src="@drawable/ic_back"
+                app:tint="@color/white" />
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
                 android:layout_weight="1"
                 android:text="Quản Lý Quà Tặng"
-                android:textSize="22sp"
-                android:textStyle="bold"
                 android:textColor="@color/white"
-                android:layout_marginStart="12dp"/>
+                android:textSize="22sp"
+                android:textStyle="bold" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/fabAddReward"
                 android:layout_width="wrap_content"
                 android:layout_height="36dp"
                 android:background="@drawable/bg_button_gray_solid"
+                android:paddingHorizontal="16dp"
                 android:text="+ Thêm mới"
                 android:textAllCaps="false"
                 android:textColor="@color/app_green_primary"
                 android:textSize="14sp"
-                android:textStyle="bold"
-                android:paddingHorizontal="16dp"/>
+                android:textStyle="bold" />
 
         </LinearLayout>
 
@@ -73,35 +73,35 @@
             <androidx.cardview.widget.CardView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:layout_marginEnd="8dp"
+                android:layout_weight="1"
+                app:cardBackgroundColor="@color/white"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="0dp"
-                app:cardBackgroundColor="@color/white">
+                app:cardElevation="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:gravity="center"
                     android:orientation="vertical"
-                    android:padding="16dp"
-                    android:gravity="center">
+                    android:padding="16dp">
 
                     <TextView
                         android:id="@+id/tvTotalRewards"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="24"
+                        android:textColor="@color/app_green_primary"
                         android:textSize="24sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/app_green_primary"/>
+                        android:textStyle="bold" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Tổng số"
-                        android:textSize="12sp"
                         android:layout_marginTop="4dp"
-                        android:textColor="@color/text_secondary"/>
+                        android:text="Tổng số"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="12sp" />
 
                 </LinearLayout>
 
@@ -111,35 +111,35 @@
             <androidx.cardview.widget.CardView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:layout_marginHorizontal="4dp"
+                android:layout_weight="1"
+                app:cardBackgroundColor="@color/white"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="0dp"
-                app:cardBackgroundColor="@color/white">
+                app:cardElevation="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:gravity="center"
                     android:orientation="vertical"
-                    android:padding="16dp"
-                    android:gravity="center">
+                    android:padding="16dp">
 
                     <TextView
                         android:id="@+id/tvActiveRewards"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="12"
+                        android:textColor="@color/app_green_primary"
                         android:textSize="24sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/app_green_primary"/>
+                        android:textStyle="bold" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Hoạt động"
-                        android:textSize="12sp"
                         android:layout_marginTop="4dp"
-                        android:textColor="@color/text_secondary"/>
+                        android:text="Hoạt động"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="12sp" />
 
                 </LinearLayout>
 
@@ -149,35 +149,35 @@
             <androidx.cardview.widget.CardView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:layout_marginStart="8dp"
+                android:layout_weight="1"
+                app:cardBackgroundColor="@color/white"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="0dp"
-                app:cardBackgroundColor="@color/white">
+                app:cardElevation="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:gravity="center"
                     android:orientation="vertical"
-                    android:padding="16dp"
-                    android:gravity="center">
+                    android:padding="16dp">
 
                     <TextView
                         android:id="@+id/tvRedeemedCount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="342"
+                        android:textColor="@color/app_green_primary"
                         android:textSize="24sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/app_green_primary"/>
+                        android:textStyle="bold" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Đã đổi"
-                        android:textSize="12sp"
                         android:layout_marginTop="4dp"
-                        android:textColor="@color/text_secondary"/>
+                        android:text="Đã đổi"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="12sp" />
 
                 </LinearLayout>
 
@@ -214,60 +214,60 @@
                         android:id="@+id/tabAll"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Tất cả"
-                        android:textSize="14sp"
+                        android:layout_marginEnd="8dp"
+                        android:background="@drawable/bg_category_tab_selected_reward"
                         android:paddingHorizontal="20dp"
                         android:paddingVertical="8dp"
-                        android:background="@drawable/bg_category_tab_selected_reward"
+                        android:text="Tất cả"
                         android:textColor="@color/app_green_primary"
-                        android:layout_marginEnd="8dp"/>
+                        android:textSize="14sp" />
 
                     <TextView
                         android:id="@+id/tabVoucher"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Voucher"
-                        android:textSize="14sp"
+                        android:layout_marginEnd="8dp"
+                        android:background="@drawable/bg_category_tab_unselected_reward"
                         android:paddingHorizontal="20dp"
                         android:paddingVertical="8dp"
-                        android:background="@drawable/bg_category_tab_unselected_reward"
+                        android:text="Voucher"
                         android:textColor="@color/text_secondary"
-                        android:layout_marginEnd="8dp"/>
+                        android:textSize="14sp" />
 
                     <TextView
                         android:id="@+id/tabGift"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Vật phẩm"
-                        android:textSize="14sp"
+                        android:layout_marginEnd="8dp"
+                        android:background="@drawable/bg_category_tab_unselected_reward"
                         android:paddingHorizontal="20dp"
                         android:paddingVertical="8dp"
-                        android:background="@drawable/bg_category_tab_unselected_reward"
+                        android:text="Vật phẩm"
                         android:textColor="@color/text_secondary"
-                        android:layout_marginEnd="8dp"/>
+                        android:textSize="14sp" />
 
                     <TextView
                         android:id="@+id/tabExperience"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Trải nghiệm"
-                        android:textSize="14sp"
+                        android:layout_marginEnd="8dp"
+                        android:background="@drawable/bg_category_tab_unselected_reward"
                         android:paddingHorizontal="20dp"
                         android:paddingVertical="8dp"
-                        android:background="@drawable/bg_category_tab_unselected_reward"
+                        android:text="Trải nghiệm"
                         android:textColor="@color/text_secondary"
-                        android:layout_marginEnd="8dp"/>
+                        android:textSize="14sp" />
 
                     <TextView
                         android:id="@+id/tabLowStock"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Sắp hết"
-                        android:textSize="14sp"
+                        android:background="@drawable/bg_category_tab_unselected_reward"
                         android:paddingHorizontal="20dp"
                         android:paddingVertical="8dp"
-                        android:background="@drawable/bg_category_tab_unselected_reward"
-                        android:textColor="@color/text_secondary"/>
+                        android:text="Sắp hết"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="14sp" />
 
                 </LinearLayout>
 
@@ -280,7 +280,7 @@
                 android:layout_height="wrap_content"
                 android:clipToPadding="false"
                 android:paddingBottom="20dp"
-                tools:listitem="@layout/item_reward_admin"/>
+                tools:listitem="@layout/item_reward_admin" />
 
         </LinearLayout>
 

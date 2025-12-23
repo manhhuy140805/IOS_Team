@@ -12,9 +12,9 @@
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:text="Duyệt yêu cầu đổi quà"
+        android:textColor="@color/text_primary"
         android:textSize="20sp"
         android:textStyle="bold"
-        android:textColor="@color/text_primary"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

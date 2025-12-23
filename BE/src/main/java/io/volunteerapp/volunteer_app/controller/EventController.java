@@ -22,6 +22,22 @@ public class EventController {
         this.eventService = eventService;
     }
 
+    // quản lý sự kiện của organization - lấy events mà user hiện tại đã tạo
+    @GetMapping("/organization/me")
+    public ResponseEntity<PageResponse<EventResponse>> getEventsByOrganization(
+            @org.springframework.security.core.annotation.AuthenticationPrincipal org.springframework.security.oauth2.jwt.Jwt jwt,
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "size", defaultValue = "20") int size,
+            @RequestParam(name = "sortBy", defaultValue = "createdAt") String sortBy,
+            @RequestParam(name = "sortDirection", defaultValue = "desc") String sortDirection) {
+
+        // Lấy email từ JWT token (sub claim)
+        String email = jwt.getSubject();
+        PageResponse<EventResponse> response = eventService.getEventsByCreatorEmail(email, page, size, sortBy,
+                sortDirection);
+        return ResponseEntity.ok(response);
+    }
+
     @GetMapping("")
     public ResponseEntity<PageResponse<EventResponse>> getAllEvents(
             @RequestParam(name = "page", defaultValue = "0") int page,
@@ -127,6 +143,13 @@ public class EventController {
             @PathVariable Integer id,
             @RequestParam("status") String status) {
         EventResponse response = eventService.updateEventStatus(id, status);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/ai-search")
+    public ResponseEntity<PageResponse<EventResponse>> searchEventsByAI(
+            @Valid @RequestBody io.volunteerapp.volunteer_app.DTO.requeset.AiSearchRequest request) {
+        PageResponse<EventResponse> response = eventService.searchEventsByAI(request.getQuery());
         return ResponseEntity.ok(response);
     }
 }

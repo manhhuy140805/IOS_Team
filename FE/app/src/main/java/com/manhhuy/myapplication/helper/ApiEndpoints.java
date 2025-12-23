@@ -63,10 +63,10 @@ public interface ApiEndpoints {
 
         @PUT("users/{id}")
         Call<RestResponse<UserResponse>> updateUser(@Path("id") Integer id, @Body UpdateUserRequest request);
-        
+
         @PUT("users/me")
         Call<RestResponse<UserResponse>> updateCurrentUser(@Body UpdateUserRequest request);
-        
+
         @PUT("users/me/change-password")
         Call<RestResponse<Void>> changePassword(@Body ChangePasswordRequest request);
 
@@ -153,6 +153,14 @@ public interface ApiEndpoints {
 
         @GET("events/my-events")
         Call<RestResponse<PageResponse<EventResponse>>> getMyEvents(
+                        @Query("page") int page,
+                        @Query("size") int size,
+                        @Query("sortBy") String sortBy,
+                        @Query("sortDirection") String sortDirection);
+
+        // Organization Events - lấy events mà organization đã tạo
+        @GET("events/organization/me")
+        Call<RestResponse<PageResponse<EventResponse>>> getOrganizationEvents(
                         @Query("page") int page,
                         @Query("size") int size,
                         @Query("sortBy") String sortBy,

@@ -18,8 +18,8 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/white"
             android:layout_marginTop="30dp"
+            android:background="@color/white"
             app:navigationIcon="@drawable/ic_back"
             app:title="Chi tiết thông báo"
             app:titleTextColor="@color/text_primary" />
@@ -121,7 +121,6 @@
                     android:text="2 giờ trước"
                     android:textColor="@color/gray_500"
                     android:textSize="12sp" />
-
 
 
                 <TextView

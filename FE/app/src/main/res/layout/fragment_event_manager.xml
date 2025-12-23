@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent" android:layout_height="match_parent" android:background="@color/md_theme_light_background" tools:context=".ui.Activities.Fragment.User.EventManagerFragment">
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent" android:layout_height="match_parent" android:background="@color/md_theme_light_background" tools:context=".ui.Activities.Fragment.Organization.OrganizationEventFragment">
 
     <androidx.core.widget.NestedScrollView android:layout_width="match_parent" android:layout_height="match_parent" android:fillViewport="true">
 
@@ -60,23 +60,9 @@
             <!-- Category Filter Chips (Dynamic) -->
 
             <!-- Events List -->
-            <HorizontalScrollView
-                android:id="@+id/categoryChipsContainer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="40dp"
-                android:paddingVertical="8dp"
-                android:scrollbars="none"
-                app:layout_constraintTop_toBottomOf="@id/statsSection"
-                tools:layout_editor_absoluteX="0dp">
+            <HorizontalScrollView android:id="@+id/categoryChipsContainer" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="40dp" android:paddingVertical="8dp" android:scrollbars="none" app:layout_constraintTop_toBottomOf="@id/statsSection" tools:layout_editor_absoluteX="0dp">
 
-                <LinearLayout
-                    android:id="@+id/categoryChipsLayout"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:paddingHorizontal="24dp"
-                    android:paddingVertical="4dp">
+                <LinearLayout android:id="@+id/categoryChipsLayout" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" android:paddingHorizontal="24dp" android:paddingVertical="4dp">
                     <!-- Chips will be added dynamically from API -->
                 </LinearLayout>
             </HorizontalScrollView>

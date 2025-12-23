@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
@@ -23,41 +22,41 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:layout_marginBottom="16dp"
                 android:gravity="center_vertical"
-                android:layout_marginBottom="16dp">
+                android:orientation="horizontal">
 
                 <ImageView
                     android:id="@+id/btnBack"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
-                    android:src="@drawable/ic_back"
-                    android:contentDescription="Back"/>
+                    android:contentDescription="Back"
+                    android:src="@drawable/ic_back" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
                     android:text="Trở về"
                     android:textColor="@color/app_green_primary"
-                    android:textSize="16sp"
-                    android:layout_marginStart="8dp"/>
+                    android:textSize="16sp" />
             </LinearLayout>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Tham gia ngay!"
+                android:textColor="@color/text_primary"
                 android:textSize="32sp"
-                android:textStyle="bold"
-                android:textColor="@color/text_primary"/>
+                android:textStyle="bold" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="32dp"
                 android:text="Bắt đầu hành trình tình nguyện của bạn"
-                android:textSize="16sp"
                 android:textColor="@color/text_secondary"
-                android:layout_marginBottom="32dp"/>
+                android:textSize="16sp" />
 
             <!-- User Registration Form -->
             <LinearLayout
@@ -70,127 +69,127 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="4dp"
                     android:text="Họ tên*"
-                    android:textStyle="bold"
                     android:textColor="@color/text_primary"
                     android:textSize="14sp"
-                    android:layout_marginBottom="4dp"/>
+                    android:textStyle="bold" />
 
                 <EditText
                     android:id="@+id/edit_text_fullname"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="15dp"
                     android:background="@drawable/bg_custom_edit_text"
-                    android:hint="Nguyễn Văn A"
-                    android:inputType="textPersonName"
                     android:drawableStart="@drawable/ic_user"
                     android:drawablePadding="12dp"
-                    android:singleLine="true"
+                    android:hint="Nguyễn Văn A"
+                    android:inputType="textPersonName"
                     android:paddingStart="16dp"
-                    android:paddingEnd="16dp"
                     android:paddingTop="14dp"
+                    android:paddingEnd="16dp"
                     android:paddingBottom="14dp"
-                    android:layout_marginBottom="15dp"/>
+                    android:singleLine="true" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="4dp"
                     android:text="Email*"
-                    android:textStyle="bold"
                     android:textColor="@color/text_primary"
                     android:textSize="14sp"
-                    android:layout_marginBottom="4dp"/>
+                    android:textStyle="bold" />
 
                 <EditText
                     android:id="@+id/edit_text_email"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="15dp"
                     android:background="@drawable/bg_custom_edit_text"
-                    android:hint="your.email@example.com"
-                    android:inputType="textEmailAddress"
                     android:drawableStart="@drawable/ic_mail"
                     android:drawablePadding="12dp"
-                    android:singleLine="true"
+                    android:hint="your.email@example.com"
+                    android:inputType="textEmailAddress"
                     android:paddingStart="16dp"
-                    android:paddingEnd="16dp"
                     android:paddingTop="14dp"
+                    android:paddingEnd="16dp"
                     android:paddingBottom="14dp"
-                    android:layout_marginBottom="15dp"/>
+                    android:singleLine="true" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="4dp"
                     android:text="SĐT*"
-                    android:textStyle="bold"
                     android:textColor="@color/text_primary"
                     android:textSize="14sp"
-                    android:layout_marginBottom="4dp"/>
+                    android:textStyle="bold" />
 
                 <EditText
                     android:id="@+id/edit_text_phone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="15dp"
                     android:background="@drawable/bg_custom_edit_text"
-                    android:hint="0123456789"
-                    android:inputType="phone"
                     android:drawableStart="@drawable/ic_phone"
                     android:drawablePadding="12dp"
-                    android:singleLine="true"
+                    android:hint="0123456789"
+                    android:inputType="phone"
                     android:paddingStart="16dp"
-                    android:paddingEnd="16dp"
                     android:paddingTop="14dp"
+                    android:paddingEnd="16dp"
                     android:paddingBottom="14dp"
-                    android:layout_marginBottom="15dp"/>
+                    android:singleLine="true" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="4dp"
                     android:text="Mật khẩu*"
-                    android:textStyle="bold"
                     android:textColor="@color/text_primary"
                     android:textSize="14sp"
-                    android:layout_marginBottom="4dp"/>
+                    android:textStyle="bold" />
 
                 <EditText
                     android:id="@+id/edit_text_password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="15dp"
                     android:background="@drawable/bg_custom_edit_text"
-                    android:hint="***********"
-                    android:inputType="textPassword"
                     android:drawableStart="@drawable/ic_lock"
                     android:drawablePadding="12dp"
-                    android:singleLine="true"
+                    android:hint="***********"
+                    android:inputType="textPassword"
                     android:paddingStart="16dp"
-                    android:paddingEnd="16dp"
                     android:paddingTop="14dp"
+                    android:paddingEnd="16dp"
                     android:paddingBottom="14dp"
-                    android:layout_marginBottom="15dp"/>
+                    android:singleLine="true" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="4dp"
                     android:text="Địa chỉ*"
-                    android:textStyle="bold"
                     android:textColor="@color/text_primary"
                     android:textSize="14sp"
-                    android:layout_marginBottom="4dp"/>
+                    android:textStyle="bold" />
 
                 <EditText
                     android:id="@+id/edit_text_location"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="15dp"
                     android:background="@drawable/bg_custom_edit_text"
-                    android:hint="Thành phố Đà Nẵng"
-                    android:inputType="textPostalAddress"
                     android:drawableStart="@drawable/ic_location"
                     android:drawablePadding="12dp"
-                    android:singleLine="true"
+                    android:hint="Thành phố Đà Nẵng"
+                    android:inputType="textPostalAddress"
                     android:paddingStart="16dp"
-                    android:paddingEnd="16dp"
                     android:paddingTop="14dp"
+                    android:paddingEnd="16dp"
                     android:paddingBottom="14dp"
-                    android:layout_marginBottom="15dp"/>
+                    android:singleLine="true" />
 
             </LinearLayout>
 
@@ -205,193 +204,193 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="4dp"
                     android:text="Tên tổ chức*"
-                    android:textStyle="bold"
                     android:textColor="@color/text_primary"
                     android:textSize="14sp"
-                    android:layout_marginBottom="4dp"/>
+                    android:textStyle="bold" />
 
                 <EditText
                     android:id="@+id/edit_text_org_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="15dp"
                     android:background="@drawable/bg_custom_edit_text"
-                    android:hint="Tổ chức Xanh"
-                    android:inputType="text"
                     android:drawableStart="@drawable/ic_organization"
                     android:drawablePadding="12dp"
-                    android:singleLine="true"
+                    android:hint="Tổ chức Xanh"
+                    android:inputType="text"
                     android:paddingStart="16dp"
-                    android:paddingEnd="16dp"
                     android:paddingTop="14dp"
+                    android:paddingEnd="16dp"
                     android:paddingBottom="14dp"
-                    android:layout_marginBottom="15dp"/>
+                    android:singleLine="true" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="4dp"
                     android:text="Email tổ chức*"
-                    android:textStyle="bold"
                     android:textColor="@color/text_primary"
                     android:textSize="14sp"
-                    android:layout_marginBottom="4dp"/>
+                    android:textStyle="bold" />
 
                 <EditText
                     android:id="@+id/edit_text_org_email"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="15dp"
                     android:background="@drawable/bg_custom_edit_text"
-                    android:hint="contact@organization.com"
-                    android:inputType="textEmailAddress"
                     android:drawableStart="@drawable/ic_mail"
                     android:drawablePadding="12dp"
-                    android:singleLine="true"
+                    android:hint="contact@organization.com"
+                    android:inputType="textEmailAddress"
                     android:paddingStart="16dp"
-                    android:paddingEnd="16dp"
                     android:paddingTop="14dp"
+                    android:paddingEnd="16dp"
                     android:paddingBottom="14dp"
-                    android:layout_marginBottom="15dp"/>
+                    android:singleLine="true" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="4dp"
                     android:text="Mật khẩu*"
-                    android:textStyle="bold"
                     android:textColor="@color/text_primary"
                     android:textSize="14sp"
-                    android:layout_marginBottom="4dp"/>
+                    android:textStyle="bold" />
 
                 <EditText
                     android:id="@+id/edit_text_org_password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="15dp"
                     android:background="@drawable/bg_custom_edit_text"
-                    android:hint="***********"
-                    android:inputType="textPassword"
                     android:drawableStart="@drawable/ic_lock"
                     android:drawablePadding="12dp"
-                    android:singleLine="true"
+                    android:hint="***********"
+                    android:inputType="textPassword"
                     android:paddingStart="16dp"
-                    android:paddingEnd="16dp"
                     android:paddingTop="14dp"
+                    android:paddingEnd="16dp"
                     android:paddingBottom="14dp"
-                    android:layout_marginBottom="15dp"/>
+                    android:singleLine="true" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="4dp"
                     android:text="Địa chỉ văn phòng*"
-                    android:textStyle="bold"
                     android:textColor="@color/text_primary"
                     android:textSize="14sp"
-                    android:layout_marginBottom="4dp"/>
+                    android:textStyle="bold" />
 
                 <EditText
                     android:id="@+id/edit_text_org_location"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="15dp"
                     android:background="@drawable/bg_custom_edit_text"
-                    android:hint="123 Đường ABC, TP. Hồ Chí Minh"
-                    android:inputType="textPostalAddress"
                     android:drawableStart="@drawable/ic_location"
                     android:drawablePadding="12dp"
-                    android:singleLine="true"
+                    android:hint="123 Đường ABC, TP. Hồ Chí Minh"
+                    android:inputType="textPostalAddress"
                     android:paddingStart="16dp"
-                    android:paddingEnd="16dp"
                     android:paddingTop="14dp"
+                    android:paddingEnd="16dp"
                     android:paddingBottom="14dp"
-                    android:layout_marginBottom="15dp"/>
+                    android:singleLine="true" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="4dp"
                     android:text="Số điện thoại liên hệ*"
-                    android:textStyle="bold"
                     android:textColor="@color/text_primary"
                     android:textSize="14sp"
-                    android:layout_marginBottom="4dp"/>
+                    android:textStyle="bold" />
 
                 <EditText
                     android:id="@+id/edit_text_org_phone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="15dp"
                     android:background="@drawable/bg_custom_edit_text"
-                    android:hint="0123456789"
-                    android:inputType="phone"
                     android:drawableStart="@drawable/ic_phone"
                     android:drawablePadding="12dp"
-                    android:singleLine="true"
+                    android:hint="0123456789"
+                    android:inputType="phone"
                     android:paddingStart="16dp"
-                    android:paddingEnd="16dp"
                     android:paddingTop="14dp"
+                    android:paddingEnd="16dp"
                     android:paddingBottom="14dp"
-                    android:layout_marginBottom="15dp"/>
+                    android:singleLine="true" />
 
             </LinearLayout>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
                 android:text="Tôi muốn tham gia như một"
-                android:textStyle="bold"
-                android:textSize="16sp"
                 android:textColor="@color/text_primary"
-                android:layout_marginBottom="12dp"/>
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginBottom="32dp">
+                android:layout_marginBottom="32dp"
+                android:orientation="horizontal">
 
                 <Button
                     android:id="@+id/btn_role_volunteer"
                     android:layout_width="0dp"
-                    android:layout_weight="1"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/bg_category_tab_selected_reward"
-                    app:backgroundTint="@null"
                     android:layout_marginEnd="8dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_category_tab_selected_reward"
+                    android:drawableTop="@drawable/ic_user"
+                    android:drawableTint="@color/app_green_primary"
                     android:paddingTop="20dp"
                     android:paddingBottom="20dp"
                     android:text="Tình nguyện viên"
+                    android:textAllCaps="false"
                     android:textColor="@color/text_primary"
                     android:textSize="16sp"
-                    android:textAllCaps="false"
-                    android:drawableTop="@drawable/ic_user"
-                    android:drawableTint="@color/app_green_primary"/>
+                    app:backgroundTint="@null" />
 
                 <Button
                     android:id="@+id/btn_role_organization"
                     android:layout_width="0dp"
-                    android:layout_weight="1"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/bg_custom_edit_text"
-                    app:backgroundTint="@null"
                     android:layout_marginStart="8dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_custom_edit_text"
+                    android:drawableTop="@drawable/ic_organization"
+                    android:drawableTint="@color/text_primary"
                     android:paddingTop="20dp"
                     android:paddingBottom="20dp"
                     android:text="Tổ chức"
+                    android:textAllCaps="false"
                     android:textColor="@color/text_primary"
                     android:textSize="16sp"
-                    android:textAllCaps="false"
-                    android:drawableTop="@drawable/ic_organization"
-                    android:drawableTint="@color/text_primary"/>
+                    app:backgroundTint="@null" />
             </LinearLayout>
 
             <Button
                 android:id="@+id/btn_create_account"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Tạo tài khoản"
-                android:textSize="16sp"
-                android:textAllCaps="false"
-                android:textColor="@color/white"
+                android:layout_marginBottom="16dp"
                 android:background="@drawable/bg_rounded_primary"
-                app:backgroundTint="@null"
                 android:paddingTop="14dp"
                 android:paddingBottom="14dp"
-                android:layout_marginBottom="16dp"/>
+                android:text="Tạo tài khoản"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                app:backgroundTint="@null" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -404,18 +403,18 @@
                     android:layout_height="wrap_content"
                     android:text="Bạn đã có tài khoản? "
                     android:textColor="@color/text_secondary"
-                    android:textSize="14sp"/>
+                    android:textSize="14sp" />
 
                 <TextView
                     android:id="@+id/tv_login_link"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:focusable="true"
                     android:text="Đăng nhập"
                     android:textColor="@color/app_green_primary"
                     android:textSize="14sp"
-                    android:textStyle="bold"
-                    android:clickable="true"
-                    android:focusable="true"/>
+                    android:textStyle="bold" />
             </LinearLayout>
 
         </LinearLayout>

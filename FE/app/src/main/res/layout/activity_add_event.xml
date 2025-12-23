@@ -1,781 +1,203 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/md_theme_light_background"
-    tools:context="ui.Activities.AddEventActivity">
+    xmlns:tools="http://schemas.android.com/tools" android:id="@+id/main" android:layout_width="match_parent" android:layout_height="match_parent" android:background="@color/md_theme_light_background" tools:context="ui.Activities.AddEventActivity">
+D
+                    <!-- Scrollable Content -->
+    <androidx.core.widget.NestedScrollView android:layout_width="match_parent" android:layout_height="0dp" android:fillViewport="true" app:layout_constraintBottom_toTopOf="@id/bottomActionContainer" app:layout_constraintTop_toTopOf="parent">
 
-    <!-- Scrollable Content -->
-    <androidx.core.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:fillViewport="true"
-        app:layout_constraintBottom_toTopOf="@id/bottomActionContainer"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+        <androidx.constraintlayout.widget.ConstraintLayout android:layout_width="match_parent" android:layout_height="wrap_content">
 
             <!-- Header Background -->
-            <View
-                android:id="@+id/headerBackground"
-                android:layout_width="match_parent"
-                android:layout_height="240dp"
-                android:background="@drawable/bg_header_green_rounded"
-                app:layout_constraintTop_toTopOf="parent" />
+            <View android:id="@+id/headerBackground" android:layout_width="match_parent" android:layout_height="240dp" android:background="@drawable/bg_header_green_rounded" app:layout_constraintTop_toTopOf="parent" />
 
             <!-- Back Button -->
-            <ImageButton
-                android:id="@+id/btnBack"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="50dp"
-                android:background="@drawable/bg_button_gray_solid"
-                android:contentDescription="Back"
-                android:padding="8dp"
-                android:src="@drawable/ic_back"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+            <ImageButton android:id="@+id/btnBack" android:layout_width="40dp" android:layout_height="40dp" android:layout_marginStart="16dp" android:layout_marginTop="50dp" android:background="@drawable/bg_button_gray_solid" android:contentDescription="Back" android:padding="8dp" android:src="@drawable/ic_back" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent" />
 
             <!-- Title in Header -->
-            <LinearLayout
-                android:id="@+id/headerContent"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="45dp"
-                android:layout_marginEnd="16dp"
-                android:orientation="vertical"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/btnBack"
-                app:layout_constraintTop_toTopOf="parent">
+            <LinearLayout android:id="@+id/headerContent" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginStart="16dp" android:layout_marginTop="45dp" android:layout_marginEnd="16dp" android:orientation="vertical" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toEndOf="@id/btnBack" app:layout_constraintTop_toTopOf="parent">
 
-                <TextView
-                    android:id="@+id/tvPageTitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Tạo Hoạt động tình nguyện"
-                    android:textColor="@color/white"
-                    android:textSize="22sp"
-                    android:textStyle="bold" />
+                <TextView android:id="@+id/tvPageTitle" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Tạo Hoạt động tình nguyện" android:textColor="@color/white" android:textSize="22sp" android:textStyle="bold" />
 
-                <TextView
-                    android:id="@+id/tvPageSubtitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:text="Thêm các thông tin để tạo 1 hoạt động"
-                    android:textColor="#E0F2F1"
-                    android:textSize="14sp" />
+                <TextView android:id="@+id/tvPageSubtitle" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="Thêm các thông tin để tạo 1 hoạt động" android:textColor="#E0F2F1" android:textSize="14sp" />
             </LinearLayout>
 
             <!-- Main Form Content -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:orientation="vertical"
-                android:paddingHorizontal="16dp"
-                android:paddingBottom="24dp"
-                app:layout_constraintTop_toBottomOf="@id/headerContent">
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="24dp" android:orientation="vertical" android:paddingHorizontal="16dp" android:paddingBottom="24dp" app:layout_constraintTop_toBottomOf="@id/headerContent">
 
                 <!-- Section: Basic Information -->
-                <androidx.cardview.widget.CardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
-                    app:cardBackgroundColor="@color/white"
-                    app:cardCornerRadius="12dp"
-                    app:cardElevation="2dp">
+                <androidx.cardview.widget.CardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="16dp" app:cardBackgroundColor="@color/white" app:cardCornerRadius="12dp" app:cardElevation="2dp">
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="16dp">
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="16dp">
 
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="12dp"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal">
+                        <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginBottom="12dp" android:gravity="center_vertical" android:orientation="horizontal">
 
-                            <ImageView
-                                android:layout_width="20dp"
-                                android:layout_height="20dp"
-                                android:src="@drawable/ic_info"
-                                app:tint="@color/md_theme_light_primary" />
+                            <ImageView android:layout_width="20dp" android:layout_height="20dp" android:src="@drawable/ic_info" app:tint="@color/md_theme_light_primary" />
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="8dp"
-                                android:text="Thông tin cơ bản"
-                                android:textColor="@color/text_primary"
-                                android:textSize="16sp"
-                                android:textStyle="bold" />
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="8dp" android:text="Thông tin cơ bản" android:textColor="@color/text_primary" android:textSize="16sp" android:textStyle="bold" />
                         </LinearLayout>
 
                         <!-- Event Title Input -->
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="8dp"
-                            android:text="Tiêu đề họạt động *"
-                            android:textColor="@color/text_primary"
-                            android:textSize="13sp"
-                            android:textStyle="bold" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginBottom="8dp" android:text="Tiêu đề họạt động *" android:textColor="@color/text_primary" android:textSize="13sp" android:textStyle="bold" />
 
-                        <EditText
-                            android:id="@+id/etEventTitle"
-                            android:layout_width="match_parent"
-                            android:layout_height="44dp"
-                            android:layout_marginBottom="16dp"
-                            android:background="@drawable/bg_input_box"
-                            android:hint="e.g. Beach Cleanup"
-                            android:paddingHorizontal="12dp"
-                            android:textColor="@color/text_primary"
-                            android:textColorHint="@color/text_secondary"
-                            android:textSize="14sp" />
+                        <EditText android:id="@+id/etEventTitle" android:layout_width="match_parent" android:layout_height="44dp" android:layout_marginBottom="16dp" android:background="@drawable/bg_input_box" android:hint="e.g. Beach Cleanup" android:paddingHorizontal="12dp" android:textColor="@color/text_primary" android:textColorHint="@color/text_secondary" android:textSize="14sp" />
 
                         <!-- Description Input -->
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="8dp"
-                            android:text="Mô tả *"
-                            android:textColor="@color/text_primary"
-                            android:textSize="13sp"
-                            android:textStyle="bold" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginBottom="8dp" android:text="Mô tả *" android:textColor="@color/text_primary" android:textSize="13sp" android:textStyle="bold" />
 
-                        <EditText
-                            android:id="@+id/etDescription"
-                            android:layout_width="match_parent"
-                            android:layout_height="100dp"
-                            android:background="@drawable/bg_input_box"
-                            android:gravity="top"
-                            android:hint="Mô tả hoạt động của bạn, những tình nguyện viên của bạn cân làm gì..."
-                            android:paddingHorizontal="12dp"
-                            android:paddingVertical="12dp"
-                            android:textColor="@color/text_primary"
-                            android:textColorHint="@color/text_secondary"
-                            android:textSize="14sp" />
+                        <EditText android:id="@+id/etDescription" android:layout_width="match_parent" android:layout_height="100dp" android:background="@drawable/bg_input_box" android:gravity="top" android:hint="Mô tả hoạt động của bạn, những tình nguyện viên của bạn cân làm gì..." android:paddingHorizontal="12dp" android:paddingVertical="12dp" android:textColor="@color/text_primary" android:textColorHint="@color/text_secondary" android:textSize="14sp" />
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
 
                 <!-- Section: Category -->
-                <androidx.cardview.widget.CardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
-                    app:cardBackgroundColor="@color/white"
-                    app:cardCornerRadius="12dp"
-                    app:cardElevation="2dp">
+                <androidx.cardview.widget.CardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="16dp" app:cardBackgroundColor="@color/white" app:cardCornerRadius="12dp" app:cardElevation="2dp">
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="16dp">
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="16dp">
 
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="12dp"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal">
+                        <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginBottom="12dp" android:gravity="center_vertical" android:orientation="horizontal">
 
-                            <ImageView
-                                android:layout_width="20dp"
-                                android:layout_height="20dp"
-                                android:src="@drawable/ic_tag"
-                                app:tint="@color/md_theme_light_primary" />
+                            <ImageView android:layout_width="20dp" android:layout_height="20dp" android:src="@drawable/ic_tag" app:tint="@color/md_theme_light_primary" />
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="8dp"
-                                android:text="Loại hình *"
-                                android:textColor="@color/text_primary"
-                                android:textSize="16sp"
-                                android:textStyle="bold" />
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="8dp" android:text="Loại hình *" android:textColor="@color/text_primary" android:textSize="16sp" android:textStyle="bold" />
                         </LinearLayout>
 
                         <!-- Category Grid -->
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="8dp"
-                            android:orientation="horizontal">
+                        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="8dp" android:orientation="horizontal">
 
-                            <Button
-                                android:id="@+id/btn_category_community"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginEnd="4dp"
-                                android:layout_weight="1"
-                                android:background="@drawable/bg_category_tab_selected_reward"
-                                android:drawableTop="@drawable/ic_backpack"
-                                android:drawableTint="@color/app_green_primary"
-                                android:paddingTop="16dp"
-                                android:paddingBottom="16dp"
-                                android:text="Cộng đồng"
-                                android:textAllCaps="false"
-                                android:textColor="@color/text_primary"
-                                android:textSize="12sp"
-                                app:backgroundTint="@null" />
+                            <Button android:id="@+id/btn_category_community" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginEnd="4dp" android:layout_weight="1" android:background="@drawable/bg_category_tab_selected_reward" android:drawableTop="@drawable/ic_backpack" android:drawableTint="@color/app_green_primary" android:paddingTop="16dp" android:paddingBottom="16dp" android:text="Cộng đồng" android:textAllCaps="false" android:textColor="@color/text_primary" android:textSize="12sp" app:backgroundTint="@null" />
 
-                            <Button
-                                android:id="@+id/btn_category_environment"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="4dp"
-                                android:layout_marginEnd="4dp"
-                                android:layout_weight="1"
-                                android:background="@drawable/bg_custom_edit_text"
-                                android:drawableTop="@drawable/ic_plant"
-                                android:drawableTint="@color/text_primary"
-                                android:paddingTop="16dp"
-                                android:paddingBottom="16dp"
-                                android:text="Môi trường"
-                                android:textAllCaps="false"
-                                android:textColor="@color/text_primary"
-                                android:textSize="12sp"
-                                app:backgroundTint="@null" />
+                            <Button android:id="@+id/btn_category_environment" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginStart="4dp" android:layout_marginEnd="4dp" android:layout_weight="1" android:background="@drawable/bg_custom_edit_text" android:drawableTop="@drawable/ic_plant" android:drawableTint="@color/text_primary" android:paddingTop="16dp" android:paddingBottom="16dp" android:text="Môi trường" android:textAllCaps="false" android:textColor="@color/text_primary" android:textSize="12sp" app:backgroundTint="@null" />
 
-                            <Button
-                                android:id="@+id/btn_category_education"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="4dp"
-                                android:layout_weight="1"
-                                android:background="@drawable/bg_custom_edit_text"
-                                android:drawableTop="@drawable/ic_book"
-                                android:drawableTint="@color/text_primary"
-                                android:paddingTop="16dp"
-                                android:paddingBottom="16dp"
-                                android:text="Giáo dục"
-                                android:textAllCaps="false"
-                                android:textColor="@color/text_primary"
-                                android:textSize="12sp"
-                                app:backgroundTint="@null" />
+                            <Button android:id="@+id/btn_category_education" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginStart="4dp" android:layout_weight="1" android:background="@drawable/bg_custom_edit_text" android:drawableTop="@drawable/ic_book" android:drawableTint="@color/text_primary" android:paddingTop="16dp" android:paddingBottom="16dp" android:text="Giáo dục" android:textAllCaps="false" android:textColor="@color/text_primary" android:textSize="12sp" app:backgroundTint="@null" />
                         </LinearLayout>
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal">
+                        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal">
 
-                            <Button
-                                android:id="@+id/btn_category_health"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginEnd="4dp"
-                                android:layout_weight="1"
-                                android:background="@drawable/bg_custom_edit_text"
-                                android:drawableTop="@drawable/ic_heart"
-                                android:paddingTop="16dp"
-                                android:paddingBottom="16dp"
-                                android:text="Sức khỏe"
-                                android:textAllCaps="false"
-                                android:textColor="@color/text_primary"
-                                android:textSize="12sp"
-                                app:backgroundTint="@null" />
+                            <Button android:id="@+id/btn_category_health" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginEnd="4dp" android:layout_weight="1" android:background="@drawable/bg_custom_edit_text" android:drawableTop="@drawable/ic_heart" android:paddingTop="16dp" android:paddingBottom="16dp" android:text="Sức khỏe" android:textAllCaps="false" android:textColor="@color/text_primary" android:textSize="12sp" app:backgroundTint="@null" />
 
-                            <Button
-                                android:id="@+id/btn_category_animal"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="4dp"
-                                android:layout_marginEnd="4dp"
-                                android:layout_weight="1"
-                                android:background="@drawable/bg_custom_edit_text"
-                                android:drawableTop="@drawable/ic_pizza"
-                                android:drawableTint="@color/text_primary"
-                                android:paddingTop="16dp"
-                                android:paddingBottom="16dp"
-                                android:text="Động vật"
-                                android:textAllCaps="false"
-                                android:textColor="@color/text_primary"
-                                android:textSize="12sp"
-                                app:backgroundTint="@null" />
+                            <Button android:id="@+id/btn_category_animal" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginStart="4dp" android:layout_marginEnd="4dp" android:layout_weight="1" android:background="@drawable/bg_custom_edit_text" android:drawableTop="@drawable/ic_pizza" android:drawableTint="@color/text_primary" android:paddingTop="16dp" android:paddingBottom="16dp" android:text="Động vật" android:textAllCaps="false" android:textColor="@color/text_primary" android:textSize="12sp" app:backgroundTint="@null" />
 
-                            <Button
-                                android:id="@+id/btn_category_other"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="4dp"
-                                android:layout_weight="1"
-                                android:background="@drawable/bg_custom_edit_text"
-                                android:drawableTop="@drawable/ic_organization"
-                                android:drawableTint="@color/text_primary"
-                                android:paddingTop="16dp"
-                                android:paddingBottom="16dp"
-                                android:text="Khác"
-                                android:textAllCaps="false"
-                                android:textColor="@color/text_primary"
-                                android:textSize="12sp"
-                                app:backgroundTint="@null" />
+                            <Button android:id="@+id/btn_category_other" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginStart="4dp" android:layout_weight="1" android:background="@drawable/bg_custom_edit_text" android:drawableTop="@drawable/ic_organization" android:drawableTint="@color/text_primary" android:paddingTop="16dp" android:paddingBottom="16dp" android:text="Khác" android:textAllCaps="false" android:textColor="@color/text_primary" android:textSize="12sp" app:backgroundTint="@null" />
                         </LinearLayout>
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
 
                 <!-- Section: Event Image -->
-                <androidx.cardview.widget.CardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
-                    app:cardBackgroundColor="@color/white"
-                    app:cardCornerRadius="12dp"
-                    app:cardElevation="2dp">
+                <androidx.cardview.widget.CardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="16dp" app:cardBackgroundColor="@color/white" app:cardCornerRadius="12dp" app:cardElevation="2dp">
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="16dp">
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="16dp">
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="12dp"
-                            android:text="Ảnh hoạt động"
-                            android:textColor="@color/text_primary"
-                            android:textSize="14sp"
-                            android:textStyle="bold" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginBottom="12dp" android:text="Ảnh hoạt động" android:textColor="@color/text_primary" android:textSize="14sp" android:textStyle="bold" />
 
-                        <FrameLayout
-                            android:id="@+id/uploadImageContainer"
-                            android:layout_width="match_parent"
-                            android:layout_height="120dp"
-                            android:background="@drawable/bg_preview_box">
+                        <FrameLayout android:id="@+id/uploadImageContainer" android:layout_width="match_parent" android:layout_height="120dp" android:background="@drawable/bg_preview_box">
 
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:gravity="center"
-                                android:orientation="vertical">
+                            <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:gravity="center" android:orientation="vertical">
 
-                                <ImageView
-                                    android:layout_width="36dp"
-                                    android:layout_height="36dp"
-                                    android:src="@drawable/ic_download"
-                                    app:tint="@color/md_theme_light_primary" />
+                                <ImageView android:layout_width="36dp" android:layout_height="36dp" android:src="@drawable/ic_download" app:tint="@color/md_theme_light_primary" />
 
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="8dp"
-                                    android:text="Nhấn vào đây để tải ảnh lên"
-                                    android:textColor="@color/md_theme_light_primary"
-                                    android:textSize="13sp" />
+                                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:text="Nhấn vào đây để tải ảnh lên" android:textColor="@color/md_theme_light_primary" android:textSize="13sp" />
 
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="4dp"
-                                    android:text="Tối đa. 2MB or 2048x2048"
-                                    android:textColor="@color/text_secondary"
-                                    android:textSize="12sp" />
+                                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="Tối đa. 2MB or 2048x2048" android:textColor="@color/text_secondary" android:textSize="12sp" />
                             </LinearLayout>
                         </FrameLayout>
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
 
                 <!-- Section: Date & Time -->
-                <androidx.cardview.widget.CardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
-                    app:cardBackgroundColor="@color/white"
-                    app:cardCornerRadius="12dp"
-                    app:cardElevation="2dp">
+                <androidx.cardview.widget.CardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="16dp" app:cardBackgroundColor="@color/white" app:cardCornerRadius="12dp" app:cardElevation="2dp">
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="16dp">
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="16dp">
 
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="12dp"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal">
+                        <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginBottom="12dp" android:gravity="center_vertical" android:orientation="horizontal">
 
-                            <ImageView
-                                android:layout_width="20dp"
-                                android:layout_height="20dp"
-                                android:src="@drawable/ic_calendar"
-                                app:tint="@color/md_theme_light_primary" />
+                            <ImageView android:layout_width="20dp" android:layout_height="20dp" android:src="@drawable/ic_calendar" app:tint="@color/md_theme_light_primary" />
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="8dp"
-                                android:text="Date &amp; Time"
-                                android:textColor="@color/text_primary"
-                                android:textSize="16sp"
-                                android:textStyle="bold" />
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="8dp" android:text="Date &amp; Time" android:textColor="@color/text_primary" android:textSize="16sp" android:textStyle="bold" />
                         </LinearLayout>
 
                         <!-- Event Date -->
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="8dp"
-                            android:text="Ngày hoạt động *"
-                            android:textColor="@color/text_primary"
-                            android:textSize="13sp"
-                            android:textStyle="bold" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginBottom="8dp" android:text="Ngày hoạt động *" android:textColor="@color/text_primary" android:textSize="13sp" android:textStyle="bold" />
 
-                        <EditText
-                            android:id="@+id/etEventDate"
-                            android:layout_width="match_parent"
-                            android:layout_height="44dp"
-                            android:layout_marginBottom="16dp"
-                            android:background="@drawable/bg_input_box"
-                            android:hint="mm/dd/yyyy"
-                            android:inputType="date"
-                            android:paddingHorizontal="12dp"
-                            android:textColor="@color/text_primary"
-                            android:textColorHint="@color/text_secondary"
-                            android:textSize="14sp" />
+                        <EditText android:id="@+id/etEventDate" android:layout_width="match_parent" android:layout_height="44dp" android:layout_marginBottom="16dp" android:background="@drawable/bg_input_box" android:hint="mm/dd/yyyy" android:inputType="date" android:paddingHorizontal="12dp" android:textColor="@color/text_primary" android:textColorHint="@color/text_secondary" android:textSize="14sp" />
 
                         <!-- Start Time -->
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="8dp"
-                            android:text="Thời gian bắt đầu *"
-                            android:textColor="@color/text_primary"
-                            android:textSize="13sp"
-                            android:textStyle="bold" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginBottom="8dp" android:text="Thời gian bắt đầu *" android:textColor="@color/text_primary" android:textSize="13sp" android:textStyle="bold" />
 
-                        <EditText
-                            android:id="@+id/etStartTime"
-                            android:layout_width="match_parent"
-                            android:layout_height="44dp"
-                            android:layout_marginBottom="16dp"
-                            android:background="@drawable/bg_input_box"
-                            android:hint="HH:mm"
-                            android:inputType="time"
-                            android:paddingHorizontal="12dp"
-                            android:textColor="@color/text_primary"
-                            android:textColorHint="@color/text_secondary"
-                            android:textSize="14sp" />
+                        <EditText android:id="@+id/etStartTime" android:layout_width="match_parent" android:layout_height="44dp" android:layout_marginBottom="16dp" android:background="@drawable/bg_input_box" android:hint="HH:mm" android:inputType="time" android:paddingHorizontal="12dp" android:textColor="@color/text_primary" android:textColorHint="@color/text_secondary" android:textSize="14sp" />
 
                         <!-- Duration -->
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="8dp"
-                            android:text="Thời lượng (giờ) *"
-                            android:textColor="@color/text_primary"
-                            android:textSize="13sp"
-                            android:textStyle="bold" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginBottom="8dp" android:text="Thời lượng (giờ) *" android:textColor="@color/text_primary" android:textSize="13sp" android:textStyle="bold" />
 
-                        <EditText
-                            android:id="@+id/etDuration"
-                            android:layout_width="match_parent"
-                            android:layout_height="44dp"
-                            android:layout_marginBottom="16dp"
-                            android:background="@drawable/bg_input_box"
-                            android:hint="e.g. 3"
-                            android:inputType="number"
-                            android:paddingHorizontal="12dp"
-                            android:textColor="@color/text_primary"
-                            android:textColorHint="@color/text_secondary"
-                            android:textSize="14sp" />
+                        <EditText android:id="@+id/etDuration" android:layout_width="match_parent" android:layout_height="44dp" android:layout_marginBottom="16dp" android:background="@drawable/bg_input_box" android:hint="e.g. 3" android:inputType="number" android:paddingHorizontal="12dp" android:textColor="@color/text_primary" android:textColorHint="@color/text_secondary" android:textSize="14sp" />
 
                         <!-- Registration Deadline -->
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="8dp"
-                            android:text="Hạn đăng ký"
-                            android:textColor="@color/text_primary"
-                            android:textSize="13sp"
-                            android:textStyle="bold" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginBottom="8dp" android:text="Hạn đăng ký" android:textColor="@color/text_primary" android:textSize="13sp" android:textStyle="bold" />
 
-                        <EditText
-                            android:id="@+id/etRegistrationDeadline"
-                            android:layout_width="match_parent"
-                            android:layout_height="44dp"
-                            android:layout_marginBottom="16dp"
-                            android:background="@drawable/bg_input_box"
-                            android:hint="mm/dd/yyyy"
-                            android:inputType="date"
-                            android:paddingHorizontal="12dp"
-                            android:textColor="@color/text_primary"
-                            android:textColorHint="@color/text_secondary"
-                            android:textSize="14sp" />
+                        <EditText android:id="@+id/etRegistrationDeadline" android:layout_width="match_parent" android:layout_height="44dp" android:layout_marginBottom="16dp" android:background="@drawable/bg_input_box" android:hint="mm/dd/yyyy" android:inputType="date" android:paddingHorizontal="12dp" android:textColor="@color/text_primary" android:textColorHint="@color/text_secondary" android:textSize="14sp" />
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
 
                 <!-- Section: Volunteers -->
-                <androidx.cardview.widget.CardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
-                    app:cardBackgroundColor="@color/white"
-                    app:cardCornerRadius="12dp"
-                    app:cardElevation="2dp">
+                <androidx.cardview.widget.CardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="16dp" app:cardBackgroundColor="@color/white" app:cardCornerRadius="12dp" app:cardElevation="2dp">
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="16dp">
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="16dp">
 
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="12dp"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal">
+                        <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginBottom="12dp" android:gravity="center_vertical" android:orientation="horizontal">
 
-                            <ImageView
-                                android:layout_width="20dp"
-                                android:layout_height="20dp"
-                                android:src="@drawable/ic_group"
-                                app:tint="@color/md_theme_light_primary" />
+                            <ImageView android:layout_width="20dp" android:layout_height="20dp" android:src="@drawable/ic_group" app:tint="@color/md_theme_light_primary" />
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="8dp"
-                                android:text="Volunteers"
-                                android:textColor="@color/text_primary"
-                                android:textSize="16sp"
-                                android:textStyle="bold" />
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="8dp" android:text="Volunteers" android:textColor="@color/text_primary" android:textSize="16sp" android:textStyle="bold" />
                         </LinearLayout>
 
                         <!-- Number Needed -->
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="8dp"
-                            android:text="Số lượng cần *"
-                            android:textColor="@color/text_primary"
-                            android:textSize="13sp"
-                            android:textStyle="bold" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginBottom="8dp" android:text="Số lượng cần *" android:textColor="@color/text_primary" android:textSize="13sp" android:textStyle="bold" />
 
-                        <EditText
-                            android:id="@+id/etNumberNeeded"
-                            android:layout_width="match_parent"
-                            android:layout_height="44dp"
-                            android:layout_marginBottom="16dp"
-                            android:background="@drawable/bg_input_box"
-                            android:hint="e.g. 20"
-                            android:inputType="number"
-                            android:paddingHorizontal="12dp"
-                            android:textColor="@color/text_primary"
-                            android:textColorHint="@color/text_secondary"
-                            android:textSize="14sp" />
+                        <EditText android:id="@+id/etNumberNeeded" android:layout_width="match_parent" android:layout_height="44dp" android:layout_marginBottom="16dp" android:background="@drawable/bg_input_box" android:hint="e.g. 20" android:inputType="number" android:paddingHorizontal="12dp" android:textColor="@color/text_primary" android:textColorHint="@color/text_secondary" android:textSize="14sp" />
 
                         <!-- Age Requirement -->
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="8dp"
-                            android:text="Yêu cầu tuổi"
-                            android:textColor="@color/text_primary"
-                            android:textSize="13sp"
-                            android:textStyle="bold" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginBottom="8dp" android:text="Yêu cầu tuổi" android:textColor="@color/text_primary" android:textSize="13sp" android:textStyle="bold" />
 
-                        <EditText
-                            android:id="@+id/etAgeRequirement"
-                            android:layout_width="match_parent"
-                            android:layout_height="44dp"
-                            android:layout_marginBottom="16dp"
-                            android:background="@drawable/bg_input_box"
-                            android:hint="e.g. 13+"
-                            android:paddingHorizontal="12dp"
-                            android:textColor="@color/text_primary"
-                            android:textColorHint="@color/text_secondary"
-                            android:textSize="14sp" />
+                        <EditText android:id="@+id/etAgeRequirement" android:layout_width="match_parent" android:layout_height="44dp" android:layout_marginBottom="16dp" android:background="@drawable/bg_input_box" android:hint="e.g. 13+" android:paddingHorizontal="12dp" android:textColor="@color/text_primary" android:textColorHint="@color/text_secondary" android:textSize="14sp" />
 
                         <!-- Requirements & Skills -->
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="8dp"
-                            android:text="Requirements &amp; Skills"
-                            android:textColor="@color/text_primary"
-                            android:textSize="13sp"
-                            android:textStyle="bold" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginBottom="8dp" android:text="Requirements &amp; Skills" android:textColor="@color/text_primary" android:textSize="13sp" android:textStyle="bold" />
 
-                        <EditText
-                            android:id="@+id/etRequirements"
-                            android:layout_width="match_parent"
-                            android:layout_height="80dp"
-                            android:layout_marginBottom="16dp"
-                            android:background="@drawable/bg_input_box"
-                            android:gravity="top"
-                            android:hint="Liệt kê bất kỳ yêu cầu, kỹ năng hoặc vật dụng mà tình nguyện viên cần mang theo"
-                            android:paddingHorizontal="12dp"
-                            android:paddingVertical="12dp"
-                            android:textColor="@color/text_primary"
-                            android:textColorHint="@color/text_secondary"
-                            android:textSize="14sp" />
+                        <EditText android:id="@+id/etRequirements" android:layout_width="match_parent" android:layout_height="80dp" android:layout_marginBottom="16dp" android:background="@drawable/bg_input_box" android:gravity="top" android:hint="Liệt kê bất kỳ yêu cầu, kỹ năng hoặc vật dụng mà tình nguyện viên cần mang theo" android:paddingHorizontal="12dp" android:paddingVertical="12dp" android:textColor="@color/text_primary" android:textColorHint="@color/text_secondary" android:textSize="14sp" />
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
 
                 <!-- Section: Location -->
-                <androidx.cardview.widget.CardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="24dp"
-                    app:cardBackgroundColor="@color/white"
-                    app:cardCornerRadius="12dp"
-                    app:cardElevation="2dp">
+                <androidx.cardview.widget.CardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="24dp" app:cardBackgroundColor="@color/white" app:cardCornerRadius="12dp" app:cardElevation="2dp">
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="16dp">
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="16dp">
 
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="12dp"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal">
+                        <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginBottom="12dp" android:gravity="center_vertical" android:orientation="horizontal">
 
-                            <ImageView
-                                android:layout_width="20dp"
-                                android:layout_height="20dp"
-                                android:src="@drawable/ic_location"
-                                app:tint="@color/md_theme_light_primary" />
+                            <ImageView android:layout_width="20dp" android:layout_height="20dp" android:src="@drawable/ic_location" app:tint="@color/md_theme_light_primary" />
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="8dp"
-                                android:text="Location"
-                                android:textColor="@color/text_primary"
-                                android:textSize="16sp"
-                                android:textStyle="bold" />
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="8dp" android:text="Location" android:textColor="@color/text_primary" android:textSize="16sp" android:textStyle="bold" />
                         </LinearLayout>
 
                         <!-- Address -->
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="8dp"
-                            android:text="Địa chỉ *"
-                            android:textColor="@color/text_primary"
-                            android:textSize="13sp"
-                            android:textStyle="bold" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginBottom="8dp" android:text="Địa chỉ *" android:textColor="@color/text_primary" android:textSize="13sp" android:textStyle="bold" />
 
-                        <EditText
-                            android:id="@+id/etAddress"
-                            android:layout_width="match_parent"
-                            android:layout_height="44dp"
-                            android:layout_marginBottom="16dp"
-                            android:background="@drawable/bg_input_box"
-                            android:hint="e.g. The Beach, Ca Name"
-                            android:paddingHorizontal="12dp"
-                            android:textColor="@color/text_primary"
-                            android:textColorHint="@color/text_secondary"
-                            android:textSize="14sp" />
+                        <EditText android:id="@+id/etAddress" android:layout_width="match_parent" android:layout_height="44dp" android:layout_marginBottom="16dp" android:background="@drawable/bg_input_box" android:hint="e.g. The Beach, Ca Name" android:paddingHorizontal="12dp" android:textColor="@color/text_primary" android:textColorHint="@color/text_secondary" android:textSize="14sp" />
 
                         <!-- City -->
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="8dp"
-                            android:text="Thành phố *"
-                            android:textColor="@color/text_primary"
-                            android:textSize="13sp"
-                            android:textStyle="bold" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginBottom="8dp" android:text="Thành phố *" android:textColor="@color/text_primary" android:textSize="13sp" android:textStyle="bold" />
 
-                        <EditText
-                            android:id="@+id/etCity"
-                            android:layout_width="match_parent"
-                            android:layout_height="44dp"
-                            android:layout_marginBottom="16dp"
-                            android:background="@drawable/bg_input_box"
-                            android:hint="e.g. Ha Noi"
-                            android:paddingHorizontal="12dp"
-                            android:textColor="@color/text_primary"
-                            android:textColorHint="@color/text_secondary"
-                            android:textSize="14sp" />
+                        <EditText android:id="@+id/etCity" android:layout_width="match_parent" android:layout_height="44dp" android:layout_marginBottom="16dp" android:background="@drawable/bg_input_box" android:hint="e.g. Ha Noi" android:paddingHorizontal="12dp" android:textColor="@color/text_primary" android:textColorHint="@color/text_secondary" android:textSize="14sp" />
 
                         <!-- District -->
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="8dp"
-                            android:text="Quận/Huyện"
-                            android:textColor="@color/text_primary"
-                            android:textSize="13sp"
-                            android:textStyle="bold" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginBottom="8dp" android:text="Quận/Huyện" android:textColor="@color/text_primary" android:textSize="13sp" android:textStyle="bold" />
 
-                        <EditText
-                            android:id="@+id/etDistrict"
-                            android:layout_width="match_parent"
-                            android:layout_height="44dp"
-                            android:layout_marginBottom="16dp"
-                            android:background="@drawable/bg_input_box"
-                            android:hint="e.g. District 1"
-                            android:paddingHorizontal="12dp"
-                            android:textColor="@color/text_primary"
-                            android:textColorHint="@color/text_secondary"
-                            android:textSize="14sp" />
+                        <EditText android:id="@+id/etDistrict" android:layout_width="match_parent" android:layout_height="44dp" android:layout_marginBottom="16dp" android:background="@drawable/bg_input_box" android:hint="e.g. District 1" android:paddingHorizontal="12dp" android:textColor="@color/text_primary" android:textColorHint="@color/text_secondary" android:textSize="14sp" />
 
-                        <!-- Map Location -->
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="12dp"
-                            android:text="Vị trí trên bản đồ"
-                            android:textColor="@color/text_primary"
-                            android:textSize="14sp"
-                            android:textStyle="bold" />
 
-                        <FrameLayout
-                            android:id="@+id/mapContainer"
-                            android:layout_width="match_parent"
-                            android:layout_height="150dp"
-                            android:layout_marginBottom="16dp"
-                            android:background="@drawable/bg_preview_box">
 
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:gravity="center"
-                                android:orientation="vertical">
 
-                                <ImageView
-                                    android:layout_width="36dp"
-                                    android:layout_height="36dp"
-                                    android:src="@drawable/ic_location_pin" />
 
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="8dp"
-                                    android:text="Nhấn vào để chọn vị trí trên bản đồ"
-                                    android:textSize="13sp" />
-                            </LinearLayout>
-                        </FrameLayout>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Vị trí chính xác để tập hợp các tình nguyện viên"
-                            android:textColor="@color/text_secondary"
-                            android:textSize="12sp" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Vị trí chính xác để tập hợp các tình nguyện viên" android:textColor="@color/text_secondary" android:textSize="12sp" />
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
             </LinearLayout>
@@ -787,42 +209,11 @@
     <!-- Fixed Floating Back Button -->
 
     <!-- Action Buttons -->
-    <LinearLayout
-        android:id="@+id/bottomActionContainer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:baselineAligned="false"
-        android:elevation="20dp"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:padding="16dp"
-        app:layout_constraintBottom_toBottomOf="parent">
+    <LinearLayout android:id="@+id/bottomActionContainer" android:layout_width="match_parent" android:layout_height="wrap_content" android:background="@color/white" android:baselineAligned="false" android:elevation="20dp" android:gravity="center" android:orientation="horizontal" android:padding="16dp" app:layout_constraintBottom_toBottomOf="parent">
 
-        <Button
-            android:id="@+id/btnCancel"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_marginEnd="8dp"
-            android:layout_weight="1"
-            android:background="@drawable/bg_rounded_primary"
-            android:text="Hủy"
-            android:textColor="@color/white"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            app:backgroundTint="@color/button_red" />
+        <Button android:id="@+id/btnCancel" android:layout_width="0dp" android:layout_height="48dp" android:layout_marginEnd="8dp" android:layout_weight="1" android:background="@drawable/bg_rounded_primary" android:text="Hủy" android:textColor="@color/white" android:textSize="14sp" android:textStyle="bold" app:backgroundTint="@color/button_red" />
 
-        <Button
-            android:id="@+id/btnCreateEvent"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_weight="1"
-            android:background="@drawable/bg_rounded_primary"
-            android:text="Tạo hoạt động"
-            android:textColor="@color/white"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            app:backgroundTint="@color/app_green_primary" />
+        <Button android:id="@+id/btnCreateEvent" android:layout_width="0dp" android:layout_height="48dp" android:layout_weight="1" android:background="@drawable/bg_rounded_primary" android:text="Tạo hoạt động" android:textColor="@color/white" android:textSize="14sp" android:textStyle="bold" app:backgroundTint="@color/app_green_primary" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
