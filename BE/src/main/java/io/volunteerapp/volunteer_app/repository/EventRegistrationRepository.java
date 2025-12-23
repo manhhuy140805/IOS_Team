@@ -7,6 +7,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
+
 public interface EventRegistrationRepository extends JpaRepository<EventRegistration, Integer> {
 
     // Count registrations for an event
@@ -26,4 +28,10 @@ public interface EventRegistrationRepository extends JpaRepository<EventRegistra
 
     // Find registrations by user and status
     Page<EventRegistration> findByUserAndStatus(User user, String status, Pageable pageable);
+
+    // Find registrations by list of events
+    Page<EventRegistration> findByEventIn(List<Event> events, Pageable pageable);
+
+    // Find registrations by list of events and status
+    Page<EventRegistration> findByEventInAndStatus(List<Event> events, String status, Pageable pageable);
 }

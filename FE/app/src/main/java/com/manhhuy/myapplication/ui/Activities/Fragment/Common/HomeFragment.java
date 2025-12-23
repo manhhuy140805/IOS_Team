@@ -57,7 +57,7 @@ public class HomeFragment extends Fragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
+                             Bundle savedInstanceState) {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
@@ -71,7 +71,7 @@ public class HomeFragment extends Fragment {
 
         // Load user info first
         // Moved to onResume to update points when returning
-
+        
         setupCategoriesRecyclerView();
         loadEventTypes();
         setupFeaturedRecyclerView();
@@ -91,35 +91,34 @@ public class HomeFragment extends Fragment {
     private void loadUserInfo() {
         // Get token from SharedPreferences
         String token = ApiConfig.getToken();
-
+        
         if (token == null || token.isEmpty()) {
             Log.w(TAG, "No token found, user not logged in");
             setDefaultUserInfo();
             return;
         }
-
+        
         // Check if token is expired
         if (JwtUtil.isExpired(token)) {
             Log.w(TAG, "Token expired");
             setDefaultUserInfo();
             return;
         }
-
+        
         Log.d(TAG, "Loading current user info");
-
+        
         // Call API to get current user info
         Call<RestResponse<UserResponse>> call = apiEndpoints.getCurrentUser();
-
+        
         call.enqueue(new Callback<RestResponse<UserResponse>>() {
             @Override
-            public void onResponse(Call<RestResponse<UserResponse>> call,
-                    Response<RestResponse<UserResponse>> response) {
-                if (binding == null)
-                    return; // Fragment destroyed
-
+            public void onResponse(Call<RestResponse<UserResponse>> call, 
+                                 Response<RestResponse<UserResponse>> response) {
+                if (binding == null) return; // Fragment destroyed
+                
                 if (response.isSuccessful() && response.body() != null) {
                     RestResponse<UserResponse> restResponse = response.body();
-
+                    
                     if (restResponse.getData() != null) {
                         UserResponse user = restResponse.getData();
                         updateUserInfo(user);
@@ -133,28 +132,26 @@ public class HomeFragment extends Fragment {
                     setDefaultUserInfo();
                 }
             }
-
+            
             @Override
             public void onFailure(Call<RestResponse<UserResponse>> call, Throwable t) {
-                if (binding == null)
-                    return; // Fragment destroyed
+                if (binding == null) return; // Fragment destroyed
                 Log.e(TAG, "Failed to load user info: " + t.getMessage(), t);
                 setDefaultUserInfo();
             }
         });
     }
-
+    
     /**
      * Update UI with user information
      */
     private void updateUserInfo(UserResponse user) {
-        if (binding == null)
-            return;
-
+        if (binding == null) return;
+        
         // Update greeting with user's name
         String firstName = getFirstName(user.getFullName());
         binding.tvGreeting.setText("Xin chào, " + firstName + "! 👋");
-
+        
         // Update points
         Integer points = user.getTotalPoints();
         if (points != null) {
@@ -163,17 +160,16 @@ public class HomeFragment extends Fragment {
             binding.impactPoints.setText("0");
         }
     }
-
+    
     /**
      * Set default user info when not logged in or error
      */
     private void setDefaultUserInfo() {
-        if (binding == null)
-            return;
+        if (binding == null) return;
         binding.tvGreeting.setText("Xin chào! 👋");
         binding.impactPoints.setText("0");
     }
-
+    
     /**
      * Extract first name from full name
      */
@@ -181,7 +177,7 @@ public class HomeFragment extends Fragment {
         if (fullName == null || fullName.trim().isEmpty()) {
             return "Bạn";
         }
-
+        
         String[] parts = fullName.trim().split("\\s+");
         if (parts.length > 0) {
             return parts[parts.length - 1]; // Vietnamese names: last word is first name
@@ -191,12 +187,12 @@ public class HomeFragment extends Fragment {
 
     private void setupCategoriesRecyclerView() {
         categoryAdapter = new CategoryAdapter(new ArrayList<>());
-
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(),
+        
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), 
                 LinearLayoutManager.HORIZONTAL, false);
         binding.categoriesRecyclerView.setLayoutManager(layoutManager);
         binding.categoriesRecyclerView.setAdapter(categoryAdapter);
-
+        
         categoryAdapter.setListener(category -> {
             if (category.getId() == null) {
                 // Load all events
@@ -210,32 +206,32 @@ public class HomeFragment extends Fragment {
 
     private void loadEventTypes() {
         Call<RestResponse<List<EventTypeResponse>>> call = apiEndpoints.getEventTypes();
-
+        
         call.enqueue(new Callback<RestResponse<List<EventTypeResponse>>>() {
             @Override
-            public void onResponse(Call<RestResponse<List<EventTypeResponse>>> call,
-                    Response<RestResponse<List<EventTypeResponse>>> response) {
+            public void onResponse(Call<RestResponse<List<EventTypeResponse>>> call, 
+                                 Response<RestResponse<List<EventTypeResponse>>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     RestResponse<List<EventTypeResponse>> restResponse = response.body();
-
+                    
                     if (restResponse.getStatusCode() == 200 && restResponse.getData() != null) {
                         List<EventTypeResponse> eventTypes = new ArrayList<>(restResponse.getData());
-
+                        
                         // Add "Tất cả" category at the beginning
                         EventTypeResponse allCategory = new EventTypeResponse();
                         allCategory.setId(null);
                         allCategory.setName("Tất cả");
                         eventTypes.add(0, allCategory);
-
+                        
                         categoryAdapter.setCategories(eventTypes);
                     } else {
-                        Toast.makeText(getContext(),
-                                "Không thể tải danh mục: " + restResponse.getMessage(),
+                        Toast.makeText(getContext(), 
+                                "Không thể tải danh mục: " + restResponse.getMessage(), 
                                 Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    Toast.makeText(getContext(),
-                            "Không thể tải danh mục",
+                    Toast.makeText(getContext(), 
+                            "Không thể tải danh mục", 
                             Toast.LENGTH_SHORT).show();
                 }
             }
@@ -253,7 +249,7 @@ public class HomeFragment extends Fragment {
         eventAdapter = new EventAdapter(new ArrayList<>());
         binding.eventsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.eventsRecyclerView.setAdapter(eventAdapter);
-
+        
         eventAdapter.setListener(event -> {
             Intent intent = new Intent(getContext(), DetailEventActivity.class);
             intent.putExtra("eventData", event);
@@ -264,24 +260,24 @@ public class HomeFragment extends Fragment {
     private void loadFeaturedEvents() {
         // Load first page of events, sorted by createdAt desc, only ACTIVE events
         Call<RestResponse<PageResponse<EventResponse>>> call = apiEndpoints.getAllEvents(
-                0, 10, "createdAt", "desc",
-                null, null, "ACTIVE", null, null, null, null, null);
-
+                0, 10, "createdAt", "desc", 
+                null, null, null, null, null, null, null, null
+        );
+        
         call.enqueue(new Callback<RestResponse<PageResponse<EventResponse>>>() {
             @Override
-            public void onResponse(Call<RestResponse<PageResponse<EventResponse>>> call,
-                    Response<RestResponse<PageResponse<EventResponse>>> response) {
-                if (binding == null)
-                    return; // Fragment destroyed
-
+            public void onResponse(Call<RestResponse<PageResponse<EventResponse>>> call, 
+                                 Response<RestResponse<PageResponse<EventResponse>>> response) {
+                if (binding == null) return; // Fragment destroyed
+                
                 if (response.isSuccessful() && response.body() != null) {
                     RestResponse<PageResponse<EventResponse>> restResponse = response.body();
-
+                    
                     if (restResponse.getStatusCode() == 200 && restResponse.getData() != null) {
                         PageResponse<EventResponse> pageResponse = restResponse.getData();
                         List<EventResponse> events = pageResponse.getContent();
                         eventAdapter.setEvents(events);
-
+                        
                         // Show/hide empty state
                         if (events.isEmpty()) {
                             binding.eventsRecyclerView.setVisibility(View.GONE);
@@ -290,7 +286,7 @@ public class HomeFragment extends Fragment {
                             binding.eventsRecyclerView.setVisibility(View.VISIBLE);
                             binding.emptyStateLayout.setVisibility(View.GONE);
                         }
-
+                        
                     } else {
                         showEmptyState("Không thể tải sự kiện");
                     }
@@ -301,33 +297,31 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void onFailure(Call<RestResponse<PageResponse<EventResponse>>> call, Throwable t) {
-                if (binding == null)
-                    return; // Fragment destroyed
+                if (binding == null) return; // Fragment destroyed
                 showEmptyState("Lỗi kết nối");
             }
         });
     }
-
+    
     private void loadEventsByType(Integer eventTypeId, String typeName) {
-        Call<RestResponse<PageResponse<EventResponse>>> call = apiEndpoints.getAllEvents(
-                0, 10, "createdAt", "desc",
-                null, null, "ACTIVE", eventTypeId, null, null, null, null);
-
+        Call<RestResponse<PageResponse<EventResponse>>> call = apiEndpoints.getEventsByType(
+                eventTypeId, 0, 10, "createdAt", "desc"
+        );
+        
         call.enqueue(new Callback<RestResponse<PageResponse<EventResponse>>>() {
             @Override
-            public void onResponse(Call<RestResponse<PageResponse<EventResponse>>> call,
-                    Response<RestResponse<PageResponse<EventResponse>>> response) {
-                if (binding == null)
-                    return; // Fragment destroyed
-
+            public void onResponse(Call<RestResponse<PageResponse<EventResponse>>> call, 
+                                 Response<RestResponse<PageResponse<EventResponse>>> response) {
+                if (binding == null) return; // Fragment destroyed
+                
                 if (response.isSuccessful() && response.body() != null) {
                     RestResponse<PageResponse<EventResponse>> restResponse = response.body();
-
+                    
                     if (restResponse.getStatusCode() == 200 && restResponse.getData() != null) {
                         PageResponse<EventResponse> pageResponse = restResponse.getData();
                         List<EventResponse> events = pageResponse.getContent();
                         eventAdapter.setEvents(events);
-
+                        
                         // Show/hide empty state
                         if (events.isEmpty()) {
                             binding.eventsRecyclerView.setVisibility(View.GONE);
@@ -337,7 +331,7 @@ public class HomeFragment extends Fragment {
                             binding.eventsRecyclerView.setVisibility(View.VISIBLE);
                             binding.emptyStateLayout.setVisibility(View.GONE);
                         }
-
+                        
                     } else {
                         showEmptyState("Không thể tải sự kiện " + typeName);
                     }
@@ -348,39 +342,21 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void onFailure(Call<RestResponse<PageResponse<EventResponse>>> call, Throwable t) {
-                if (binding == null)
-                    return; // Fragment destroyed
+                if (binding == null) return; // Fragment destroyed
                 showEmptyState("Lỗi kết nối");
             }
         });
     }
-
+    
     private void showEmptyState(String message) {
-        if (binding == null)
-            return; // Fragment destroyed
+        if (binding == null) return; // Fragment destroyed
         binding.eventsRecyclerView.setVisibility(View.GONE);
         binding.emptyStateLayout.setVisibility(View.VISIBLE);
         binding.emptyStateText.setText(message);
     }
 
     private void setupClickListeners() {
-        // AI Search button click listener
-        binding.aiSearchButton.setOnClickListener(v -> {
-            String aiQuery = binding.aiSearchInput.getText().toString().trim();
-            if (!aiQuery.isEmpty()) {
-                // Navigate to Search with AI query
-                if (getActivity() instanceof AdminActivity) {
-                    // TODO: Add similar method to AdminActivity if needed
-                    Toast.makeText(getContext(), "Đang tìm kiếm...", Toast.LENGTH_SHORT).show();
-                } else if (getActivity() instanceof UserActivity) {
-                    ((UserActivity) getActivity()).switchToSearchWithAiQuery(aiQuery);
-                }
-            } else {
-                Toast.makeText(getContext(), "Vui lòng nhập sở thích hoặc mô tả bản thân", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        // Quick Search bar click listener - go to normal search
+        // Search bar click listener
         binding.searchContainer.setOnClickListener(v -> {
             if (getActivity() instanceof AdminActivity) {
                 ((AdminActivity) getActivity()).switchToSearchTab();
@@ -391,8 +367,10 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        binding.viewAllFeatured.setOnClickListener(
-                v -> Toast.makeText(getContext(), "Xem tất cả sự kiện nổi bật", Toast.LENGTH_SHORT).show());
+
+        binding.viewAllFeatured.setOnClickListener(v -> 
+            Toast.makeText(getContext(), "Xem tất cả sự kiện nổi bật", Toast.LENGTH_SHORT).show()
+        );
     }
 
     @Override

@@ -40,6 +40,18 @@ public class EventRegistrationController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/my-events-registrations")
+    @PreAuthorize("hasAnyRole('ROLE_ORGANIZATION', 'ROLE_ADMIN')")
+    public ResponseEntity<PageResponse<EventRegistrationResponse>> getMyEventsRegistrations(
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "size", defaultValue = "10") int size,
+            @RequestParam(name = "status", required = false) String status) {
+
+        PageResponse<EventRegistrationResponse> response = registrationService.getMyEventsRegistrations(
+                page, size, status);
+        return ResponseEntity.ok(response);
+    }
+
     @GetMapping("/my-registrations")
     @PreAuthorize("hasAnyRole('ROLE_VOLUNTEER', 'ROLE_ADMIN')")
     public ResponseEntity<PageResponse<EventRegistrationResponse>> getMyRegistrations(

@@ -72,65 +72,19 @@ public class AcceptApplicantFragment extends Fragment implements AplicationAdapt
         
         setupRecyclerView();
         setupListeners();
-        loadMyEvents();
+        loadAllEventRegistrations(null);
     }
     
-    private void loadMyEvents() {
+
+    private void loadAllEventRegistrations(String status) {
         if (isLoading) return;
         
         isLoading = true;
         showLoading();
         
         ApiEndpoints apiService = ApiConfig.getClient().create(ApiEndpoints.class);
-        Call<RestResponse<PageResponse<EventResponse>>> call = apiService.getMyEvents(
-                0, 100, "createdAt", "desc"
-        );
-        
-        call.enqueue(new Callback<RestResponse<PageResponse<EventResponse>>>() {
-            @Override
-            public void onResponse(Call<RestResponse<PageResponse<EventResponse>>> call,
-                                 Response<RestResponse<PageResponse<EventResponse>>> response) {
-                isLoading = false;
-                
-                if (response.isSuccessful() && response.body() != null) {
-                    RestResponse<PageResponse<EventResponse>> restResponse = response.body();
-                    PageResponse<EventResponse> pageResponse = restResponse.getData();
-                    
-                    if (pageResponse != null && pageResponse.getContent() != null) {
-                        myEvents = pageResponse.getContent();
-                        
-                        if (!myEvents.isEmpty()) {
-                            // Load registrations for first event
-                            loadEventRegistrations(myEvents.get(0).getId(), null);
-                        } else {
-                            hideLoading();
-                            showEmptyState();
-                        }
-                    }
-                } else {
-                    hideLoading();
-                    Toast.makeText(getContext(), "Không thể tải sự kiện", Toast.LENGTH_SHORT).show();
-                }
-            }
-            
-            @Override
-            public void onFailure(Call<RestResponse<PageResponse<EventResponse>>> call, Throwable t) {
-                isLoading = false;
-                hideLoading();
-                Toast.makeText(getContext(), "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-    
-    private void loadEventRegistrations(Integer eventId, String status) {
-        if (isLoading) return;
-        
-        isLoading = true;
-        showLoading();
-        
-        ApiEndpoints apiService = ApiConfig.getClient().create(ApiEndpoints.class);
-        Call<RestResponse<PageResponse<EventRegistrationResponse>>> call = apiService.getEventRegistrations(
-                eventId, 0, 100, status
+        Call<RestResponse<PageResponse<EventRegistrationResponse>>> call = apiService.getMyEventsRegistrations(
+                0, 100, status
         );
         
         call.enqueue(new Callback<RestResponse<PageResponse<EventRegistrationResponse>>>() {
@@ -140,8 +94,21 @@ public class AcceptApplicantFragment extends Fragment implements AplicationAdapt
                 isLoading = false;
                 hideLoading();
                 
+                Log.d(TAG, "Response code: " + response.code());
                 Log.d(TAG, "Response successful: " + response.isSuccessful());
                 Log.d(TAG, "Response body null: " + (response.body() == null));
+                
+                if (!response.isSuccessful()) {
+                    try {
+                        String errorBody = response.errorBody() != null ? response.errorBody().string() : "No error body";
+                        Log.e(TAG, "Error response: " + errorBody);
+                        Toast.makeText(getContext(), "Lỗi: " + response.code() + " - " + errorBody, Toast.LENGTH_LONG).show();
+                    } catch (Exception e) {
+                        Log.e(TAG, "Error reading error body", e);
+                    }
+                    updateEmptyState();
+                    return;
+                }
                 
                 if (response.isSuccessful() && response.body() != null) {
                     RestResponse<PageResponse<EventRegistrationResponse>> restResponse = response.body();
@@ -174,10 +141,12 @@ public class AcceptApplicantFragment extends Fragment implements AplicationAdapt
                         Log.d(TAG, "Loaded " + applicantList.size() + " registrations");
                     } else {
                         Log.e(TAG, "PageResponse or content is null");
+                        updateEmptyState();
                     }
                 } else {
                     Log.e(TAG, "Response not successful or body is null");
                     Toast.makeText(getContext(), "Không thể tải danh sách đăng ký", Toast.LENGTH_SHORT).show();
+                    updateEmptyState();
                 }
             }
             
@@ -186,6 +155,7 @@ public class AcceptApplicantFragment extends Fragment implements AplicationAdapt
                 isLoading = false;
                 hideLoading();
                 Toast.makeText(getContext(), "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                updateEmptyState();
             }
         });
     }
@@ -264,15 +234,17 @@ public class AcceptApplicantFragment extends Fragment implements AplicationAdapt
         selectedTab.setBackgroundResource(R.drawable.bg_filter_selected);
         selectedTab.setTextColor(ContextCompat.getColor(requireContext(), android.R.color.white));
 
-        // Filter locally
-        adapter.filterByStatus(filter);
-        updateEmptyState();
+        // Reload from API with status filter
+        String status = null;
+        if (filter == 0) {
+            status = "PENDING";
+        } else if (filter == 1) {
+            status = "APPROVED";
+        } else if (filter == 2) {
+            status = "REJECTED";
+        }
         
-        // Or reload from API with status filter
-        // String status = filter == 0 ? "PENDING" : filter == 1 ? "APPROVED" : filter == 2 ? "REJECTED" : null;
-        // if (myEvents != null && !myEvents.isEmpty()) {
-        //     loadEventRegistrations(myEvents.get(0).getId(), status);
-        // }
+        loadAllEventRegistrations(status);
     }
 
     private void resetTab(TextView tab) {
