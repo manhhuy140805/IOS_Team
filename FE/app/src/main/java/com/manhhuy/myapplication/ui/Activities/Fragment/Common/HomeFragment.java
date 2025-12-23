@@ -159,6 +159,9 @@ public class HomeFragment extends Fragment {
         } else {
             binding.impactPoints.setText("0");
         }
+        
+        // Load avatar
+        loadAvatar(user.getAvatarUrl());
     }
     
     /**
@@ -168,6 +171,9 @@ public class HomeFragment extends Fragment {
         if (binding == null) return;
         binding.tvGreeting.setText("Xin chào! 👋");
         binding.impactPoints.setText("0");
+        
+        // Set default avatar
+        binding.profileIcon.setImageResource(R.drawable.ic_profile);
     }
     
     /**
@@ -183,6 +189,48 @@ public class HomeFragment extends Fragment {
             return parts[parts.length - 1]; // Vietnamese names: last word is first name
         }
         return fullName;
+    }
+    
+    /**
+     * Load avatar image with proper URL handling
+     */
+    private void loadAvatar(String avatarUrl) {
+        if (binding == null || !isAdded()) {
+            return;
+        }
+
+        try {
+            // Check if avatar URL is valid
+            if (avatarUrl != null && !avatarUrl.isEmpty() && 
+                !avatarUrl.equals("null") && !avatarUrl.equals("undefined")) {
+                
+                // Build full URL if needed
+                String fullAvatarUrl = avatarUrl;
+                if (!avatarUrl.startsWith("http://") && !avatarUrl.startsWith("https://")) {
+                    // If relative URL, prepend base URL
+                    fullAvatarUrl = "http://10.0.2.2:8081" + (avatarUrl.startsWith("/") ? "" : "/") + avatarUrl;
+                }
+                
+                Log.d(TAG, "Loading avatar from: " + fullAvatarUrl);
+                
+                com.bumptech.glide.Glide.with(this)
+                    .load(fullAvatarUrl)
+                    .placeholder(R.drawable.ic_profile)
+                    .error(R.drawable.ic_profile)
+                    .circleCrop()
+                    .into(binding.profileIcon);
+            } else {
+                Log.d(TAG, "No valid avatar URL, using default icon");
+                com.bumptech.glide.Glide.with(this)
+                    .load(R.drawable.ic_profile)
+                    .circleCrop()
+                    .into(binding.profileIcon);
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Error loading avatar: " + e.getMessage(), e);
+            // Fallback to default icon
+            binding.profileIcon.setImageResource(R.drawable.ic_profile);
+        }
     }
 
     private void setupCategoriesRecyclerView() {

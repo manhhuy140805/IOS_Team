@@ -14,6 +14,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.manhhuy.myapplication.R;
 import com.manhhuy.myapplication.databinding.FragmentMeBinding;
 import com.manhhuy.myapplication.helper.ApiConfig;
 import com.manhhuy.myapplication.helper.ApiEndpoints;
@@ -79,6 +81,9 @@ public class MeFragment extends Fragment {
         // Get token from SharedPreferences
         String token = ApiConfig.getToken();
 
+        Log.d(TAG, "=== LOAD USER DATA ===");
+        Log.d(TAG, "Token: " + (token != null ? "exists" : "null"));
+
         if (token == null || token.isEmpty()) {
             Log.w(TAG, "No token found, user not logged in");
             setDefaultUserInfo();
@@ -112,8 +117,13 @@ public class MeFragment extends Fragment {
                 if (binding == null)
                     return; // Fragment destroyed
 
+                Log.d(TAG, "API Response received");
+                Log.d(TAG, "Response code: " + response.code());
+                Log.d(TAG, "Response successful: " + response.isSuccessful());
+
                 if (response.isSuccessful() && response.body() != null) {
                     RestResponse<UserResponse> restResponse = response.body();
+                    Log.d(TAG, "RestResponse status: " + restResponse.getStatusCode());
 
                     if (restResponse.getStatusCode() == 200 && restResponse.getData() != null) {
                         UserResponse user = restResponse.getData();
@@ -125,6 +135,12 @@ public class MeFragment extends Fragment {
                     }
                 } else {
                     Log.e(TAG, "Response not successful: " + response.code());
+                    try {
+                        String errorBody = response.errorBody() != null ? response.errorBody().string() : "No error body";
+                        Log.e(TAG, "Error body: " + errorBody);
+                    } catch (Exception e) {
+                        Log.e(TAG, "Error reading error body", e);
+                    }
                     setDefaultUserInfo();
                 }
             }
@@ -146,10 +162,17 @@ public class MeFragment extends Fragment {
         if (binding == null)
             return;
 
+        Log.d(TAG, "=== UPDATE USER INFO ===");
+        Log.d(TAG, "Full name: " + user.getFullName());
+        Log.d(TAG, "Avatar URL: " + user.getAvatarUrl());
+
         // Set user information
         binding.tvFullName.setText(user.getFullName() != null ? user.getFullName() : "Người dùng");
         binding.tvEmail.setText(user.getEmail() != null ? user.getEmail() : "");
         binding.tvPhone.setText(user.getPhone() != null ? user.getPhone() : "");
+
+        // Load avatar with improved handling
+        loadAvatar(user.getAvatarUrl());
 
         // Set role badge text based on role
         String roleText = getRoleText(user.getRole());
@@ -166,6 +189,59 @@ public class MeFragment extends Fragment {
         // Set points
         Integer points = user.getTotalPoints();
         binding.tvPointsCount.setText(String.format(Locale.getDefault(), "%,d", points != null ? points : 0));
+    }
+
+    /**
+     * Load avatar image with proper URL handling
+     */
+    private void loadAvatar(String avatarUrl) {
+        if (binding == null || !isAdded()) {
+            return;
+        }
+
+        try {
+            // Check if avatar URL is valid
+            if (avatarUrl != null && !avatarUrl.isEmpty() && 
+                !avatarUrl.equals("null") && !avatarUrl.equals("undefined")) {
+                
+                // Build full URL if needed
+                String fullAvatarUrl = avatarUrl;
+                if (!avatarUrl.startsWith("http://") && !avatarUrl.startsWith("https://")) {
+                    // If relative URL, prepend base URL
+                    fullAvatarUrl = "http://10.0.2.2:8081" + (avatarUrl.startsWith("/") ? "" : "/") + avatarUrl;
+                }
+                
+                Log.d(TAG, "Loading avatar from: " + fullAvatarUrl);
+                
+                // Remove background and tint when loading real avatar
+                binding.ivAvatar.setBackgroundResource(0);
+                
+                Glide.with(this)
+                    .load(fullAvatarUrl)
+                    .placeholder(R.drawable.ic_user)
+                    .error(R.drawable.ic_user)
+                    .circleCrop()
+                    .into(binding.ivAvatar);
+            } else {
+                Log.d(TAG, "No valid avatar URL, using default icon");
+                // Set background for default icon
+                binding.ivAvatar.setBackgroundResource(R.drawable.bg_avatar_circle);
+                
+                Glide.with(this)
+                    .load(R.drawable.ic_user)
+                    .circleCrop()
+                    .into(binding.ivAvatar);
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Error loading avatar: " + e.getMessage(), e);
+            // Fallback to default icon
+            binding.ivAvatar.setBackgroundResource(R.drawable.bg_avatar_circle);
+            
+            Glide.with(this)
+                .load(R.drawable.ic_user)
+                .circleCrop()
+                .into(binding.ivAvatar);
+        }
     }
 
     private String formatDate(String isoDate) {
@@ -194,6 +270,13 @@ public class MeFragment extends Fragment {
         binding.tvMemberSince.setText("Thành viên từ: 2024");
         binding.tvEventsCount.setText("0");
         binding.tvPointsCount.setText("0");
+        
+        // Set default avatar with background
+        binding.ivAvatar.setBackgroundResource(R.drawable.bg_avatar_circle);
+        Glide.with(this)
+            .load(R.drawable.ic_user)
+            .circleCrop()
+            .into(binding.ivAvatar);
     }
 
     private String getRoleText(String role) {
