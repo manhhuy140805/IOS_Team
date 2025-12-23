@@ -1,16 +1,25 @@
 package com.manhhuy.myapplication.ui.Activities;
 
+import android.Manifest;
+import android.app.DownloadManager;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.manhhuy.myapplication.R;
 import com.manhhuy.myapplication.databinding.ActivityNotificationDetailBinding;
+import com.manhhuy.myapplication.helper.ApiConfig;
 import com.manhhuy.myapplication.helper.ApiService;
 import com.manhhuy.myapplication.helper.response.NotificationResponse;
 import com.manhhuy.myapplication.helper.response.RestResponse;
@@ -26,7 +35,7 @@ import retrofit2.Response;
 public class NotificationDetailActivity extends AppCompatActivity {
 
     private static final String TAG = "NotificationDetail";
-    private static final int CURRENT_USER_ID = 1; // TODO: Get from session
+    private static final int PERMISSION_REQUEST_CODE = 1001;
     
     private ActivityNotificationDetailBinding binding;
     private int notificationId;
@@ -55,8 +64,15 @@ public class NotificationDetailActivity extends AppCompatActivity {
     }
     
     private void markNotificationAsRead() {
+        // Lấy userId từ token
+        Integer userId = ApiConfig.getUserId();
+        if (userId == null) {
+            Log.e(TAG, "User ID is null, cannot mark as read");
+            return;
+        }
+        
         // Gọi API để tự động đánh dấu đã đọc khi xem chi tiết
-        ApiService.api().getNotificationById(notificationId, CURRENT_USER_ID)
+        ApiService.api().getNotificationById(notificationId, userId)
             .enqueue(new Callback<RestResponse<NotificationResponse>>() {
                 @Override
                 public void onResponse(Call<RestResponse<NotificationResponse>> call, 
@@ -154,41 +170,123 @@ public class NotificationDetailActivity extends AppCompatActivity {
 
         // Initial read status display
         updateReadStatus();
-
-        // Hide action buttons for now (can be customized based on notification type)
-        binding.actionButtonsContainer.setVisibility(View.GONE);
     }
 
     private void setupClickListeners() {
         // Download attachment
         binding.btnDownloadAttachment.setOnClickListener(v -> {
             if (attached != null && !attached.isEmpty()) {
-                Toast.makeText(this, "Đang tải xuống...", Toast.LENGTH_SHORT).show();
-                // TODO: Implement download functionality
+                downloadFile(attached);
+            } else {
+                Toast.makeText(this, "Không có file đính kèm", Toast.LENGTH_SHORT).show();
             }
         });
 
-        // Action buttons
-        binding.btnActionPrimary.setOnClickListener(v -> {
-            Toast.makeText(this, "Chức năng đang phát triển", Toast.LENGTH_SHORT).show();
-        });
-
-        binding.btnActionSecondary.setOnClickListener(v -> {
-            Toast.makeText(this, "Đã lưu để xem sau", Toast.LENGTH_SHORT).show();
-            finish();
-        });
-
         // Delete notification
-        binding.btnDeleteNotification.setOnClickListener(v -> {
-            // TODO: Implement delete functionality
-            Toast.makeText(this, "Đã xóa thông báo", Toast.LENGTH_SHORT).show();
+        binding.btnDeleteNotification.setOnClickListener(v -> deleteNotification());
+    }
+    
+    private void deleteNotification() {
+        // Lấy userId từ token
+        Integer userId = ApiConfig.getUserId();
+        if (userId == null) {
+            Toast.makeText(this, "Không thể xóa thông báo", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        
+        // Hiển thị loading (có thể thêm progress dialog nếu cần)
+        binding.btnDeleteNotification.setEnabled(false);
+        
+        // Gọi API xóa thông báo
+        ApiService.api().deleteUserNotification(userId, notificationId)
+            .enqueue(new Callback<RestResponse<Void>>() {
+                @Override
+                public void onResponse(Call<RestResponse<Void>> call, 
+                                     Response<RestResponse<Void>> response) {
+                    binding.btnDeleteNotification.setEnabled(true);
+                    
+                    if (response.isSuccessful() && response.body() != null) {
+                        RestResponse<Void> restResponse = response.body();
+                        if (restResponse.getStatusCode() == 200) {
+                            Toast.makeText(NotificationDetailActivity.this, 
+                                "Đã xóa thông báo", Toast.LENGTH_SHORT).show();
+                            
+                            // Return result to update the list
+                            Intent resultIntent = new Intent();
+                            resultIntent.putExtra("deleted_notification_id", notificationId);
+                            setResult(RESULT_OK, resultIntent);
+                            finish();
+                        } else {
+                            Toast.makeText(NotificationDetailActivity.this, 
+                                "Không thể xóa thông báo: " + restResponse.getMessage(), 
+                                Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Toast.makeText(NotificationDetailActivity.this, 
+                            "Không thể xóa thông báo", Toast.LENGTH_SHORT).show();
+                        Log.e(TAG, "Delete failed: " + response.code());
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<RestResponse<Void>> call, Throwable t) {
+                    binding.btnDeleteNotification.setEnabled(true);
+                    Toast.makeText(NotificationDetailActivity.this, 
+                        "Lỗi khi xóa thông báo", Toast.LENGTH_SHORT).show();
+                    Log.e(TAG, "Delete error", t);
+                }
+            });
+    }
+    
+    private void downloadFile(String fileUrl) {
+        // Check permission for Android 9 and below
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        PERMISSION_REQUEST_CODE);
+                return;
+            }
+        }
+        
+        try {
+            String fileName = getFileNameFromUrl(fileUrl);
             
-            // Return result to update the list
-            Intent resultIntent = new Intent();
-            resultIntent.putExtra("deleted_notification_id", notificationId);
-            setResult(RESULT_OK, resultIntent);
-            finish();
-        });
+            DownloadManager.Request request = new DownloadManager.Request(Uri.parse(fileUrl));
+            request.setTitle("Tải xuống file đính kèm");
+            request.setDescription("Đang tải: " + fileName);
+            request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+            request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName);
+            request.setAllowedOverMetered(true);
+            request.setAllowedOverRoaming(true);
+            
+            DownloadManager downloadManager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
+            if (downloadManager != null) {
+                long downloadId = downloadManager.enqueue(request);
+                Toast.makeText(this, "Đang tải xuống file...", Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "Download started with ID: " + downloadId);
+            } else {
+                Toast.makeText(this, "Không thể tải file", Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Error downloading file", e);
+            Toast.makeText(this, "Lỗi khi tải file: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+    }
+    
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == PERMISSION_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (attached != null && !attached.isEmpty()) {
+                    downloadFile(attached);
+                }
+            } else {
+                Toast.makeText(this, "Cần cấp quyền để tải file", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     private String getRelativeTimeString(Date date) {

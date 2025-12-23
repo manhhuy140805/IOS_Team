@@ -57,6 +57,7 @@ public class DetailEventActivity extends AppCompatActivity {
     
     // For sending certificate
     private Uri selectedFileUri;
+    private String uploadedFileUrl; // Lưu URL sau khi upload
     private TextView tvSelectedFileName;
     private ActivityResultLauncher<String> filePickerLauncher;
 
@@ -73,8 +74,13 @@ public class DetailEventActivity extends AppCompatActivity {
                     if (uri != null) {
                         selectedFileUri = uri;
                         if (tvSelectedFileName != null) {
-                            tvSelectedFileName.setText("Đã chọn file");
+                            // Hiển thị tên file
+                            String fileName = getFileNameFromUri(uri);
+                            tvSelectedFileName.setText(fileName);
                             tvSelectedFileName.setVisibility(View.VISIBLE);
+                            
+                            // Upload ngay lập tức
+                            uploadFileImmediately(uri);
                         }
                     }
                 }
@@ -447,6 +453,7 @@ public class DetailEventActivity extends AppCompatActivity {
         
         // Reset selection
         selectedFileUri = null;
+        uploadedFileUrl = null;
         
         btnAttachFile.setOnClickListener(v -> {
             filePickerLauncher.launch("*/*");
@@ -463,21 +470,19 @@ public class DetailEventActivity extends AppCompatActivity {
                 return;
             }
             
-            if (selectedFileUri != null) {
-                uploadFileAndSendNotification(title, content, dialog);
-            } else {
-                sendNotification(title, content, null, dialog);
-            }
+            // Sử dụng URL đã upload sẵn (nếu có)
+            sendNotification(title, content, uploadedFileUrl, dialog);
         });
         
         dialog.show();
     }
     
-    private void uploadFileAndSendNotification(String title, String content, AlertDialog dialog) {
+    // Upload file ngay khi người dùng chọn file
+    private void uploadFileImmediately(Uri fileUri) {
         showProgressDialog("Đang tải lên tệp...");
         
         try {
-            File file = getFileFromUri(selectedFileUri);
+            File file = getFileFromUri(fileUri);
             if (file == null) {
                 dismissProgressDialog();
                 Toast.makeText(this, "Lỗi khi đọc tệp", Toast.LENGTH_SHORT).show();
@@ -485,25 +490,27 @@ public class DetailEventActivity extends AppCompatActivity {
             }
             
             // Determine MIME type
-            String mimeType = getContentResolver().getType(selectedFileUri);
+            String mimeType = getContentResolver().getType(fileUri);
             if (mimeType == null) {
-                mimeType = "multipart/form-data";
+                mimeType = "application/octet-stream";
             }
             
             RequestBody requestFile = RequestBody.create(MediaType.parse(mimeType), file);
             MultipartBody.Part body = MultipartBody.Part.createFormData("file", file.getName(), requestFile);
             
             ApiEndpoints apiService = ApiConfig.getClient().create(ApiEndpoints.class);
-            Call<Map<String, Object>> call = apiService.uploadImage(body);
+            Call<RestResponse<Map<String, String>>> call = apiService.uploadNotificationAttachment(body);
             
-            call.enqueue(new Callback<Map<String, Object>>() {
+            call.enqueue(new Callback<RestResponse<Map<String, String>>>() {
                 @Override
-                public void onResponse(Call<Map<String, Object>> call, Response<Map<String, Object>> response) {
-                    if (response.isSuccessful() && response.body() != null) {
-                        String fileUrl = (String) response.body().get("imageUrl");
-                        sendNotification(title, content, fileUrl, dialog);
+                public void onResponse(Call<RestResponse<Map<String, String>>> call, Response<RestResponse<Map<String, String>>> response) {
+                    dismissProgressDialog();
+                    if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
+                        uploadedFileUrl = response.body().getData().get("url");
+                        Toast.makeText(DetailEventActivity.this, "✅ Tải lên thành công!", Toast.LENGTH_SHORT).show();
                     } else {
-                        dismissProgressDialog();
+                        selectedFileUri = null;
+                        tvSelectedFileName.setText("Chưa chọn tệp");
                         try {
                             String errorBody = response.errorBody() != null ? response.errorBody().string() : "Unknown error";
                             Toast.makeText(DetailEventActivity.this, "Tải lên thất bại: " + errorBody, Toast.LENGTH_LONG).show();
@@ -514,8 +521,10 @@ public class DetailEventActivity extends AppCompatActivity {
                 }
                 
                 @Override
-                public void onFailure(Call<Map<String, Object>> call, Throwable t) {
+                public void onFailure(Call<RestResponse<Map<String, String>>> call, Throwable t) {
                     dismissProgressDialog();
+                    selectedFileUri = null;
+                    tvSelectedFileName.setText("Chưa chọn tệp");
                     Toast.makeText(DetailEventActivity.this, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             });
@@ -527,18 +536,14 @@ public class DetailEventActivity extends AppCompatActivity {
     }
     
     private void sendNotification(String title, String content, String attachmentUrl, AlertDialog dialog) {
-        if (progressDialog == null || !progressDialog.isShowing()) {
-            showProgressDialog("Đang gửi thông báo...");
-        } else {
-            progressDialog.setMessage("Đang gửi thông báo...");
-        }
+        showProgressDialog("Đang gửi thông báo...");
         
         SendNotificationRequest request = new SendNotificationRequest(
                 eventData.getId(),
                 title,
                 content,
-                "ALL", // Send to all participants
-                attachmentUrl
+                "ALL", // Send to all participants - recipientType
+                attachmentUrl // attachmentUrl
         );
         
         ApiEndpoints apiService = ApiConfig.getClient().create(ApiEndpoints.class);
@@ -590,6 +595,19 @@ public class DetailEventActivity extends AppCompatActivity {
         outputStream.close();
         inputStream.close();
         return file;
+    }
+    
+    private String getFileNameFromUri(Uri uri) {
+        String fileName = "file";
+        android.database.Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+        if (cursor != null && cursor.moveToFirst()) {
+            int nameIndex = cursor.getColumnIndex(android.provider.OpenableColumns.DISPLAY_NAME);
+            if (nameIndex != -1) {
+                fileName = cursor.getString(nameIndex);
+            }
+            cursor.close();
+        }
+        return fileName;
     }
 
     /**

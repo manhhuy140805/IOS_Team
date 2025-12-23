@@ -44,6 +44,7 @@ public class SendNotificationActivity extends AppCompatActivity {
     private Integer eventId;
     private boolean isLoading = false;
     private Uri selectedImageUri;
+    private String uploadedImageUrl; // Lưu URL sau khi upload
     private ActivityResultLauncher<Intent> imagePickerLauncher;
 
     @Override
@@ -123,6 +124,7 @@ public class SendNotificationActivity extends AppCompatActivity {
 
         binding.ivRemoveFile.setOnClickListener(v -> {
             selectedImageUri = null;
+            uploadedImageUrl = null;
             binding.tvFileName.setText("Chưa chọn tệp nào");
             binding.ivSelectedImage.setVisibility(View.GONE);
             binding.ivRemoveFile.setVisibility(View.GONE);
@@ -138,10 +140,13 @@ public class SendNotificationActivity extends AppCompatActivity {
                     if (result.getResultCode() == RESULT_OK && result.getData() != null) {
                         selectedImageUri = result.getData().getData();
                         if (selectedImageUri != null) {
-                            binding.tvFileName.setText("Đã chọn ảnh");
+                            binding.tvFileName.setText("Đang tải lên...");
                             binding.ivSelectedImage.setImageURI(selectedImageUri);
                             binding.ivSelectedImage.setVisibility(View.VISIBLE);
                             binding.ivRemoveFile.setVisibility(View.VISIBLE);
+                            
+                            // Upload ngay lập tức
+                            uploadImageImmediately();
                         }
                     }
                 });
@@ -290,27 +295,17 @@ public class SendNotificationActivity extends AppCompatActivity {
         showLoading();
         
         ApiEndpoints apiService = ApiConfig.getClient().create(ApiEndpoints.class);
-        Call<RestResponse<Map<String, Object>>> call;
-
-        RequestBody eventIdPart = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(eventId));
-        RequestBody titlePart = RequestBody.create(MediaType.parse("text/plain"), title);
-        RequestBody contentPart = RequestBody.create(MediaType.parse("text/plain"), content);
-        RequestBody recipientTypePart = RequestBody.create(MediaType.parse("text/plain"), recipientType);
-
-        MultipartBody.Part filePart = null;
-        if (selectedImageUri != null) {
-            try {
-                File file = getFileFromUri(selectedImageUri);
-                if (file != null) {
-                    RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), file);
-                    filePart = MultipartBody.Part.createFormData("file", file.getName(), requestFile);
-                }
-            } catch (Exception e) {
-                Log.e(TAG, "Error preparing file: " + e.getMessage());
-            }
-        }
-
-        call = apiService.sendNotificationMultipart(eventIdPart, titlePart, contentPart, recipientTypePart, filePart);
+        
+        // Tạo request với URL đã upload sẵn
+        SendNotificationRequest request = new SendNotificationRequest(
+                eventId,
+                title,
+                content,
+                recipientType,
+                uploadedImageUrl // Dùng URL đã upload
+        );
+        
+        Call<RestResponse<Map<String, Object>>> call = apiService.sendNotification(request);
         
         call.enqueue(new Callback<RestResponse<Map<String, Object>>>() {
             @Override
@@ -358,6 +353,60 @@ public class SendNotificationActivity extends AppCompatActivity {
                     Toast.LENGTH_SHORT).show();
             }
         });
+    }
+    
+    // Method upload ảnh ngay khi chọn
+    private void uploadImageImmediately() {
+        if (selectedImageUri == null) return;
+        
+        try {
+            File file = getFileFromUri(selectedImageUri);
+            if (file == null) {
+                Toast.makeText(this, "Lỗi khi đọc file", Toast.LENGTH_SHORT).show();
+                binding.tvFileName.setText("Chưa chọn tệp nào");
+                return;
+            }
+            
+            RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), file);
+            MultipartBody.Part body = MultipartBody.Part.createFormData("file", file.getName(), requestFile);
+            
+            ApiEndpoints apiService = ApiConfig.getClient().create(ApiEndpoints.class);
+            Call<RestResponse<Map<String, String>>> call = apiService.uploadNotificationAttachment(body);
+            
+            call.enqueue(new Callback<RestResponse<Map<String, String>>>() {
+                @Override
+                public void onResponse(Call<RestResponse<Map<String, String>>> call, Response<RestResponse<Map<String, String>>> response) {
+                    if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
+                        uploadedImageUrl = response.body().getData().get("url");
+                        binding.tvFileName.setText("✅ Tải lên thành công");
+                        Toast.makeText(SendNotificationActivity.this, "Tải ảnh thành công", Toast.LENGTH_SHORT).show();
+                        Log.d(TAG, "Image uploaded: " + uploadedImageUrl);
+                    } else {
+                        selectedImageUri = null;
+                        uploadedImageUrl = null;
+                        binding.tvFileName.setText("Tải lên thất bại");
+                        binding.ivSelectedImage.setVisibility(View.GONE);
+                        binding.ivRemoveFile.setVisibility(View.GONE);
+                        Toast.makeText(SendNotificationActivity.this, "Tải ảnh thất bại", Toast.LENGTH_SHORT).show();
+                    }
+                }
+                
+                @Override
+                public void onFailure(Call<RestResponse<Map<String, String>>> call, Throwable t) {
+                    selectedImageUri = null;
+                    uploadedImageUrl = null;
+                    binding.tvFileName.setText("Lỗi kết nối");
+                    binding.ivSelectedImage.setVisibility(View.GONE);
+                    binding.ivRemoveFile.setVisibility(View.GONE);
+                    Toast.makeText(SendNotificationActivity.this, "Lỗi: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                    Log.e(TAG, "Upload failed: " + t.getMessage());
+                }
+            });
+            
+        } catch (Exception e) {
+            Toast.makeText(this, "Lỗi: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            Log.e(TAG, "Error preparing upload: " + e.getMessage());
+        }
     }
 
     private File getFileFromUri(Uri uri) {

@@ -248,18 +248,12 @@ public interface ApiEndpoints {
                         @Path("userId") Integer userId,
                         @Path("notificationId") Integer notificationId);
 
+        @Multipart
+        @POST("notifications/upload-attachment")
+        Call<RestResponse<Map<String, String>>> uploadNotificationAttachment(@Part MultipartBody.Part file);
+
         @POST("notifications/send")
         Call<RestResponse<Map<String, Object>>> sendNotification(@Body SendNotificationRequest request);
-
-        @Multipart
-        @POST("notifications/send")
-        Call<RestResponse<Map<String, Object>>> sendNotificationMultipart(
-                @Part("eventId") okhttp3.RequestBody eventId,
-                @Part("title") okhttp3.RequestBody title,
-                @Part("content") okhttp3.RequestBody content,
-                @Part("recipientType") okhttp3.RequestBody recipientType,
-                @Part MultipartBody.Part file
-        );
 
         // ========== User Reward APIs ==========
 
