@@ -55,6 +55,8 @@ dependencies {
     implementation("com.google.android.material:material:1.12.0")
     implementation("androidx.cardview:cardview:1.0.0")
     implementation("androidx.recyclerview:recyclerview:1.3.2")
+// SwipeRefreshLayout for pull-to-refresh
+    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
 // thư viện lưu token 
     // implementation("androidx.security:security-crypto:1.1.0-alpha06")
 //component đẹp chuẩn cho anh em quốc nhá
