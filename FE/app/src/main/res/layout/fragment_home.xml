@@ -89,10 +89,10 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_marginStart="12dp"
-                android:background="@drawable/bg_avatar_circle"
                 android:clipToOutline="true"
                 android:scaleType="centerCrop"
-                android:src="@drawable/ic_profile" />
+                android:src="@drawable/ic_profile"
+                android:contentDescription="Profile Avatar" />
 
         </LinearLayout>
 

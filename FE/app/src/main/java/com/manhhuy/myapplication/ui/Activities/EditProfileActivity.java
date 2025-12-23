@@ -379,6 +379,15 @@ public class EditProfileActivity extends AppCompatActivity {
     private void displayUserInfo() {
         if (currentUser == null) return;
 
+        Log.d(TAG, "=== DISPLAY USER INFO ===");
+        Log.d(TAG, "Full name: " + currentUser.getFullName());
+        Log.d(TAG, "Phone: " + currentUser.getPhone());
+        Log.d(TAG, "Email: " + currentUser.getEmail());
+        Log.d(TAG, "Address: " + currentUser.getAddress());
+        Log.d(TAG, "Avatar URL: " + currentUser.getAvatarUrl());
+        Log.d(TAG, "Date of Birth: " + currentUser.getDateOfBirth());
+        Log.d(TAG, "Gender: " + currentUser.getGender());
+
         // Set text fields
         binding.etFullName.setText(currentUser.getFullName());
         binding.etPhone.setText(currentUser.getPhone());
@@ -426,11 +435,22 @@ public class EditProfileActivity extends AppCompatActivity {
         }
 
         // Load avatar
-        if (currentUser.getAvatarUrl() != null && !currentUser.getAvatarUrl().isEmpty()) {
+        String avatarUrl = currentUser.getAvatarUrl();
+        Log.d(TAG, "Loading avatar from URL: " + avatarUrl);
+        
+        if (avatarUrl != null && !avatarUrl.isEmpty() && !avatarUrl.equals("null")) {
+            Log.d(TAG, "Avatar URL is valid, loading with Glide");
             Glide.with(this)
-                .load(currentUser.getAvatarUrl())
+                .load(avatarUrl)
                 .placeholder(R.drawable.ic_user)
                 .error(R.drawable.ic_user)
+                .circleCrop()
+                .into(binding.ivAvatar);
+        } else {
+            Log.d(TAG, "Avatar URL is null or empty, using default icon");
+            // Set default avatar
+            Glide.with(this)
+                .load(R.drawable.ic_user)
                 .circleCrop()
                 .into(binding.ivAvatar);
         }
