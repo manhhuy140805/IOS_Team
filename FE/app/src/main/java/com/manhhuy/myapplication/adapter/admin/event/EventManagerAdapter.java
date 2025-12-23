@@ -77,14 +77,30 @@ public class EventManagerAdapter extends RecyclerView.Adapter<EventManagerAdapte
 
         // Set status
         String status = event.getStatus();
-        if ("active".equals(status)) {
-            holder.binding.tvStatus.setText("Đang hoạt động");
-            holder.binding.tvStatus.setBackgroundResource(R.drawable.bg_status_active_event);
-            holder.binding.tvStatus.setTextColor(context.getResources().getColor(R.color.app_green_primary));
-        } else if ("completed".equals(status)) {
-            holder.binding.tvStatus.setText("Hoàn thành");
-            holder.binding.tvStatus.setBackgroundResource(R.drawable.bg_rounded_lite);
-            holder.binding.tvStatus.setTextColor(context.getResources().getColor(R.color.button_blue));
+        if (status != null) {
+            if ("active".equalsIgnoreCase(status)) {
+                holder.binding.tvStatus.setText("Đang hoạt động");
+                holder.binding.tvStatus.setBackgroundResource(R.drawable.bg_status_active_event);
+                holder.binding.tvStatus.setTextColor(context.getResources().getColor(R.color.app_green_primary));
+            } else if ("completed".equalsIgnoreCase(status)) {
+                holder.binding.tvStatus.setText("Hoàn thành");
+                holder.binding.tvStatus.setBackgroundResource(R.drawable.bg_rounded_lite);
+                holder.binding.tvStatus.setTextColor(context.getResources().getColor(R.color.button_blue));
+            } else if ("pending".equalsIgnoreCase(status)) {
+                holder.binding.tvStatus.setText("Chờ duyệt");
+                holder.binding.tvStatus.setBackgroundResource(R.drawable.bg_status_pending);
+                holder.binding.tvStatus.setTextColor(context.getResources().getColor(R.color.status_pending));
+            } else if ("rejected".equalsIgnoreCase(status)) {
+                holder.binding.tvStatus.setText("Đã từ chối");
+                holder.binding.tvStatus.setBackgroundResource(R.drawable.bg_status_rejected);
+                holder.binding.tvStatus.setTextColor(context.getResources().getColor(R.color.status_rejected));
+            } else {
+                holder.binding.tvStatus.setText(status);
+                holder.binding.tvStatus.setBackgroundResource(R.drawable.bg_rounded_lite);
+                holder.binding.tvStatus.setTextColor(context.getResources().getColor(R.color.text_secondary));
+            }
+        } else {
+            holder.binding.tvStatus.setVisibility(View.GONE);
         }
 
         String category = event.getCategory();

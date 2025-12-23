@@ -77,7 +77,13 @@ public class OrganizationEventFragment extends Fragment implements OnEventAction
         apiEndpoints = ApiConfig.getClient().create(ApiEndpoints.class);
 
         setupUI();
-        loadData();
+        // loadData(); // Removed to avoid double loading with onResume
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        loadEvents();
     }
 
     private void setupUI() {
@@ -145,7 +151,13 @@ public class OrganizationEventFragment extends Fragment implements OnEventAction
                         @Override
                         public void onResponse(Call<Void> call, Response<Void> response) {
                             if (response.isSuccessful()) {
-                                allEventsList.remove(event);
+                                // Remove by ID
+                                for (int i = 0; i < allEventsList.size(); i++) {
+                                    if (allEventsList.get(i).getId().equals(event.getId())) {
+                                        allEventsList.remove(i);
+                                        break;
+                                    }
+                                }
                                 applyFilters();
                                 updateStatistics();
                                 showToast("Đã xóa sự kiện và tất cả đăng ký liên quan");
@@ -364,13 +376,6 @@ public class OrganizationEventFragment extends Fragment implements OnEventAction
         if (binding != null) {
             binding.recyclerViewEvents.setVisibility(show ? View.GONE : View.VISIBLE);
         }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        // Reload events when returning to this fragment (e.g., after adding/editing)
-        loadEvents();
     }
 
     @Override

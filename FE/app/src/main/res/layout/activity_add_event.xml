@@ -147,6 +147,11 @@ D
 
                         <EditText android:id="@+id/etAgeRequirement" android:layout_width="match_parent" android:layout_height="44dp" android:layout_marginBottom="16dp" android:background="@drawable/bg_input_box" android:hint="e.g. 13+" android:paddingHorizontal="12dp" android:textColor="@color/text_primary" android:textColorHint="@color/text_secondary" android:textSize="14sp" />
 
+                        <!-- Reward Points -->
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginBottom="8dp" android:text="Điểm thưởng *" android:textColor="@color/text_primary" android:textSize="13sp" android:textStyle="bold" />
+
+                        <EditText android:id="@+id/etRewardPoints" android:layout_width="match_parent" android:layout_height="44dp" android:layout_marginBottom="16dp" android:background="@drawable/bg_input_box" android:hint="e.g. 10" android:inputType="number" android:paddingHorizontal="12dp" android:textColor="@color/text_primary" android:textColorHint="@color/text_secondary" android:textSize="14sp" />
+
                         <!-- Requirements & Skills -->
                         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginBottom="8dp" android:text="Requirements &amp; Skills" android:textColor="@color/text_primary" android:textSize="13sp" android:textStyle="bold" />
 

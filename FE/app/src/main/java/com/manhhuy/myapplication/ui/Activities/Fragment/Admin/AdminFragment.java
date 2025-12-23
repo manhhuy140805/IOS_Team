@@ -100,17 +100,24 @@ public class AdminFragment extends Fragment implements OnUserActionListener, OnO
                 if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
                     userList.clear();
                     for (UserResponse ur : response.body().getData()) {
-                        User user = new User();
-                        user.setId(ur.getId());
-                        user.setFullName(ur.getFullName());
-                        user.setEmail(ur.getEmail());
-                        user.setAvatarUrl(ur.getAvatarUrl());
-                        user.setStatus(mapStatus(ur.getStatus()));
-                        user.setJoinDate(formatDate(ur.getCreatedAt()));
-                        user.setActivityCount(ur.getActivityCount() != null ? ur.getActivityCount() : 0);
-                        user.setPointsCount(ur.getTotalPoints() != null ? ur.getTotalPoints() : 0);
-                        user.setViolationType(ur.getViolation() != null && ur.getViolation() ? "Vi phạm" : null);
-                        userList.add(user);
+                        // Chỉ thêm user có role là USER hoặc VOLUNTEER
+                        if ("ROLE_USER".equalsIgnoreCase(ur.getRole()) || 
+                            "USER".equalsIgnoreCase(ur.getRole()) ||
+                            "ROLE_VOLUNTEER".equalsIgnoreCase(ur.getRole()) ||
+                            "VOLUNTEER".equalsIgnoreCase(ur.getRole())) {
+                            
+                            User user = new User();
+                            user.setId(ur.getId());
+                            user.setFullName(ur.getFullName());
+                            user.setEmail(ur.getEmail());
+                            user.setAvatarUrl(ur.getAvatarUrl());
+                            user.setStatus(mapStatus(ur.getStatus()));
+                            user.setJoinDate(formatDate(ur.getCreatedAt()));
+                            user.setActivityCount(ur.getActivityCount() != null ? ur.getActivityCount() : 0);
+                            user.setPointsCount(ur.getTotalPoints() != null ? ur.getTotalPoints() : 0);
+                            user.setViolationType(ur.getViolation() != null && ur.getViolation() ? "Vi phạm" : null);
+                            userList.add(user);
+                        }
                     }
                     filteredUserList.clear();
                     filteredUserList.addAll(userList);

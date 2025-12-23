@@ -21,6 +21,7 @@ import com.manhhuy.myapplication.adapter.admin.post.OnItemClickListenerInterface
 import com.manhhuy.myapplication.databinding.FragmentAdminApprovePostsBinding;
 import com.manhhuy.myapplication.helper.ApiConfig;
 import com.manhhuy.myapplication.helper.ApiEndpoints;
+import com.manhhuy.myapplication.helper.request.SendNotificationRequest;
 import com.manhhuy.myapplication.helper.response.EventResponse;
 import com.manhhuy.myapplication.helper.response.PageResponse;
 import com.manhhuy.myapplication.helper.response.RestResponse;
@@ -28,6 +29,7 @@ import com.manhhuy.myapplication.ui.Activities.DetailEventActivity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -219,6 +221,7 @@ public class AdminApprovePostsFragment extends Fragment implements OnItemClickLi
                                 eventList.remove(event);
                                 adapter.notifyDataSetChanged();
                                 showToast("Đã duyệt sự kiện");
+                                sendNotificationToCreator(event, true);
                             } else {
                                 showToast("Không thể duyệt sự kiện");
                             }
@@ -255,6 +258,7 @@ public class AdminApprovePostsFragment extends Fragment implements OnItemClickLi
                                 }
                                 adapter.notifyDataSetChanged();
                                 showToast("Đã từ chối sự kiện");
+                                sendNotificationToCreator(event, false);
                             } else {
                                 showToast("Không thể từ chối sự kiện");
                             }
@@ -268,6 +272,32 @@ public class AdminApprovePostsFragment extends Fragment implements OnItemClickLi
             })
             .setNegativeButton("Hủy", null)
             .show();
+    }
+
+    private void sendNotificationToCreator(EventResponse event, boolean isApproved) {
+        SendNotificationRequest request = new SendNotificationRequest();
+        request.setEventId(event.getId());
+        request.setRecipientType("CREATOR");
+        
+        if (isApproved) {
+            request.setTitle("Sự kiện đã được duyệt");
+            request.setContent("Sự kiện \"" + event.getTitle() + "\" của bạn đã được duyệt và đang hoạt động.");
+        } else {
+            request.setTitle("Sự kiện bị từ chối");
+            request.setContent("Sự kiện \"" + event.getTitle() + "\" của bạn đã bị từ chối. Vui lòng kiểm tra lại thông tin.");
+        }
+
+        apiEndpoints.sendNotification(request).enqueue(new Callback<RestResponse<Map<String, Object>>>() {
+            @Override
+            public void onResponse(Call<RestResponse<Map<String, Object>>> call, Response<RestResponse<Map<String, Object>>> response) {
+                // Notification sent (or failed silently)
+            }
+
+            @Override
+            public void onFailure(Call<RestResponse<Map<String, Object>>> call, Throwable t) {
+                // Ignore failure
+            }
+        });
     }
     
     private <T> boolean isResponseValid(Response<RestResponse<T>> response) {

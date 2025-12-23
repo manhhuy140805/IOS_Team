@@ -246,13 +246,15 @@ public class AddEventActivity extends AppCompatActivity {
         String description = binding.etDescription.getText().toString().trim();
         String location = binding.etAddress.getText().toString().trim();
         String volunteersStr = binding.etNumberNeeded.getText().toString().trim();
+        String rewardPointsStr = binding.etRewardPoints.getText().toString().trim();
 
-        if (!validateInputs(title, description, location, volunteersStr)) {
+        if (!validateInputs(title, description, location, volunteersStr, rewardPointsStr)) {
             return;
         }
 
         int numVolunteers = Integer.parseInt(volunteersStr);
-        EventRequest request = buildEventRequest(title, description, location, numVolunteers);
+        int rewardPoints = Integer.parseInt(rewardPointsStr);
+        EventRequest request = buildEventRequest(title, description, location, numVolunteers, rewardPoints);
 
         isLoading = true;
         showLoading();
@@ -285,7 +287,7 @@ public class AddEventActivity extends AppCompatActivity {
         });
     }
 
-    private boolean validateInputs(String title, String description, String location, String volunteersStr) {
+    private boolean validateInputs(String title, String description, String location, String volunteersStr, String rewardPointsStr) {
         if (title.isEmpty()) {
             showError("Vui lòng nhập tên sự kiện");
             return false;
@@ -310,6 +312,10 @@ public class AddEventActivity extends AppCompatActivity {
             showError("Vui lòng nhập số lượng tình nguyện viên");
             return false;
         }
+        if (rewardPointsStr.isEmpty()) {
+            showError("Vui lòng nhập điểm thưởng");
+            return false;
+        }
         if (selectedEventTypeId == null) {
             showError("Vui lòng chọn loại sự kiện");
             return false;
@@ -323,6 +329,17 @@ public class AddEventActivity extends AppCompatActivity {
             }
         } catch (NumberFormatException e) {
             showError("Số lượng tình nguyện viên không hợp lệ");
+            return false;
+        }
+
+        try {
+            int points = Integer.parseInt(rewardPointsStr);
+            if (points < 0) {
+                showError("Điểm thưởng không được âm");
+                return false;
+            }
+        } catch (NumberFormatException e) {
+            showError("Điểm thưởng không hợp lệ");
             return false;
         }
 
@@ -341,7 +358,7 @@ public class AddEventActivity extends AppCompatActivity {
         return location;
     }
 
-    private EventRequest buildEventRequest(String title, String description, String location, int numVolunteers) {
+    private EventRequest buildEventRequest(String title, String description, String location, int numVolunteers, int rewardPoints) {
         EventRequest request = new EventRequest();
         request.setTitle(title);
         request.setDescription(description);
@@ -349,7 +366,7 @@ public class AddEventActivity extends AppCompatActivity {
         request.setEventStartTime(selectedStartDate);
         request.setEventEndTime(selectedEndDate);
         request.setNumOfVolunteers(numVolunteers);
-        request.setRewardPoints(null);
+        request.setRewardPoints(rewardPoints);
         request.setEventTypeId(selectedEventTypeId);
         request.setCategory(selectedCategory);
         request.setStatus("PENDING");
@@ -408,6 +425,10 @@ public class AddEventActivity extends AppCompatActivity {
 
         if (event.getNumOfVolunteers() != null) {
             binding.etNumberNeeded.setText(String.valueOf(event.getNumOfVolunteers()));
+        }
+
+        if (event.getRewardPoints() != null) {
+            binding.etRewardPoints.setText(String.valueOf(event.getRewardPoints()));
         }
 
         if (event.getEventStartTime() != null) {

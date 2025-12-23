@@ -82,6 +82,13 @@ public class EventManageFragment extends Fragment implements OnEventActionListen
         setupUI();
         loadData();
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Reload data when returning to this fragment (e.g. from Approve Posts tab)
+        loadEvents();
+    }
     
     private void setupUI() {
         binding.btnBack.setVisibility(View.GONE);
@@ -219,14 +226,14 @@ public class EventManageFragment extends Fragment implements OnEventActionListen
     private void loadEventsPage(int page) {
         isLoading = true;
         showLoading(page == 0);
-        
+
         Call<RestResponse<PageResponse<EventResponse>>> call;
-        
+
         if (ApiConfig.isAdmin()) {
             // Admin: Chỉ load events ACTIVE
             call = apiEndpoints.getAllEvents(page, PAGE_SIZE, "createdAt", "DESC", null, null, "ACTIVE", null, null, null, null, null);
         } else if (ApiConfig.isOrganizer()) {
-            // Organizer: Load own events (sẽ filter local)
+            // Organizer: Load own events
             call = apiEndpoints.getMyEvents(page, PAGE_SIZE, "createdAt", "DESC");
         } else {
             isLoading = false;
@@ -234,24 +241,22 @@ public class EventManageFragment extends Fragment implements OnEventActionListen
             showToast("Bạn không có quyền truy cập");
             return;
         }
-        
+
         call.enqueue(new Callback<RestResponse<PageResponse<EventResponse>>>() {
             @Override
             public void onResponse(Call<RestResponse<PageResponse<EventResponse>>> call, Response<RestResponse<PageResponse<EventResponse>>> response) {
                 isLoading = false;
                 showLoading(false);
-                
+
                 if (isResponseValid(response)) {
                     PageResponse<EventResponse> pageData = response.body().getData();
-                    
-                    // Chỉ thêm events có status ACTIVE
-                    for (EventResponse event : pageData.getContent()) {
-                        String status = event.getStatus();
-                        if ("ACTIVE".equalsIgnoreCase(status)) {
-                            allEventsList.add(event);
-                        }
+
+                    if (page == 0) {
+                        allEventsList.clear();
                     }
-                    
+
+                    allEventsList.addAll(pageData.getContent());
+
                     hasMorePages = !pageData.isLast();
                     applyFilters();
                     updateStatistics();

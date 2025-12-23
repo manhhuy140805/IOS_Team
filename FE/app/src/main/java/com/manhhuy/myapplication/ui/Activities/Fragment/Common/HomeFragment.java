@@ -265,7 +265,7 @@ public class HomeFragment extends Fragment {
         // Load first page of events, sorted by createdAt desc, only ACTIVE events
         Call<RestResponse<PageResponse<EventResponse>>> call = apiEndpoints.getAllEvents(
                 0, 10, "createdAt", "desc",
-                null, null, null, null, null, null, null, null);
+                null, null, "ACTIVE", null, null, null, null, null);
 
         call.enqueue(new Callback<RestResponse<PageResponse<EventResponse>>>() {
             @Override
@@ -309,8 +309,9 @@ public class HomeFragment extends Fragment {
     }
 
     private void loadEventsByType(Integer eventTypeId, String typeName) {
-        Call<RestResponse<PageResponse<EventResponse>>> call = apiEndpoints.getEventsByType(
-                eventTypeId, 0, 10, "createdAt", "desc");
+        Call<RestResponse<PageResponse<EventResponse>>> call = apiEndpoints.getAllEvents(
+                0, 10, "createdAt", "desc",
+                null, null, "ACTIVE", eventTypeId, null, null, null, null);
 
         call.enqueue(new Callback<RestResponse<PageResponse<EventResponse>>>() {
             @Override

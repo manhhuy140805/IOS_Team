@@ -116,6 +116,27 @@ public class NotificationService {
         // Get registrations based on recipient type
         List<EventRegistration> registrations;
         String recipientType = request.getRecipientType() != null ? request.getRecipientType() : "ALL";
+
+        if ("CREATOR".equals(recipientType)) {
+            // Create notification for the event creator (Organization)
+            Notification notification = new Notification();
+            notification.setTitle(request.getTitle());
+            notification.setContent(request.getContent());
+            notification.setSenderRole("ADMIN");
+            notification.setType("SYSTEM");
+            notification.setCreatedAt(Instant.now());
+            
+            Notification savedNotification = notificationRepository.save(notification);
+
+            UserNotification userNotification = new UserNotification();
+            userNotification.setUser(event.getCreator());
+            userNotification.setNotification(savedNotification);
+            userNotification.setIsRead(false);
+            userNotification.setCreatedAt(Instant.now());
+            
+            userNotificationRepository.save(userNotification);
+            return 1;
+        }
         
         if ("APPROVED".equals(recipientType)) {
             registrations = eventRegistrationRepository.findByEventAndStatus(event, "APPROVED", 

@@ -45,9 +45,10 @@ public class OrganizationActivity extends AppCompatActivity {
         binding.viewPager.setAdapter(organizationAdapter);
         binding.viewPager.setPageTransformer(new ZoomOutPageTransformer());
 
-        tabTitles = new String[] { "Sự kiện", "Duyệt đăng ký", "Cá nhân" };
+        tabTitles = new String[] { "Sự kiện", "Duyệt đăng ký", "Thông báo", "Cá nhân" };
         tabIcons = new int[] {
                 R.drawable.ic_event,
+                R.drawable.ic_check,
                 R.drawable.ic_notification,
                 R.drawable.ic_profile
         };

@@ -155,9 +155,8 @@ public class MeFragment extends Fragment {
         String roleText = getRoleText(user.getRole());
         binding.tvRole.setText(roleText);
 
-        // Set member since (format createdAt if available, otherwise use default)
-        // Note: Backend doesn't return createdAt yet, so we'll use a default
-        binding.tvMemberSince.setText("Thành viên từ: 2024");
+        // Set member since
+        binding.tvMemberSince.setText("Thành viên từ: " + (user.getCreatedAt() != null ? formatDate(user.getCreatedAt()) : "2024"));
 
         // Set statistics
         Integer activityCount = user.getActivityCount();
@@ -167,6 +166,19 @@ public class MeFragment extends Fragment {
         // Set points
         Integer points = user.getTotalPoints();
         binding.tvPointsCount.setText(String.format(Locale.getDefault(), "%,d", points != null ? points : 0));
+    }
+
+    private String formatDate(String isoDate) {
+        if (isoDate == null || isoDate.isEmpty()) return "2024";
+        try {
+            // Parse ISO 8601: "2024-10-15T10:30:00Z"
+            java.time.Instant instant = java.time.Instant.parse(isoDate);
+            java.time.LocalDate date = instant.atZone(java.time.ZoneId.systemDefault()).toLocalDate();
+            java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("yyyy");
+            return date.format(formatter);
+        } catch (Exception e) {
+            return "2024";
+        }
     }
 
     /**
@@ -185,12 +197,16 @@ public class MeFragment extends Fragment {
     }
 
     private String getRoleText(String role) {
-        switch (role) {
+        if (role == null) return "Thành viên";
+        switch (role.toUpperCase()) {
             case "VOLUNTEER":
+            case "ROLE_VOLUNTEER":
                 return "Tình nguyện viên";
-            case "ORGANIZER":
+            case "ORGANIZATION":
+            case "ROLE_ORGANIZATION":
                 return "Tổ chức";
             case "ADMIN":
+            case "ROLE_ADMIN":
                 return "Quản trị viên";
             default:
                 return "Thành viên";
@@ -204,8 +220,16 @@ public class MeFragment extends Fragment {
         });
 
         binding.cardMyEvents.setOnClickListener(v -> {
-            Intent intent = new Intent(getActivity(), MyEventsActivity.class);
-            startActivity(intent);
+            if (ApiConfig.isOrganizer()) {
+                // If organizer, switch to Events tab in OrganizationActivity
+                if (getActivity() instanceof com.manhhuy.myapplication.ui.Activities.OrganizationActivity) {
+                    ((com.manhhuy.myapplication.ui.Activities.OrganizationActivity) getActivity()).switchToEventTab();
+                }
+            } else {
+                // If volunteer, open MyEventsActivity
+                Intent intent = new Intent(getActivity(), MyEventsActivity.class);
+                startActivity(intent);
+            }
         });
 
         binding.layoutMyCertificates.setOnClickListener(v -> {
