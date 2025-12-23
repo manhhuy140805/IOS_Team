@@ -151,8 +151,6 @@ public class EventController {
     public ResponseEntity<io.volunteerapp.volunteer_app.DTO.response.AiSearchResponse> searchEventsByAI(
             @RequestBody io.volunteerapp.volunteer_app.DTO.requeset.AiSearchRequest request) {
         io.volunteerapp.volunteer_app.DTO.response.AiSearchResponse response = eventService.searchEventsByAI(
-                request.getInterests(),
-                request.getLocation(),
                 request.getQuery());
         return ResponseEntity.ok(response);
     }

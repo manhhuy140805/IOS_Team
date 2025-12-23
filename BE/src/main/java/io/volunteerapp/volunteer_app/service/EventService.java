@@ -263,9 +263,8 @@ public class EventService {
                 return convertToResponse(updatedEvent);
         }
 
-        // Search events using AI (Gemini) with interests, location, query
-        public io.volunteerapp.volunteer_app.DTO.response.AiSearchResponse searchEventsByAI(
-                        String interests, String location, String query) {
+        // Search events using AI (Gemini) - single query, AI will extract info
+        public io.volunteerapp.volunteer_app.DTO.response.AiSearchResponse searchEventsByAI(String userQuery) {
                 // 1. Get all events from database
                 List<Event> allEvents = eventRepository.findAll();
 
@@ -281,8 +280,7 @@ public class EventService {
                 }
 
                 // 2. Use Gemini to analyze events and find matches
-                GeminiService.AiAnalysisResult aiResult = geminiService.analyzeEventsForSearch(
-                                allEvents, interests, location, query);
+                GeminiService.AiAnalysisResult aiResult = geminiService.analyzeEventsForSearch(allEvents, userQuery);
 
                 if (aiResult.eventIds.isEmpty()) {
                         PageResponse<EventResponse> emptyPage = new PageResponse<>(

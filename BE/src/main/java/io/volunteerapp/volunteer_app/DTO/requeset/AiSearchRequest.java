@@ -11,12 +11,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class AiSearchRequest {
 
-    // Sở thích, thói quen của người dùng
-    private String interests;
-
-    // Địa điểm mong muốn
-    private String location;
-
-    // Query tìm kiếm tự do (optional)
+    // Mô tả bản thân, sở thích, địa điểm, thời gian... tất cả trong 1 ô
+    // AI sẽ tự phân tích và tìm sự kiện phù hợp
     private String query;
 }

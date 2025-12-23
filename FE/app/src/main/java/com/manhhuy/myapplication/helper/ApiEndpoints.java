@@ -151,6 +151,11 @@ public interface ApiEndpoints {
                         @Query("sortBy") String sortBy,
                         @Query("sortDirection") String sortDirection);
 
+        // AI-powered search
+        @POST("events/ai-search")
+        Call<RestResponse<com.manhhuy.myapplication.helper.response.AiSearchResponse>> aiSearchEvents(
+                        @Body com.manhhuy.myapplication.helper.request.AiSearchRequest request);
+
         @GET("events/my-events")
         Call<RestResponse<PageResponse<EventResponse>>> getMyEvents(
                         @Query("page") int page,

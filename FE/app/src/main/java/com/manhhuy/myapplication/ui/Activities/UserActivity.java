@@ -1,5 +1,6 @@
 package com.manhhuy.myapplication.ui.Activities;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
@@ -19,6 +20,9 @@ public class UserActivity extends AppCompatActivity {
     private ActivityUserBinding binding;
     private String[] tabTitles;
     private int[] tabIcons;
+
+    public static final String PREFS_AI_SEARCH = "ai_search_prefs";
+    public static final String KEY_AI_QUERY = "ai_query";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,12 +74,30 @@ public class UserActivity extends AppCompatActivity {
             }
         });
     }
+
     public void switchToSearchTab() {
+        // Clear any previous AI query
+        clearAiQuery();
         binding.viewPager.setCurrentItem(1, true);
     }
+
+    // Switch to search with AI query - used from Home
+    public void switchToSearchWithAiQuery(String aiQuery) {
+        // Save query to SharedPreferences for SearchFragment to read
+        SharedPreferences prefs = getSharedPreferences(PREFS_AI_SEARCH, MODE_PRIVATE);
+        prefs.edit().putString(KEY_AI_QUERY, aiQuery).apply();
+        binding.viewPager.setCurrentItem(1, true);
+    }
+
+    public void clearAiQuery() {
+        SharedPreferences prefs = getSharedPreferences(PREFS_AI_SEARCH, MODE_PRIVATE);
+        prefs.edit().remove(KEY_AI_QUERY).apply();
+    }
+
     public void switchToRedeemTab() {
         binding.viewPager.setCurrentItem(2, true);
     }
+
     public void switchToNofiticationTab() {
         binding.viewPager.setCurrentItem(3, true);
     }

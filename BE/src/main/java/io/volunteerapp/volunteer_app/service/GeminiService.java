@@ -49,8 +49,7 @@ public class GeminiService {
         }
     }
 
-    public AiAnalysisResult analyzeEventsForSearch(List<Event> events, String interests, String location,
-            String query) {
+    public AiAnalysisResult analyzeEventsForSearch(List<Event> events, String userQuery) {
         if (events == null || events.isEmpty()) {
             return new AiAnalysisResult(new ArrayList<>(), "Hiện tại chưa có sự kiện nào trong hệ thống.");
         }
@@ -87,7 +86,7 @@ public class GeminiService {
         eventsData.append("]");
 
         // Build prompt
-        String prompt = buildPrompt(eventsData.toString(), interests, location, query);
+        String prompt = buildPrompt(eventsData.toString(), userQuery);
 
         // Call Gemini API
         String response = callGeminiApi(prompt);
@@ -96,22 +95,10 @@ public class GeminiService {
         return parseAiResponse(response);
     }
 
-    private String buildPrompt(String eventsData, String interests, String location, String query) {
-        StringBuilder userInput = new StringBuilder();
-
-        if (interests != null && !interests.trim().isEmpty()) {
-            userInput.append("Sở thích/Thói quen: ").append(interests).append("\n");
-        }
-        if (location != null && !location.trim().isEmpty()) {
-            userInput.append("Địa điểm mong muốn: ").append(location).append("\n");
-        }
-        if (query != null && !query.trim().isEmpty()) {
-            userInput.append("Yêu cầu thêm: ").append(query).append("\n");
-        }
-
-        if (userInput.length() == 0) {
-            userInput.append("Gợi ý các hoạt động tình nguyện phù hợp nhất");
-        }
+    private String buildPrompt(String eventsData, String userQuery) {
+        String queryText = (userQuery != null && !userQuery.trim().isEmpty())
+                ? userQuery
+                : "Gợi ý các hoạt động tình nguyện phù hợp nhất";
 
         return """
                 Bạn là một trợ lý AI thân thiện, chuyên gợi ý các hoạt động tình nguyện từ thiện.
@@ -120,11 +107,14 @@ public class GeminiService {
                 Dưới đây là danh sách các sự kiện tình nguyện hiện có:
                 %s
 
-                Thông tin từ người dùng:
-                %s
+                Người dùng mô tả: "%s"
 
                 NHIỆM VỤ:
-                1. Phân tích sở thích, địa điểm và yêu cầu của người dùng
+                1. TỰ ĐỘNG phân tích mô tả của người dùng để hiểu:
+                   - Sở thích, thói quen của họ
+                   - Địa điểm họ mong muốn (nếu có)
+                   - Thời gian họ rảnh (nếu có)
+                   - Bất kỳ yêu cầu đặc biệt nào
                 2. Chọn các sự kiện PHÙ HỢP NHẤT (ưu tiên trả về sự kiện, gần đúng là được)
                 3. Viết một đoạn giải thích ngắn gọn, ấm áp, truyền cảm hứng về lý do gợi ý
 
@@ -135,14 +125,14 @@ public class GeminiService {
                 }
 
                 Trong explanation, hãy:
-                - Nói về lý do các sự kiện phù hợp với sở thích người dùng
+                - Nói về lý do các sự kiện phù hợp với người dùng
                 - Khích lệ tinh thần tình nguyện
                 - Giữ ngắn gọn (2-3 câu)
                 - Phong cách thân thiện, truyền cảm hứng
 
                 Nếu không tìm thấy sự kiện phù hợp, vẫn trả về JSON với eventIds rỗng và explanation động viên.
                 CHỈ TRẢ VỀ JSON, KHÔNG CÓ TEXT KHÁC.
-                """.formatted(eventsData, userInput.toString());
+                """.formatted(eventsData, queryText);
     }
 
     private String callGeminiApi(String prompt) {
