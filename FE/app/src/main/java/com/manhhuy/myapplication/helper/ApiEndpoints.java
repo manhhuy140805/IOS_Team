@@ -201,7 +201,7 @@ public interface ApiEndpoints {
                         @Query("size") int size,
                         @Query("status") String status);
 
-        @GET("event-registrations/my-events-registrations")
+        @GET("event-registrations/organization/registrations")
         Call<RestResponse<PageResponse<EventRegistrationResponse>>> getMyEventsRegistrations(
                         @Query("page") int page,
                         @Query("size") int size,
