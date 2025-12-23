@@ -207,4 +207,32 @@ public class UserService {
         response.setMessage("Đổi mật khẩu thành công");
         return ResponseEntity.ok(response);
     }
+    
+    /**
+     * Reset password (for forgot password flow - no current password needed)
+     */
+    public ResponseEntity<RestResponse<Void>> resetPassword(String email, String newPassword) {
+        
+        // 1. Find user by email
+        Optional<User> userOptional = userRepository.findByEmail(email);
+        if (userOptional.isEmpty()) {
+            RestResponse<Void> response = new RestResponse<>();
+            response.setStatus(404);
+            response.setError("Not Found");
+            response.setMessage("Không tìm thấy người dùng với email: " + email);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        }
+        
+        User user = userOptional.get();
+        
+        // 2. Update password
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+        
+        // 3. Return success
+        RestResponse<Void> response = new RestResponse<>();
+        response.setStatus(200);
+        response.setMessage("Đặt lại mật khẩu thành công");
+        return ResponseEntity.ok(response);
+    }
 }
