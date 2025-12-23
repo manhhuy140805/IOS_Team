@@ -251,6 +251,16 @@ public interface ApiEndpoints {
         @POST("notifications/send")
         Call<RestResponse<Map<String, Object>>> sendNotification(@Body SendNotificationRequest request);
 
+        @Multipart
+        @POST("notifications/send")
+        Call<RestResponse<Map<String, Object>>> sendNotificationMultipart(
+                @Part("eventId") okhttp3.RequestBody eventId,
+                @Part("title") okhttp3.RequestBody title,
+                @Part("content") okhttp3.RequestBody content,
+                @Part("recipientType") okhttp3.RequestBody recipientType,
+                @Part MultipartBody.Part file
+        );
+
         // ========== User Reward APIs ==========
 
         /**

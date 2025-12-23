@@ -36,6 +36,22 @@ public class CloudinaryService {
         return uploadResult.get("secure_url").toString();
     }
 
+    public String uploadAttachment(MultipartFile file) throws IOException {
+        if (file == null || file.isEmpty()) {
+            return null;
+        }
+
+        Map<String, Object> uploadParams = ObjectUtils.asMap(
+                "resource_type", "auto",
+                "folder", "volunteer-app/notifications",
+                "use_filename", true,
+                "unique_filename", true,
+                "overwrite", false);
+
+        Map<String, Object> uploadResult = cloudinary.uploader().upload(file.getBytes(), uploadParams);
+        return uploadResult.get("secure_url").toString();
+    }
+
     private void validateImageFile(MultipartFile file) {
         if (file == null || file.isEmpty()) {
             throw new IllegalArgumentException("File không được để trống");

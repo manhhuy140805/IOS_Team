@@ -1,12 +1,18 @@
 package com.manhhuy.myapplication.ui.Activities;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
@@ -18,8 +24,14 @@ import com.manhhuy.myapplication.helper.ApiEndpoints;
 import com.manhhuy.myapplication.helper.request.SendNotificationRequest;
 import com.manhhuy.myapplication.helper.response.RestResponse;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.util.Map;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -31,12 +43,16 @@ public class SendNotificationActivity extends AppCompatActivity {
     private int selectedRecipientType = 0; // 0: All, 1: Confirmed, 2: Unconfirmed
     private Integer eventId;
     private boolean isLoading = false;
+    private Uri selectedImageUri;
+    private ActivityResultLauncher<Intent> imagePickerLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivitySendNotificationBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        setupImagePicker();
 
         // Get event ID from intent
         eventId = getIntent().getIntExtra("EVENT_ID", -1);
@@ -99,9 +115,36 @@ public class SendNotificationActivity extends AppCompatActivity {
         binding.rbConfirmedUsers.setOnClickListener(v -> selectRecipient(1));
         binding.rbUnconfirmedUsers.setOnClickListener(v -> selectRecipient(2));
 
+        // File Selection
+        binding.btnSelectFile.setOnClickListener(v -> {
+            Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            imagePickerLauncher.launch(intent);
+        });
 
+        binding.ivRemoveFile.setOnClickListener(v -> {
+            selectedImageUri = null;
+            binding.tvFileName.setText("Chưa chọn tệp nào");
+            binding.ivSelectedImage.setVisibility(View.GONE);
+            binding.ivRemoveFile.setVisibility(View.GONE);
+        });
 
         binding.btnSendNotification.setOnClickListener(v -> sendNotification());
+    }
+
+    private void setupImagePicker() {
+        imagePickerLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                        selectedImageUri = result.getData().getData();
+                        if (selectedImageUri != null) {
+                            binding.tvFileName.setText("Đã chọn ảnh");
+                            binding.ivSelectedImage.setImageURI(selectedImageUri);
+                            binding.ivSelectedImage.setVisibility(View.VISIBLE);
+                            binding.ivRemoveFile.setVisibility(View.VISIBLE);
+                        }
+                    }
+                });
     }
 
     private void setupTextWatchers() {
@@ -242,19 +285,32 @@ public class SendNotificationActivity extends AppCompatActivity {
                 break;
         }
         
-        // Create request
-        SendNotificationRequest request = new SendNotificationRequest();
-        request.setEventId(eventId);
-        request.setTitle(title);
-        request.setContent(content);
-        request.setRecipientType(recipientType);
-        
         // Call API
         isLoading = true;
         showLoading();
         
         ApiEndpoints apiService = ApiConfig.getClient().create(ApiEndpoints.class);
-        Call<RestResponse<Map<String, Object>>> call = apiService.sendNotification(request);
+        Call<RestResponse<Map<String, Object>>> call;
+
+        RequestBody eventIdPart = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(eventId));
+        RequestBody titlePart = RequestBody.create(MediaType.parse("text/plain"), title);
+        RequestBody contentPart = RequestBody.create(MediaType.parse("text/plain"), content);
+        RequestBody recipientTypePart = RequestBody.create(MediaType.parse("text/plain"), recipientType);
+
+        MultipartBody.Part filePart = null;
+        if (selectedImageUri != null) {
+            try {
+                File file = getFileFromUri(selectedImageUri);
+                if (file != null) {
+                    RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), file);
+                    filePart = MultipartBody.Part.createFormData("file", file.getName(), requestFile);
+                }
+            } catch (Exception e) {
+                Log.e(TAG, "Error preparing file: " + e.getMessage());
+            }
+        }
+
+        call = apiService.sendNotificationMultipart(eventIdPart, titlePart, contentPart, recipientTypePart, filePart);
         
         call.enqueue(new Callback<RestResponse<Map<String, Object>>>() {
             @Override
@@ -302,6 +358,25 @@ public class SendNotificationActivity extends AppCompatActivity {
                     Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private File getFileFromUri(Uri uri) {
+        try {
+            InputStream inputStream = getContentResolver().openInputStream(uri);
+            File file = new File(getCacheDir(), "temp_image_" + System.currentTimeMillis());
+            FileOutputStream outputStream = new FileOutputStream(file);
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = inputStream.read(buffer)) > 0) {
+                outputStream.write(buffer, 0, length);
+            }
+            outputStream.close();
+            inputStream.close();
+            return file;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
     
     private void showLoading() {
