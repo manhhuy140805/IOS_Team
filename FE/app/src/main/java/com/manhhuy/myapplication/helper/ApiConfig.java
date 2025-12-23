@@ -119,4 +119,15 @@ public class ApiConfig {
         }
         return JwtUtil.getUserId(token);
     }
+    
+    /**
+     * Lấy email từ token
+     */
+    public static String getUserEmail() {
+        String token = getToken();
+        if (token == null || token.isEmpty()) {
+            return null;
+        }
+        return JwtUtil.getEmail(token);
+    }
 }
