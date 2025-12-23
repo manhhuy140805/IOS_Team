@@ -289,4 +289,15 @@ public interface ApiEndpoints {
         @Multipart
         @POST("images/upload")
         Call<Map<String, Object>> uploadImage(@Part MultipartBody.Part file);
+
+        // ========== OTP APIs ==========
+
+        @POST("otp/send")
+        Call<RestResponse<String>> sendOTP(@Body com.manhhuy.myapplication.helper.request.SendOTPRequest request);
+
+        @POST("otp/verify")
+        Call<RestResponse<Boolean>> verifyOTP(@Body com.manhhuy.myapplication.helper.request.VerifyOTPRequest request);
+
+        @POST("otp/reset-password")
+        Call<RestResponse<Void>> resetPassword(@Body com.manhhuy.myapplication.helper.request.ResetPasswordRequest request);
 }
