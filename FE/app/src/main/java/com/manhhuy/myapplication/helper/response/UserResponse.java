@@ -13,7 +13,9 @@ public class UserResponse {
     private String createdAt;     
     private String updatedAt;     
     private Boolean violation;   
-    private Integer activityCount; 
+    private Integer activityCount;
+    private String dateOfBirth;  // Format: yyyy-MM-dd
+    private String gender;       // MALE, FEMALE, OTHER
     
     public UserResponse() {}
     
@@ -119,5 +121,21 @@ public class UserResponse {
     
     public void setActivityCount(Integer activityCount) {
         this.activityCount = activityCount;
+    }
+    
+    public String getDateOfBirth() {
+        return dateOfBirth;
+    }
+    
+    public void setDateOfBirth(String dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
+    
+    public String getGender() {
+        return gender;
+    }
+    
+    public void setGender(String gender) {
+        this.gender = gender;
     }
 }

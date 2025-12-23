@@ -5,6 +5,8 @@ public class UpdateUserRequest {
     private String phone;
     private String address;
     private String avatarUrl;
+    private String dateOfBirth;  // Format: yyyy-MM-dd
+    private String gender;       // MALE, FEMALE, OTHER
     
     public UpdateUserRequest() {}
     
@@ -19,6 +21,16 @@ public class UpdateUserRequest {
         this.phone = phone;
         this.address = address;
         this.avatarUrl = avatarUrl;
+    }
+    
+    public UpdateUserRequest(String fullName, String phone, String address, String avatarUrl, 
+                           String dateOfBirth, String gender) {
+        this.fullName = fullName;
+        this.phone = phone;
+        this.address = address;
+        this.avatarUrl = avatarUrl;
+        this.dateOfBirth = dateOfBirth;
+        this.gender = gender;
     }
     
     public String getFullName() {
@@ -51,5 +63,21 @@ public class UpdateUserRequest {
     
     public void setAvatarUrl(String avatarUrl) {
         this.avatarUrl = avatarUrl;
+    }
+    
+    public String getDateOfBirth() {
+        return dateOfBirth;
+    }
+    
+    public void setDateOfBirth(String dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
+    
+    public String getGender() {
+        return gender;
+    }
+    
+    public void setGender(String gender) {
+        this.gender = gender;
     }
 }
