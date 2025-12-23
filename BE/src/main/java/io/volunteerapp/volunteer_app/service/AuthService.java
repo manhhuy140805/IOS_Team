@@ -132,7 +132,9 @@ public class AuthService {
                 user.getCreatedAt(),
                 user.getUpdatedAt(),
                 user.getViolation(),
-                0  
+                0,  // activityCount
+                user.getDateOfBirth(),
+                user.getGender()
         );
     }
 }

@@ -56,11 +56,9 @@
                             android:id="@+id/ivAvatar"
                             android:layout_width="100dp"
                             android:layout_height="100dp"
-                            android:background="@drawable/bg_avatar_circle"
-                            android:padding="20dp"
                             android:scaleType="centerCrop"
                             android:src="@drawable/ic_user"
-                            app:tint="@color/app_green_primary" />
+                            android:contentDescription="Avatar" />
 
                         <!-- Status Badge -->
                         <View

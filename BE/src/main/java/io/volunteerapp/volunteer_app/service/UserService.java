@@ -76,12 +76,37 @@ public class UserService {
         }
 
         User user = userOptional.get();
+        
+        // Log request data
+        System.out.println("=== UPDATE USER REQUEST ===");
+        System.out.println("User ID: " + userId);
+        System.out.println("Full Name: " + request.getFullName());
+        System.out.println("Phone: " + request.getPhone());
+        System.out.println("Address: " + request.getAddress());
+        System.out.println("Avatar URL: " + request.getAvatarUrl());
+        System.out.println("Date of Birth: " + request.getDateOfBirth());
+        System.out.println("Gender: " + request.getGender());
+        System.out.println("Role: " + request.getRole());
+        System.out.println("Status: " + request.getStatus());
+        System.out.println("===========================");
 
         // 2. Cập nhật thông tin sử dụng mapper (chỉ cập nhật field không null)
         userMapper.updateEntityFromRequest(request, user);
+        
+        // Log after mapping
+        System.out.println("=== AFTER MAPPING ===");
+        System.out.println("User Date of Birth: " + user.getDateOfBirth());
+        System.out.println("User Gender: " + user.getGender());
+        System.out.println("=====================");
 
         // 3. Lưu vào database
         User updatedUser = userRepository.save(user);
+        
+        // Log after save
+        System.out.println("=== AFTER SAVE ===");
+        System.out.println("Saved Date of Birth: " + updatedUser.getDateOfBirth());
+        System.out.println("Saved Gender: " + updatedUser.getGender());
+        System.out.println("==================");
 
         // 4. Trả về response
         UserResponse userResponse = convertToUserResponse(updatedUser);
@@ -147,7 +172,7 @@ public class UserService {
         }
         // Organizations: set to 0 (bỏ member count)
         
-        return new UserResponse(
+        UserResponse response = new UserResponse(
                 user.getId(),
                 user.getEmail(),
                 user.getFullName(),
@@ -160,8 +185,12 @@ public class UserService {
                 user.getCreatedAt(),
                 user.getUpdatedAt(),
                 user.getViolation(),
-                activityCount
+                activityCount,
+                user.getDateOfBirth(),
+                user.getGender()
         );
+        
+        return response;
     }
     
     public ResponseEntity<RestResponse<Void>> changePassword(Integer userId, 
