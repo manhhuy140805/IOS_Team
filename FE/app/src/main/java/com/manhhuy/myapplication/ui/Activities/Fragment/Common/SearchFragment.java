@@ -262,8 +262,11 @@ public class SearchFragment extends Fragment {
                     if (restResponse.getStatusCode() == 200 && restResponse.getData() != null) {
                         AiSearchResponse aiResponse = restResponse.getData();
 
-                        // Show AI explanation
-                        showAiExplanation(aiResponse.getExplanation());
+                        // Kiểm tra foundMatch để hiển thị UI phù hợp
+                        boolean isFoundMatch = aiResponse.isFoundMatch();
+
+                        // Show AI explanation với style khác nhau dựa trên foundMatch
+                        showAiExplanation(aiResponse.getExplanation(), isFoundMatch);
 
                         // Show events
                         if (aiResponse.getEvents() != null && aiResponse.getEvents().getContent() != null) {
@@ -271,7 +274,14 @@ public class SearchFragment extends Fragment {
                             allResults.clear();
                             allResults.addAll(events);
                             updateSearchResults(events);
-                            updateResultCount(events.size());
+
+                            // Cập nhật label hiển thị
+                            if (isFoundMatch) {
+                                updateResultCount(events.size());
+                            } else {
+                                // Hiển thị là "gợi ý" thay vì "kết quả"
+                                updateSuggestionCount(events.size());
+                            }
                         } else {
                             allResults.clear();
                             updateSearchResults(new ArrayList<>());
@@ -301,11 +311,22 @@ public class SearchFragment extends Fragment {
         });
     }
 
-    private void showAiExplanation(String explanation) {
+    private void showAiExplanation(String explanation, boolean isFoundMatch) {
         if (binding == null)
             return;
         binding.aiExplanationCard.setVisibility(View.VISIBLE);
         binding.tvAiExplanation.setText(explanation);
+
+        // Thay đổi màu nền dựa trên foundMatch
+        if (isFoundMatch) {
+            // Màu xanh lá cho kết quả phù hợp
+            binding.aiExplanationCard.setCardBackgroundColor(
+                    getResources().getColor(android.R.color.holo_green_light, null));
+        } else {
+            // Màu cam nhạt cho gợi ý
+            binding.aiExplanationCard.setCardBackgroundColor(
+                    android.graphics.Color.parseColor("#FFF3E0")); // Light orange
+        }
     }
 
     private void hideAiExplanation() {
@@ -331,6 +352,10 @@ public class SearchFragment extends Fragment {
 
     private void updateResultCount(int count) {
         binding.viewMoreFilters.setText(count + " cơ hội được tìm thấy");
+    }
+
+    private void updateSuggestionCount(int count) {
+        binding.viewMoreFilters.setText(count + " gợi ý liên quan");
     }
 
     @Override

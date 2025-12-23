@@ -37,21 +37,24 @@ public class GeminiService {
     public static class AiAnalysisResult {
         public List<Integer> eventIds;
         public String explanation;
+        public boolean foundMatch; // true nếu tìm thấy kết quả phù hợp, false nếu chỉ là gợi ý liên quan
 
         public AiAnalysisResult() {
             this.eventIds = new ArrayList<>();
             this.explanation = "";
+            this.foundMatch = true;
         }
 
-        public AiAnalysisResult(List<Integer> eventIds, String explanation) {
+        public AiAnalysisResult(List<Integer> eventIds, String explanation, boolean foundMatch) {
             this.eventIds = eventIds;
             this.explanation = explanation;
+            this.foundMatch = foundMatch;
         }
     }
 
     public AiAnalysisResult analyzeEventsForSearch(List<Event> events, String userQuery) {
         if (events == null || events.isEmpty()) {
-            return new AiAnalysisResult(new ArrayList<>(), "Hiện tại chưa có sự kiện nào trong hệ thống.");
+            return new AiAnalysisResult(new ArrayList<>(), "Hiện tại chưa có sự kiện nào trong hệ thống.", false);
         }
 
         // Build events data string for prompt
@@ -118,21 +121,35 @@ public class GeminiService {
                 2. Chọn các sự kiện PHÙ HỢP NHẤT (ưu tiên trả về sự kiện, gần đúng là được)
                 3. Viết một đoạn giải thích ngắn gọn, ấm áp, truyền cảm hứng về lý do gợi ý
 
+                QUAN TRỌNG - XỬ LÝ KHI KHÔNG TÌM THẤY KẾT QUẢ PHÙ HỢP:
+                - Nếu KHÔNG có sự kiện nào PHÙ HỢP HOÀN TOÀN với yêu cầu, hãy:
+                  1. Đặt "foundMatch": false trong JSON
+                  2. Vẫn trả về danh sách eventIds của 3-5 sự kiện LIÊN QUAN NHẤT (gần với yêu cầu nhất)
+                  3. Trong explanation, giải thích rằng chưa tìm thấy sự kiện phù hợp 100%% nhưng gợi ý các sự kiện tương tự
+
+                - Nếu TÌM THẤY sự kiện phù hợp:
+                  1. Đặt "foundMatch": true trong JSON
+                  2. Trả về danh sách eventIds phù hợp
+                  3. Trong explanation, nói về lý do các sự kiện phù hợp
+
                 QUAN TRỌNG: Trả về ĐÚNG ĐỊNH DẠNG JSON sau:
                 {
                     "eventIds": [1, 2, 3],
+                    "foundMatch": true,
                     "explanation": "Đoạn giải thích của bạn ở đây..."
                 }
 
                 Trong explanation, hãy:
-                - Nói về lý do các sự kiện phù hợp với người dùng
-                - Khích lệ tinh thần tình nguyện
+                - Nếu foundMatch=true: Nói về lý do các sự kiện phù hợp với người dùng
+                - Nếu foundMatch=false: Thông báo chưa tìm thấy kết quả hoàn toàn phù hợp, nhưng gợi ý các hoạt động liên quan và động viên người dùng tham gia
+                - Luôn khích lệ tinh thần tình nguyện
                 - Giữ ngắn gọn (2-3 câu)
                 - Phong cách thân thiện, truyền cảm hứng
 
-                Nếu không tìm thấy sự kiện phù hợp, vẫn trả về JSON với eventIds rỗng và explanation động viên.
+                LUÔN TRẢ VỀ ÍT NHẤT 1 SỰ KIỆN nếu có sự kiện trong hệ thống, không bao giờ trả về eventIds rỗng trừ khi không có sự kiện nào.
                 CHỈ TRẢ VỀ JSON, KHÔNG CÓ TEXT KHÁC.
-                """.formatted(eventsData, queryText);
+                """
+                .formatted(eventsData, queryText);
     }
 
     private String callGeminiApi(String prompt) {
@@ -200,12 +217,25 @@ public class GeminiService {
                 }
             }
 
+            // Get foundMatch - default to true nếu không có field
+            JsonNode foundMatchNode = rootNode.path("foundMatch");
+            if (!foundMatchNode.isMissingNode()) {
+                result.foundMatch = foundMatchNode.asBoolean(true);
+            } else {
+                // Nếu không có field foundMatch, giả định là tìm thấy nếu có eventIds
+                result.foundMatch = !result.eventIds.isEmpty();
+            }
+
             // Get explanation
             JsonNode explanationNode = rootNode.path("explanation");
             if (!explanationNode.isMissingNode()) {
                 result.explanation = explanationNode.asText();
             } else {
-                result.explanation = "Chúng tôi đã tìm thấy một số hoạt động tình nguyện phù hợp với bạn! 💚";
+                if (result.foundMatch) {
+                    result.explanation = "Chúng tôi đã tìm thấy một số hoạt động tình nguyện phù hợp với bạn! 💚";
+                } else {
+                    result.explanation = "Chưa tìm thấy hoạt động phù hợp hoàn toàn, nhưng đây là một số gợi ý liên quan cho bạn! 🌟";
+                }
             }
 
         } catch (JsonProcessingException e) {

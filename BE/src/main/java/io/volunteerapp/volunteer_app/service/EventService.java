@@ -276,6 +276,7 @@ public class EventService {
                                         0);
                         return new io.volunteerapp.volunteer_app.DTO.response.AiSearchResponse(
                                         "Hiện tại chưa có sự kiện nào trong hệ thống. Hãy quay lại sau nhé! 💚",
+                                        false,
                                         emptyPage);
                 }
 
@@ -290,6 +291,7 @@ public class EventService {
                                         0);
                         return new io.volunteerapp.volunteer_app.DTO.response.AiSearchResponse(
                                         aiResult.explanation,
+                                        aiResult.foundMatch,
                                         emptyPage);
                 }
 
@@ -309,6 +311,7 @@ public class EventService {
 
                 return new io.volunteerapp.volunteer_app.DTO.response.AiSearchResponse(
                                 aiResult.explanation,
+                                aiResult.foundMatch,
                                 pageResponse);
         }
 

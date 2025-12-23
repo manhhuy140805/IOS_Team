@@ -29,8 +29,6 @@ public class AdminActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
 
-
-
         binding = ActivityAdminBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -82,7 +80,16 @@ public class AdminActivity extends AppCompatActivity {
         });
 
     }
+
     public void switchToSearchTab() {
+        binding.viewPager.setCurrentItem(1, true);
+    }
+
+    // Switch to search with AI query - used from Home
+    public void switchToSearchWithAiQuery(String aiQuery) {
+        // Save query to SharedPreferences for SearchFragment to read
+        android.content.SharedPreferences prefs = getSharedPreferences("ai_search_prefs", MODE_PRIVATE);
+        prefs.edit().putString("ai_query", aiQuery).apply();
         binding.viewPager.setCurrentItem(1, true);
     }
 }
