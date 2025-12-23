@@ -6,6 +6,7 @@ import io.volunteerapp.volunteer_app.service.NotificationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 import java.util.List;
@@ -97,14 +98,41 @@ public class NotificationController {
     }
 
     /**
-     * Gửi notification đến người dùng đã đăng ký sự kiện
+     * Gửi notification đến người dùng đã đăng ký sự kiện (Multipart - có file)
      * POST /api/v1/notifications/send
      */
-    @PostMapping("/send")
+    @PostMapping(value = "/send", consumes = {"multipart/form-data"})
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_ORGANIZATION')")
-    public ResponseEntity<Map<String, Object>> sendNotificationToEventParticipants(
+    public ResponseEntity<Map<String, Object>> sendNotificationToEventParticipantsMultipart(
+            @RequestParam("eventId") Integer eventId,
+            @RequestParam("title") String title,
+            @RequestParam("content") String content,
+            @RequestParam("recipientType") String recipientType,
+            @RequestParam(value = "file", required = false) MultipartFile file) {
+        
+        io.volunteerapp.volunteer_app.DTO.requeset.SendNotificationRequest request = 
+            new io.volunteerapp.volunteer_app.DTO.requeset.SendNotificationRequest();
+        request.setEventId(eventId);
+        request.setTitle(title);
+        request.setContent(content);
+        request.setRecipientType(recipientType);
+        
+        int sentCount = notificationService.sendNotificationToEventParticipants(request, file);
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", "Notification sent successfully");
+        response.put("sentCount", sentCount);
+        return ResponseEntity.ok(response);
+    }
+
+    /**
+     * Gửi notification đến người dùng đã đăng ký sự kiện (JSON - không file)
+     * POST /api/v1/notifications/send
+     */
+    @PostMapping(value = "/send", consumes = {"application/json"})
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_ORGANIZATION')")
+    public ResponseEntity<Map<String, Object>> sendNotificationToEventParticipantsJson(
             @RequestBody io.volunteerapp.volunteer_app.DTO.requeset.SendNotificationRequest request) {
-        int sentCount = notificationService.sendNotificationToEventParticipants(request);
+        int sentCount = notificationService.sendNotificationToEventParticipants(request, null);
         Map<String, Object> response = new HashMap<>();
         response.put("message", "Notification sent successfully");
         response.put("sentCount", sentCount);

@@ -2,10 +2,18 @@ package com.manhhuy.myapplication.ui.Activities;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
@@ -14,17 +22,25 @@ import com.manhhuy.myapplication.databinding.ActivityDetailEventBinding;
 import com.manhhuy.myapplication.helper.ApiConfig;
 import com.manhhuy.myapplication.helper.ApiEndpoints;
 import com.manhhuy.myapplication.helper.request.EventRegistrationRequest;
+import com.manhhuy.myapplication.helper.request.SendNotificationRequest;
 import com.manhhuy.myapplication.helper.response.EventRegistrationResponse;
 import com.manhhuy.myapplication.helper.response.EventResponse;
 import com.manhhuy.myapplication.helper.response.RestResponse;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
+import java.util.Map;
+
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class DetailEventActivity extends AppCompatActivity {
 
@@ -38,12 +54,31 @@ public class DetailEventActivity extends AppCompatActivity {
     private Integer registrationId;
     private boolean isRegistered = false;
     private String registrationStatus;
+    
+    // For sending certificate
+    private Uri selectedFileUri;
+    private TextView tvSelectedFileName;
+    private ActivityResultLauncher<String> filePickerLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityDetailEventBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        
+        // Initialize file picker
+        filePickerLauncher = registerForActivityResult(
+                new ActivityResultContracts.GetContent(),
+                uri -> {
+                    if (uri != null) {
+                        selectedFileUri = uri;
+                        if (tvSelectedFileName != null) {
+                            tvSelectedFileName.setText("Đã chọn file");
+                            tvSelectedFileName.setVisibility(View.VISIBLE);
+                        }
+                    }
+                }
+        );
 
         // Get EventResponse from Intent
         eventData = (EventResponse) getIntent().getSerializableExtra("eventData");
@@ -117,6 +152,27 @@ public class DetailEventActivity extends AppCompatActivity {
         displayEventInfo();
         loadImages();
         checkUserRoleAndShowRegisterButton();
+        checkUserRoleAndSetupShareButton();
+    }
+    
+    private void checkUserRoleAndSetupShareButton() {
+        if (ApiConfig.isOrganizer()) {
+            // Change share button to send certificate button
+            binding.btnShare.setImageResource(R.drawable.ic_certificate);
+            binding.btnShare.setOnClickListener(v -> {
+                if (eventData != null && "ACTIVE".equals(eventData.getStatus())) {
+                    showSendCertificateDialog();
+                } else {
+                    Toast.makeText(this, "Chỉ có thể gửi thông báo cho sự kiện đang diễn ra", Toast.LENGTH_SHORT).show();
+                }
+            });
+        } else {
+            // Default share behavior
+            binding.btnShare.setImageResource(R.drawable.ic_share);
+            binding.btnShare.setOnClickListener(v -> {
+                Toast.makeText(this, "Chia sẻ sự kiện", Toast.LENGTH_SHORT).show();
+            });
+        }
     }
     
 
@@ -373,6 +429,169 @@ public class DetailEventActivity extends AppCompatActivity {
         });
     }
     
+    private void showSendCertificateDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.dialog_send_notification, null);
+        builder.setView(dialogView);
+        
+        AlertDialog dialog = builder.create();
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        
+        EditText etTitle = dialogView.findViewById(R.id.etTitle);
+        EditText etContent = dialogView.findViewById(R.id.etContent);
+        Button btnAttachFile = dialogView.findViewById(R.id.btnAttachFile);
+        tvSelectedFileName = dialogView.findViewById(R.id.tvFileName);
+        Button btnCancel = dialogView.findViewById(R.id.btnCancel);
+        Button btnSend = dialogView.findViewById(R.id.btnSend);
+        
+        // Reset selection
+        selectedFileUri = null;
+        
+        btnAttachFile.setOnClickListener(v -> {
+            filePickerLauncher.launch("*/*");
+        });
+        
+        btnCancel.setOnClickListener(v -> dialog.dismiss());
+        
+        btnSend.setOnClickListener(v -> {
+            String title = etTitle.getText().toString().trim();
+            String content = etContent.getText().toString().trim();
+            
+            if (title.isEmpty() || content.isEmpty()) {
+                Toast.makeText(this, "Vui lòng nhập tiêu đề và nội dung", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            
+            if (selectedFileUri != null) {
+                uploadFileAndSendNotification(title, content, dialog);
+            } else {
+                sendNotification(title, content, null, dialog);
+            }
+        });
+        
+        dialog.show();
+    }
+    
+    private void uploadFileAndSendNotification(String title, String content, AlertDialog dialog) {
+        showProgressDialog("Đang tải lên tệp...");
+        
+        try {
+            File file = getFileFromUri(selectedFileUri);
+            if (file == null) {
+                dismissProgressDialog();
+                Toast.makeText(this, "Lỗi khi đọc tệp", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            
+            // Determine MIME type
+            String mimeType = getContentResolver().getType(selectedFileUri);
+            if (mimeType == null) {
+                mimeType = "multipart/form-data";
+            }
+            
+            RequestBody requestFile = RequestBody.create(MediaType.parse(mimeType), file);
+            MultipartBody.Part body = MultipartBody.Part.createFormData("file", file.getName(), requestFile);
+            
+            ApiEndpoints apiService = ApiConfig.getClient().create(ApiEndpoints.class);
+            Call<Map<String, Object>> call = apiService.uploadImage(body);
+            
+            call.enqueue(new Callback<Map<String, Object>>() {
+                @Override
+                public void onResponse(Call<Map<String, Object>> call, Response<Map<String, Object>> response) {
+                    if (response.isSuccessful() && response.body() != null) {
+                        String fileUrl = (String) response.body().get("imageUrl");
+                        sendNotification(title, content, fileUrl, dialog);
+                    } else {
+                        dismissProgressDialog();
+                        try {
+                            String errorBody = response.errorBody() != null ? response.errorBody().string() : "Unknown error";
+                            Toast.makeText(DetailEventActivity.this, "Tải lên thất bại: " + errorBody, Toast.LENGTH_LONG).show();
+                        } catch (Exception e) {
+                            Toast.makeText(DetailEventActivity.this, "Tải lên thất bại", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+                
+                @Override
+                public void onFailure(Call<Map<String, Object>> call, Throwable t) {
+                    dismissProgressDialog();
+                    Toast.makeText(DetailEventActivity.this, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+            
+        } catch (Exception e) {
+            dismissProgressDialog();
+            Toast.makeText(this, "Lỗi: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+    }
+    
+    private void sendNotification(String title, String content, String attachmentUrl, AlertDialog dialog) {
+        if (progressDialog == null || !progressDialog.isShowing()) {
+            showProgressDialog("Đang gửi thông báo...");
+        } else {
+            progressDialog.setMessage("Đang gửi thông báo...");
+        }
+        
+        SendNotificationRequest request = new SendNotificationRequest(
+                eventData.getId(),
+                title,
+                content,
+                "ALL", // Send to all participants
+                attachmentUrl
+        );
+        
+        ApiEndpoints apiService = ApiConfig.getClient().create(ApiEndpoints.class);
+        Call<RestResponse<Map<String, Object>>> call = apiService.sendNotification(request);
+        
+        call.enqueue(new Callback<RestResponse<Map<String, Object>>>() {
+            @Override
+            public void onResponse(Call<RestResponse<Map<String, Object>>> call, Response<RestResponse<Map<String, Object>>> response) {
+                dismissProgressDialog();
+                if (response.isSuccessful()) {
+                    Toast.makeText(DetailEventActivity.this, "Đã gửi thông báo thành công", Toast.LENGTH_SHORT).show();
+                    dialog.dismiss();
+                } else {
+                    Toast.makeText(DetailEventActivity.this, "Gửi thất bại: " + response.code(), Toast.LENGTH_SHORT).show();
+                }
+            }
+            
+            @Override
+            public void onFailure(Call<RestResponse<Map<String, Object>>> call, Throwable t) {
+                dismissProgressDialog();
+                Toast.makeText(DetailEventActivity.this, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    
+    private File getFileFromUri(Uri uri) throws Exception {
+        InputStream inputStream = getContentResolver().openInputStream(uri);
+        
+        // Get file name
+        String fileName = "temp_file";
+        android.database.Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+        if (cursor != null && cursor.moveToFirst()) {
+            int nameIndex = cursor.getColumnIndex(android.provider.OpenableColumns.DISPLAY_NAME);
+            if (nameIndex != -1) {
+                fileName = cursor.getString(nameIndex);
+            }
+            cursor.close();
+        }
+        
+        File file = new File(getCacheDir(), fileName);
+        FileOutputStream outputStream = new FileOutputStream(file);
+        
+        byte[] buffer = new byte[1024];
+        int length;
+        while ((length = inputStream.read(buffer)) > 0) {
+            outputStream.write(buffer, 0, length);
+        }
+        
+        outputStream.close();
+        inputStream.close();
+        return file;
+    }
+
     /**
      * Show progress dialog
      */

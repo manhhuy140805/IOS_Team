@@ -14,7 +14,9 @@ import io.volunteerapp.volunteer_app.repository.UserNotificationRepository;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,15 +28,18 @@ public class NotificationService {
     private final UserNotificationRepository userNotificationRepository;
     private final EventRepository eventRepository;
     private final EventRegistrationRepository eventRegistrationRepository;
+    private final CloudinaryService cloudinaryService;
 
     public NotificationService(NotificationRepository notificationRepository,
                               UserNotificationRepository userNotificationRepository,
                               EventRepository eventRepository,
-                              EventRegistrationRepository eventRegistrationRepository) {
+                              EventRegistrationRepository eventRegistrationRepository,
+                              CloudinaryService cloudinaryService) {
         this.notificationRepository = notificationRepository;
         this.userNotificationRepository = userNotificationRepository;
         this.eventRepository = eventRepository;
         this.eventRegistrationRepository = eventRegistrationRepository;
+        this.cloudinaryService = cloudinaryService;
     }
 
     // Lấy notification theo ID và tự động đánh dấu đã đọc
@@ -108,7 +113,17 @@ public class NotificationService {
 
     // Gửi notification đến người dùng đã đăng ký sự kiện
     @Transactional
-    public int sendNotificationToEventParticipants(SendNotificationRequest request) {
+    public int sendNotificationToEventParticipants(SendNotificationRequest request, MultipartFile file) {
+        // Upload attachment if exists
+        String attachmentUrl = null;
+        if (file != null && !file.isEmpty()) {
+            try {
+                attachmentUrl = cloudinaryService.uploadAttachment(file);
+            } catch (IOException e) {
+                throw new RuntimeException("Failed to upload attachment", e);
+            }
+        }
+
         // Get event
         Event event = eventRepository.findById(request.getEventId())
                 .orElseThrow(() -> new RuntimeException("Event not found with id: " + request.getEventId()));
@@ -122,6 +137,7 @@ public class NotificationService {
             Notification notification = new Notification();
             notification.setTitle(request.getTitle());
             notification.setContent(request.getContent());
+            notification.setAttached(attachmentUrl);
             notification.setSenderRole("ADMIN");
             notification.setType("SYSTEM");
             notification.setCreatedAt(Instant.now());
@@ -158,6 +174,7 @@ public class NotificationService {
         Notification notification = new Notification();
         notification.setTitle(request.getTitle());
         notification.setContent(request.getContent());
+        notification.setAttached(attachmentUrl);
         notification.setType("ORGANIZATION");
         notification.setCreatedAt(Instant.now());
         

@@ -22,6 +22,8 @@ public class SendNotificationRequest {
     @NotBlank(message = "Content is required")
     private String content;
 
+    private String attachmentUrl;
+
     // Recipient type: ALL, APPROVED, PENDING
     private String recipientType;
 }
