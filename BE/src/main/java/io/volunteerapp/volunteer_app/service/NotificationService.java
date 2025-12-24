@@ -214,8 +214,8 @@ public class NotificationService {
             registrations = eventRegistrationRepository.findByEventAndStatus(event, "PENDING", 
                 Pageable.unpaged()).getContent();
         } else {
-            // ALL
-            registrations = eventRegistrationRepository.findByEvent(event, 
+            // ALL - chỉ gửi cho những user đã được APPROVED
+            registrations = eventRegistrationRepository.findByEventAndStatus(event, "APPROVED", 
                 Pageable.unpaged()).getContent();
         }
         
@@ -249,12 +249,13 @@ public class NotificationService {
             
             userNotificationRepository.save(userNotification);
             
-            // Cộng reward points cho user nếu event có reward points
-            if (eventRewardPoints != null && eventRewardPoints > 0) {
+            // Chỉ cộng reward points khi có file đính kèm (chứng chỉ) và event có reward points
+            if (attachmentUrl != null && !attachmentUrl.trim().isEmpty() 
+                && eventRewardPoints != null && eventRewardPoints > 0) {
                 io.volunteerapp.volunteer_app.model.User user = registration.getUser();
                 user.setTotalPoints(user.getTotalPoints() + eventRewardPoints);
                 userRepository.save(user);
-                System.out.println("✅ Đã cộng " + eventRewardPoints + " điểm cho user: " + user.getFullName());
+                System.out.println("✅ Đã cộng " + eventRewardPoints + " điểm cho user: " + user.getFullName() + " (có chứng chỉ đính kèm)");
             }
             
             sentCount++;
