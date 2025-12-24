@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit;
 public class ApiConfig {
     
     // Base URL của backend API
-    private static final String BASE_URL = " http://10.0.2.2:8888/api/v1/";
+    private static final String BASE_URL = "http://103.37.60.236:8888/api/v1/";
     
     private static Retrofit retrofit = null;
     private static Context appContext;
