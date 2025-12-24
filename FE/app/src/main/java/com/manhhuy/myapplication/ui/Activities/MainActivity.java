@@ -35,6 +35,12 @@ public class MainActivity extends AppCompatActivity {
         // Khởi tạo ApiConfig
         ApiConfig.init(this);
 
+        // Kiểm tra token đã lưu
+        if (checkSavedToken()) {
+            // Token còn hạn, tự động đăng nhập
+            return; // Không cần hiển thị màn hình login
+        }
+
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -65,6 +71,45 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(MainActivity.this, RegisterActivity.class);
             startActivity(intent);
         });
+    }
+
+    /**
+     * Kiểm tra token đã lưu trong SharedPreferences
+     * @return true nếu token còn hạn và đã chuyển màn hình, false nếu cần đăng nhập lại
+     */
+    private boolean checkSavedToken() {
+        // Kiểm tra token có hợp lệ không
+        if (!ApiConfig.isTokenValid()) {
+            Log.d(TAG, "No valid token found");
+            ApiConfig.clearToken(); // Xóa token không hợp lệ
+            return false;
+        }
+        
+        // Token còn hạn, tự động đăng nhập
+        String token = ApiConfig.getToken();
+        Log.d(TAG, "Valid token found, auto login");
+        
+        // Lấy role từ token
+        String role = JwtUtil.getRole(token);
+        String roleSimple = JwtUtil.getRoleSimple(token);
+        Integer userId = JwtUtil.getUserId(token);
+        
+        Log.d(TAG, "Auto login - UserId: " + userId + ", Role: " + roleSimple);
+        
+        // Chuyển đến Activity phù hợp dựa trên role
+        Intent intent;
+        if ("ROLE_ADMIN".equals(role) || "ADMIN".equalsIgnoreCase(roleSimple)) {
+            intent = new Intent(MainActivity.this, AdminActivity.class);
+        } else if ("ROLE_ORGANIZATION".equals(role) || "ORGANIZATION".equalsIgnoreCase(roleSimple)) {
+            intent = new Intent(MainActivity.this, OrganizationActivity.class);
+        } else {
+            // Mặc định là USER/VOLUNTEER
+            intent = new Intent(MainActivity.this, UserActivity.class);
+        }
+        
+        startActivity(intent);
+        finish();
+        return true;
     }
 
     /**
