@@ -52,6 +52,9 @@ public class AdminApprovePostsFragment extends Fragment implements OnItemClickLi
     private boolean isLoading = false;
     private boolean hasMorePages = true;
     private static final int PAGE_SIZE = 20;
+    
+    // Flag to track if data has been loaded
+    private boolean isDataLoaded = false;
 
     public AdminApprovePostsFragment() {
 
@@ -72,7 +75,35 @@ public class AdminApprovePostsFragment extends Fragment implements OnItemClickLi
         
         setupRecyclerView();
         setupListeners();
-        loadEvents();
+        setupSwipeRefresh();
+        
+        // Load data only on first time
+        if (!isDataLoaded) {
+            loadEvents();
+            isDataLoaded = true;
+        }
+    }
+
+    /**
+     * Setup SwipeRefreshLayout
+     */
+    private void setupSwipeRefresh() {
+        binding.swipeRefreshLayout.setColorSchemeResources(
+            R.color.app_green_primary,
+            R.color.app_green_light
+        );
+        
+        binding.swipeRefreshLayout.setOnRefreshListener(() -> {
+            // Reload events based on current filter
+            loadEvents();
+            
+            // Stop refreshing after a delay
+            binding.swipeRefreshLayout.postDelayed(() -> {
+                if (binding != null) {
+                    binding.swipeRefreshLayout.setRefreshing(false);
+                }
+            }, 1000);
+        });
     }
 
     private void setupRecyclerView() {
