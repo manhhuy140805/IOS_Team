@@ -47,6 +47,9 @@ public class AcceptApplicantFragment extends Fragment implements AplicationAdapt
     
     private boolean isLoading = false;
     private List<EventResponse> myEvents;
+    
+    // Flag to track if data has been loaded
+    private boolean isDataLoaded = false;
 
     public AcceptApplicantFragment() {
         // Required empty public constructor
@@ -72,7 +75,44 @@ public class AcceptApplicantFragment extends Fragment implements AplicationAdapt
         
         setupRecyclerView();
         setupListeners();
-        loadAllEventRegistrations(null);
+        setupSwipeRefresh();
+        
+        // Load data only on first time
+        if (!isDataLoaded) {
+            loadAllEventRegistrations(null);
+            isDataLoaded = true;
+        }
+    }
+    
+    /**
+     * Setup SwipeRefreshLayout
+     */
+    private void setupSwipeRefresh() {
+        binding.swipeRefreshLayout.setColorSchemeResources(
+            R.color.app_green_primary,
+            R.color.app_green_light
+        );
+        
+        binding.swipeRefreshLayout.setOnRefreshListener(() -> {
+            // Reload data based on current filter
+            String status = null;
+            if (currentFilter == 0) {
+                status = "PENDING";
+            } else if (currentFilter == 1) {
+                status = "APPROVED";
+            } else if (currentFilter == 2) {
+                status = "REJECTED";
+            }
+            
+            loadAllEventRegistrations(status);
+            
+            // Stop refreshing after a delay
+            binding.swipeRefreshLayout.postDelayed(() -> {
+                if (binding != null) {
+                    binding.swipeRefreshLayout.setRefreshing(false);
+                }
+            }, 1000);
+        });
     }
     
 
