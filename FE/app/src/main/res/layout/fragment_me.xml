@@ -679,17 +679,5 @@
     </androidx.core.widget.NestedScrollView>
 
     <!-- Settings Icon (Floating) -->
-    <ImageButton
-        android:id="@+id/ivSettings"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="40dp"
-        android:layout_marginEnd="16dp"
-        android:background="@drawable/bg_button_gray_solid"
-        android:padding="8dp"
-        android:src="@drawable/ic_settings"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:tint="@color/app_green_primary" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

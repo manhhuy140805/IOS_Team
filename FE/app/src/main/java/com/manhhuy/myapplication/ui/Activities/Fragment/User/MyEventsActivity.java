@@ -12,6 +12,7 @@ import com.manhhuy.myapplication.adapter.EventRegistrationAdapter;
 import com.manhhuy.myapplication.databinding.ActivityMyEventsBinding;
 import com.manhhuy.myapplication.helper.ApiConfig;
 import com.manhhuy.myapplication.helper.ApiEndpoints;
+import com.manhhuy.myapplication.helper.ApiService;
 import com.manhhuy.myapplication.helper.response.EventRegistrationResponse;
 import com.manhhuy.myapplication.helper.response.PageResponse;
 import com.manhhuy.myapplication.helper.response.RestResponse;
@@ -78,53 +79,53 @@ public class MyEventsActivity extends AppCompatActivity {
     }
 
     private void loadMyRegistrations() {
-        if (isLoading) return;
+        if (isLoading)
+            return;
 
         isLoading = true;
         showLoading();
 
         // Get token to ensure user is authenticated
         String token = ApiConfig.getToken();
-        
+
         Log.d(TAG, "Token: " + (token != null ? "exists (length: " + token.length() + ")" : "null"));
-        
+
         if (token == null || token.isEmpty()) {
             Log.w(TAG, "No token found, user not logged in");
             isLoading = false;
             showError("Vui lòng đăng nhập để xem sự kiện của bạn");
             return;
         }
-        
-        Log.d(TAG, "Loading my event registrations from: " + ApiConfig.getClient().baseUrl() + "event-registrations/my-registrations");
 
-        ApiEndpoints apiService = ApiConfig.getClient().create(ApiEndpoints.class);
-        
+        Log.d(TAG, "Loading my event registrations from: " + ApiConfig.getClient().baseUrl()
+                + "event-registrations/my-registrations");
+
         // Call getMyRegistrations - returns event registrations of the current user
-        Call<RestResponse<PageResponse<EventRegistrationResponse>>> call = apiService.getMyRegistrations(
+        Call<RestResponse<PageResponse<EventRegistrationResponse>>> call = ApiService.api().getMyRegistrations(
                 currentPage,
                 PAGE_SIZE,
-                null  // status filter (null = all statuses)
+                null // status filter (null = all statuses)
         );
 
         call.enqueue(new Callback<RestResponse<PageResponse<EventRegistrationResponse>>>() {
             @Override
-            public void onResponse(Call<RestResponse<PageResponse<EventRegistrationResponse>>> call, 
-                                 Response<RestResponse<PageResponse<EventRegistrationResponse>>> response) {
+            public void onResponse(Call<RestResponse<PageResponse<EventRegistrationResponse>>> call,
+                    Response<RestResponse<PageResponse<EventRegistrationResponse>>> response) {
                 isLoading = false;
 
                 Log.d(TAG, "Response code: " + response.code());
                 Log.d(TAG, "Response successful: " + response.isSuccessful());
-                
+
                 if (response.isSuccessful() && response.body() != null) {
                     RestResponse<PageResponse<EventRegistrationResponse>> restResponse = response.body();
                     PageResponse<EventRegistrationResponse> pageResponse = restResponse.getData();
-                    
+
                     if (pageResponse == null) {
                         Log.e(TAG, "PageResponse is null in RestResponse");
                         showError("Không có dữ liệu");
                         return;
                     }
-                    
+
                     List<EventRegistrationResponse> registrations = pageResponse.getContent();
 
                     Log.d(TAG, "Page response: " + pageResponse);
@@ -135,7 +136,7 @@ public class MyEventsActivity extends AppCompatActivity {
                         registrationList.addAll(registrations);
                         adapter.setRegistrations(registrationList);
                         showContent();
-                        
+
                         Log.d(TAG, "Loaded " + registrations.size() + " registrations");
                         for (EventRegistrationResponse reg : registrations) {
                             Log.d(TAG, "Registration: " + reg.getEventTitle() + " - Status: " + reg.getStatus());
@@ -149,7 +150,8 @@ public class MyEventsActivity extends AppCompatActivity {
                 } else {
                     Log.e(TAG, "API Error: " + response.code() + " - " + response.message());
                     try {
-                        String errorBody = response.errorBody() != null ? response.errorBody().string() : "No error body";
+                        String errorBody = response.errorBody() != null ? response.errorBody().string()
+                                : "No error body";
                         Log.e(TAG, "Error body: " + errorBody);
                     } catch (Exception e) {
                         Log.e(TAG, "Error reading error body", e);
@@ -205,11 +207,11 @@ public class MyEventsActivity extends AppCompatActivity {
             loadMyRegistrations();
         }
     }
-    
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        
+
         // Reload data if returning from DetailEventActivity with success result
         if (requestCode == 100 && resultCode == RESULT_OK) {
             currentPage = 0;

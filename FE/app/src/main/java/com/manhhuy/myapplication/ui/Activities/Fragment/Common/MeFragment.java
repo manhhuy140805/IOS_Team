@@ -136,7 +136,8 @@ public class MeFragment extends Fragment {
                 } else {
                     Log.e(TAG, "Response not successful: " + response.code());
                     try {
-                        String errorBody = response.errorBody() != null ? response.errorBody().string() : "No error body";
+                        String errorBody = response.errorBody() != null ? response.errorBody().string()
+                                : "No error body";
                         Log.e(TAG, "Error body: " + errorBody);
                     } catch (Exception e) {
                         Log.e(TAG, "Error reading error body", e);
@@ -179,7 +180,8 @@ public class MeFragment extends Fragment {
         binding.tvRole.setText(roleText);
 
         // Set member since
-        binding.tvMemberSince.setText("Thành viên từ: " + (user.getCreatedAt() != null ? formatDate(user.getCreatedAt()) : "2024"));
+        binding.tvMemberSince
+                .setText("Thành viên từ: " + (user.getCreatedAt() != null ? formatDate(user.getCreatedAt()) : "2024"));
 
         // Set statistics
         Integer activityCount = user.getActivityCount();
@@ -201,51 +203,52 @@ public class MeFragment extends Fragment {
 
         try {
             // Check if avatar URL is valid
-            if (avatarUrl != null && !avatarUrl.isEmpty() && 
-                !avatarUrl.equals("null") && !avatarUrl.equals("undefined")) {
-                
+            if (avatarUrl != null && !avatarUrl.isEmpty() &&
+                    !avatarUrl.equals("null") && !avatarUrl.equals("undefined")) {
+
                 // Build full URL if needed
                 String fullAvatarUrl = avatarUrl;
                 if (!avatarUrl.startsWith("http://") && !avatarUrl.startsWith("https://")) {
                     // If relative URL, prepend base URL
                     fullAvatarUrl = "http://10.0.2.2:8081" + (avatarUrl.startsWith("/") ? "" : "/") + avatarUrl;
                 }
-                
+
                 Log.d(TAG, "Loading avatar from: " + fullAvatarUrl);
-                
+
                 // Remove background and tint when loading real avatar
                 binding.ivAvatar.setBackgroundResource(0);
-                
+
                 Glide.with(this)
-                    .load(fullAvatarUrl)
-                    .placeholder(R.drawable.ic_user)
-                    .error(R.drawable.ic_user)
-                    .circleCrop()
-                    .into(binding.ivAvatar);
+                        .load(fullAvatarUrl)
+                        .placeholder(R.drawable.ic_user)
+                        .error(R.drawable.ic_user)
+                        .circleCrop()
+                        .into(binding.ivAvatar);
             } else {
                 Log.d(TAG, "No valid avatar URL, using default icon");
                 // Set background for default icon
                 binding.ivAvatar.setBackgroundResource(R.drawable.bg_avatar_circle);
-                
+
                 Glide.with(this)
-                    .load(R.drawable.ic_user)
-                    .circleCrop()
-                    .into(binding.ivAvatar);
+                        .load(R.drawable.ic_user)
+                        .circleCrop()
+                        .into(binding.ivAvatar);
             }
         } catch (Exception e) {
             Log.e(TAG, "Error loading avatar: " + e.getMessage(), e);
             // Fallback to default icon
             binding.ivAvatar.setBackgroundResource(R.drawable.bg_avatar_circle);
-            
+
             Glide.with(this)
-                .load(R.drawable.ic_user)
-                .circleCrop()
-                .into(binding.ivAvatar);
+                    .load(R.drawable.ic_user)
+                    .circleCrop()
+                    .into(binding.ivAvatar);
         }
     }
 
     private String formatDate(String isoDate) {
-        if (isoDate == null || isoDate.isEmpty()) return "2024";
+        if (isoDate == null || isoDate.isEmpty())
+            return "2024";
         try {
             // Parse ISO 8601: "2024-10-15T10:30:00Z"
             java.time.Instant instant = java.time.Instant.parse(isoDate);
@@ -270,17 +273,18 @@ public class MeFragment extends Fragment {
         binding.tvMemberSince.setText("Thành viên từ: 2024");
         binding.tvEventsCount.setText("0");
         binding.tvPointsCount.setText("0");
-        
+
         // Set default avatar with background
         binding.ivAvatar.setBackgroundResource(R.drawable.bg_avatar_circle);
         Glide.with(this)
-            .load(R.drawable.ic_user)
-            .circleCrop()
-            .into(binding.ivAvatar);
+                .load(R.drawable.ic_user)
+                .circleCrop()
+                .into(binding.ivAvatar);
     }
 
     private String getRoleText(String role) {
-        if (role == null) return "Thành viên";
+        if (role == null)
+            return "Thành viên";
         switch (role.toUpperCase()) {
             case "VOLUNTEER":
             case "ROLE_VOLUNTEER":
@@ -297,10 +301,6 @@ public class MeFragment extends Fragment {
     }
 
     private void setupClickListeners() {
-
-        binding.ivSettings.setOnClickListener(v -> {
-            Toast.makeText(getContext(), "Cài đặt", Toast.LENGTH_SHORT).show();
-        });
 
         binding.cardMyEvents.setOnClickListener(v -> {
             if (ApiConfig.isOrganizer()) {
