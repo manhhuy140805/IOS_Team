@@ -46,19 +46,13 @@ public class JwtUtil {
         }
     }
     
-    /**
-     * Lấy userId từ token
-     * @param token JWT token
-     * @return userId (Integer), null nếu không tìm thấy
-     */
+  
     public static Integer getUserId(String token) {
         JSONObject payload = decodePayload(token);
         if (payload == null) return null;
         
         try {
-            // Backend lưu userId trong claim "userId"
             if (payload.has("userId")) {
-                // Handle both Long and Integer types
                 Object userIdObj = payload.get("userId");
                 if (userIdObj instanceof Integer) {
                     return (Integer) userIdObj;
@@ -77,11 +71,7 @@ public class JwtUtil {
         return null;
     }
     
-    /**
-     * Lấy email (subject) từ token
-     * @param token JWT token
-     * @return email string, null nếu không tìm thấy
-     */
+
     public static String getEmail(String token) {
         JSONObject payload = decodePayload(token);
         if (payload == null) return null;
@@ -96,12 +86,21 @@ public class JwtUtil {
         }
         return null;
     }
+
+    public static String getStatus(String token){
+        JSONObject payload = decodePayload(token);
+        if (payload == null) return null;
+        try{
+            if(payload.has("status")){
+                return payload.getString("status");
+            }
+        }catch (JSONException e){
+            Log.e(TAG, "Error getting status from token", e);
+        }
+        return null;
+    }
     
-    /**
-     * Lấy role từ token
-     * @param token JWT token
-     * @return role string (VD: "ROLE_ADMIN" hoặc "ROLE_USER"), null nếu không tìm thấy
-     */
+
     public static String getRole(String token) {
         JSONObject payload = decodePayload(token);
         if (payload == null) return null;
@@ -118,11 +117,7 @@ public class JwtUtil {
         return null;
     }
     
-    /**
-     * Lấy role ngắn gọn (không có prefix ROLE_)
-     * @param token JWT token
-     * @return "ADMIN" hoặc "USER", null nếu không tìm thấy
-     */
+
     public static String getRoleSimple(String token) {
         String role = getRole(token);
         if (role != null && role.startsWith("ROLE_")) {
@@ -131,21 +126,13 @@ public class JwtUtil {
         return role;
     }
     
-    /**
-     * Kiểm tra token có phải là admin không
-     * @param token JWT token
-     * @return true nếu là admin, false nếu không
-     */
+
     public static boolean isAdmin(String token) {
         String role = getRole(token);
         return "ROLE_ADMIN".equals(role);
     }
     
-    /**
-     * Kiểm tra token có hết hạn chưa
-     * @param token JWT token
-     * @return true nếu đã hết hạn, false nếu còn hiệu lực
-     */
+
     public static boolean isExpired(String token) {
         JSONObject payload = decodePayload(token);
         if (payload == null) return true;

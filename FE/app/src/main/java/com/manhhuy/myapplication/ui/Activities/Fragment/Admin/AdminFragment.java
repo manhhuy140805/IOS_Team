@@ -1,8 +1,6 @@
 package com.manhhuy.myapplication.ui.Activities.Fragment.Admin;
 
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +22,7 @@ import com.manhhuy.myapplication.adapter.admin.userOrganations.UserAdapter;
 import com.manhhuy.myapplication.databinding.ActivityUserManagementBinding;
 import com.manhhuy.myapplication.helper.ApiConfig;
 import com.manhhuy.myapplication.helper.ApiEndpoints;
+import com.manhhuy.myapplication.helper.request.UpdateUserRequest;
 import com.manhhuy.myapplication.helper.response.RestResponse;
 import com.manhhuy.myapplication.helper.response.UserResponse;
 import com.manhhuy.myapplication.model.Organization;
@@ -141,6 +140,7 @@ public class AdminFragment extends Fragment implements OnUserActionListener, OnO
         if ("PENDING".equalsIgnoreCase(status)) return "Chờ xác thực";
         return "Hoạt động";
     }
+
 
     private String formatDate(String isoDate) {
         if (isoDate == null || isoDate.isEmpty()) return "N/A";
@@ -361,20 +361,37 @@ public class AdminFragment extends Fragment implements OnUserActionListener, OnO
     @Override
     public void onLockUnlockClick(User user) {
         String action = user.getStatus().equals("Bị khóa") ? "mở khóa" : "khóa";
+        String newStatus = user.getStatus().equals("Bị khóa") ? "Hoạt động" : "Bị khóa";
+        String apiStatus = user.getStatus().equals("Bị khóa") ? "ACTIVE" : "LOCKED";
 
         new AlertDialog.Builder(requireContext())
                 .setTitle("Xác nhận")
                 .setMessage("Bạn có chắc muốn " + action + " tài khoản " + user.getName() + "?")
                 .setPositiveButton("Đồng ý", (dialog, which) -> {
-                    if (user.getStatus().equals("Bị khóa")) {
-                        user.setStatus("Hoạt động");
-                        user.setViolationType(null);
-                    } else {
-                        user.setStatus("Bị khóa");
-                    }
-                    userAdapter.updateList(filteredUserList);
-                    updateStatistics();
-                    Toast.makeText(getContext(), "Đã " + action + " tài khoản", Toast.LENGTH_SHORT).show();
+                    UpdateUserRequest request = new UpdateUserRequest();
+                    request.setStatus(apiStatus);
+
+                    apiEndpoints.updateUser(user.getId(), request).enqueue(new Callback<RestResponse<UserResponse>>() {
+                        @Override
+                        public void onResponse(Call<RestResponse<UserResponse>> call, Response<RestResponse<UserResponse>> response) {
+                            if (response.isSuccessful() && response.body() != null) {
+                                user.setStatus(newStatus);
+                                if (newStatus.equals("Hoạt động")) {
+                                    user.setViolationType(null);
+                                }
+                                userAdapter.updateList(filteredUserList);
+                                updateStatistics();
+                                Toast.makeText(getContext(), "Đã " + action + " tài khoản", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(getContext(), "Lỗi cập nhật trạng thái", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<RestResponse<UserResponse>> call, Throwable t) {
+                            Toast.makeText(getContext(), "Lỗi kết nối", Toast.LENGTH_SHORT).show();
+                        }
+                    });
                 })
                 .setNegativeButton("Hủy", null)
                 .show();
@@ -422,19 +439,42 @@ public class AdminFragment extends Fragment implements OnUserActionListener, OnO
     @Override
     public void onLockUnlockClick(Organization organization) {
         String action = organization.getStatus().equals("Bị khóa") ? "mở khóa" : "khóa";
+        String newStatus = organization.getStatus().equals("Bị khóa") ? "Hoạt động" : "Bị khóa";
+        String apiStatus = organization.getStatus().equals("Bị khóa") ? "ACTIVE" : "LOCKED";
+
         new AlertDialog.Builder(requireContext())
                 .setTitle("Xác nhận")
                 .setMessage("Bạn có chắc muốn " + action + " tổ chức " + organization.getName() + "?")
                 .setPositiveButton("Đồng ý", (dialog, which) -> {
-                    if (organization.getStatus().equals("Bị khóa")) {
-                        organization.setStatus("Hoạt động");
-                        organization.setViolationType(null);
-                    } else {
-                        organization.setStatus("Bị khóa");
+                    UpdateUserRequest request = new UpdateUserRequest();
+                    request.setStatus(apiStatus);
+
+                    try {
+                        int orgId = Integer.parseInt(organization.getId());
+                        apiEndpoints.updateUser(orgId, request).enqueue(new Callback<RestResponse<UserResponse>>() {
+                            @Override
+                            public void onResponse(Call<RestResponse<UserResponse>> call, Response<RestResponse<UserResponse>> response) {
+                                if (response.isSuccessful()) {
+                                    organization.setStatus(newStatus);
+                                    if (newStatus.equals("Hoạt động")) {
+                                        organization.setViolationType(null);
+                                    }
+                                    organizationAdapter.updateList(filteredOrgList);
+                                    updateStatistics();
+                                    Toast.makeText(getContext(), "Đã " + action + " tổ chức", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(getContext(), "Lỗi cập nhật trạng thái", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<RestResponse<UserResponse>> call, Throwable t) {
+                                Toast.makeText(getContext(), "Lỗi kết nối", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    } catch (NumberFormatException e) {
+                        Toast.makeText(getContext(), "ID tổ chức không hợp lệ", Toast.LENGTH_SHORT).show();
                     }
-                    organizationAdapter.updateList(filteredOrgList);
-                    updateStatistics();
-                    Toast.makeText(getContext(), "Đã " + action + " tổ chức", Toast.LENGTH_SHORT).show();
                 })
                 .setNegativeButton("Hủy", null)
                 .show();
