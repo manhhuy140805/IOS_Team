@@ -87,6 +87,17 @@ public class ApiConfig {
         return token != null && !token.isEmpty();
     }
     
+    /**
+     * Kiểm tra token có hợp lệ không (tồn tại và chưa hết hạn)
+     */
+    public static boolean isTokenValid() {
+        String token = getToken();
+        if (token == null || token.isEmpty()) {
+            return false;
+        }
+        return !JwtUtil.isExpired(token);
+    }
+    
     
     public static String getUserRole() {
         String token = getToken();
