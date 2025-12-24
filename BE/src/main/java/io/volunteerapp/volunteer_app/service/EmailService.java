@@ -110,48 +110,213 @@ public class EmailService {
             <html>
             <head>
                 <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
                 <style>
-                    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-                    .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-                    .header { background: linear-gradient(135deg, #00C997 0%%, #00A67E 100%%); 
-                              color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
-                    .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }
-                    .otp-box { background: white; padding: 20px; text-align: center; 
-                               border: 2px dashed #00C997; border-radius: 10px; margin: 20px 0; }
-                    .otp-code { font-size: 32px; font-weight: bold; color: #00C997; 
-                                letter-spacing: 5px; }
-                    .footer { text-align: center; margin-top: 20px; color: #666; font-size: 12px; }
-                    .warning { color: #e74c3c; font-size: 14px; margin-top: 15px; }
+                    * { margin: 0; padding: 0; box-sizing: border-box; }
+                    body { 
+                        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+                        line-height: 1.6; 
+                        color: #333; 
+                        background: linear-gradient(135deg, #667eea 0%%, #764ba2 100%%);
+                        padding: 40px 20px;
+                    }
+                    .email-wrapper { 
+                        max-width: 600px; 
+                        margin: 0 auto; 
+                        background: white;
+                        border-radius: 16px;
+                        overflow: hidden;
+                        box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+                    }
+                    .header { 
+                        background: linear-gradient(135deg, #00C997 0%%, #00A67E 100%%); 
+                        color: white; 
+                        padding: 40px 30px; 
+                        text-align: center;
+                    }
+                    .header h1 { 
+                        font-size: 28px; 
+                        margin-bottom: 10px;
+                        font-weight: 700;
+                    }
+                    .header p { 
+                        font-size: 16px; 
+                        opacity: 0.95;
+                    }
+                    .content { 
+                        padding: 40px 30px; 
+                        background: #ffffff;
+                    }
+                    .greeting { 
+                        font-size: 20px; 
+                        font-weight: 600; 
+                        color: #2c3e50;
+                        margin-bottom: 20px;
+                    }
+                    .message { 
+                        font-size: 15px; 
+                        color: #555;
+                        margin-bottom: 30px;
+                        line-height: 1.8;
+                    }
+                    .otp-container { 
+                        background: linear-gradient(135deg, #f5f7fa 0%%, #c3cfe2 100%%);
+                        padding: 30px; 
+                        text-align: center; 
+                        border-radius: 12px;
+                        margin: 30px 0;
+                        border: 3px solid #00C997;
+                    }
+                    .otp-label { 
+                        font-size: 14px; 
+                        color: #666;
+                        margin-bottom: 15px;
+                        text-transform: uppercase;
+                        letter-spacing: 1px;
+                        font-weight: 600;
+                    }
+                    .otp-code { 
+                        font-size: 42px; 
+                        font-weight: 800; 
+                        color: #00C997; 
+                        letter-spacing: 8px;
+                        font-family: 'Courier New', monospace;
+                        text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+                        margin: 10px 0;
+                    }
+                    .expiry-warning { 
+                        background: #fff3cd;
+                        color: #856404;
+                        padding: 12px 20px;
+                        border-radius: 8px;
+                        font-size: 14px;
+                        margin-top: 20px;
+                        border-left: 4px solid #ffc107;
+                        display: inline-block;
+                    }
+                    .security-notice { 
+                        background: #f8f9fa;
+                        padding: 25px;
+                        border-radius: 10px;
+                        margin-top: 30px;
+                        border-left: 4px solid #00C997;
+                    }
+                    .security-notice h3 { 
+                        color: #2c3e50;
+                        font-size: 16px;
+                        margin-bottom: 15px;
+                        display: flex;
+                        align-items: center;
+                    }
+                    .security-notice ul { 
+                        list-style: none;
+                        padding: 0;
+                    }
+                    .security-notice li { 
+                        padding: 8px 0;
+                        color: #555;
+                        font-size: 14px;
+                        position: relative;
+                        padding-left: 25px;
+                    }
+                    .security-notice li:before { 
+                        content: "✓";
+                        position: absolute;
+                        left: 0;
+                        color: #00C997;
+                        font-weight: bold;
+                        font-size: 16px;
+                    }
+                    .signature { 
+                        margin-top: 35px;
+                        padding-top: 25px;
+                        border-top: 2px solid #e9ecef;
+                        color: #666;
+                        font-size: 15px;
+                    }
+                    .signature strong { 
+                        color: #00C997;
+                    }
+                    .footer { 
+                        background: #2c3e50;
+                        color: #ecf0f1;
+                        text-align: center; 
+                        padding: 30px;
+                        font-size: 13px;
+                    }
+                    .footer p { 
+                        margin: 8px 0;
+                        opacity: 0.9;
+                    }
+                    .footer a { 
+                        color: #00C997;
+                        text-decoration: none;
+                    }
+                    @media only screen and (max-width: 600px) {
+                        .email-wrapper { 
+                            border-radius: 0;
+                        }
+                        .header h1 { 
+                            font-size: 24px;
+                        }
+                        .otp-code { 
+                            font-size: 36px;
+                            letter-spacing: 6px;
+                        }
+                        .content { 
+                            padding: 30px 20px;
+                        }
+                    }
                 </style>
             </head>
             <body>
-                <div class="container">
+                <div class="email-wrapper">
                     <div class="header">
-                        <h1>🎯 Volunteer App</h1>
-                        <p>Xác thực tài khoản của bạn</p>
+                        <h1>🌟 Volunteer App</h1>
+                        <p>Nền tảng kết nối tình nguyện viên</p>
                     </div>
+                    
                     <div class="content">
-                        <h2>Xin chào!</h2>
-                        <p>Bạn đã yêu cầu mã OTP để xác thực tài khoản. Vui lòng sử dụng mã dưới đây:</p>
+                        <div class="greeting">Xin chào! 👋</div>
                         
-                        <div class="otp-box">
-                            <p style="margin: 0; color: #666;">Mã OTP của bạn là:</p>
+                        <p class="message">
+                            Bạn đã yêu cầu mã OTP để xác thực tài khoản của mình. 
+                            Vui lòng sử dụng mã bảo mật dưới đây để tiếp tục:
+                        </p>
+                        
+                        <div class="otp-container">
+                            <div class="otp-label">Mã OTP của bạn</div>
                             <div class="otp-code">%s</div>
-                            <p class="warning">⏰ Mã này sẽ hết hạn sau 5 phút</p>
+                            <div class="expiry-warning">
+                                ⏰ Mã này sẽ hết hạn sau <strong>5 phút</strong>
+                            </div>
                         </div>
                         
-                        <p><strong>Lưu ý:</strong></p>
-                        <ul>
-                            <li>Không chia sẻ mã OTP này với bất kỳ ai</li>
-                            <li>Volunteer App sẽ không bao giờ yêu cầu mã OTP qua điện thoại</li>
-                            <li>Nếu bạn không yêu cầu mã này, vui lòng bỏ qua email</li>
-                        </ul>
+                        <div class="security-notice">
+                            <h3>🔒 Lưu ý bảo mật</h3>
+                            <ul>
+                                <li>Không chia sẻ mã OTP này với bất kỳ ai, kể cả nhân viên Volunteer App</li>
+                                <li>Volunteer App sẽ không bao giờ yêu cầu mã OTP qua điện thoại hoặc tin nhắn</li>
+                                <li>Nếu bạn không thực hiện yêu cầu này, vui lòng bỏ qua email và đổi mật khẩu ngay</li>
+                                <li>Mỗi mã OTP chỉ có thể sử dụng một lần duy nhất</li>
+                            </ul>
+                        </div>
                         
-                        <p>Trân trọng,<br><strong>Đội ngũ Volunteer App</strong></p>
+                        <div class="signature">
+                            <p>Trân trọng,</p>
+                            <p><strong>Đội ngũ Volunteer App</strong></p>
+                            <p style="font-size: 13px; color: #999; margin-top: 10px;">
+                                Cùng nhau tạo nên sự khác biệt 💚
+                            </p>
+                        </div>
                     </div>
+                    
                     <div class="footer">
-                        <p>© 2024 Volunteer App. All rights reserved.</p>
+                        <p><strong>© 2024 Volunteer App</strong></p>
                         <p>Email này được gửi tự động, vui lòng không trả lời.</p>
+                        <p style="margin-top: 15px;">
+                            Cần hỗ trợ? Liên hệ: <a href="mailto:support@volunteerapp.com">support@volunteerapp.com</a>
+                        </p>
                     </div>
                 </div>
             </body>
