@@ -69,6 +69,9 @@ public class HomeFragment extends Fragment {
         // Initialize API client
         apiEndpoints = ApiConfig.getClient().create(ApiEndpoints.class);
 
+        // Setup SwipeRefreshLayout
+        setupSwipeRefresh();
+
         // Load user info first
         // Moved to onResume to update points when returning
 
@@ -77,6 +80,30 @@ public class HomeFragment extends Fragment {
         setupFeaturedRecyclerView();
         loadFeaturedEvents();
         setupClickListeners();
+    }
+
+    /**
+     * Setup SwipeRefreshLayout
+     */
+    private void setupSwipeRefresh() {
+        binding.swipeRefreshLayout.setColorSchemeResources(
+            R.color.app_green_primary,
+            R.color.app_green_light
+        );
+        
+        binding.swipeRefreshLayout.setOnRefreshListener(() -> {
+            // Reload all data
+            loadUserInfo();
+            loadEventTypes();
+            loadFeaturedEvents();
+            
+            // Stop refreshing after a delay
+            binding.swipeRefreshLayout.postDelayed(() -> {
+                if (binding != null) {
+                    binding.swipeRefreshLayout.setRefreshing(false);
+                }
+            }, 1000);
+        });
     }
 
     @Override

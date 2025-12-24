@@ -71,6 +71,9 @@ public class RedeemFragment extends Fragment implements RewardAdapter.OnRewardRe
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        // Setup SwipeRefreshLayout
+        setupSwipeRefresh();
+
         // RecyclerView cho danh sách rewards
         LinearLayoutManager layoutManager = new LinearLayoutManager(requireContext());
         binding.rvRewards.setLayoutManager(layoutManager);
@@ -91,6 +94,36 @@ public class RedeemFragment extends Fragment implements RewardAdapter.OnRewardRe
 
         // Load rewards khi khởi tạo (tab "Tất cả")
         loadAllRewards();
+    }
+
+    /**
+     * Setup SwipeRefreshLayout
+     */
+    private void setupSwipeRefresh() {
+        binding.swipeRefreshLayout.setColorSchemeResources(
+            R.color.app_green_primary,
+            R.color.app_green_light
+        );
+        
+        binding.swipeRefreshLayout.setOnRefreshListener(() -> {
+            // Reload all data
+            loadUserPoints();
+            loadRewardTypes();
+            
+            // Reload rewards based on current category
+            if (selectedCategory == 0) {
+                loadAllRewards();
+            } else {
+                loadRewards(selectedCategory);
+            }
+            
+            // Stop refreshing after a delay
+            binding.swipeRefreshLayout.postDelayed(() -> {
+                if (binding != null) {
+                    binding.swipeRefreshLayout.setRefreshing(false);
+                }
+            }, 1000);
+        });
     }
 
     /**
