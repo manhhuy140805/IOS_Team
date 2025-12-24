@@ -35,16 +35,15 @@ public class JwtUtil {
             return null;
         }
     }
-
+    
+  
     public static Integer getUserId(String token) {
         JSONObject payload = decodePayload(token);
         if (payload == null)
             return null;
 
         try {
-            // Backend lưu userId trong claim "userId"
             if (payload.has("userId")) {
-                // Handle both Long and Integer types
                 Object userIdObj = payload.get("userId");
                 if (userIdObj instanceof Integer) {
                     return (Integer) userIdObj;
@@ -62,6 +61,7 @@ public class JwtUtil {
         }
         return null;
     }
+    
 
     public static String getEmail(String token) {
         JSONObject payload = decodePayload(token);
@@ -79,6 +79,20 @@ public class JwtUtil {
         return null;
     }
 
+    public static String getStatus(String token){
+        JSONObject payload = decodePayload(token);
+        if (payload == null) return null;
+        try{
+            if(payload.has("status")){
+                return payload.getString("status");
+            }
+        }catch (JSONException e){
+            Log.e(TAG, "Error getting status from token", e);
+        }
+        return null;
+    }
+    
+
     public static String getRole(String token) {
         JSONObject payload = decodePayload(token);
         if (payload == null)
@@ -95,6 +109,7 @@ public class JwtUtil {
         }
         return null;
     }
+    
 
     public static String getRoleSimple(String token) {
         String role = getRole(token);
@@ -103,11 +118,13 @@ public class JwtUtil {
         }
         return role;
     }
+    
 
     public static boolean isAdmin(String token) {
         String role = getRole(token);
         return "ROLE_ADMIN".equals(role);
     }
+    
 
     public static boolean isExpired(String token) {
         JSONObject payload = decodePayload(token);

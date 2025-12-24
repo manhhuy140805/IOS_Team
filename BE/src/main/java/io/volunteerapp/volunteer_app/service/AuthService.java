@@ -63,8 +63,6 @@ public class AuthService {
         
         user.setRole(roleToSet);
         
-        System.out.println("Role set to user: " + roleToSet);
-        
         user.setStatus("ACTIVE");
         user.setUpdatedAt(Instant.now());
 

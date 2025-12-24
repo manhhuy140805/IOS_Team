@@ -35,10 +35,10 @@ public class MainActivity extends AppCompatActivity {
         // Khởi tạo ApiConfig
         ApiConfig.init(this);
 
+
         // Kiểm tra token đã lưu
         if (checkSavedToken()) {
-            // Token còn hạn, tự động đăng nhập
-            return; // Không cần hiển thị màn hình login
+            return;
         }
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
@@ -73,10 +73,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    /**
-     * Kiểm tra token đã lưu trong SharedPreferences
-     * @return true nếu token còn hạn và đã chuyển màn hình, false nếu cần đăng nhập lại
-     */
     private boolean checkSavedToken() {
         // Kiểm tra token có hợp lệ không
         if (!ApiConfig.isTokenValid()) {
@@ -94,8 +90,7 @@ public class MainActivity extends AppCompatActivity {
         String roleSimple = JwtUtil.getRoleSimple(token);
         Integer userId = JwtUtil.getUserId(token);
         
-        Log.d(TAG, "Auto login - UserId: " + userId + ", Role: " + roleSimple);
-        
+
         // Chuyển đến Activity phù hợp dựa trên role
         Intent intent;
         if ("ROLE_ADMIN".equals(role) || "ADMIN".equalsIgnoreCase(roleSimple)) {
@@ -138,17 +133,20 @@ public class MainActivity extends AppCompatActivity {
 
                     if (restResponse.getStatusCode() == 200 && restResponse.getData() != null) {
                         LoginResponse loginResponse = restResponse.getData();
+                        String status = loginResponse.getUser().getStatus();
+                        if(!"ACTIVE".equalsIgnoreCase(status))
+                        {
+                            Toast.makeText(MainActivity.this, "Tài khoản của bạn đã bị khóa", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        
+                        // Lấy token
                         String token = loginResponse.getAccessToken();
 
                         // Lưu token
                         ApiConfig.saveToken(token);
-
-                        // Decode token để lấy role
                         String role = JwtUtil.getRole(token);
                         String roleSimple = JwtUtil.getRoleSimple(token);
-
-                        Log.d(TAG, "Login successful. Role: " + role);
-                        Log.d(TAG, "Token info: " + JwtUtil.decodePayload(token));
 
                         // Chuyển đến Activity phù hợp dựa trên role
                         Intent intent;

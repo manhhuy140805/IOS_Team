@@ -8,6 +8,9 @@ public class UpdateUserRequest {
     private String dateOfBirth;  // Format: yyyy-MM-dd
     private String gender;       // MALE, FEMALE, OTHER
     
+    private String status;
+    private String role;
+    
     public UpdateUserRequest() {}
     
     public UpdateUserRequest(String fullName, String phone, String address) {
@@ -31,6 +34,22 @@ public class UpdateUserRequest {
         this.avatarUrl = avatarUrl;
         this.dateOfBirth = dateOfBirth;
         this.gender = gender;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
     
     public String getFullName() {

@@ -14,11 +14,7 @@ import org.springframework.stereotype.Service;
 
 import io.volunteerapp.volunteer_app.model.User;
 
-/**
- * Service xử lý JWT Token
- * - Tạo token với claim "scope" chứa quyền dạng "ROLE_ADMIN" hoặc "ROLE_VOLUNTEER"
- * - Spring Security sẽ tự động parse scope thành authorities
- */
+
 @Service
 public class SecurityUtil {
 
@@ -40,19 +36,10 @@ public class SecurityUtil {
                     .issuer("VolunteerApp")
                     .issueTime(new java.util.Date())
                     .expirationTime(new java.util.Date(
-                            Instant.now().plus(this.accessTokenExpiration, ChronoUnit.SECONDS).toEpochMilli())) // Thời
-                                                                                                                // gian
-                                                                                                                // hết
-                                                                                                                // hạn
-                    .claim("userId", user.getId()) // Custom claim: user ID
-
-                    // QUAN TRỌNG: claim "scope" chứa role
-                    // VD: user.getRole() = "ADMIN" -> scope = "ROLE_ADMIN"
-                    // Spring Security tự động parse "scope" thành
-                    // SimpleGrantedAuthority("ROLE_ADMIN")
-                    .claim("scope", "ROLE_" + user.getRole()) // Thêm prefix ROLE_
+                            Instant.now().plus(this.accessTokenExpiration, ChronoUnit.SECONDS).toEpochMilli())) 
+                    .claim("userId", user.getId()) 
+                    .claim("scope", "ROLE_" + user.getRole()) 
                     .build();
-
             // Tạo JWS Object và ký
             Payload payload = new Payload(jwtClaimsSet.toJSONObject());
             JWSObject jwsObject = new JWSObject(header, payload);
@@ -77,7 +64,7 @@ public class SecurityUtil {
                     .expirationTime(new java.util.Date(
                             Instant.now().plus(this.refreshTokenExpiration, ChronoUnit.SECONDS).toEpochMilli()))
                     .claim("userId", user.getId())
-                    .claim("type", "refresh") // Đánh dấu là refresh token
+                    .claim("type", "refresh") 
                     .build();
 
             Payload payload = new Payload(jwtClaimsSet.toJSONObject());
