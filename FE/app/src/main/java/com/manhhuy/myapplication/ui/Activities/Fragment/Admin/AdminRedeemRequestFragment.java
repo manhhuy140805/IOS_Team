@@ -42,7 +42,7 @@ public class AdminRedeemRequestFragment extends Fragment implements AdminRedeemR
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+            Bundle savedInstanceState) {
         binding = FragmentAdminRedeemRequestBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
@@ -65,13 +65,11 @@ public class AdminRedeemRequestFragment extends Fragment implements AdminRedeemR
 
     private void loadPendingRequests() {
         binding.progressBar.setVisibility(View.VISIBLE);
-        
-        // Call API to get pending rewards
-        // Note: Need to ensure this endpoint exists in ApiEndpoints
+
         apiEndpoints.getPendingRewards(0, 100).enqueue(new Callback<RestResponse<PageResponse<UserRewardResponse>>>() {
             @Override
-            public void onResponse(Call<RestResponse<PageResponse<UserRewardResponse>>> call, 
-                                 Response<RestResponse<PageResponse<UserRewardResponse>>> response) {
+            public void onResponse(Call<RestResponse<PageResponse<UserRewardResponse>>> call,
+                    Response<RestResponse<PageResponse<UserRewardResponse>>> response) {
                 binding.progressBar.setVisibility(View.GONE);
 
                 if (response.isSuccessful() && response.body() != null) {
@@ -80,7 +78,7 @@ public class AdminRedeemRequestFragment extends Fragment implements AdminRedeemR
                         requestList.clear();
                         requestList.addAll(restResponse.getData().getContent());
                         adapter.notifyDataSetChanged();
-                        
+
                         updateEmptyState();
                     }
                 } else {
@@ -130,13 +128,13 @@ public class AdminRedeemRequestFragment extends Fragment implements AdminRedeemR
 
     private void updateRequestStatus(Integer id, String status) {
         binding.progressBar.setVisibility(View.VISIBLE);
-        
+
         apiEndpoints.updateUserRewardStatus(id, status).enqueue(new Callback<RestResponse<UserRewardResponse>>() {
             @Override
-            public void onResponse(Call<RestResponse<UserRewardResponse>> call, 
-                                 Response<RestResponse<UserRewardResponse>> response) {
+            public void onResponse(Call<RestResponse<UserRewardResponse>> call,
+                    Response<RestResponse<UserRewardResponse>> response) {
                 binding.progressBar.setVisibility(View.GONE);
-                
+
                 if (response.isSuccessful()) {
                     String message = "ACCEPTED".equals(status) ? "Đã duyệt yêu cầu" : "Đã từ chối yêu cầu";
                     Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();

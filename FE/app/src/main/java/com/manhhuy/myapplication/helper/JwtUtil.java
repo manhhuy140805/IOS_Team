@@ -6,40 +6,30 @@ import android.util.Log;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-/**
- * Utility class để decode JWT token và lấy thông tin từ token
- * JWT token có format: header.payload.signature
- * Payload chứa các claims (thông tin) được encode base64
- */
 public class JwtUtil {
-    
+
     private static final String TAG = "JwtUtil";
-    
-    /**
-     * Decode JWT token và trả về payload dưới dạng JSONObject
-     * @param token JWT token string
-     * @return JSONObject chứa các claims, null nếu lỗi
-     */
+
     public static JSONObject decodePayload(String token) {
         try {
             // JWT token có format: header.payload.signature
             String[] parts = token.split("\\.");
-            
+
             if (parts.length != 3) {
                 Log.e(TAG, "Invalid JWT token format");
                 return null;
             }
-            
+
             // Lấy payload (phần thứ 2)
             String payload = parts[1];
-            
+
             // Decode base64 (URL_SAFE vì JWT dùng base64url)
             byte[] decodedBytes = Base64.decode(payload, Base64.URL_SAFE);
             String decodedString = new String(decodedBytes, "UTF-8");
-            
+
             // Parse thành JSONObject
             return new JSONObject(decodedString);
-            
+
         } catch (Exception e) {
             Log.e(TAG, "Error decoding JWT token", e);
             return null;
@@ -49,8 +39,9 @@ public class JwtUtil {
   
     public static Integer getUserId(String token) {
         JSONObject payload = decodePayload(token);
-        if (payload == null) return null;
-        
+        if (payload == null)
+            return null;
+
         try {
             if (payload.has("userId")) {
                 Object userIdObj = payload.get("userId");
@@ -74,8 +65,9 @@ public class JwtUtil {
 
     public static String getEmail(String token) {
         JSONObject payload = decodePayload(token);
-        if (payload == null) return null;
-        
+        if (payload == null)
+            return null;
+
         try {
             // Backend lưu email trong claim "sub" (subject)
             if (payload.has("sub")) {
@@ -103,8 +95,9 @@ public class JwtUtil {
 
     public static String getRole(String token) {
         JSONObject payload = decodePayload(token);
-        if (payload == null) return null;
-        
+        if (payload == null)
+            return null;
+
         try {
             // Backend lưu role trong claim "scope" với format "ROLE_ADMIN" hoặc "ROLE_USER"
             if (payload.has("scope")) {
@@ -135,8 +128,9 @@ public class JwtUtil {
 
     public static boolean isExpired(String token) {
         JSONObject payload = decodePayload(token);
-        if (payload == null) return true;
-        
+        if (payload == null)
+            return true;
+
         try {
             if (payload.has("exp")) {
                 long expirationTime = payload.getLong("exp"); // Unix timestamp (seconds)

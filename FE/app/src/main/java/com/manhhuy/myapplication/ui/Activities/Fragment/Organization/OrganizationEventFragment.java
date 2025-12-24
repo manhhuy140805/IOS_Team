@@ -36,10 +36,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-/**
- * Fragment quản lý sự kiện cho Organization
- * Hiển thị các events mà organization đã tạo
- */
 public class OrganizationEventFragment extends Fragment implements OnEventActionListenerInterface {
 
     // UI

@@ -24,6 +24,7 @@ import com.manhhuy.myapplication.R;
 import com.manhhuy.myapplication.databinding.ActivityAddEventBinding;
 import com.manhhuy.myapplication.helper.ApiConfig;
 import com.manhhuy.myapplication.helper.ApiEndpoints;
+import com.manhhuy.myapplication.helper.ApiService;
 import com.manhhuy.myapplication.helper.request.EventRequest;
 import com.manhhuy.myapplication.helper.response.EventResponse;
 import com.manhhuy.myapplication.helper.response.EventTypeResponse;
@@ -390,8 +391,7 @@ public class AddEventActivity extends AppCompatActivity {
 
     private void loadEventDetails() {
 
-
-        apiService.getEventById(eventId).enqueue(new Callback<RestResponse<EventResponse>>() {
+        ApiService.api().getEventById(eventId).enqueue(new Callback<RestResponse<EventResponse>>() {
             @Override
             public void onResponse(Call<RestResponse<EventResponse>> call,
                     Response<RestResponse<EventResponse>> response) {

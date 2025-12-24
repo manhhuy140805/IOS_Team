@@ -106,8 +106,6 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
                 binding.llViolationWarning.setVisibility(View.GONE);
             }
 
-            // Set click listeners
-            binding.btnView.setOnClickListener(v -> listener.onViewClick(user));
             binding.btnLockUnlock.setOnClickListener(v -> listener.onLockUnlockClick(user));
             binding.btnDelete.setOnClickListener(v -> listener.onDeleteClick(user));
         }
