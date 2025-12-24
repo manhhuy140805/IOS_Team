@@ -63,6 +63,9 @@ public class OrganizationEventFragment extends Fragment implements OnEventAction
     private boolean isLoading = false;
     private boolean hasMorePages = true;
     private static final int PAGE_SIZE = 20;
+    
+    // Flag to track if data has been loaded
+    private boolean isDataLoaded = false;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -77,13 +80,41 @@ public class OrganizationEventFragment extends Fragment implements OnEventAction
         apiEndpoints = ApiConfig.getClient().create(ApiEndpoints.class);
 
         setupUI();
-        // loadData(); // Removed to avoid double loading with onResume
+        setupSwipeRefresh();
+        
+        // Load data only on first time
+        if (!isDataLoaded) {
+            loadData();
+            isDataLoaded = true;
+        }
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        loadEvents();
+        // Không load lại khi resume, chỉ load khi swipe refresh
+    }
+
+    /**
+     * Setup SwipeRefreshLayout
+     */
+    private void setupSwipeRefresh() {
+        binding.swipeRefreshLayout.setColorSchemeResources(
+            R.color.app_green_primary,
+            R.color.app_green_light
+        );
+        
+        binding.swipeRefreshLayout.setOnRefreshListener(() -> {
+            // Reload all data
+            loadData();
+            
+            // Stop refreshing after a delay
+            binding.swipeRefreshLayout.postDelayed(() -> {
+                if (binding != null) {
+                    binding.swipeRefreshLayout.setRefreshing(false);
+                }
+            }, 1000);
+        });
     }
 
     private void setupUI() {
@@ -121,6 +152,13 @@ public class OrganizationEventFragment extends Fragment implements OnEventAction
     private void loadData() {
         loadEventTypes();
         loadEvents();
+    }
+
+    /**
+     * Refresh data - called by swipe refresh
+     */
+    private void refreshData() {
+        loadData();
     }
 
     // ========== Event Actions ==========
