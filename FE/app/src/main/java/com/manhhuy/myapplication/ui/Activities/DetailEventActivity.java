@@ -45,7 +45,11 @@ import retrofit2.Response;
 public class DetailEventActivity extends AppCompatActivity {
 
     private static final String TAG = "DetailEventActivity";
+    private static final int BUFFER_SIZE = 1024;
+    private static final String DEFAULT_MAP_PREVIEW_URL = "https://images.viblo.asia/01cb5447-ae32-46db-8224-6c7392202648.png";
+    
     private ActivityDetailEventBinding binding;
+    private ApiEndpoints apiService;
     private EventResponse eventData;
     private ProgressDialog progressDialog;
     private boolean isRegistering = false;
@@ -110,13 +114,14 @@ public class DetailEventActivity extends AppCompatActivity {
             return;
         }
 
+        apiService = ApiConfig.getClient().create(ApiEndpoints.class);
+        
         setupUI();
     }
     
     private void loadEventById(int eventId) {
         showProgressDialog("Đang tải thông tin sự kiện...");
         
-        ApiEndpoints apiService = ApiConfig.getClient().create(ApiEndpoints.class);
         Call<RestResponse<EventResponse>> call = apiService.getEventById(eventId);
         
         call.enqueue(new Callback<RestResponse<EventResponse>>() {
@@ -262,7 +267,7 @@ public class DetailEventActivity extends AppCompatActivity {
         
         // Map preview
         Glide.with(this)
-            .load("https://images.viblo.asia/01cb5447-ae32-46db-8224-6c7392202648.png")
+            .load(DEFAULT_MAP_PREVIEW_URL)
             .placeholder(R.drawable.banner_event_default)
             .error(R.drawable.banner_event_default)
             .override(600, 400)
@@ -316,7 +321,6 @@ public class DetailEventActivity extends AppCompatActivity {
                 "" // notes - có thể để trống hoặc thêm dialog nhập ghi chú
         );
         
-        ApiEndpoints apiService = ApiConfig.getClient().create(ApiEndpoints.class);
         Call<EventRegistrationResponse> call = apiService.registerForEvent(request);
         
         call.enqueue(new Callback<EventRegistrationResponse>() {
@@ -392,7 +396,6 @@ public class DetailEventActivity extends AppCompatActivity {
         isRegistering = true;
         showProgressDialog("Đang hủy đăng ký...");
         
-        ApiEndpoints apiService = ApiConfig.getClient().create(ApiEndpoints.class);
         Call<Void> call = apiService.cancelRegistration(registrationId);
         
         call.enqueue(new Callback<Void>() {
@@ -498,7 +501,6 @@ public class DetailEventActivity extends AppCompatActivity {
             RequestBody requestFile = RequestBody.create(MediaType.parse(mimeType), file);
             MultipartBody.Part body = MultipartBody.Part.createFormData("file", file.getName(), requestFile);
             
-            ApiEndpoints apiService = ApiConfig.getClient().create(ApiEndpoints.class);
             Call<RestResponse<Map<String, String>>> call = apiService.uploadNotificationAttachment(body);
             
             call.enqueue(new Callback<RestResponse<Map<String, String>>>() {
@@ -546,7 +548,6 @@ public class DetailEventActivity extends AppCompatActivity {
                 attachmentUrl // attachmentUrl
         );
         
-        ApiEndpoints apiService = ApiConfig.getClient().create(ApiEndpoints.class);
         Call<RestResponse<Map<String, Object>>> call = apiService.sendNotification(request);
         
         call.enqueue(new Callback<RestResponse<Map<String, Object>>>() {
@@ -586,7 +587,7 @@ public class DetailEventActivity extends AppCompatActivity {
         File file = new File(getCacheDir(), fileName);
         FileOutputStream outputStream = new FileOutputStream(file);
         
-        byte[] buffer = new byte[1024];
+        byte[] buffer = new byte[BUFFER_SIZE];
         int length;
         while ((length = inputStream.read(buffer)) > 0) {
             outputStream.write(buffer, 0, length);
@@ -597,6 +598,10 @@ public class DetailEventActivity extends AppCompatActivity {
         return file;
     }
     
+    
+    /**
+     * Helper method to get file name from URI using cursor
+     */
     private String getFileNameFromUri(Uri uri) {
         String fileName = "file";
         android.database.Cursor cursor = getContentResolver().query(uri, null, null, null, null);

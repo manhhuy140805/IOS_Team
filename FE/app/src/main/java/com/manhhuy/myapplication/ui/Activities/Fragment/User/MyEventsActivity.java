@@ -127,9 +127,6 @@ public class MyEventsActivity extends AppCompatActivity {
                     
                     List<EventRegistrationResponse> registrations = pageResponse.getContent();
 
-                    Log.d(TAG, "Page response: " + pageResponse);
-                    Log.d(TAG, "Registrations count: " + (registrations != null ? registrations.size() : "null"));
-
                     if (registrations != null && !registrations.isEmpty()) {
                         registrationList.clear();
                         registrationList.addAll(registrations);

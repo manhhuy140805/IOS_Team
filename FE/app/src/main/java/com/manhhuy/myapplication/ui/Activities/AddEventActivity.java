@@ -48,7 +48,10 @@ import retrofit2.Response;
 
 public class AddEventActivity extends AppCompatActivity {
 
+    private static final int BUFFER_SIZE = 4096;
+    
     private ActivityAddEventBinding binding;
+    private ApiEndpoints apiService;
 
     private Uri selectedImageUri;
     private String uploadedImageUrl;
@@ -102,6 +105,8 @@ public class AddEventActivity extends AppCompatActivity {
             binding.btnCreateEvent.setText("Cập nhật sự kiện");
         }
 
+        apiService = ApiConfig.getClient().create(ApiEndpoints.class);
+        
         setupListeners();
         loadEventTypes();
 
@@ -111,7 +116,6 @@ public class AddEventActivity extends AppCompatActivity {
     }
 
     private void loadEventTypes() {
-        ApiEndpoints apiService = ApiConfig.getClient().create(ApiEndpoints.class);
 
         apiService.getEventTypes().enqueue(new Callback<RestResponse<List<EventTypeResponse>>>() {
             @Override
@@ -259,7 +263,7 @@ public class AddEventActivity extends AppCompatActivity {
         isLoading = true;
         showLoading();
 
-        ApiEndpoints apiService = ApiConfig.getClient().create(ApiEndpoints.class);
+
         Call<EventResponse> call = isEditMode && eventId != null
                 ? apiService.updateEvent(eventId, request)
                 : apiService.createEvent(request);
@@ -385,7 +389,7 @@ public class AddEventActivity extends AppCompatActivity {
     }
 
     private void loadEventDetails() {
-        ApiEndpoints apiService = ApiConfig.getClient().create(ApiEndpoints.class);
+
 
         apiService.getEventById(eventId).enqueue(new Callback<RestResponse<EventResponse>>() {
             @Override
@@ -502,7 +506,7 @@ public class AddEventActivity extends AppCompatActivity {
             RequestBody requestFile = RequestBody.create(MediaType.parse(mimeType), file);
             MultipartBody.Part body = MultipartBody.Part.createFormData("file", file.getName(), requestFile);
 
-            ApiEndpoints apiService = ApiConfig.getClient().create(ApiEndpoints.class);
+
             apiService.uploadImage(body).enqueue(new Callback<Map<String, Object>>() {
                 @Override
                 public void onResponse(Call<Map<String, Object>> call, Response<Map<String, Object>> response) {
@@ -551,7 +555,7 @@ public class AddEventActivity extends AppCompatActivity {
                 throw new Exception("Cannot open input stream");
             }
 
-            byte[] buffer = new byte[4096];
+            byte[] buffer = new byte[BUFFER_SIZE];
             int length;
             while ((length = inputStream.read(buffer)) > 0) {
                 outputStream.write(buffer, 0, length);
@@ -561,10 +565,7 @@ public class AddEventActivity extends AppCompatActivity {
         return file;
     }
 
-    private void selectMapLocation() {
-        // TODO: Implement map location picker
-        Toast.makeText(this, "Chức năng chọn vị trí đang phát triển", Toast.LENGTH_SHORT).show();
-    }
+
 
     private void showError(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
