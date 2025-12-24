@@ -542,7 +542,7 @@ public class DetailEventActivity extends AppCompatActivity {
                 eventData.getId(),
                 title,
                 content,
-                "ALL", // Send to all participants - recipientType
+                "APPROVED", // Send to approved participants only - recipientType
                 attachmentUrl // attachmentUrl
         );
         
