@@ -32,16 +32,10 @@ import retrofit2.Response;
 
 public class SearchFragment extends Fragment {
 
-    private static final String ARG_AI_QUERY = "ai_query";
-    private static final String ARG_IS_AI_SEARCH = "is_ai_search";
-
     private FragmentSearchBinding binding;
     private EventAdapter adapter;
     private List<EventResponse> allResults;
     private ApiEndpoints apiEndpoints;
-
-    private boolean isAiSearchMode = false;
-    private String aiQuery = null;
 
     public SearchFragment() {
         // Required empty public constructor
@@ -49,25 +43,6 @@ public class SearchFragment extends Fragment {
 
     public static SearchFragment newInstance() {
         return new SearchFragment();
-    }
-
-    // Factory method for AI search from home
-    public static SearchFragment newInstanceWithAiSearch(String aiQuery) {
-        SearchFragment fragment = new SearchFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_AI_QUERY, aiQuery);
-        args.putBoolean(ARG_IS_AI_SEARCH, true);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            aiQuery = getArguments().getString(ARG_AI_QUERY);
-            isAiSearchMode = getArguments().getBoolean(ARG_IS_AI_SEARCH, false);
-        }
     }
 
     @Override
@@ -108,13 +83,8 @@ public class SearchFragment extends Fragment {
             }
         }
 
-        // Check bundle arguments (for direct fragment creation)
-        if (isAiSearchMode && aiQuery != null && !aiQuery.isEmpty()) {
-            binding.searchKeyword.setText(aiQuery);
-            performAiSearch(aiQuery);
-        } else {
-            showEmptyState();
-        }
+        // Show empty state initially
+        showEmptyState();
     }
 
     private void setupRecyclerView() {
