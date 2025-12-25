@@ -195,7 +195,7 @@ public class DetailEventActivity extends AppCompatActivity {
             binding.btnRegisterEvent.setVisibility(View.VISIBLE);
             binding.btnRegisterEvent.setText("Đã hết hạn đăng ký");
             binding.btnRegisterEvent.setEnabled(false);
-            binding.btnRegisterEvent.setBackgroundColor(getResources().getColor(android.R.color.darker_gray));
+            binding.btnRegisterEvent.setBackgroundTintList(getResources().getColorStateList(android.R.color.darker_gray));
             return;
         }
 

@@ -94,6 +94,7 @@ public class MyRewardAdapter extends RecyclerView.Adapter<MyRewardAdapter.ViewHo
                     bgColor = ContextCompat.getColor(context, R.color.status_pending);
                     break;
                 case "APPROVED":
+                case "ACCEPTED":
                     bgColor = ContextCompat.getColor(context, R.color.status_approved);
                     break;
                 case "DELIVERED":
