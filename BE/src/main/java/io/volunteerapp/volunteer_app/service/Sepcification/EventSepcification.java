@@ -88,4 +88,23 @@ public class EventSepcification {
             }
         };
     }
+
+    // Filter events where registration is still open (eventEndTime >= today)
+    public static Specification<Event> registrationOpen() {
+        return (root, query, criteriaBuilder) -> {
+            Date today = new Date(System.currentTimeMillis());
+            return criteriaBuilder.greaterThanOrEqualTo(root.get("eventEndTime"), today);
+        };
+    }
+
+    // Filter events where registration is still open (eventEndTime >= provided
+    // date)
+    public static Specification<Event> registrationOpenAfter(Date date) {
+        return (root, query, criteriaBuilder) -> {
+            if (date == null) {
+                return criteriaBuilder.conjunction();
+            }
+            return criteriaBuilder.greaterThanOrEqualTo(root.get("eventEndTime"), date);
+        };
+    }
 }

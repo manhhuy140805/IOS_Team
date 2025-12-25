@@ -39,4 +39,7 @@ public class EventResponse {
     // Registration stats
     private Integer currentParticipants;
     private Integer availableSlots;
+
+    // Expired flag - true if eventEndTime < today (registration closed)
+    private Boolean isExpired;
 }

@@ -54,21 +54,50 @@ public class EventService {
                                 : Sort.by(sortBy).ascending();
                 Pageable pageable = PageRequest.of(page, size, sort);
 
+                // Build base specification
                 Specification<Event> specification = EventSepcification.hasTitle(title)
                                 .and(EventSepcification.hasLocation(location))
-                                .and(EventSepcification.hasStatus(status))
                                 .and(EventSepcification.hasEventType(eventTypeId))
                                 .and(EventSepcification.eventStartTimeAfter(startDateFrom))
                                 .and(EventSepcification.eventStartTimeBefore(startDateTo))
                                 .and(EventSepcification.hasRewardPoints(hasReward));
 
+                // If status is provided (e.g., from Admin), use it
+                // Otherwise, default to ACTIVE status for regular users
+                if (status != null && !status.isEmpty()) {
+                        specification = specification.and(EventSepcification.hasStatus(status));
+                } else {
+                        // For regular users: only ACTIVE events (show all including expired)
+                        specification = specification.and(EventSepcification.hasStatus("ACTIVE"));
+                }
+
                 Page<Event> eventPage = eventRepository.findAll(specification, pageable);
+
+                // Convert to response and set isExpired flag
+                Date today = new Date(System.currentTimeMillis());
                 List<EventResponse> responses = eventPage.getContent().stream()
-                                .map(this::convertToResponse)
+                                .map(event -> {
+                                        EventResponse response = convertToResponse(event);
+                                        // Set isExpired based on eventEndTime
+                                        boolean expired = event.getEventEndTime() != null
+                                                        && event.getEventEndTime().before(today);
+                                        response.setIsExpired(expired);
+                                        return response;
+                                })
                                 .toList();
 
+                // Sort: non-expired first, then expired at bottom
+                List<EventResponse> sortedResponses = new java.util.ArrayList<>(responses);
+                sortedResponses.sort((a, b) -> {
+                        boolean aExpired = Boolean.TRUE.equals(a.getIsExpired());
+                        boolean bExpired = Boolean.TRUE.equals(b.getIsExpired());
+                        if (aExpired == bExpired)
+                                return 0;
+                        return aExpired ? 1 : -1; // Expired goes to bottom
+                });
+
                 return new PageResponse<>(
-                                responses,
+                                sortedResponses,
                                 eventPage.getNumber(),
                                 eventPage.getTotalElements(),
                                 eventPage.getTotalPages());

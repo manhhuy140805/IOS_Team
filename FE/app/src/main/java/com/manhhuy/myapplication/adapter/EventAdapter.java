@@ -39,8 +39,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
         EventItemBinding binding = EventItemBinding.inflate(
                 LayoutInflater.from(parent.getContext()),
                 parent,
-                false
-        );
+                false);
         return new EventViewHolder(binding);
     }
 
@@ -70,8 +69,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
 
         public void bind(EventResponse event) {
             binding.eventTitle.setText(event.getTitle());
-            binding.eventOrganization.setText(event.getCreatorName() != null ? 
-                    event.getCreatorName() : "Tổ chức");
+            binding.eventOrganization.setText(event.getCreatorName() != null ? event.getCreatorName() : "Tổ chức");
             binding.eventLocation.setText(event.getLocation());
 
             // Load image
@@ -101,16 +99,33 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
                 binding.eventDeadline.setText("N/A");
             }
 
-            // Set available slots
-            int availableSlots = event.getAvailableSlots() != null ? 
-                    event.getAvailableSlots() : 0;
-            String slotsText = availableSlots > 0 ? 
-                    "Còn " + availableSlots + " chỗ" : "Hết chỗ";
-            binding.eventSlots.setText(slotsText);
+            // Check if event is expired
+            boolean isExpired = Boolean.TRUE.equals(event.getIsExpired());
+
+            // Show/hide expired badge
+            if (binding.expiredBadge != null) {
+                binding.expiredBadge.setVisibility(isExpired ? android.view.View.VISIBLE : android.view.View.GONE);
+            }
+
+            // Set available slots - show "Đã hết hạn" if expired
+            if (isExpired) {
+                binding.eventSlots.setText("Đã hết hạn");
+                binding.eventSlots.setTextColor(
+                        binding.getRoot().getContext().getResources().getColor(android.R.color.holo_red_dark));
+                // Dim the card slightly for expired events
+                itemView.setAlpha(0.7f);
+            } else {
+                int availableSlots = event.getAvailableSlots() != null ? event.getAvailableSlots() : 0;
+                String slotsText = availableSlots > 0 ? "Còn " + availableSlots + " chỗ" : "Hết chỗ";
+                binding.eventSlots.setText(slotsText);
+                binding.eventSlots.setTextColor(
+                        binding.getRoot().getContext().getResources().getColor(R.color.app_green_primary));
+                itemView.setAlpha(1.0f);
+            }
 
             // Set reward points
             if (event.getRewardPoints() != null) {
-                binding.eventRewardPoints.setText(String.valueOf(event.getRewardPoints())+" điểm");
+                binding.eventRewardPoints.setText(String.valueOf(event.getRewardPoints()) + " điểm");
             } else {
                 binding.eventRewardPoints.setText("0");
             }
